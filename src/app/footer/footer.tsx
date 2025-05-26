@@ -14,10 +14,10 @@ export default function Footer() {
             </button>
           </form>
           <div className="flex gap-2">
-            <img width="40" src="../assets/images/zalo-seeklogo.webp" alt="zalo" />
-            <img width="40" src="../assets/images/Instagram_icon.png.webp" alt="instagram" />
-            <img width="40" src="../assets/images/yt.png" alt="youtube" />
-            <img width="40" src="../assets/images/2023_Facebook_icon.svg.png" alt="facebook" />
+            <img width="40" src="/assets/images/zalo-seeklogo.webp" alt="zalo" />
+            <img width="40" src="/assets/images/Instagram_icon.png.webp" alt="instagram" />
+            <img width="40" src="/assets/images/yt.png" alt="youtube" />
+            <img width="40" src="/assets/images/2023_Facebook_icon.svg.png" alt="facebook" />
           </div>
         </div>
 
@@ -32,7 +32,7 @@ export default function Footer() {
             <div className="flex items-start text-sm mb-1"><FaClock className="mr-2 mt-1" /> Giờ mở cửa : 08:30 - 22:00</div>
             <div className="flex items-start text-sm mb-3"><FaHeadphones className="mr-2 mt-1" /> Nhân viên tư vấn phản hồi tin nhắn đến 24:00 (Mỗi ngày)</div>
             <div className="mt-4">
-              <img width="120" src="../assets/images/vertify.webp" alt="cert1" className="mb-2" />
+              <img width="120" src="/assets/images/vertify.webp" alt="cert1" className="mb-2" />
               <img src="https://images.dmca.com/Badges/dmca_protected_16_120.png?ID=9049de26-d97b-48dc-ab97-1e5fcb221fba" alt="DMCA" className="max-w-[150px]" />
             </div>
           </div>
@@ -87,9 +87,9 @@ export default function Footer() {
           <div className="min-w-[250px] flex-1">
             <h3 className="text-lg font-bold uppercase mb-4">PHƯƠNG THỨC THANH TOÁN</h3>
             <div className="flex gap-2">
-              <img width="50" src="../assets/images/spay.webp" alt="spay" />
-              <img width="50" src="../assets/images/vnpay.webp" alt="vnpay" />
-              <img width="50" src="../assets/images/cod.webp" alt="cod" />
+              <img width="50" src="/assets/images/spay.webp" alt="spay" />
+              <img width="50" src="/assets/images/vnpay.webp" alt="vnpay" />
+              <img width="50" src="/assets/images/cod.webp" alt="cod" />
             </div>
           </div>
         </div>

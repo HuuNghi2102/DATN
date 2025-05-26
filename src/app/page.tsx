@@ -1,8 +1,26 @@
+'use client';
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Slider from 'react-slick';
 import './globals.css';
+const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
+  <div
+    className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    onClick={onClick}
+  >
+    <FontAwesomeIcon icon={faChevronLeft} />
+  </div>
+);
 
+const NextArrow = ({ onClick }: { onClick?: () => void }) => (
+  <div
+    className="absolute top-1/2 text-white text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    onClick={onClick}
+  >
+    <FontAwesomeIcon icon={faChevronRight} />
+  </div>
+);
 const vouchers = [
   {
     code: 'MAY10',
@@ -31,17 +49,38 @@ const vouchers = [
 ];
 
 const Home = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    autoplaySpeed: 3000,
+    speed: 200,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
   return (
     <div>
-      <div className="container mx-auto mt-40 max-w-[1200px] px-4">
+      <div className="container mx-auto mt-40 max-w-[1200px]">
         {/* Banner */}
-        <div className="flex justify-center max-w-[1190px] mx-auto">
-          <img
-            src="../assets/images/new_banner_pc.webp"
-            alt="Banner"
-            className="w-full object-cover max-h-[400px] sm:max-h-[300px] rounded-lg"
-          />
-        </div>
+      <div className="container mx-auto mt-40 max-w-[1200px] relative">
+      <Slider {...settings}>
+        {[
+          "/assets/images/new_banner_pc.webp",
+          "/assets/images/a.webp",
+          "/assets/images/banner_desktop_bb7ca9cf2054479598a1acaabfda8a34.webp",
+          "/assets/images/banner_store_dk.webp",
+        ].map((src, index) => (
+          <div key={index}>
+            <img
+              src={src}
+              alt={`Banner ${index + 1}`}
+              className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
+            />
+          </div>
+        ))}
+      </Slider>
+    </div>
 
         {/* Voucher Section */}
 <div className="my-4">
@@ -50,34 +89,34 @@ const Home = () => {
   </h2>
 
   {/* Scroll ngang */}
-  <div className="overflow-x-auto">
-    <div className="flex gap-4 w-max pb-2">
-      {vouchers.map((voucher, index) => (
-        <div
-          key={index}
-          className="flex-shrink-0 w-[280px] h-[110px] p-2 border-l-[10px] border-[#FCBF49] rounded-md shadow-md bg-white flex"
-        >
-          <div className="flex items-center justify-center w-[70px] font-bold text-sm">
-            {voucher.code}
-          </div>
-          <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
-            <div className="py-1 pr-2">
-              <h3 className="font-semibold">{voucher.title}</h3>
-              <p className="text-xs">{voucher.description}</p> <br />
-              <p className="mt-1">
-                Mã: <span className="font-semibold">{voucher.code}</span>
-              </p>
-              <p>HSD: {voucher.expiry}</p>
+    <div className="overflow-x-auto">
+      <div className="flex gap-4 w-max pb-2">
+        {vouchers.map((voucher, index) => (
+          <div
+            key={index}
+            className="flex-shrink-0 w-[280px] h-[110px] p-2 border-l-[10px] border-[#FCBF49] rounded-md shadow-md bg-white flex"
+          >
+            <div className="flex items-center justify-center w-[70px] font-bold text-sm">
+              {voucher.code}
             </div>
-            <button className="absolute right-2 bottom-2 bg-black text-white px-2 py-0.5 rounded-full text-xs">
-              Sao chép mã
-            </button>
-          </div>
+            <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
+              <div className="py-1 pr-2">
+                <h3 className="font-semibold">{voucher.title}</h3>
+                <p className="text-xs">{voucher.description}</p> <br />
+                <p className="mt-1">
+                  Mã: <span className="font-semibold">{voucher.code}</span>
+                </p>
+                <p>HSD: {voucher.expiry}</p>
+              </div>
+              <button className="absolute right-2 bottom-2 bg-black text-white px-2 py-0.5 rounded-full text-xs">
+                Sao chép mã
+              </button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
-  </div>
-</div>
 
         {/* Product Sections */}
         {[
@@ -90,6 +129,7 @@ const Home = () => {
             banner: '../assets/images/banchay_a01333a0db53411883d51490d22b7eab.webp',
             products: Array(5).fill({ name: 'Quần thun 12size', price: '20000' }),
           },
+          
         ].map((section, index) => (
           <div key={index} className="my-4">
             <div>
@@ -99,14 +139,16 @@ const Home = () => {
               {section.products.map((product, i) => (
                 <div key={i} className="bg-slate-100 p-2 rounded-lg cursor-pointer">
                   <div className="relative group overflow-hidden">
-                    <img src="../assets/images/zzz.webp" alt="product" className="w-full" />
-                    <img
-                      src="../assets/images/zz.webp"
-                      alt="product"
-                      className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    />
-                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <FontAwesomeIcon icon={faSearch} className="text-white w-4" />
+                    <a href="#"  className="relative">
+                      <img src="../assets/images/zzz.webp" alt="product" className="w-full" />
+                      <img
+                        src="../assets/images/zz.webp"
+                        alt="product"
+                        className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      />
+                    </a>
+                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto"  />
                     </div>
                     <a
                       href="#"
