@@ -1,6 +1,7 @@
+'use client'
 import React, { useState } from 'react';
 
-const EcommercePage = () => {
+const CartPage = () => {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
 
@@ -42,7 +43,24 @@ const EcommercePage = () => {
       badge: 'Siêu Hot'
     }
   ];
-
+  const cartItems = [
+  {
+    name: "Áo thun xanh",
+    size: "M",
+    color: "Xanh",
+    quantity: 2,
+    price: 150000,
+    image: "/assets/images/zz.webp",
+  },
+  {
+    name: "Quần jean đen",
+    size: "L",
+    color: "Đen",
+    quantity: 1,
+    price: 350000,
+    image: "/assets/images/zzz.webp",
+  },
+  ];
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Font Awesome CDN */}
@@ -70,17 +88,42 @@ const EcommercePage = () => {
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Giỏ hàng:</h2>
-                <span className="text-blue-600 cursor-pointer hover:underline text-sm sm:text-base">0 Sản phẩm</span>
+                <span className="text-blue-600 cursor-pointer hover:underline text-sm sm:text-base">
+                  {cartItems.length} Sản phẩm
+                </span>
               </div>
-              
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p className="text-blue-800 text-sm">
-                  Bạn được giảm 10% tối đa 10K, mua thêm 599.000đ nữa để giảm ngay 50K!
-                </p>
-                <p className="text-gray-600 text-sm mt-2">
-                  Giỏ hàng của bạn đang trống. Mời bạn mua thêm sản phẩm <span className="text-blue-600 cursor-pointer hover:underline"><a href="/productPage">tại đây</a></span>.
-                </p>
-              </div>
+
+              {cartItems.length === 0 ? (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <p className="text-blue-800 text-sm">
+                    Bạn được giảm 10% tối đa 10K, mua thêm 599.000đ nữa để giảm ngay 50K!
+                  </p>
+                  <p className="text-gray-600 text-sm mt-2">
+                    Giỏ hàng của bạn đang trống. Mời bạn mua thêm sản phẩm{" "}
+                    <span className="text-blue-600 cursor-pointer hover:underline">
+                      <a href="/productPage">tại đây</a>
+                    </span>.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {cartItems.map((item, index) => (
+                    <div key={index} className="flex items-start gap-4 border-b pb-4">
+                      <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
+                      <div className="flex-1">
+                        <h3 className="text-sm sm:text-base font-medium text-gray-800">{item.name}</h3>
+                        <p className="text-sm text-gray-500">
+                          Size: {item.size} | Màu: {item.color}
+                        </p>
+                        <p className="text-sm text-gray-600 mt-1">Số lượng: {item.quantity}</p>
+                        <p className="text-base font-semibold text-gray-900 mt-2">
+                          {(item.price * item.quantity)}đ
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -198,4 +241,4 @@ const EcommercePage = () => {
   );
 };
 
-export default EcommercePage;
+export default CartPage;

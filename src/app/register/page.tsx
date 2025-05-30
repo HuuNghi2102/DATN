@@ -37,7 +37,7 @@ const Register = () => {
               <div>
                 <input
                   type="tel"
-                  placeholder="Nhập số điện thoại"
+                  placeholder="Nhập email của bạn"
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
                 />
               </div>

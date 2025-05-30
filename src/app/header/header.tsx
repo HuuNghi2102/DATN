@@ -55,7 +55,7 @@ const Header = () => {
                 ☰
             </button>
             <div className={styles.logo}>
-                <a href="/"><img src="../assets/images/logo160store.png" alt="160STORE" /></a>
+                <a href="/"><img src="/assets/images/logo.png" alt="160STORE" /></a>
             </div>
 
             <div className={styles['search-container']}>
@@ -94,7 +94,7 @@ const Header = () => {
                     alt=""
                     />
                 </div>
-                <span>Đăng nhập</span>
+                <span><a href="/login">Đăng nhập</a></span>
                 </div>
 
                 <div className={styles['user-control-item']}>

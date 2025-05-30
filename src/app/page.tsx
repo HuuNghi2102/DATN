@@ -59,11 +59,27 @@ const Home = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
+const productSettings = {
+  slidesToShow: 5,
+  slidesToScroll: 2,
+  autoplay: true,
+  autoplaySpeed: 2000,
+  speed: 500,
+  dots: true,
+  infinite: true,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  responsive: [
+    { breakpoint: 1280, settings: { slidesToShow: 4 } },
+    { breakpoint: 768, settings: { slidesToShow: 3 } },
+    { breakpoint: 480, settings: { slidesToShow: 2 } },
+  ],
+};
   return (
     <div>
-      <div className="container mx-auto mt-40 max-w-[1200px]">
+      <div className="container  mx-auto mt-40 max-w-[1200px]">
         {/* Banner */}
-      <div className="container mx-auto mt-40 max-w-[1200px] relative">
+        <div className="container mx-auto mt-40 max-w-[1200px] relative">
       <Slider {...settings}>
         {[
           "/assets/images/new_banner_pc.webp",
@@ -80,98 +96,101 @@ const Home = () => {
           </div>
         ))}
       </Slider>
-    </div>
-
-        {/* Voucher Section */}
-<div className="my-4">
-  <h2 className="border-l-4 border-black pl-2 my-2 text-xl font-semibold sm:text-lg">
-    ƯU ĐÃI DÀNH CHO BẠN
-  </h2>
-
-  {/* Scroll ngang */}
-    <div className="overflow-x-auto">
-      <div className="flex gap-4 w-max pb-2">
-        {vouchers.map((voucher, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 w-[280px] h-[110px] p-2 border-l-[10px] border-[#FCBF49] rounded-md shadow-md bg-white flex"
-          >
-            <div className="flex items-center justify-center w-[70px] font-bold text-sm">
-              {voucher.code}
-            </div>
-            <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
-              <div className="py-1 pr-2">
-                <h3 className="font-semibold">{voucher.title}</h3>
-                <p className="text-xs">{voucher.description}</p> <br />
-                <p className="mt-1">
-                  Mã: <span className="font-semibold">{voucher.code}</span>
-                </p>
-                <p>HSD: {voucher.expiry}</p>
-              </div>
-              <button className="absolute right-2 bottom-2 bg-black text-white px-2 py-0.5 rounded-full text-xs">
-                Sao chép mã
-              </button>
-              </div>
-            </div>
-          ))}
         </div>
-      </div>
-    </div>
-
+        {/* Voucher Section */}
+        <div className="my-4">
+          <h2 className="border-l-4 border-black pl-2 my-2 text-xl font-semibold sm:text-lg">
+            ƯU ĐÃI DÀNH CHO BẠN
+          </h2>
+        {/* Scroll ngang */}
+          <div className="overflow-x-auto">
+          <div className="flex gap-6  pb-2">
+            {vouchers.map((voucher, index) => (
+              <div
+                key={index}
+                className="flex-shrink-0 w-[280px] h-[110px] p-2 border-l-[10px] border-[#FCBF49] rounded-md shadow-md bg-white flex"
+              >
+                <div className="flex items-center justify-center w-[70px] font-bold text-sm">
+                  {voucher.code}
+                </div>
+                <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
+                  <div className="py-1 pr-2">
+                    <h3 className="font-semibold">{voucher.title}</h3>
+                    <p className="text-xs">{voucher.description}</p> <br />
+                    <p className="mt-1">
+                      Mã: <span className="font-semibold">{voucher.code}</span>
+                    </p>
+                    <p>HSD: {voucher.expiry}</p>
+                  </div>
+                  <button className="absolute right-2 bottom-2 bg-black text-white px-2 py-0.5 rounded-full text-xs">
+                    Sao chép mã
+                  </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
         {/* Product Sections */}
         {[
-          { banner: '../assets/images/yptvddzi.jpg', products: Array(5).fill({ name: 'Quần thun 12size', price: '20000' }) },
+          {
+            banner: '../assets/images/yptvddzi.jpg',
+            products: Array(5).fill({ name: 'Quần thun co giãn ICM LOTTEPark', price: '123123' })
+          },
           {
             banner: '../assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp',
-            products: Array(5).fill({ name: 'Quần thun 12size', price: '20000' }),
+            products: Array(5).fill({ name: 'Áo Polo Nam ICONDENIM Logo Mark', price: '200400' })
           },
           {
             banner: '../assets/images/banchay_a01333a0db53411883d51490d22b7eab.webp',
-            products: Array(5).fill({ name: 'Quần thun 12size', price: '20000' }),
+            products: Array(5).fill({ name: 'Áo Polo Nam ICONDENIM Logo Mark', price: '200200' })
           },
-          
         ].map((section, index) => (
           <div key={index} className="my-4">
             <div>
               <img src={section.banner} alt="Section Banner" className="w-full object-cover rounded-lg" />
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 my-2">
+
+            {/* Slider thay cho grid */}
+            <Slider {...productSettings} className="my-4">
               {section.products.map((product, i) => (
-                <div key={i} className="bg-slate-100 p-2 rounded-lg cursor-pointer">
-                  <div className="relative group overflow-hidden">
-                    <a href="#"  className="relative">
-                      <img src="../assets/images/zzz.webp" alt="product" className="w-full" />
-                      <img
-                        src="../assets/images/zz.webp"
-                        alt="product"
-                        className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      />
-                    </a>
-                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                      <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto"  />
+                <div key={i} className="p-2">
+                  <div className="bg-white p-2 rounded-lg cursor-pointer">
+                    <div className="relative group overflow-hidden">
+                      <a href="#" className="relative">
+                        <img src="../assets/images/zzz.webp" alt="product" className="w-full" />
+                        <img
+                          src="../assets/images/zz.webp"
+                          alt="product"
+                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        />
+                      </a>
+                      <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                      </div>
+                      <a
+                        href="#"
+                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                      >
+                        <FontAwesomeIcon icon={faCartShopping} />
+                      </a>
                     </div>
-                    <a
-                      href="#"
-                      className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
-                    >
-                      <FontAwesomeIcon icon={faCartShopping} />
-                    </a>
-                  </div>
-                  <div className="px-1 mt-2 ">
-                    <p className="text-sm">{product.name}</p>
-                    <strong className="text-sm">{product.price}</strong>
+                    <div className="px-1 mt-2">
+                      <p className="text-sm">{product.name}</p>
+                      <strong className="text-sm">{product.price}</strong>
+                    </div>
                   </div>
                 </div>
               ))}
-            </div>
-            <div className="flex justify-center my-3">
+            </Slider>
+
+            <div className="flex justify-center my-5">
               <button className="rounded-lg bg-black border-2 border-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
           </div>
         ))}
-
         {/* Collection Section */}
         <div className="my-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -214,7 +233,6 @@ const Home = () => {
             ))}
           </div>
         </div>
-
         {/* Combo Mix & Match */}
         <div className="comboMix py-6">
           <h2 className="text-xl font-semibold mb-4 uppercase sm:text-lg">COMBO MIX & MATCH ĐÚNG CHUẨN</h2>
