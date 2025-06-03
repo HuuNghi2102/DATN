@@ -5,6 +5,41 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [notification,setNotification]  = useState('');
+
+  const handleLogin = async () => {
+    if(email == '' || password == '' ){
+      setNotification('Bạn vui lòng điền đầy đủ thông tin');
+      return
+    }
+    try {
+      const res = await fetch('https://huunghi.id.vn/api/user/login',{
+        method : 'POST',
+        headers : {
+          "Content-Type" : "application/json",
+        },
+        body : JSON.stringify(
+          {
+            email,
+            password
+          })
+      });
+      const result = await res.json();
+      console.log(result.data);
+      if(!res.ok){
+        setNotification('Tên tài khoản hoặc mật khẩu không chính xác');
+      }
+      const user = result.data.user;
+      const accessToken = result.data.token;
+      const tokenType = result.data.tokenType;
+      localStorage.setItem('user',user)
+      localStorage.setItem('accessToken',accessToken);
+      localStorage.setItem('tokenType',tokenType); 
+      window.location.href = '/register'
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-200 mt-40">
@@ -71,10 +106,12 @@ const LoginPage = () => {
               {/* Login Button */}
             <button
                 type="button"
+                onClick={handleLogin}
                 className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-200 text-sm"
               >
                 ĐĂNG NHẬP
             </button>
+            {notification}
               {/* Forgot Password */}
             <div className="text-center">
                 <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">
