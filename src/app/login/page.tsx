@@ -31,10 +31,10 @@ const LoginPage = () => {
       }
       const user = result.data.user;
       const accessToken = result.data.token;
-      const tokenType = result.data.tokenType;
+      const typeToken = result.data.typeToken;
       localStorage.setItem('user',user)
       localStorage.setItem('accessToken',accessToken);
-      localStorage.setItem('tokenType',tokenType); 
+      localStorage.setItem('tokenType',typeToken); 
       window.location.href = '/register'
     } catch (error) {
       console.log(error);
