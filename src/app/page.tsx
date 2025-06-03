@@ -178,7 +178,7 @@ useEffect(() => {
           </div>
         </div>
         {/* Product Sections */}
-            <div className="my-4">
+        <div className="my-4">
               {/* BestSalerProducts */}
               <div>
                 <img src="../assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
@@ -299,7 +299,7 @@ useEffect(() => {
                   </button>
                 </div>
               </div>
-            </div>
+        </div>
         {/* Collection Section */}
         <div className="my-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

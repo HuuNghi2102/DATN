@@ -87,12 +87,14 @@ const Header = () => {
 
                 <div className={styles['user-control-item']}>
                 <div className={styles.icon}>
+                    <a href="/login">
                     <img
                     src="https://theme.hstatic.net/1000253775/1001315144/14/user-account.svg?v=2041"
                     width="24"
                     height="24"
                     alt=""
-                    />
+                    />                    
+                    </a>
                 </div>
                 <span><a href="/login">Đăng nhập</a></span>
                 </div>

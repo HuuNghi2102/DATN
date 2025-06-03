@@ -33,15 +33,38 @@ const Register = () => {
 
             {/* Form */}
             <form className="space-y-6">
-              {/* Phone Input */}
+              {/* Name Input */}
               <div>
                 <input
-                  type="tel"
+                  type="text"
+                  placeholder="Nhập họ và tên của bạn"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                />
+              </div>              
+              {/* Email Input */}
+              <div>
+                <input
+                  type="email"
                   placeholder="Nhập email của bạn"
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
                 />
               </div>
-
+              {/* Password Input */}
+              <div>
+                <input
+                  type="passoword"
+                  placeholder="Nhập mật khẩu của bạn"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                />
+              </div>             
+              {/* Password Input Again */}
+              <div>
+                <input
+                  type="password"
+                  placeholder="Xác nhận lại mật khẩu"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                />
+              </div>              
               {/* Submit Button */}
               <button
                 type="submit"

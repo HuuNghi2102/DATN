@@ -31,11 +31,11 @@ const LoginPage = () => {
       }
       const user = result.data.user;
       const accessToken = result.data.token;
-      const tokenType = result.data.tokenType;
+      const typeToken = result.data.typeToken;
       localStorage.setItem('user',user)
       localStorage.setItem('accessToken',accessToken);
-      localStorage.setItem('tokenType',tokenType); 
-      window.location.href = '/register'
+      localStorage.setItem('typeToken',typeToken); 
+      window.location.href = '/'
     } catch (error) {
       console.log(error);
     }
