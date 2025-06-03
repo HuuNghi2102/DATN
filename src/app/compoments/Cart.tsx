@@ -106,23 +106,47 @@ const CartPage = () => {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {cartItems.map((item, index) => (
-                    <div key={index} className="flex items-start gap-4 border-b pb-4">
-                      <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
-                      <div className="flex-1">
-                        <h3 className="text-sm sm:text-base font-medium text-gray-800">{item.name}</h3>
-                        <p className="text-sm text-gray-500">
-                          Size: {item.size} | Màu: {item.color}
-                        </p>
-                        <p className="text-sm text-gray-600 mt-1">Số lượng: {item.quantity}</p>
-                        <p className="text-base font-semibold text-gray-900 mt-2">
-                          {(item.price * item.quantity)}đ
-                        </p>
-                      </div>
+            <div className="space-y-4">
+              {cartItems.map((item, index) => (
+                <div key={index} className="flex items-start gap-4 border-b pb-4">
+                  <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
+                  <div className="flex-1">
+                    <h3 className="text-sm sm:text-base font-medium text-gray-800">{item.name}</h3>
+                    <p className=''>
+                    Giá:{(item.price).toLocaleString('vi-VN')}₫
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Size: {item.size} | Màu: {item.color}
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <button
+                        // onClick={() => decreaseQuantity(index)}
+                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                      >
+                        -
+                      </button>
+                      <span className="text-sm text-gray-600">{item.quantity}</span>
+                      <button
+                        // onClick={() => increaseQuantity(index)}
+                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                      >
+                        +
+                      </button>
                     </div>
-                  ))}
+                    
+                    <p className="text-base float-end font-semibold text-gray-900 mt-2">
+
+                      Tổng tiền: {(item.price * item.quantity).toLocaleString('vi-VN')}₫
+                    </p>
+                  </div>
+                    <button
+                      // onClick={() => removeItem(index)}
+                    className="mt-2 text-red-500 text-sm hover:underline">
+                      X
+                    </button>
                 </div>
+              ))}
+            </div>
               )}
             </div>
           </div>
@@ -204,36 +228,6 @@ const CartPage = () => {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Products Section */}
-        <div className="mt-12">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-8">BẠN SẼ CẦN</h2>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-            {products.map((product) => (
-              <div key={product.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-                <div className="relative">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-32 sm:h-48 object-cover"
-                  />
-                  <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                    {product.badge}
-                  </div>
-                  <button className="absolute bottom-2 right-2 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition-colors">
-                    <i className="fas fa-plus text-gray-600 text-sm"></i>
-                  </button>
-                </div>
-                
-                <div className="p-3 sm:p-4">
-                  <h3 className="font-medium text-gray-900 mb-2 text-xs sm:text-sm">{product.name}</h3>
-                  <div className="text-blue-600 font-semibold text-sm">{product.price}</div>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

@@ -55,7 +55,7 @@ const Header = () => {
                 ☰
             </button>
             <div className={styles.logo}>
-                <a href="/"><img src="/assets/images/logo.png" alt="160STORE" /></a>
+                <a href="/"><img src="/assets/images/logoverve.png" alt="160STORE" /></a>
             </div>
 
             <div className={styles['search-container']}>

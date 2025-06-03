@@ -1,7 +1,12 @@
 'use client';
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import productsBestSalerInterface from './compoments/productsBestSalerInterface';
+import productsNewInterface from "./compoments/productsNewInterface"
+import productsSalerInterface from './compoments/productsSalerInterface';
+// import { ProducSalerImage } from './compoments/productsSalerInterface';
+// import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
 import './globals.css';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
@@ -75,6 +80,48 @@ const productSettings = {
     { breakpoint: 480, settings: { slidesToShow: 2 } },
   ],
 };
+const [productsBestSaler, setProductsBestSaler] = useState<productsBestSalerInterface[]>([]);
+const [productsNew, setProductsNew] =useState<productsNewInterface[]>([]);
+const [productsSaler, setProductsSaler] =useState<productsNewInterface[]>([]);
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('http://huunghi.id.vn/api/product/getBestSalerProducts');
+      const result = await res.json();
+      setProductsBestSaler(result.data.productBestSeller);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchProducts();
+},[])
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('http://huunghi.id.vn/api/product/getProductNews');
+      const result = await res.json();
+      setProductsNew(result.data.productNews);
+      console.log(setProductsNew);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchProducts();
+},[])
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('https://huunghi.id.vn/api/product/getProductSales');
+      const result = await res.json();
+      setProductsSaler(result.data.productSales);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchProducts();
+},[])
   return (
     <div>
       <div className="container  mx-auto mt-40 max-w-[1200px]">
@@ -82,10 +129,9 @@ const productSettings = {
         <div className="container mx-auto mt-40 max-w-[1200px] relative">
       <Slider {...settings}>
         {[
-          "/assets/images/new_banner_pc.webp",
-          "/assets/images/a.webp",
-          "/assets/images/banner_desktop_bb7ca9cf2054479598a1acaabfda8a34.webp",
-          "/assets/images/banner_store_dk.webp",
+          "/assets/images/banner1.png",
+          "/assets/images/banner2.png",
+          "/assets/images/banner3.png",
         ].map((src, index) => (
           <div key={index}>
             <img
@@ -132,65 +178,128 @@ const productSettings = {
           </div>
         </div>
         {/* Product Sections */}
-        {[
-          {
-            banner: '../assets/images/yptvddzi.jpg',
-            products: Array(5).fill({ name: 'Quần thun co giãn ICM LOTTEPark', price: '123123' })
-          },
-          {
-            banner: '../assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp',
-            products: Array(5).fill({ name: 'Áo Polo Nam ICONDENIM Logo Mark', price: '200400' })
-          },
-          {
-            banner: '../assets/images/banchay_a01333a0db53411883d51490d22b7eab.webp',
-            products: Array(5).fill({ name: 'Áo Polo Nam ICONDENIM Logo Mark', price: '200200' })
-          },
-        ].map((section, index) => (
-          <div key={index} className="my-4">
-            <div>
-              <img src={section.banner} alt="Section Banner" className="w-full object-cover rounded-lg" />
-            </div>
-
-            {/* Slider thay cho grid */}
-            <Slider {...productSettings} className="my-4">
-              {section.products.map((product, i) => (
-                <div key={i} className="p-2">
-                  <div className="bg-white p-2 rounded-lg cursor-pointer">
-                    <div className="relative group overflow-hidden">
-                      <a href="#" className="relative">
-                        <img src="../assets/images/zzz.webp" alt="product" className="w-full" />
-                        <img
-                          src="../assets/images/zz.webp"
-                          alt="product"
-                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        />
-                      </a>
-                      <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+            <div className="my-4">
+              {/* BestSalerProducts */}
+              <div>
+                <img src="../assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
+                <Slider {...productSettings} className="my-4">
+                  {productsBestSaler.map((product, i) => (
+                    <div key={i} className="p-2">
+                      <div className="bg-white p-2 rounded-lg cursor-pointer">
+                      <div className="relative group overflow-hidden">
+                        <a href="#" className="relative">
+                          <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`}  alt="aa" className="w-full" />
+                          <img
+                            src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`} 
+                            alt="product"
+                            className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          />
+                        </a>
+                        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                        </div>
+                        <a
+                          href="#"
+                          className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </a>
                       </div>
-                      <a
-                        href="#"
-                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
-                      >
-                        <FontAwesomeIcon icon={faCartShopping} />
-                      </a>
+                      <div className="px-1 mt-2">
+                        <p className="text-sm">{product.ten_san_pham}</p>
+                        <strong className="text-sm">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'}</strong>
+                      </div>
                     </div>
-                    <div className="px-1 mt-2">
-                      <p className="text-sm">{product.name}</p>
-                      <strong className="text-sm">{product.price}</strong>
                     </div>
-                  </div>
+                  ))}
+                </Slider>
+                <div className="flex justify-center my-5">
+                  <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+                    Xem tất cả
+                  </button>
                 </div>
-              ))}
-            </Slider>
-
-            <div className="flex justify-center my-5">
-              <button className="rounded-lg bg-black border-2 border-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
-                Xem tất cả
-              </button>
+              </div>
+              {/* NewProducts */}
+              <div>
+                <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
+                <Slider {...productSettings} className="my-4">
+                  {productsNew.map((product, i) => (
+                    <div key={i} className="p-2">
+                      <div className="bg-white p-2 rounded-lg cursor-pointer">
+                      <div className="relative group overflow-hidden">
+                        <a href="#" className="relative">
+                          <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`}  alt="aa" className="w-full" />
+                          <img
+                            src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`} 
+                            alt="product"
+                            className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          />
+                        </a>
+                        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                        </div>
+                        <a
+                          href="#"
+                          className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </a>
+                      </div>
+                      <div className="px-1 mt-2">
+                        <p className="text-sm">{product.ten_san_pham}</p>
+                        <strong className="text-sm">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'}</strong>
+                      </div>
+                    </div>
+                    </div>
+                  ))}
+                </Slider>
+                <div className="flex justify-center my-5">
+                  <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+                    Xem tất cả
+                  </button>
+                </div>
+              </div>
+              {/* ProductSaler */}
+              <div>
+                <img src="/assets/images/banchay_a01333a0db53411883d51490d22b7eab.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
+                <Slider {...productSettings} className="my-4">
+                  {productsSaler.map((product, i) => (
+                    <div key={i} className="p-2">
+                      <div className="bg-white p-2 rounded-lg cursor-pointer">
+                      <div className="relative group overflow-hidden">
+                        <a href="#" className="relative">
+                          <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
+                          <img
+                            src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                            alt="product"
+                            className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          />
+                        </a>
+                        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                        </div>
+                        <a
+                          href="#"
+                          className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                        >
+                          <FontAwesomeIcon icon={faCartShopping} />
+                        </a>
+                      </div>
+                      <div className="px-1 mt-2">
+                        <p className="text-sm">{product.ten_san_pham}</p>
+                        <strong className="text-sm">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'}</strong>
+                      </div>
+                    </div>
+                    </div>
+                  ))}
+                </Slider>
+                <div className="flex justify-center my-5">
+                  <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+                    Xem tất cả
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
         {/* Collection Section */}
         <div className="my-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
