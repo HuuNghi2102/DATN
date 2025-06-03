@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import productsBestSalerInterface from './compoments/productsBestSalerInterface';
 import productsNewInterface from "./compoments/productsNewInterface";
-import {productsCateInterface,productsInterface} from "./compoments/productsCateInterface";
+import {productsCateInterface} from "./compoments/productsCateInterface";
 import productsSalerInterface from './compoments/productsSalerInterface';
 
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
@@ -214,7 +214,7 @@ useEffect(() => {
                           <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
                         </div>
                         <a
-                          href="#"
+                          href={`/product/${product.duong_dan}`}
                           className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
                         >
                           <FontAwesomeIcon icon={faCartShopping} />
@@ -242,7 +242,7 @@ useEffect(() => {
                     <div key={i} className="p-2">
                       <div className="bg-white p-2 rounded-lg cursor-pointer">
                       <div className="relative group overflow-hidden">
-                        <a href="#" className="relative">
+                        <a href={`/product/${product.duong_dan}`} className="relative">
                           <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`}  alt="aa" className="w-full" />
                           <img
                             src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`} 
