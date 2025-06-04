@@ -304,7 +304,7 @@ const ProductPageDetail = () => {
             <div className="text-sm text-gray-600">
                 <div className="flex items-center">
                     <i className="fas fa-store mr-2"></i>
-                    <span>Có { productVariant?.so_luong } cửa hàng còn sản phẩm này</span>
+                    <span>Có { productVariant?.so_luong } sản phẩm này còn trong cửa hàng</span>
                     <button className="ml-2 text-blue-600 hover:underline">+</button>
                 </div>
             </div>

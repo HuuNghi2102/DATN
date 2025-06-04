@@ -5,6 +5,7 @@ import { faSearch, faCartShopping, faChevronDown } from '@fortawesome/free-solid
 import styles from './header.module.css';
 
 const Header = () => {
+  const [category, setCategory] = useState<any[]>([]);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdowns, setActiveDropdowns] = useState<{ [key: number]: boolean }>({});
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -25,11 +26,25 @@ const Header = () => {
       ...prev,
       [index]: !prev[index],
     }));
-  };
+  }
 
   const handleOverlayClick = () => {
     setMobileMenuOpen(false);
   };
+
+  useEffect(()=>{
+    const fetchCategory = async () => {
+        try {
+            const res = await fetch('https://huunghi.id.vn/api/categoryProduct/getCateParent');
+            const result = await res.json();
+            setCategory(result.data.cateParent);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    fetchCategory();
+  });
+
     if (!isClient) return null;
   return (
     <div>
@@ -131,44 +146,18 @@ const Header = () => {
                     <li><a href="#">PHỤ KIỆN</a></li>
                 </ul>
                 </li>
-                <li className={styles['nav-item']}>
-                ÁO NAM <FontAwesomeIcon icon={faChevronDown} />
-                <ul>
-                    <li><a href="#">ÁO THUN</a></li>
-                    <li><a href="#">ÁO POLO</a></li>
-                    <li><a href="#">ÁO SƠ MI</a></li>
-                    <li><a href="#">ÁO KHOÁC</a></li>
-                    <li><a href="#">ÁO BA LỖ</a></li>
-                    <li><a href="#">SET QUẦN ÁO</a></li>
-                    <li><a href="#">ÁO NỈ - SWEATSHIRT</a></li>
-                    <li><a href="#">ÁO HOODIE</a></li>
-                    <li><a href="#">ÁO LEN</a></li>
-                </ul>
-                </li>
-                <li className={styles['nav-item']}>
-                QUẦN NAM <FontAwesomeIcon icon={faChevronDown} />
-                <ul>
-                    <li><a href="#">QUẦN JEAN</a></li>
-                    <li><a href="#">QUẦN SHORT</a></li>
-                    <li><a href="#">QUẦN TÂY</a></li>
-                    <li><a href="#">QUẦN JOGGER - QUẦN DÀI</a></li>
-                    <li><a href="#">QUẦN KAKI</a></li>
-                    <li><a href="#">SET QUẦN ÁO</a></li>
-                    <li><a href="#">QUẦN BOXER</a></li>
-                </ul>
-                </li>
-                <li className={styles['nav-item']}>
-                PHỤ KIỆN <FontAwesomeIcon icon={faChevronDown} />
-                <ul>
-                    <li><a href="#">NÓN</a></li>
-                    <li><a href="#">THẮT LƯNG</a></li>
-                    <li><a href="#">BALO - TÚI XÁCH</a></li>
-                    <li><a href="#">VÍ</a></li>
-                    <li><a href="#">GIÀY DÉP</a></li>
-                    <li><a href="#">MẮT KÍNH</a></li>
-                    <li><a href="#">VỚ</a></li>
-                </ul>
-                </li>
+                {category.map((cate,index)=>(
+                    <li className={styles['nav-item']}>
+                    {cate.ten_loai}  <FontAwesomeIcon icon={faChevronDown} />
+                    {cate.categories.length > 0 && (
+                        <ul>
+                            {cate.categories.map((e:any,i:number)=>(
+                                <li><a href={`collections/${e.duong_dan}`}>{e.ten_loai}</a></li>
+                            ))}
+                        </ul>
+                    )}
+                    </li> 
+                ))}
                 <li className={styles['nav-item']} style={{ color: '#ff0000' }}>
                 GIÁ MỚI
                 </li>

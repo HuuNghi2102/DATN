@@ -1,13 +1,93 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+interface User{
+  id_user : number,
+  ten_user : string,
+  anh_dai_dien_user : string,
+  email_user : string,
+  email_verified_at : string,
+  mat_khau_user	 : string,
+  dia_chi_user : string,
+  sdt_user : string,
+  ma_otp : number,
+  trang_thai : number,
+  id_vai_tro  : number,
+  remember_token : string,
+  created_at : string,
+  updated_at : string,
+  deleted_at :string
+}
+
+interface FormData{
+  name: string,
+  email : string,
+  phone: string,
+  address : string,
+}
 
 export default function UserProfile() {
-  const [formData, setFormData] = useState({
-    lastName: 'Võ Chí',
-    firstName: 'Hải',
-    phone: '0363599809',
-    gender: 'Nam'
+  // const [token, setToken] = useState<string>()
+  const [user, setUser] = useState<User>()
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email : '',
+    phone: '',
+    address : '',
   });
+useEffect(() => {
+  const u = localStorage.getItem('user');
+  if(u){
+    const uu = JSON.parse(u);
+    setUser(uu);
+  }  
+}, []);
+
+useEffect(()=>{
+  if(user){
+    setFormData({
+    name : user.ten_user || '',
+    email : user.email_user || '',
+    phone : user.sdt_user || '',
+    address : user.dia_chi_user || ''
+  });
+  }
+},[user]);
+
+  
+
+  
+
+
+  
+
+  const updateUserProfile = async () => {
+    if(formData.name == '' || formData.email == '' || formData.phone == '' || formData.address == ''){
+      alert('Bạn vui lòng điền đẩy đủ thông tin');
+      return
+    }
+    const tokenLocal = localStorage.getItem('accessToken');
+    if(tokenLocal){
+      const token = JSON.parse(tokenLocal);
+      const res = await fetch('https://huunghi.id.vn/api/user/changeImformationUser',{
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json",
+          'Authorization' : `Bearer ${token}`
+        },
+        body : JSON.stringify({
+          name : formData.name,
+          phone : formData.phone,
+          address : formData.address,
+        })
+      });
+      const result = await res.json();
+
+      localStorage.setItem('user',JSON.stringify(result.data.user));
+    }else{
+      alert('Bạn chưa đăng nhập');
+    }      
+  }
 
   const handleInputChange = (e:any) => {
     const { name, value } = e.target;
@@ -89,27 +169,28 @@ export default function UserProfile() {
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Họ
-                    </label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Tên
                     </label>
                     <input
                       type="text"
-                      name="firstName"
-                      value={formData.firstName}
+                      name="name"
+                      value={formData.name}
                       onChange={handleInputChange}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="text"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      disabled
                     />
                   </div>
                   
@@ -125,41 +206,24 @@ export default function UserProfile() {
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-                  
+
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      Giới tính
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Địa Chỉ
                     </label>
-                    <div className="flex gap-6">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="Nam"
-                          checked={formData.gender === 'Nam'}
-                          onChange={handleInputChange}
-                          className="w-4 h-4 text-black border-gray-300 focus:ring-black"
-                        />
-                        <span className="text-sm">Nam</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="gender"
-                          value="Nữ"
-                          checked={formData.gender === 'Nữ'}
-                          onChange={handleInputChange}
-                          className="w-4 h-4 text-black border-gray-300 focus:ring-black"
-                        />
-                        <span className="text-sm">Nữ</span>
-                      </label>
-                    </div>
+                    <input
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
                   </div>
                 </div>
               </div>
               
               <div className="mt-8 flex justify-end">
-                <button className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors">
+                <button onClick={updateUserProfile} className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors">
                   CẬP NHẬT
                 </button>
               </div>

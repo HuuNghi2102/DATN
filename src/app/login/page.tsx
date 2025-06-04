@@ -32,9 +32,9 @@ const LoginPage = () => {
       const user = result.data.user;
       const accessToken = result.data.token;
       const typeToken = result.data.typeToken;
-      localStorage.setItem('user',user)
-      localStorage.setItem('accessToken',accessToken);
-      localStorage.setItem('typeToken',typeToken); 
+      localStorage.setItem('user',JSON.stringify(user))
+      localStorage.setItem('accessToken',JSON.stringify(accessToken));
+      localStorage.setItem('typeToken',JSON.stringify(typeToken)); 
       window.location.href = '/'
     } catch (error) {
       console.log(error);
