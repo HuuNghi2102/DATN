@@ -202,7 +202,7 @@ useEffect(() => {
                     <div key={i} className="p-2">
                       <div className="bg-white p-2 rounded-lg cursor-pointer">
                       <div className="relative group overflow-hidden">
-                        <a href="#" className="relative">
+                        <a href={`/product/${product.duong_dan}`} className="relative">
                           <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`}  alt="aa" className="w-full" />
                           <img
                             src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`} 
@@ -282,7 +282,7 @@ useEffect(() => {
                     <div key={i} className="p-2">
                       <div className="bg-white p-2 rounded-lg cursor-pointer">
                       <div className="relative group overflow-hidden">
-                        <a href="#" className="relative">
+                        <a href={`/product/${product.duong_dan}`} className="relative">
                           <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
                           <img
                             src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}

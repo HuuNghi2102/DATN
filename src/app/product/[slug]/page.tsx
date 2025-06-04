@@ -24,16 +24,18 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   </div>
 );
 const ProductPageDetail = () => {
-  const [selectedSize, setSelectedSize] = useState('S');
-  const [selectedColor, setSelectedColor] = useState('white');
+  const [selectedSize, setSelectedSize] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState('');
+  const [productVariant, setProductVariant] = useState<any>(null); 
 
-  const [sizes, setSizes] = useState<any[]>([]); 
+  const [sizes, setSizes] = useState<any[] | []>([]); 
   const [colors, setColors] = useState<any[]>([]);
-  const [product, setProduct] = useState<any>();
+  const [product, setProduct] = useState<any>(null);
   const [images, setImages] = useState<any[]>([]);
-  const [productRelateds, setProductRelateds] = useState<any[]>([]); 
+  const [productRelateds, setProductRelateds] = useState<any[]>([]);
+  
 
   const params = useParams();
   const { slug } = params;
@@ -60,33 +62,65 @@ const ProductPageDetail = () => {
   ];
 
 
-useEffect(()=>{
-    if (!slug) return; 
-    const fetchProduct = async ()=> {
-        try {
-            const res = await fetch(`https://huunghi.id.vn/api/product/pageDetailProduct/${slug}`);
-            const result = await res.json();
-            // console.log(result.data);
-            setImages(result.data.product.images);
-            setProduct(result.data.product);
-            setColors(result.data.colors);
-            setSizes(result.data.sizes);
-            const pro = result.data.product;
+    useEffect(()=>{
+        if (!slug) return; 
+        const fetchProduct = async ()=> {
+            try {
+                const res = await fetch(`https://huunghi.id.vn/api/product/pageDetailProduct/${slug}`);
+                const result = await res.json();
+                setImages(result.data.product.images);
+                setProduct(result.data.product);
+                setColors(result.data.colors);
+                setSizes(result.data.sizes);
+                
+                // set color, size , image default
+                setSelectedColor(result.data.colors[0]);
+                setSelectedSize(result.data.sizes[0]);
+                setCurrentImageIndex(result.data.product.images[0].link_anh);
+                
+                // get product
+                const pro = result.data.product;
+                
 
-            console.log(pro.id_loai_san_pham)
-            
-            const res2 = await fetch(`https://huunghi.id.vn/api/product/getTenRelatedProduct/${pro.id_loai_san_pham}`);
-            const result2 = await res2.json();
-            setProductRelateds(result2.data.relatedProducts)
+                // fetch relatedProduct
+                const res2 = await fetch(`https://huunghi.id.vn/api/product/getTenRelatedProduct/${pro?.id_loai_san_pham}`);
+                const result2 = await res2.json();
+                setProductRelateds(result2.data.relatedProducts)
+
+                handleChangeQuantity(pro.id_san_pham,result.data.colors[0].ten_mau,result.data.sizes[0].id_kich_thuoc);
+
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchProduct();
+    },[]);
+
+    const handleChangeQuantity = async (idProduct:number,ten_mau:string,id_kich_thuoc:number) => {
+        try {
+            const res = await fetch(`https://huunghi.id.vn/api/productVariant/getProductBySizeAndColor/${idProduct}`,{
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json",
+                },
+                body : JSON.stringify({
+                    nameColor : ten_mau,
+                    idSize : id_kich_thuoc
+                })
+            });
+            const result = await res.json();
+            console.log(result);
+            setProductVariant(result.data);
             
         } catch (error) {
             console.log(error);
         }
     }
-    fetchProduct();
-},[]);
 
   
+  
+
 
   const productSettings = {
   slidesToShow: 5,
@@ -128,7 +162,7 @@ useEffect(()=>{
             {/* Main Image */}
             <div className="relative bg-white rounded-lg overflow-hidden shadow-sm">
               <img 
-                src={`https://huunghi.id.vn/storage/products/${images[0] ? images[0].link_anh : 'Đang tải' }`} 
+                src={`https://huunghi.id.vn/storage/products/${currentImageIndex ? currentImageIndex : 'Đang tải' }`} 
                 alt="Product"
                 className="w-full h-96 lg:h-[500px] object-cover"
               />
@@ -139,9 +173,9 @@ useEffect(()=>{
               { images.map((img, index) => (
                 <button
                   key={index}
-                  onClick={() => setCurrentImageIndex(index)}
+                  onClick={() => setCurrentImageIndex(img.link_anh)}
                   className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-lg overflow-hidden border-2 ${
-                    currentImageIndex === index ? 'border-blue-500' : 'border-gray-200'
+                    currentImageIndex === img.link_anh ? 'border-blue-500' : 'border-gray-200'
                   }`}
                 >
                   <img src={`https://huunghi.id.vn/storage/products/${img.link_anh}`} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
@@ -205,15 +239,15 @@ useEffect(()=>{
             <div>
                 <div className="flex items-center mb-3">
                     <span className="text-sm font-medium mr-2">Màu sắc:</span>
-                    <span className="text-sm text-gray-600 capitalize">{selectedColor === 'white' ? 'Trắng' : 'Đen'}</span>
+                    <span className="text-sm text-gray-600 capitalize">{selectedColor?.ten_mau}</span>
                 </div>
                 <div className="flex space-x-2">
                     {colors.map((colorOption,index) => (
                     <button
                         key={colorOption ? colorOption.ten_mau : 'Đang tải...'}
-                        onClick={() => setSelectedColor(colorOption ? colorOption.ten_mau : 'Đang tải...')}
+                        onClick={() => {setSelectedColor(colorOption) ;handleChangeQuantity(product?.id_san_pham,selectedColor.ten_mau,selectedSize.id_kich_thuoc); }}
                         className={`w-8 h-8 rounded-full border-2 ${colorOption ? colorOption.ma_mau : 'Đang tải...'} ${
-                        selectedColor === colorOption.ten_mau ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                        selectedColor?.ten_mau === colorOption.ten_mau ? 'ring-2 ring-blue-500 ring-offset-2' : ''
                         }`}
                     />
                     ))}
@@ -223,19 +257,19 @@ useEffect(()=>{
             {/* Size Selection */}
             <div>
                 <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium">Kích thước: S</span>
+                <span className="text-sm font-medium">Kích thước: {selectedSize?.ten_kich_thuoc}</span>
                 <button className="text-sm text-blue-600 hover:underline">
                     <i className="fas fa-ruler mr-1"></i>
                     Hướng dẫn chọn size
                 </button>
                 </div>
                 <div className="flex space-x-2">
-                {sizes.map((size) => (
+                 {sizes.map((size) => (
                     <button
-                    key={size ? size.ten_kich_thuoc : "Đang tải" }
-                    onClick={() => setSelectedSize(size ? size.ten_kich_thuoc : "Đang tải" )}
+                    key={size.ten_kich_thuoc}
+                    onClick={() => {setSelectedSize(size);handleChangeQuantity(product?.id_san_pham,selectedColor.ten_mau,selectedSize.id_kich_thuoc)}}
                     className={`w-10 h-10 border rounded text-sm font-medium ${
-                        selectedSize === size.ten_kich_thuoc
+                        selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
                         ? 'border-red-500 bg-red-50 text-red-600'
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
@@ -275,7 +309,7 @@ useEffect(()=>{
             <div className="text-sm text-gray-600">
                 <div className="flex items-center">
                     <i className="fas fa-store mr-2"></i>
-                    <span>Có 13 cửa hàng còn sản phẩm này</span>
+                    <span>Có { productVariant?.so_luong } cửa hàng còn sản phẩm này</span>
                     <button className="ml-2 text-blue-600 hover:underline">+</button>
                 </div>
             </div>
@@ -351,7 +385,7 @@ useEffect(()=>{
             </div>
             <div className="p-6">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">
-                160STORE - Áo Thun Nam ICONDENIM Double Stripes ICDN
+                160STORE - {product ? product.ten_san_pham : 'Đang tải...'}
                 </h2>
                 
                 <div className="space-y-6 text-gray-700">
