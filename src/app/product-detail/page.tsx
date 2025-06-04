@@ -33,7 +33,7 @@ const ProductPageDetail = () => {
     '/assets/images/zz.webp',
     '/assets/images/zzz.webp',
   ];
-
+  
   const sizes = ['S', 'M', 'L', 'XL'];
   const colors = [
     { name: 'white', color: 'bg-white border-gray-300' },

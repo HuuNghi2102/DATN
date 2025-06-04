@@ -3,8 +3,10 @@ import React,{useState,useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import productsBestSalerInterface from './compoments/productsBestSalerInterface';
-import productsNewInterface from "./compoments/productsNewInterface"
+import productsNewInterface from "./compoments/productsNewInterface";
+import {productsCateInterface,productsInterface} from "./compoments/productsCateInterface";
 import productsSalerInterface from './compoments/productsSalerInterface';
+
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
 // import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
@@ -83,12 +85,25 @@ const productSettings = {
 const [productsBestSaler, setProductsBestSaler] = useState<productsBestSalerInterface[]>([]);
 const [productsNew, setProductsNew] =useState<productsNewInterface[]>([]);
 const [productsSaler, setProductsSaler] =useState<productsNewInterface[]>([]);
+const [productsCate, setproductsCate ] = useState<productsCateInterface[]>([]);
 useEffect(() => {
   const fetchProducts = async () => {
     try {
       const res = await fetch('http://huunghi.id.vn/api/product/getBestSalerProducts');
       const result = await res.json();
       setProductsBestSaler(result.data.productBestSeller);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchProducts();
+},[])
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('https://huunghi.id.vn/api/categoryProduct/getCateAndProducts');
+      const result = await res.json();
+      setproductsCate(result.data.cateAndProducts);
     } catch (error) {
       console.log(error);
     }
@@ -303,25 +318,29 @@ useEffect(() => {
         {/* Collection Section */}
         <div className="my-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {['Áo thun', 'Áo khoác'].map((title, index) => (
-              <div key={index} className="bg-white rounded-[10px] shadow-md p-4">
+            {productsCate.map((category, index) => (
+              category.products.length > 0 && (
+                <div key={index} className="bg-white rounded-[10px] shadow-md p-4">
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{title}</h3>
+                  <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>
                   <button className="text-white bg-black w-[100px] h-[30px] rounded-[8px] hover:bg-white hover:text-black border hover:border-black transition-all duration-500 text-sm">
                     Xem tất cả
                   </button>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {[1, 2, 3].map((_, i) => (
-                    <div key={i} className="w-full">
+                  {category.products.map((product, i) => (
+                    i < 3 && (
+                      <div key={i} className="w-full">
                       <div className="relative group overflow-hidden">
-                        <img src="../assets/images/zzz.webp" alt="product" className="w-full" />
+                        <a href="#" className='relative'>
+                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="product" className="w-full" />
                         <img
-                          src="../assets/images/zz.webp"
+                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
                           alt="product"
                           className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
-                        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity">
+                        </a>
+                        <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                           <FontAwesomeIcon icon={faSearch} className="text-white w-4" />
                         </div>
                         <a
@@ -332,13 +351,15 @@ useEffect(() => {
                         </a>
                       </div>
                       <div className="mt-2 px-1">
-                        <a href="#" className="block font-medium text-sm">Quần Short Nam</a>
-                        <p className="text-black font-semibold text-sm">229,000đ</p>
+                        <a href="#" className="block font-medium text-sm">{product.ten_san_pham}</a>
+                        <p className="text-black font-semibold text-sm">{product.gia_da_giam.toLocaleString('vi-VN')+` VNĐ`}</p>
                       </div>
                     </div>
+                    )
                   ))}
                 </div>
               </div>
+              )
             ))}
           </div>
         </div>
