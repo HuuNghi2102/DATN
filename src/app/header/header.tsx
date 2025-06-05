@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import styles from './header.module.css';
+import userInterface from "../compoments/userInterface";
 
 const Header = () => {
   const [category, setCategory] = useState<any[]>([]);
@@ -10,6 +11,7 @@ const Header = () => {
   const [activeDropdowns, setActiveDropdowns] = useState<{ [key: number]: boolean }>({});
   const overlayRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false); // 👈 new
+  const [currentUser,setCurrentUser] = useState<userInterface>();
 
     useEffect(() => {
     setIsClient(true); // 👈 set khi client mount
@@ -43,7 +45,13 @@ const Header = () => {
         }
     }
     fetchCategory();
-  });
+    const user = localStorage.getItem('user');
+    if(user){
+        setCurrentUser(JSON.parse(user)); 
+    }
+  },[]);
+
+  
 
     if (!isClient) return null;
   return (
@@ -111,7 +119,8 @@ const Header = () => {
                     />                    
                     </a>
                 </div>
-                <span><a href="/login">Đăng nhập</a></span>
+                {currentUser ? (<span><a href="/login">Hi,{currentUser.ten_user}</a></span>) :(<span><a href="/login">Đăng nhập</a></span>) }
+                
                 </div>
 
                 <div className={styles['user-control-item']}>
@@ -147,12 +156,12 @@ const Header = () => {
                 </ul>
                 </li>
                 {category.map((cate,index)=>(
-                    <li className={styles['nav-item']}>
+                    <li key={index} className={styles['nav-item']}>
                     {cate.ten_loai}  <FontAwesomeIcon icon={faChevronDown} />
                     {cate.categories.length > 0 && (
                         <ul>
                             {cate.categories.map((e:any,i:number)=>(
-                                <li><a href={`collections/${e.duong_dan}`}>{e.ten_loai}</a></li>
+                                <li key={i}><a href={`collections/${e.duong_dan}`}>{e.ten_loai}</a></li>
                             ))}
                         </ul>
                     )}

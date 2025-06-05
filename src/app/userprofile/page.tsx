@@ -53,12 +53,6 @@ useEffect(()=>{
   });
   }
 },[user]);
-
-  
-
-  
-
-
   
 
   const updateUserProfile = async () => {
@@ -270,28 +264,28 @@ useEffect(()=>{
             <div className="p-4">
               <h2 className="text-lg font-medium mb-6">HỒ SƠ CỦA TÔI</h2>
               
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Họ
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                
+              <div className="space-y-4">                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Tên
                   </label>
                   <input
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.name}
                     onChange={handleInputChange}
                     className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -309,35 +303,18 @@ useEffect(()=>{
                     className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Giới tính
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Địa chỉ
                   </label>
-                  <div className="flex gap-6">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="Nam"
-                        checked={formData.gender === 'Nam'}
-                        onChange={handleInputChange}
-                        className="w-4 h-4 text-black border-gray-300 focus:ring-black"
-                      />
-                      <span className="text-sm">Nam</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="gender"
-                        value="Nữ"
-                        checked={formData.gender === 'Nữ'}
-                        onChange={handleInputChange}
-                        className="w-4 h-4 text-black border-gray-300 focus:ring-black"
-                      />
-                      <span className="text-sm">Nữ</span>
-                    </label>
-                  </div>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
                 </div>
               </div>
               
