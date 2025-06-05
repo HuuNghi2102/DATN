@@ -1,10 +1,16 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 
 const Register = () => {
-  return (
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    return (
     <div className="min-h-screen bg-gray-100 mt-40">
       {/* Navigation */}
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+        />
       <nav className=" border-b border-gray-200 px-4 py-3">
         <div className="max-w-7xl mx-auto">
           <div className="flex space-x-8 text-sm font-medium text-gray-700">
@@ -50,21 +56,39 @@ const Register = () => {
                 />
               </div>
               {/* Password Input */}
-              <div>
+            <div className="relative">
                 <input
-                  type="passoword"
-                  placeholder="Nhập mật khẩu của bạn"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Mật khẩu"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-gray-500 pr-12"
                 />
-              </div>             
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
+            </div>            
               {/* Password Input Again */}
-              <div>
+            <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Xác nhận lại mật khẩu"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-gray-500 pr-12"
                 />
-              </div>              
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
+            </div>              
               {/* Submit Button */}
               <button
                 type="submit"

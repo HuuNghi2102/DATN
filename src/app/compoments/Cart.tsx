@@ -1,66 +1,10 @@
-'use client'
+"use client"
 import React, { useState } from 'react';
-
+import { useCart } from '../context/CartContext';
 const CartPage = () => {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
-
-
-  const products = [
-    {
-      id: 1,
-      name: 'Áo Polo Nam',
-      price: '389.000đ',
-      image: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 2,
-      name: 'Áo Thun',
-      price: '319.000đ',
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 3,
-      name: 'Quần Short',
-      price: '349.000đ',
-      image: 'https://images.unsplash.com/photo-1506629905607-48d47d8f4f04?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 4,
-      name: 'Quần Jean',
-      price: '689.000đ',
-      image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 5,
-      name: 'Quần Jean',
-      price: '689.000đ',
-      image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    }
-  ];
-  const cartItems = [
-  {
-    name: "Áo thun xanh",
-    size: "M",
-    color: "Xanh",
-    quantity: 2,
-    price: 150000,
-    image: "/assets/images/zz.webp",
-  },
-  {
-    name: "Quần jean đen",
-    size: "L",
-    color: "Đen",
-    quantity: 1,
-    price: 350000,
-    image: "/assets/images/zzz.webp",
-  },
-  ];
+  const { state, dispatch } = useCart();
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Font Awesome CDN */}
@@ -86,68 +30,41 @@ const CartPage = () => {
           {/* Cart Section */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Giỏ hàng:</h2>
-                <span className="text-blue-600 cursor-pointer hover:underline text-sm sm:text-base">
-                  {cartItems.length} Sản phẩm
-                </span>
+<h1 className="text-xl font-bold mb-4">Giỏ Hàng</h1>
+      {state.cart.length === 0 ? (
+        <p>Giỏ hàng trống</p>
+      ) : (
+        <div className="space-y-4">
+          {state.cart.map((item, index) => (
+            <li key={index} className="flex items-center space-x-4 border-b pb-4">
+              <img
+                src={`https://huunghi.id.vn/storage/products/${item.image}`}
+                alt={item.name}
+                className="w-20 h-20 object-cover rounded"
+              />
+              <div className="flex-1">
+                <p className="font-semibold">{item.name}</p>
+                <p className="text-sm text-gray-600">Màu: {item.color} | Size: {item.size}</p>
+                <p className="text-sm">Số lượng: {item.quantity}</p>
+                <p className="text-sm font-bold">{item.price.toLocaleString('vi-VN')}đ</p>
               </div>
-
-              {cartItems.length === 0 ? (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                  <p className="text-blue-800 text-sm">
-                    Bạn được giảm 10% tối đa 10K, mua thêm 599.000đ nữa để giảm ngay 50K!
-                  </p>
-                  <p className="text-gray-600 text-sm mt-2">
-                    Giỏ hàng của bạn đang trống. Mời bạn mua thêm sản phẩm{" "}
-                    <span className="text-blue-600 cursor-pointer hover:underline">
-                      <a href="/productPage">tại đây</a>
-                    </span>.
-                  </p>
-                </div>
-              ) : (
-            <div className="space-y-4">
-              {cartItems.map((item, index) => (
-                <div key={index} className="flex items-start gap-4 border-b pb-4">
-                  <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
-                  <div className="flex-1">
-                    <h3 className="text-sm sm:text-base font-medium text-gray-800">{item.name}</h3>
-                    <p className=''>
-                    Giá:{(item.price).toLocaleString('vi-VN')}₫
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Size: {item.size} | Màu: {item.color}
-                    </p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <button
-                        // onClick={() => decreaseQuantity(index)}
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        -
-                      </button>
-                      <span className="text-sm text-gray-600">{item.quantity}</span>
-                      <button
-                        // onClick={() => increaseQuantity(index)}
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        +
-                      </button>
-                    </div>
-                    
-                    <p className="text-base float-end font-semibold text-gray-900 mt-2">
-
-                      Tổng tiền: {(item.price * item.quantity).toLocaleString('vi-VN')}₫
-                    </p>
-                  </div>
-                    <button
-                      // onClick={() => removeItem(index)}
-                    className="mt-2 text-red-500 text-sm hover:underline">
-                      X
-                    </button>
-                </div>
-              ))}
-            </div>
-              )}
+              <button
+                onClick={() => dispatch({
+                  type: 'REMOVE_FROM_CART',   payload: {
+                  id_variant: item.id_variant,
+                  size: item.size,
+                  color: item.color,
+                }}
+                  
+                  )}
+                className="text-red-500 text-sm hover:underline"
+              >
+                Xoá
+              </button>
+            </li>
+          ))}
+        </div>
+      )}
             </div>
           </div>
 
@@ -224,7 +141,9 @@ const CartPage = () => {
                 </button>
                 <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
                   <i className="fas fa-shopping-cart"></i>
+                  <a href="/">
                   <span>Tiếp tục mua hàng</span>
+                  </a>
                 </button>
               </div>
             </div>

@@ -4,7 +4,7 @@ import { FaPhone, FaEnvelope, FaClock, FaHeadphones, FaChevronDown } from 'react
 export default function Footer() {
   return (
     <footer className="bg-black text-white w-full py-8">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-[1200px] mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-700 pb-6 mb-6">
           <div className="text-lg font-bold mb-4 md:mb-0">ĐĂNG KÍ NHẬN TIN</div>
           <form className="flex w-full max-w-md mb-4 md:mb-0">

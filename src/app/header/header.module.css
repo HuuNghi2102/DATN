@@ -53,7 +53,7 @@
   align-items: center;
   justify-content: center;
   padding: 15px 20px;
-  background-color: black;
+  background-color: rgb(30, 30, 30);
   color: white;
   gap: 80px;
 }
@@ -92,7 +92,7 @@
 }
 
 .search-button {
-  background-color: #333;
+  background-color: #1e1e1e;
   color: white;
   border: none;
   cursor: pointer;
@@ -420,7 +420,7 @@
   align-items: center;
   justify-content: center;
   padding: 15px 20px;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.804);
   color: white;
   gap: 15%;
 }

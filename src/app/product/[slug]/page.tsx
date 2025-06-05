@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'react-slick';
 import productDetailInterface from "../../compoments/productDetailInterface";
+import { useCart } from '@/app/context/CartContext';
 
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
@@ -23,6 +24,7 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <FontAwesomeIcon icon={faChevronRight} />
   </div>
 );
+
 const ProductPageDetail = () => {
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [selectedColor, setSelectedColor] = useState<any>(null);
@@ -36,23 +38,10 @@ const ProductPageDetail = () => {
   const [images, setImages] = useState<any[]>([]);
   const [productRelateds, setProductRelateds] = useState<any[]>([]);
   
+const { dispatch } = useCart();
 
   const params = useParams();
   const { slug } = params;
-
-//   const images = [
-//     '/assets/images/zzz.webp',
-//     '/assets/images/zz.webp',
-//     '/assets/images/zzz.webp',
-//     '/assets/images/zz.webp',
-//     '/assets/images/zzz.webp',
-//   ];
-  
-//   const sizes = ['S', 'M', 'L', 'XL'];
-//   const colors = [
-//     { name: 'white', color: 'bg-white border-gray-300' },
-//     { name: 'black', color: 'bg-black' }
-//   ];
 
   const promoOffers = [
     { code: 'MAY10', discount: '10%', minOrder: '199K' },
@@ -118,9 +107,8 @@ const ProductPageDetail = () => {
 
   const productSettings = {
   slidesToShow: 5,
-  slidesToScroll: 2,
+  slidesToScroll: 1,
   autoplay: true,
-  autoplaySpeed: 2000,
   speed: 500,
   dots: true,
   infinite: true,
@@ -158,7 +146,7 @@ const ProductPageDetail = () => {
               <img 
                 src={`https://huunghi.id.vn/storage/products/${currentImageIndex ? currentImageIndex : 'Đang tải' }`} 
                 alt="Product"
-                className="w-full h-96 lg:h-[500px] object-cover"
+                className="w-full h-96 lg:h-[650px] object-cover"
               />
             </div>
             
@@ -184,7 +172,7 @@ const ProductPageDetail = () => {
                 <h1 className="text-xl lg:text-xl font-bold text-gray-900 mb-2">
                     {product ? product.ten_san_pham : 'Đang tải...' }
                 </h1>
-                <div className=" bg-green-500 text-white w-20 px-2 py-1 rounded text-xs font-medium">
+                <div className=" bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium">
                     Còn Hàng
                 </div>
                 <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
@@ -290,8 +278,36 @@ const ProductPageDetail = () => {
                         +
                     </button>
                     </div>
-                    <button className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors">
-                    THÊM VÀO GIỎ
+                    <button
+                        onClick={() => {
+                        if (!productVariant || !selectedColor || !selectedSize) return;
+
+                        console.log('Đang thêm vào giỏ:', {
+                            id_variant: productVariant.id_bien_the,
+                            name: product.ten_san_pham,
+                            image: currentImageIndex,
+                            price: product.gia_da_giam,
+                            color: selectedColor.ten_mau,
+                            size: selectedSize.ten_kich_thuoc,
+                            quantity,
+                        });
+
+                        dispatch({
+                            type: 'ADD_TO_CART',
+                            payload: {
+                            id_variant: productVariant.id_bien_the,
+                            name: product.ten_san_pham,
+                            image: currentImageIndex,
+                            price: product.gia_da_giam,
+                            color: selectedColor.ten_mau,
+                            size: selectedSize.ten_kich_thuoc,
+                            quantity,
+                            },
+                        });
+                        }}
+                        className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors"
+                        >
+                        THÊM VÀO GIỎ
                     </button>
                     <button className=" bg-white border-2 border-black text-black py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors">
                         MUA NGAY
@@ -430,14 +446,7 @@ const ProductPageDetail = () => {
                 SẢN PHẨM LIÊN QUAN
                 <div className="w-16 h-0.5 bg-gray-400 mx-auto mt-2"></div>
             </h2>
-        {/* Product Sections */}
-        {[
-            {
-                products: Array(5).fill({ name: 'Quần thun co giãn ICM LOTTEPark', price: '123123' })
-            },
-        ].map((section, index) => (
-            <div key={index} className="my-4">
-
+            <div className="my-4">
                 {/* Slider thay cho grid */}
                 <Slider {...productSettings} className="my-4">
                 {productRelateds.map((product, i) => (
@@ -453,7 +462,7 @@ const ProductPageDetail = () => {
                                     />
                                 </a>
                                 <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                    <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                                    <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                                 </div>
                                 <a
                                     href="#"
@@ -471,7 +480,6 @@ const ProductPageDetail = () => {
                 ))}
                 </Slider>
             </div>
-        ))}
         </div>
     </div>
     </div>

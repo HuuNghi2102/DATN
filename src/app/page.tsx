@@ -211,7 +211,7 @@ useEffect(() => {
                           />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href={`/product/${product.duong_dan}`}
@@ -228,7 +228,7 @@ useEffect(() => {
                     </div>
                   ))}
                 </Slider>
-                <div className="flex justify-center my-5">
+                <div className="flex justify-center my-9">
                   <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                     Xem tất cả
                   </button>
@@ -251,7 +251,7 @@ useEffect(() => {
                           />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href="#"
@@ -268,7 +268,7 @@ useEffect(() => {
                     </div>
                   ))}
                 </Slider>
-                <div className="flex justify-center my-5">
+                <div className="flex justify-center my-9">
                   <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                     Xem tất cả
                   </button>
@@ -291,7 +291,7 @@ useEffect(() => {
                           />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href="#"
@@ -308,7 +308,7 @@ useEffect(() => {
                     </div>
                   ))}
                 </Slider>
-                <div className="flex justify-center my-5">
+                <div className="flex justify-center my-9">
                   <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                     Xem tất cả
                   </button>
@@ -341,7 +341,7 @@ useEffect(() => {
                         />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href="#"
