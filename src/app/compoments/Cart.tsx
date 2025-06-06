@@ -73,19 +73,21 @@ const CartPage = () => {
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 sticky top-8">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông tin đơn hàng</h3>
               
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tạm tính:</span>
-                  <span className="text-gray-900">0đ</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Giá giảm:</span>
-                  <span className="text-gray-900">0đ</span>
-                </div>
-                <div className="flex justify-between text-sm font-semibold">
-                  <span className="text-gray-900">Tổng tiền:</span>
-                  <span className="text-gray-900">0đ</span>
-                </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Tạm tính:</span>
+                <span className="text-gray-900">
+                  {state.cart.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0).toLocaleString('vi-VN')}đ
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Giá giảm:</span>
+                <span className="text-gray-900">0đ</span>
+              </div>
+              <div className="flex justify-between text-sm font-semibold">
+                <span className="text-gray-900">Tổng tiền:</span>
+                <span className="text-gray-900">
+                  {state.cart.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0).toLocaleString('vi-VN')}đ
+                </span>
               </div>
 
               {/* Shipping Info */}
@@ -136,9 +138,11 @@ const CartPage = () => {
 
               {/* Checkout Buttons */}
               <div className="space-y-3">
+                <a href="/pay">
                 <button className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
-                  THANH TOÁN NGAY
-                </button>
+                    THANH TOÁN NGAY
+                  </button>
+                </a>
                 <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
                   <i className="fas fa-shopping-cart"></i>
                   <a href="/">

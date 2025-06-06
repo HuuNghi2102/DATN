@@ -68,10 +68,10 @@ const Home = () => {
   };
 const productSettings = {
   slidesToShow: 5,
-  slidesToScroll: 2,
+  slidesToScroll: 3,
   autoplay: true,
-  autoplaySpeed: 2000,
-  speed: 500,
+  autoplaySpeed: 5000,
+  speed: 300,
   dots: true,
   infinite: true,
   nextArrow: <NextArrow />,
@@ -219,6 +219,9 @@ useEffect(() => {
                         >
                           <FontAwesomeIcon icon={faCartShopping} />
                         </a>
+                        <div className=" absolute top-1 right-1 text-black bg-yellow-500 text-xs rounded-md p-1 font-bold">
+                          <p>Sản phẩm mới</p>
+                        </div>
                       </div>
                       <div className="px-1 mt-2">
                         <p className="text-sm">{product.ten_san_pham}</p>
@@ -236,7 +239,7 @@ useEffect(() => {
               </div>
               {/* NewProducts */}
               <div>
-                <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
+                <img src="/assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
                 <Slider {...productSettings} className="my-4">
                   {productsNew.map((product, i) => (
                     <div key={i} className="p-2">

@@ -295,7 +295,7 @@ const { dispatch } = useCart();
                             payload: {
                             id_gio_hang: 0,
                             id_khach_hang: 0,
-                            duong_dan: '',
+                            duong_dan: product.duong_dan,
                             id_san_pham_bien_the: productVariant.id_bien_the,
                             ten_san_pham: product.ten_san_pham,
                             anh_san_pham: currentImageIndex,

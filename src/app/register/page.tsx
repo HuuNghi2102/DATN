@@ -25,47 +25,53 @@ const Register = () => {
     }));
   };
 
-  const handleRegister = async () => {
-    try {
-      const res = await fetch('https://huunghi.id.vn/api/user/register',{
-        method : "POST",
-        headers : {
-          "Content-type" : "application/json",
-        },
-        body : JSON.stringify({
-          name : formRegister.name,
-          email : formRegister.email,
-          password : formRegister.password,
-          confirm_password : formRegister.passwordConfirm
-        })
-      });
+const handleRegister = async () => {
+  try {
+    const res = await fetch('https://huunghi.id.vn/api/user/register', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formRegister.name,
+        email: formRegister.email,
+        password: formRegister.password,
+        confirm_password: formRegister.passwordConfirm
+      }),
+    });
 
-      const result = await res.json();
-
-      if(result.status == false){
-        setErrors({
-          errName : result.errors.name,
-          errEmail : result.errors.email,
-          errPassword : result.errors.password,
-          errPasswordConfirm : result.errors.confirm_password
-        })
-        return;
-      }
-
-      localStorage.setItem('user',JSON.stringify(result.data.user))
-      localStorage.setItem('accessToken',JSON.stringify(result.data.token))
-      localStorage.setItem('typeToken',JSON.stringify(result.data.typeToken))
-
-      alert(`${result.message}`);
-      
-      window.location.href = '/userprofile'
-
-
-
-    } catch (error) {
-      console.log(error);
+    // Check xem server có trả JSON hợp lệ không
+    const contentType = res.headers.get("content-type");
+    if (!res.ok || !contentType?.includes("application/json")) {
+      const text = await res.text(); // lấy raw HTML trả về
+      console.error("Server returned non-JSON response:", text);
+      throw new Error("Đăng ký thất bại. Server không trả về JSON hợp lệ.");
     }
+
+    const result = await res.json();
+
+    if (result.status === false) {
+      setErrors({
+        errName: result.errors?.name || '',
+        errEmail: result.errors?.email || '',
+        errPassword: result.errors?.password || '',
+        errPasswordConfirm: result.errors?.confirm_password || '',
+      });
+      return;
+    }
+
+    localStorage.setItem('user', JSON.stringify(result.data.user));
+    localStorage.setItem('accessToken', JSON.stringify(result.data.token));
+    localStorage.setItem('typeToken', JSON.stringify(result.data.typeToken));
+
+    alert(`${result.message}`);
+    window.location.href = '/userprofile';
+
+  } catch (error) {
+    console.error("Lỗi khi gọi API:", error);
+    alert("Đăng ký thất bại. Vui lòng thử lại sau.");
   }
+}
 
   return (
     <div className="min-h-screen bg-gray-100 mt-40">
