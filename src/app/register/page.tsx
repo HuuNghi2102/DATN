@@ -1,10 +1,73 @@
 'use client';
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 const Register = () => {
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    return (
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors,setErrors] = useState({
+    errName : '',
+    errEmail : '',
+    errPassword : '',
+    errPasswordConfirm : ''
+  });
+
+  const [formRegister,setFromRegister] = useState({
+    name : '',
+    email : '',
+    password : '',
+    passwordConfirm : ''
+  });
+
+  const handleChangeInput = (e:any) => {
+    const { name, value } = e.target;
+    setFromRegister(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleRegister = async () => {
+    try {
+      const res = await fetch('https://huunghi.id.vn/api/user/register',{
+        method : "POST",
+        headers : {
+          "Content-type" : "application/json",
+        },
+        body : JSON.stringify({
+          name : formRegister.name,
+          email : formRegister.email,
+          password : formRegister.password,
+          confirm_password : formRegister.passwordConfirm
+        })
+      });
+
+      const result = await res.json();
+
+      if(result.status == false){
+        setErrors({
+          errName : result.errors.name,
+          errEmail : result.errors.email,
+          errPassword : result.errors.password,
+          errPasswordConfirm : result.errors.confirm_password
+        })
+        return;
+      }
+
+      localStorage.setItem('user',JSON.stringify(result.data.user))
+      localStorage.setItem('accessToken',JSON.stringify(result.data.token))
+      localStorage.setItem('typeToken',JSON.stringify(result.data.typeToken))
+
+      alert(`${result.message}`);
+      
+      window.location.href = '/userprofile'
+
+
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return (
     <div className="min-h-screen bg-gray-100 mt-40">
       {/* Navigation */}
         <link 
@@ -38,31 +101,40 @@ const Register = () => {
             </h1>
 
             {/* Form */}
-            <form className="space-y-6">
+            <form onSubmit={e => e.preventDefault()} className="space-y-6">
               {/* Name Input */}
               <div>
                 <input
                   type="text"
+                  name="name"
                   placeholder="Nhập họ và tên của bạn"
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                  value={formRegister.name}
+                  onChange={handleChangeInput}
                 />
+                {errors.errName}
               </div>              
               {/* Email Input */}
               <div>
                 <input
                   type="email"
+                  name="email"
                   placeholder="Nhập email của bạn"
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                  value={formRegister.email}
+                  onChange={handleChangeInput}
                 />
+                {errors.errEmail}
               </div>
               {/* Password Input */}
             <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
                   placeholder="Mật khẩu"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-gray-500 pr-12"
+                  value={formRegister.password}
+                  onChange={handleChangeInput}
                 />
                 <button
                   type="button"
@@ -71,16 +143,18 @@ const Register = () => {
                 >
                   <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                 </button>
-            </div>            
+              </div>
               {/* Password Input Again */}
             <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="passwordConfirm"
                   placeholder="Xác nhận lại mật khẩu"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-gray-500 pr-12"
+                  value={formRegister.passwordConfirm}
+                  onChange={handleChangeInput}
                 />
+                {errors.errPasswordConfirm}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -89,8 +163,10 @@ const Register = () => {
                   <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                 </button>
             </div>              
+
               {/* Submit Button */}
               <button
+                onClick={handleRegister}
                 type="submit"
                 className="w-full bg-black text-white py-3 px-4 rounded-md font-medium hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
               >

@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import styles from './header.module.css';
+import userInterface from "../compoments/userInterface";
 
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -10,6 +11,8 @@ const Header = () => {
     const overlayRef = useRef<HTMLDivElement>(null);
     const [isClient, setIsClient] = useState(false); // 👈 new
     const [cartCount, setCartCount] = useState(0);
+    const [category, setCategory] = useState<any[]>([]);
+    const [currentUser,setCurrentUser] = useState<userInterface>();
     useEffect(() => {
     setIsClient(true); // 👈 set khi client mount
 }, [])
@@ -19,7 +22,7 @@ const Header = () => {
       if (storedCart) {
         const cartItems = JSON.parse(storedCart);
         // Đếm tổng số lượng (quantity) của từng item
-        const totalQuantity = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
+        const totalQuantity = cartItems.reduce((sum: number, item: any) => sum + item.so_luong_san_pham, 0);
         setCartCount(totalQuantity);
       }
     }
@@ -35,11 +38,31 @@ const Header = () => {
       ...prev,
       [index]: !prev[index],
     }));
-  };
+  }
 
   const handleOverlayClick = () => {
     setMobileMenuOpen(false);
   };
+
+  useEffect(()=>{
+    const fetchCategory = async () => {
+        try {
+            const res = await fetch('https://huunghi.id.vn/api/categoryProduct/getCateParent');
+            const result = await res.json();
+            setCategory(result.data.cateParent);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    fetchCategory();
+    const user = localStorage.getItem('user');
+    if(user){
+        setCurrentUser(JSON.parse(user)); 
+    }
+  },[]);
+
+  
+
     if (!isClient) return null;
   return (
     <div>
@@ -106,7 +129,8 @@ const Header = () => {
                     />                    
                     </a>
                 </div>
-                <span><a href="/login">Đăng nhập</a></span>
+                {currentUser ? (<span><a href="/login">Hi,{currentUser.ten_user}</a></span>) :(<span><a href="/login">Đăng nhập</a></span>) }
+                
                 </div>
 
                 <div className={styles['user-control-item']}>
@@ -141,44 +165,18 @@ const Header = () => {
                     <li><a href="#">PHỤ KIỆN</a></li>
                 </ul>
                 </li>
-                <li className={styles['nav-item']}>
-                ÁO NAM <FontAwesomeIcon icon={faChevronDown} />
-                <ul>
-                    <li><a href="#">ÁO THUN</a></li>
-                    <li><a href="#">ÁO POLO</a></li>
-                    <li><a href="#">ÁO SƠ MI</a></li>
-                    <li><a href="#">ÁO KHOÁC</a></li>
-                    <li><a href="#">ÁO BA LỖ</a></li>
-                    <li><a href="#">SET QUẦN ÁO</a></li>
-                    <li><a href="#">ÁO NỈ - SWEATSHIRT</a></li>
-                    <li><a href="#">ÁO HOODIE</a></li>
-                    <li><a href="#">ÁO LEN</a></li>
-                </ul>
-                </li>
-                <li className={styles['nav-item']}>
-                QUẦN NAM <FontAwesomeIcon icon={faChevronDown} />
-                <ul>
-                    <li><a href="#">QUẦN JEAN</a></li>
-                    <li><a href="#">QUẦN SHORT</a></li>
-                    <li><a href="#">QUẦN TÂY</a></li>
-                    <li><a href="#">QUẦN JOGGER - QUẦN DÀI</a></li>
-                    <li><a href="#">QUẦN KAKI</a></li>
-                    <li><a href="#">SET QUẦN ÁO</a></li>
-                    <li><a href="#">QUẦN BOXER</a></li>
-                </ul>
-                </li>
-                <li className={styles['nav-item']}>
-                PHỤ KIỆN <FontAwesomeIcon icon={faChevronDown} />
-                <ul>
-                    <li><a href="#">NÓN</a></li>
-                    <li><a href="#">THẮT LƯNG</a></li>
-                    <li><a href="#">BALO - TÚI XÁCH</a></li>
-                    <li><a href="#">VÍ</a></li>
-                    <li><a href="#">GIÀY DÉP</a></li>
-                    <li><a href="#">MẮT KÍNH</a></li>
-                    <li><a href="#">VỚ</a></li>
-                </ul>
-                </li>
+                {category.map((cate,index)=>(
+                    <li key={index} className={styles['nav-item']}>
+                    {cate.ten_loai}  <FontAwesomeIcon icon={faChevronDown} />
+                    {cate.categories.length > 0 && (
+                        <ul>
+                            {cate.categories.map((e:any,i:number)=>(
+                                <li key={i}><a href={`collections/${e.duong_dan}`}>{e.ten_loai}</a></li>
+                            ))}
+                        </ul>
+                    )}
+                    </li> 
+                ))}
                 <li className={styles['nav-item']} style={{ color: '#ff0000' }}>
                 GIÁ MỚI
                 </li>

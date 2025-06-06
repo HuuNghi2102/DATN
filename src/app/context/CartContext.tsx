@@ -28,17 +28,17 @@ function cartReducer(state: CartState, action: Action): CartState {
 
     case 'ADD_TO_CART': {
       const exist = state.cart.find(item =>
-        item.id_variant === action.payload.id_variant &&
-        item.size === action.payload.size &&
-        item.color === action.payload.color
+        item.id_san_pham_bien_the === action.payload.id_san_pham_bien_the &&
+        item.kich_thuoc_san_pham === action.payload.kich_thuoc_san_pham &&
+        item.mau_san_pham === action.payload.mau_san_pham
       );
       let newCart;
       if (exist) {
         newCart = state.cart.map(item =>
-          item.id_variant === action.payload.id_variant &&
-          item.size === action.payload.size &&
-          item.color === action.payload.color
-            ? { ...item, quantity: item.quantity + action.payload.quantity }
+          item.id_san_pham_bien_the === action.payload.id_san_pham_bien_the &&
+          item.kich_thuoc_san_pham === action.payload.kich_thuoc_san_pham &&
+          item.mau_san_pham === action.payload.mau_san_pham
+            ? { ...item, quantity: item.so_luong_san_pham + action.payload.so_luong_san_pham }
             : item
         );
       } else {
@@ -49,16 +49,16 @@ function cartReducer(state: CartState, action: Action): CartState {
       if (typeof window !== 'undefined') {
         localStorage.setItem('cart', JSON.stringify(newCart));
       }
-
+      // window.location.href = '/cart'
       return { cart: newCart };
     }
 
     case 'REMOVE_FROM_CART': {
       const newCart = state.cart.filter(item =>
         !(
-          item.id_variant === action.payload.id_variant &&
-          item.size === action.payload.size &&
-          item.color === action.payload.color
+          item.id_san_pham_bien_the === action.payload.id_variant &&
+          item.kich_thuoc_san_pham === action.payload.size &&
+          item.mau_san_pham === action.payload.color
         )
       );
       if (typeof window !== 'undefined') {
@@ -105,18 +105,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       const typeToken = localStorage.getItem('typeToken') || 'Bearer';
 
       if (accessToken) {
-        fetch('https://huunghi.id.vn/api/cart/getListCartOfUser', {
+        fetch('https://huunghi.id.vn/api/cart/addToCart', {
+          method: "GET",
           headers: {
-            Authorization: `${typeToken} ${accessToken}`,
+            "Content-type" : "application/json",
+            "Authorization": ` ${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`,
           },
         })
           .then(res => res.json())
           .then(data => {
-            if (Array.isArray(data?.cart)) {
-              dispatch({ type: 'SET_CART', payload: data.cart });
-
+            if (Array.isArray(data?.data.carts)) {
+              dispatch({ type: 'SET_CART', payload: data.data.carts });
               // Lưu vào localStorage luôn nếu muốn
-              localStorage.setItem('cart', JSON.stringify(data.cart));
+              localStorage.setItem('cart', JSON.stringify(data.data.carts));
             }
           })
           .catch(err => console.error('Lỗi tải cart từ server:', err));

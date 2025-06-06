@@ -247,7 +247,7 @@ const { dispatch } = useCart();
                 </button>
                 </div>
                 <div className="flex space-x-2">
-                 {sizes.map((size) => (
+                {sizes.map((size) => (
                     <button
                     key={size.ten_kich_thuoc}
                     onClick={() => {setSelectedSize(size);handleChangeQuantity(product?.id_san_pham,selectedColor.ten_mau,selectedSize.id_kich_thuoc)}}
@@ -281,27 +281,28 @@ const { dispatch } = useCart();
                     <button
                         onClick={() => {
                         if (!productVariant || !selectedColor || !selectedSize) return;
-
                         console.log('Đang thêm vào giỏ:', {
                             id_variant: productVariant.id_bien_the,
-                            name: product.ten_san_pham,
-                            image: currentImageIndex,
-                            price: product.gia_da_giam,
-                            color: selectedColor.ten_mau,
-                            size: selectedSize.ten_kich_thuoc,
-                            quantity,
+                            ten_san_pham: product.ten_san_pham,
+                            anh_san_pham: currentImageIndex,
+                            gia_san_pham: product.gia_da_giam,
+                            mau_san_pham: selectedColor.ten_mau,
+                            kich_thuoc_san_pham: selectedSize.ten_kich_thuoc,
+                            so_luong_san_pham: quantity,
                         });
-
                         dispatch({
                             type: 'ADD_TO_CART',
                             payload: {
-                            id_variant: productVariant.id_bien_the,
-                            name: product.ten_san_pham,
-                            image: currentImageIndex,
-                            price: product.gia_da_giam,
-                            color: selectedColor.ten_mau,
-                            size: selectedSize.ten_kich_thuoc,
-                            quantity,
+                            id_gio_hang: 0,
+                            id_khach_hang: 0,
+                            duong_dan: '',
+                            id_san_pham_bien_the: productVariant.id_bien_the,
+                            ten_san_pham: product.ten_san_pham,
+                            anh_san_pham: currentImageIndex,
+                            gia_san_pham: product.gia_da_giam,
+                            mau_san_pham: selectedColor.ten_mau,
+                            kich_thuoc_san_pham: selectedSize.ten_kich_thuoc,
+                            so_luong_san_pham :quantity,
                             },
                         });
                         }}
@@ -320,7 +321,7 @@ const { dispatch } = useCart();
             <div className="text-sm text-gray-600">
                 <div className="flex items-center">
                     <i className="fas fa-store mr-2"></i>
-                    <span>Có { productVariant?.so_luong } cửa hàng còn sản phẩm này</span>
+                    <span>Có { productVariant?.so_luong } sản phẩm này còn trong cửa hàng</span>
                     <button className="ml-2 text-blue-600 hover:underline">+</button>
                 </div>
             </div>

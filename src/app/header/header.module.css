@@ -161,6 +161,7 @@
 }
 
 .nav-item {
+  text-transform: uppercase;
   padding: 15px 20px;
   cursor: pointer;
   font-weight: bold;

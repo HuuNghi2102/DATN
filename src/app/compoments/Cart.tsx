@@ -38,22 +38,22 @@ const CartPage = () => {
           {state.cart.map((item, index) => (
             <li key={index} className="flex items-center space-x-4 border-b pb-4">
               <img
-                src={`https://huunghi.id.vn/storage/products/${item.image}`}
-                alt={item.name}
+                src={`https://huunghi.id.vn/storage/products/${item.anh_san_pham}`}
+                alt={item.ten_san_pham}
                 className="w-20 h-20 object-cover rounded"
               />
               <div className="flex-1">
-                <p className="font-semibold">{item.name}</p>
-                <p className="text-sm text-gray-600">Màu: {item.color} | Size: {item.size}</p>
-                <p className="text-sm">Số lượng: {item.quantity}</p>
-                <p className="text-sm font-bold">{item.price.toLocaleString('vi-VN')}đ</p>
+                <p className="font-semibold">{item.ten_san_pham}</p>
+                <p className="text-sm text-gray-600">Màu: {item.mau_san_pham} | Size: {item.kich_thuoc_san_pham}</p>
+                <p className="text-sm">Số lượng: {item.so_luong_san_pham}</p>
+                <p className="text-sm font-bold">{item.gia_san_pham.toLocaleString('vi-VN')}đ</p>
               </div>
               <button
                 onClick={() => dispatch({
                   type: 'REMOVE_FROM_CART',   payload: {
-                  id_variant: item.id_variant,
-                  size: item.size,
-                  color: item.color,
+                  id_variant: item.id_san_pham_bien_the,
+                  size: item.kich_thuoc_san_pham,
+                  color: item.mau_san_pham,
                 }}
                   
                   )}

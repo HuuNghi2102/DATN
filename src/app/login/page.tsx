@@ -32,7 +32,7 @@ const LoginPage = () => {
       const result = await res.json();
 
       if (!res.ok) {
-        setError({ ...newError,email: 'Tài khoản hoặc mật khẩu không chính xác', password: 'Mật khẩu  không chính xác' });
+        setError({ ...newError,email: 'Tài khoản hoặc mật khẩu không chính xác', password: 'Tài khoản hoặc mật khẩu  không chính xác' });
         return;
       }
 
@@ -42,8 +42,8 @@ const LoginPage = () => {
 
       // ✅ Lưu token
       localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('typeToken', typeToken);
+      localStorage.setItem('accessToken', JSON.stringify(accessToken));
+      localStorage.setItem('typeToken', JSON.stringify(typeToken));
       const cartRes = await fetch('https://huunghi.id.vn/api/cart/addToCart', {
         method: "POST",
         headers: {
