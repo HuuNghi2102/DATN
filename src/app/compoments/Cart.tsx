@@ -3,16 +3,18 @@ import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { CartItem } from '../compoments/CartItem';
 const CartPage = () => {
-  const [selectedProvince, setSelectedProvince] = useState({
-    
-  });
-  const [selectedDistrict, setSelectedDistrict] = useState<any>();
+  const [selectedProvince, setSelectedProvince] = useState();
+  const [selectedDistrict, setSelectedDistrict] = useState<number>(1);
+  const [selectedWard, setSelectedWard] = useState<number>();
+  const [dateDeliver , setDateDeliver] = useState('');
 
   const [arrProvince, setArrProvince] = useState<any[]>([]);
   const [arrDistrict, setArrDistrict] = useState<any[]>([]);
+  const [arrWard, setArrWard] = useState<any[]>([]);
 
   const { state, dispatch } = useCart();
   const [carts,setCarts] = useState<CartItem[]>([]);
+  const [voucher,setVoucher] = useState<any>(null);
 
   useEffect(()=>{
 
@@ -52,7 +54,6 @@ const CartPage = () => {
       const result2 = await res2.json();
       const province = result2.province.data;
       setArrProvince(province);
-      console.log(province);
 
     }
     fetchCarts();
@@ -60,12 +61,76 @@ const CartPage = () => {
   },[]);
 
   const getDistrict = async (idProvince:number) =>{
-    console.log(idProvince);
     const res = await fetch(`https://huunghi.id.vn/api/function/getDistrict/${idProvince}`)
     const result = await res.json();
     const district = result.district.data;
     setArrDistrict(district);
-    console.log(district);
+  }
+
+  const getWard = async (idDistrict:number) => {
+    const res = await fetch(`https://huunghi.id.vn/api/function/getWard/${idDistrict}`)
+    const result = await res.json();
+    const ward = result.ward.data;
+    setArrWard(ward);
+  }
+  const deliveryDate = async (idDistrict:number,wardCode:number) => {
+    const res = await fetch(`https://huunghi.id.vn/api/function/deliveryDate/idDistrict/${idDistrict}/wardCode/${wardCode}`)
+    const result = await res.json();
+    const date = result.data.date;
+    setDateDeliver( 'Ngày giao hàng dự kiến '+date);
+    console.log(result.data);
+  }
+  const removeCartItem = async (position:number) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const typeToken = localStorage.getItem("typeToken");
+    const user = localStorage.getItem("user");
+    const localCart = localStorage.getItem('cart');
+    let arrCart = [];
+
+    if(localCart){
+      arrCart = JSON.parse(localCart);
+    }
+
+    if(user && accessToken && typeToken ){
+
+      const parsetoken = JSON.parse(accessToken);
+      const parsetypeToken = JSON.parse(typeToken);
+      const currenCart = arrCart[position];
+
+      const res = await fetch(`https://huunghi.id.vn/api/cart/deleteCartOfUser/${currenCart.id_gio_hang}`,{
+        method : "DELETE",
+        headers : {
+          "Content-Type" : "application/json",
+          "Authorization" : `${parsetypeToken} ${parsetoken}`
+        }
+      })
+      const result = await res.json();
+      arrCart.splice(position,1)
+      alert(result.message);
+    }else{
+      arrCart.splice(position,1)
+      localStorage.setItem('cart',JSON.stringify(arrCart));
+    }
+    setCarts(arrCart);
+  }
+  const useVoucher = async (codeVoucher:string,totalOrder:number) => {
+    const res = await fetch(`https://huunghi.id.vn/api/voucher/useVoucher`,{
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json",
+      },
+      body : JSON.stringify({
+        codeVoucher : codeVoucher,
+        totalOrder : totalOrder
+      })
+    })
+    const result = await res.json();
+    if(result.status == false){
+      alert(result.message);
+    }else{
+      setVoucher(result.data.voucher);
+    }
+    
   }
   
   
@@ -116,14 +181,7 @@ const CartPage = () => {
                 <p className="text-sm font-bold">{item.gia_san_pham.toLocaleString('vi-VN')}đ</p>
               </div>
               <button
-                onClick={() => dispatch({
-                  type: 'REMOVE_FROM_CART',   payload: {
-                  id_variant: item.id_san_pham_bien_the,
-                  size: item.kich_thuoc_san_pham,
-                  color: item.mau_san_pham,
-                }}
-                  
-                  )}
+                onClick={() => removeCartItem(index)}
                 className="text-red-500 text-sm hover:underline"
               >
                 Xoá
@@ -143,17 +201,17 @@ const CartPage = () => {
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Tạm tính:</span>
                 <span className="text-gray-900">
-                  {state.cart.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0).toLocaleString('vi-VN')}đ
+                  {carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0).toLocaleString('vi-VN')}đ
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Giá giảm:</span>
-                <span className="text-gray-900">0đ</span>
+                <span className="text-gray-900">-{ (voucher ? voucher?.gia_tri_giam : 0).toLocaleString('vi-VN')}đ</span>
               </div>
               <div className="flex justify-between text-sm font-semibold">
                 <span className="text-gray-900">Tổng tiền:</span>
                 <span className="text-gray-900">
-                  {state.cart.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0).toLocaleString('vi-VN')}đ
+                  {(carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0) - (voucher ? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN')}đ
                 </span>
               </div>
 
@@ -178,7 +236,7 @@ const CartPage = () => {
                   
                   <select
                     value={selectedDistrict}
-                    onChange={(e) => setSelectedDistrict(e.target.value)}
+                    onChange={(e:any) => {setSelectedDistrict(e.target.value);getWard(e.target.value)}}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
                     <option value="">Chọn Quận/huyện</option>
@@ -186,8 +244,23 @@ const CartPage = () => {
                       <option key={index} value={district?.DistrictID}>{district?.DistrictName}</option>
                     ))}
                   </select>
+
+                   <select
+                    value={selectedWard}
+                    onChange={(e:any) => {setSelectedWard(e.target.value);deliveryDate(selectedDistrict,e.target.value)}}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  >
+                    <option value="">Chọn Phường/xã</option>
+                    {arrWard?.map((ward,index)=>(
+                      <option key={index} value={ward?.WardCode}>{ward?.WardName}</option>
+                    ))}
+                  </select>
+                  
                 </div>
+                <br></br>
+                {dateDeliver}
               </div>
+              
 
               {/* Order Notes */}
               <div className="mb-6">
@@ -197,6 +270,12 @@ const CartPage = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm h-16 resize-none mb-3"
                 />
                 <input
+                  onKeyDown={(e:any) => { 
+                    if(e.key === 'Enter')
+                    {
+                        useVoucher(e.target.value,carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0))
+                    }
+                  }}
                   type="text"
                   placeholder="Nhập mã khuyến mãi (nếu có)"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
