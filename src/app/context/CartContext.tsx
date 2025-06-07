@@ -2,11 +2,12 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { CartItem } from '../compoments/CartItem';
 import { log } from 'node:console';
+import addToCart from '../compoments/addToCart';
 
 type Action =
   | { type: 'SET_CART'; payload: CartItem[] }
   | { type: 'ADD_TO_CART'; payload: CartItem }
-  | { type: 'REMOVE_FROM_CART'; payload: { id_variant: number; size: string; color: string } }
+  | { type: 'REMOVE_FROM_CART'; payload: { id_variant: number; size: string; color: string }}
   | { type: 'CLEAR_CART' };
 
 type CartState = {
@@ -18,7 +19,7 @@ const initialState: CartState = {
 };
 
 const CartContext = createContext<{
-  state: CartState;
+  state: CartState; 
   dispatch: React.Dispatch<Action>;
 }>({ state: initialState, dispatch: () => {} });
 
@@ -26,41 +27,14 @@ function cartReducer(state: CartState, action: Action): CartState {
   switch (action.type) {
     case 'SET_CART':
       return { cart: action.payload };
-
     case 'ADD_TO_CART': {
       const accessToken = localStorage.getItem("accessToken");
       const typeToken = localStorage.getItem("typeToken");
       const user = localStorage.getItem("user");
       if (accessToken && typeToken && user) {
-        const parsetoken = JSON.parse(accessToken);
-        console.log(parsetoken)
-        const parsetypeToken = JSON.parse(typeToken);
-        console.log(parsetypeToken);
-        fetch("https://huunghi.id.vn/api/cart/addToCart", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer 60|7ivF4jPa1tTb85iUutQ28xBWnRqll5ZXoMubO5Gk846e5728`
-          },
-          body: JSON.stringify({
-            name: action.payload.ten_san_pham,
-            image: action.payload.anh_san_pham,
-            slug: action.payload.duong_dan,
-            size: action.payload.kich_thuoc_san_pham,
-            color: action.payload.mau_san_pham,
-            quantity: action.payload.so_luong_san_pham,
-            price: action.payload.gia_san_pham,
-            idVariant: action.payload.id_san_pham_bien_the,
-          })
-        })
-          .then(res => res.json())
-          .then(data => {
-            alert(data.message);
-            return;
-          })
-          .catch(err => console.error('Lỗi tải cart từ server:', err));
-      
-      }
+        addToCart(action.payload);
+        window.location.href ='/cart'
+      } 
       const exist = state.cart.find(item =>
         item.id_san_pham_bien_the === action.payload.id_san_pham_bien_the &&
         item.kich_thuoc_san_pham === action.payload.kich_thuoc_san_pham &&
@@ -87,7 +61,6 @@ function cartReducer(state: CartState, action: Action): CartState {
       return { cart: newCart };
 
     }
-
     case 'REMOVE_FROM_CART': {
       const newCart = state.cart.filter(item =>
         !(

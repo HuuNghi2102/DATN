@@ -1,10 +1,75 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { CartItem } from '../compoments/CartItem';
 const CartPage = () => {
-  const [selectedProvince, setSelectedProvince] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState({
+    
+  });
+  const [selectedDistrict, setSelectedDistrict] = useState<any>();
+
+  const [arrProvince, setArrProvince] = useState<any[]>([]);
+  const [arrDistrict, setArrDistrict] = useState<any[]>([]);
+
   const { state, dispatch } = useCart();
+  const [carts,setCarts] = useState<CartItem[]>([]);
+
+  useEffect(()=>{
+
+    const fetchCarts = async () => {
+
+      const accessToken = localStorage.getItem("accessToken");
+      const typeToken = localStorage.getItem("typeToken");
+      const user = localStorage.getItem("user");
+
+      if (accessToken && typeToken && user) {
+
+        const parsetoken = JSON.parse(accessToken);
+        const parsetypeToken = JSON.parse(typeToken);
+
+        const res = await fetch('https://huunghi.id.vn/api/cart/getListCartOfUser',{
+          headers : {
+            "Content-Type": "application/json",
+            "Authorization" : `${parsetypeToken} ${parsetoken}`
+          },
+        })
+
+        const result = await res.json();
+        setCarts(result.data.carts);
+
+      }else{
+
+        const localCarts = localStorage.getItem('cart');
+
+        if(localCarts){
+          setCarts(JSON.parse(localCarts));
+        }else{
+          setCarts([]);
+        }
+
+      }
+      const res2 = await fetch('https://huunghi.id.vn/api/function/getProvince');
+      const result2 = await res2.json();
+      const province = result2.province.data;
+      setArrProvince(province);
+      console.log(province);
+
+    }
+    fetchCarts();
+
+  },[]);
+
+  const getDistrict = async (idProvince:number) =>{
+    console.log(idProvince);
+    const res = await fetch(`https://huunghi.id.vn/api/function/getDistrict/${idProvince}`)
+    const result = await res.json();
+    const district = result.district.data;
+    setArrDistrict(district);
+    console.log(district);
+  }
+  
+  
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Font Awesome CDN */}
@@ -31,17 +96,19 @@ const CartPage = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
 <h1 className="text-xl font-bold mb-4">Giỏ Hàng</h1>
-      {state.cart.length === 0 ? (
+      {carts.length === 0 ? (
         <p>Giỏ hàng trống</p>
       ) : (
         <div className="space-y-4">
-          {state.cart.map((item, index) => (
+          {carts.map((item, index) => (
             <li key={index} className="flex items-center space-x-4 border-b pb-4">
-              <img
-                src={`https://huunghi.id.vn/storage/products/${item.anh_san_pham}`}
-                alt={item.ten_san_pham}
-                className="w-20 h-20 object-cover rounded"
-              />
+              <a href={`/product/${item.duong_dan}`}>
+                <img
+                  src={`https://huunghi.id.vn/storage/products/${item.anh_san_pham}`}
+                  alt={item.ten_san_pham}
+                  className="w-20 h-20 object-cover rounded"
+                />
+              </a>
               <div className="flex-1">
                 <p className="font-semibold">{item.ten_san_pham}</p>
                 <p className="text-sm text-gray-600">Màu: {item.mau_san_pham} | Size: {item.kich_thuoc_san_pham}</p>
@@ -99,14 +166,14 @@ const CartPage = () => {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                   <select
-                    value={selectedProvince}
-                    onChange={(e) => setSelectedProvince(e.target.value)}
+                    // value={selectedProvince}
+                    onChange={(e:any) => { setSelectedProvince(e.target.value);getDistrict(e.target.value)}}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
-                    <option value="">Chọn tỉnh/thành phố</option>
-                    <option value="hanoi">Hà Nội</option>
-                    <option value="hcm">TP. Hồ Chí Minh</option>
-                    <option value="danang">Đà Nẵng</option>
+                    <option >Chọn tỉnh/thành phố</option>
+                    {arrProvince.map((province:any,index) => (
+                      <option key={index} value={province?.ProvinceID}>{province?.ProvinceName}</option>
+                    ))}
                   </select>
                   
                   <select
@@ -115,9 +182,9 @@ const CartPage = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
                     <option value="">Chọn Quận/huyện</option>
-                    <option value="quan1">Quận 1</option>
-                    <option value="quan2">Quận 2</option>
-                    <option value="quan3">Quận 3</option>
+                    {arrDistrict.map((district,index)=>(
+                      <option key={index} value={district?.DistrictID}>{district?.DistrictName}</option>
+                    ))}
                   </select>
                 </div>
               </div>

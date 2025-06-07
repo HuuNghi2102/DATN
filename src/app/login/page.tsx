@@ -44,18 +44,18 @@ const LoginPage = () => {
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('accessToken', JSON.stringify(accessToken));
       localStorage.setItem('typeToken', JSON.stringify(typeToken));
-      const cartRes = await fetch('https://huunghi.id.vn/api/cart/addToCart', {
-        method: "POST",
-        headers: {
-          Authorization: `${typeToken} ${accessToken}`
-        }
-      });
-      const cartResult = await cartRes.json();
+      // const cartRes = await fetch('https://huunghi.id.vn/api/cart/addToCart', {
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: `${typeToken} ${accessToken}`
+      //   }
+      // });
+      // const cartResult = await cartRes.json();
 
-      if (Array.isArray(cartResult.cart)) {
-        dispatch({ type: 'SET_CART', payload: cartResult.cart });
-        localStorage.setItem('cart', JSON.stringify(cartResult.cart));
-      }
+      // if (Array.isArray(cartResult.cart)) {
+      //   dispatch({ type: 'SET_CART', payload: cartResult.cart });
+      //   localStorage.setItem('cart', JSON.stringify(cartResult.cart));
+      // }
       window.location.href = '/userprofile';
     } catch (err) {
       console.error(err);
