@@ -11,7 +11,7 @@ const addToCart = (action:CartItem) => {
             method: "POST",
             headers: {
               "Content-Type" : "application/json",
-              "Authorization" : `${parsetypeToken} ${parsetoken}`
+              Authorization : `${parsetypeToken} ${parsetoken}`
             },
             body: JSON.stringify({
               name: action.ten_san_pham,

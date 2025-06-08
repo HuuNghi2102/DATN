@@ -3,7 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import styles from './header.module.css';
-import userInterface from "../compoments/userInterface";
+import type userInterface from "../compoments/userInterface";
+import { UserControlProps } from '../compoments/userInterface';
+import { log } from 'console';
 
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -13,9 +15,52 @@ const Header = () => {
     const [cartCount, setCartCount] = useState(0);
     const [category, setCategory] = useState<any[]>([]);
     const [currentUser,setCurrentUser] = useState<userInterface>();
+    const [showUserDropdown, setShowUserDropdown] = useState(false);
+    const [logoutUser, setLogoutUser] = useState(false);
+    useEffect(() => {
+        const logout = async () => {
+            try{
+                const accessToken = localStorage.getItem("accessToken");
+                const typeToken = localStorage.getItem("typeToken");
+
+                    if (accessToken && typeToken ){
+                        const parseaccessToken = JSON.parse(accessToken);
+                        const parsetypeToken = JSON.parse(typeToken);
+                        console.log(parseaccessToken);
+                        console.log(parsetypeToken);
+                            const response = await fetch("https://huunghi.id.vn/api/user/logout", {
+                            method: "GET",
+                            headers: {
+                                'Content-Type': 'application/json',
+                                "Authorization": `${parsetypeToken} ${parseaccessToken}`,
+                            }
+                        });
+                        if(response.ok){
+                            localStorage.removeItem("user");
+                            localStorage.removeItem("accesToken");
+                            localStorage.removeItem("typeToken");
+                            localStorage.removeItem("cart");
+                            window.location.href = "/login";
+                        }else{
+                            alert('Không thể đăng xuất')
+                        }
+                    }
+            }catch (error){
+                console.log('Lỗi: ',error);
+            }
+        }
+        if(logoutUser){
+            logout();
+        }
+    },[logoutUser])
+    const handleToggleUserDropdown = () => {
+    if (currentUser) {
+        setShowUserDropdown(prev => !prev);
+    }
+    };
     useEffect(() => {
     setIsClient(true); // 👈 set khi client mount
-}, [])
+    }, [])
      useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedCart = localStorage.getItem('cart');
@@ -88,7 +133,7 @@ const Header = () => {
                 ☰
             </button>
             <div className={styles.logo}>
-                <a href="/"><img src="/assets/images/logo.png" alt="160STORE" /></a>
+                <a href="/"><img src="/assets/images/LogoAgain.png" alt="160STORE" /></a>
             </div>
 
             <div className={styles['search-container']}>
@@ -118,19 +163,39 @@ const Header = () => {
                 <span>Cửa hàng</span>
                 </div>
 
-                <div className={styles['user-control-item']}>
-                <div className={styles.icon}>
-                    <a href="/login">
+                <div className={styles['user-control-item']} style={{ position: 'relative' }}>
+                <div className={styles.icon} onClick={handleToggleUserDropdown} style={{ cursor: 'pointer' }}>
                     <img
                     src="https://theme.hstatic.net/1000253775/1001315144/14/user-account.svg?v=2041"
                     width="24"
                     height="24"
                     alt=""
-                    />                    
-                    </a>
+                    />
                 </div>
-                {currentUser ? (<span><a href="/login">Hi,{currentUser.ten_user}</a></span>) :(<span><a href="/login">Đăng nhập</a></span>) }
-                
+
+                {currentUser ? (
+                    <>
+                    <span style={{ cursor: 'pointer' }} onClick={handleToggleUserDropdown}>
+                        Hi, {currentUser.ten_user}
+                    </span>
+                    {currentUser && showUserDropdown && (
+                            <div className={styles.dropdown}>
+                            <h1 className='text-center text-xl'>THÔNG TIN TÀI KHOẢN</h1>
+                            <p className='text-center text-sm'>Số điện thoại: <strong className='text-black'>{currentUser.sdt_user}</strong></p>
+                            <div  className={styles.dropdownButtons }>
+                                <button className={styles.btn}>
+                                    <a href="/userprofile">Xem chi tiết</a>
+                                </button>
+                                <button className={styles.btn} onClick={() => {
+                                    setLogoutUser(true)
+                                }}>Đăng xuất</button>
+                            </div>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <span><a href="/login">Đăng nhập</a></span>
+                )}
                 </div>
 
                 <div className={styles['user-control-item']}>

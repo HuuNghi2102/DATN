@@ -155,11 +155,9 @@ const [cartItem,setCartItem] = useState({
     const addToCart = () => {
         const localCart = localStorage.getItem('cart');
         let carts = []
-
         if(localCart){
             carts = JSON.parse(localCart);
         }
-
         const accessToken = localStorage.getItem("accessToken");
         const typeToken = localStorage.getItem("typeToken");
         const user = localStorage.getItem("user");
@@ -186,6 +184,8 @@ const [cartItem,setCartItem] = useState({
               })
               .then(res => res.json())
               .then(data => {
+                carts.push(cartItem);
+                localStorage.setItem('cart', JSON.stringify(carts));
                 alert(data.message);
               })
               .catch(err => console.error('Lỗi tải cart từ server:', err));
@@ -193,16 +193,13 @@ const [cartItem,setCartItem] = useState({
               console.log(error);
             }
         }else{
-
             let flag:boolean = true;
-
             carts.forEach((cart:CartItem) => {
                 if(cart.id_san_pham_bien_the == cartItem.id_san_pham_bien_the){
                     cart.so_luong_san_pham += cartItem.so_luong_san_pham;
                     flag = false;
                 }
             })
-
             console.log(flag);
 
             if(flag === true){
