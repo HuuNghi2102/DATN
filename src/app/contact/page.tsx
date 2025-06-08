@@ -67,61 +67,24 @@ export default function StoreLocationsPage() {
     <div className="max-w-[1200px] mx-auto px-4 pt-[11%]"> 
 
       {/* Breadcrumb */}
-      <nav className="text-[11px] font-normal text-black pb-2">
+      <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
-          <li className="text-gray-500 hover:text-black cursor-pointer">Trang chủ</li>
-          <li>/</li>
-          <li className="font-semibold">ĐỊA CHỈ CỬA HÀNG</li>
+          <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
+          <li className="text-gray-500 font-normal">/</li>
+          <li className="text-[12px] font-semibold mt-0.5">Địa Chỉ Cửa Hàng</li>
         </ul>
       </nav>
+     
 
       {/* Banner */}
-      <div className="relative w-full rounded-md overflow-hidden">
+      <div className="mt-1">
         <img
-          alt="Menswear banner"
-          className="w-full object-cover h-48"
-          height="192"
-          src="https://picsum.photos/1200/300?random=9"
+          alt="Banner Áo Nam"
+          className="w-full object-cover"
+          height="300"
+          src="https://picsum.photos/1200/300?random=20"
           width="1200"
         />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center px-6 sm:px-12"
-        >
-          <div className="max-w-[600px]">
-            <div className="flex items-center space-x-2 mb-2">
-              <svg
-                aria-hidden="true"
-                className="w-8 h-8 text-yellow-400 flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 11c1.104 0 2-.896 2-2s-.896-2-2-2-2 .896-2 2 .896 2 2 2z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 21s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="text-white uppercase font-semibold text-lg tracking-wide">
-                HỆ THỐNG
-              </span>
-            </div>
-            <h1 className="text-white font-extrabold text-5xl sm:text-6xl leading-tight">
-              160STORE
-            </h1>
-            <p className="text-white uppercase font-semibold text-lg tracking-wide mt-1">
-              TOÀN QUỐC
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* Info boxes */}
@@ -156,7 +119,7 @@ export default function StoreLocationsPage() {
       <div className="mt-4 flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
         <select
           aria-label="Chọn tỉnh thành phố"
-          className="border border-gray-300 rounded-md px-3 py-2 text-gray-700 text-sm w-full sm:w-1/2 bg-no-repeat bg-right-2 bg-[length:1.25em_1.25em] bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg fill=%27none%27 stroke=%27%23333%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 viewBox=%270 0 24 24%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M6 9l6 6 6-6%27%3e%3c/path%3e%3c/svg%3e')] pr-10"
+          className="border border-gray-300 rounded-md px-3 py-2 text-gray-700 text-sm w-full sm:w-1/4 bg-no-repeat bg-right-2 bg-[length:1.25em_1.25em] bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg fill=%27none%27 stroke=%27%23333%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 viewBox=%270 0 24 24%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M6 9l6 6 6-6%27%3e%3c/path%3e%3c/svg%3e')] pr-10"
         >
           <option>Chọn tỉnh thành phố</option>
           <option>Đà Nẵng</option>
@@ -167,7 +130,7 @@ export default function StoreLocationsPage() {
         </select>
         <select
           aria-label="Chọn Quận/huyện"
-          className="border border-gray-300 rounded-md px-3 py-2 text-gray-700 text-sm w-full sm:w-1/2 bg-no-repeat bg-right-2 bg-[length:1.25em_1.25em] bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg fill=%27none%27 stroke=%27%23333%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 viewBox=%270 0 24 24%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M6 9l6 6 6-6%27%3e%3c/path%3e%3c/svg%3e')] pr-10"
+          className="border border-gray-300 rounded-md px-3 py-2 text-gray-700 text-sm w-full sm:w-1/4 bg-no-repeat bg-right-2 bg-[length:1.25em_1.25em] bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg fill=%27none%27 stroke=%27%23333%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%272%27 viewBox=%270 0 24 24%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M6 9l6 6 6-6%27%3e%3c/path%3e%3c/svg%3e')] pr-10"
         >
           <option>Chọn Quận/huyện</option>
         </select>
@@ -221,6 +184,25 @@ export default function StoreLocationsPage() {
           </div>
         ))}
       </div>
+      {/* Pagination */}
+      <nav className="mt-8 flex justify-center">
+          <ul className="flex gap-2">
+            {[1, 2, 3, 4, 5].map((page) => (
+              <li key={page}>
+                <a
+                  href="#"
+                  className={`px-3 py-1 rounded-md text-sm font-semibold transition ${
+                    page === 1
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100 hover:bg-black hover:text-white'
+                  }`}
+                >
+                  {page}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
     </div>
   );
 }

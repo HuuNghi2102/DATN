@@ -11,7 +11,7 @@ const articles = [
       'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
     link: '#',
   },
-  // Bỏ bớt bản sao để demo, nhưng bạn có thể lặp lại nếu cần
+  
 ];
 
 const MainContent = () => {
