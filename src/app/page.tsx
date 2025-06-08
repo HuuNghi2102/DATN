@@ -68,10 +68,10 @@ const Home = () => {
   };
 const productSettings = {
   slidesToShow: 5,
-  slidesToScroll: 2,
+  slidesToScroll: 3,
   autoplay: true,
-  autoplaySpeed: 2000,
-  speed: 500,
+  autoplaySpeed: 5000,
+  speed: 300,
   dots: true,
   infinite: true,
   nextArrow: <NextArrow />,
@@ -211,7 +211,7 @@ useEffect(() => {
                           />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href={`/product/${product.duong_dan}`}
@@ -219,6 +219,9 @@ useEffect(() => {
                         >
                           <FontAwesomeIcon icon={faCartShopping} />
                         </a>
+                        <div className=" absolute top-1 right-1 text-black bg-yellow-500 text-xs rounded-md p-1 font-bold">
+                          <p>Sản phẩm mới</p>
+                        </div>
                       </div>
                       <div className="px-1 mt-2">
                         <p className="text-sm">{product.ten_san_pham}</p>
@@ -228,7 +231,7 @@ useEffect(() => {
                     </div>
                   ))}
                 </Slider>
-                <div className="flex justify-center my-5">
+                <div className="flex justify-center my-9">
                   <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                     Xem tất cả
                   </button>
@@ -236,7 +239,7 @@ useEffect(() => {
               </div>
               {/* NewProducts */}
               <div>
-                <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
+                <img src="/assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
                 <Slider {...productSettings} className="my-4">
                   {productsNew.map((product, i) => (
                     <div key={i} className="p-2">
@@ -251,7 +254,7 @@ useEffect(() => {
                           />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href="#"
@@ -268,7 +271,7 @@ useEffect(() => {
                     </div>
                   ))}
                 </Slider>
-                <div className="flex justify-center my-5">
+                <div className="flex justify-center my-9">
                   <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                     Xem tất cả
                   </button>
@@ -291,7 +294,7 @@ useEffect(() => {
                           />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href="#"
@@ -308,7 +311,7 @@ useEffect(() => {
                     </div>
                   ))}
                 </Slider>
-                <div className="flex justify-center my-5">
+                <div className="flex justify-center my-9">
                   <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                     Xem tất cả
                   </button>
@@ -341,7 +344,7 @@ useEffect(() => {
                         />
                         </a>
                         <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                          <FontAwesomeIcon icon={faSearch} className="text-white w-4" />
+                          <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                         </div>
                         <a
                           href="#"

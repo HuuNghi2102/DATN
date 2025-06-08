@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-
 const Register = () => {
-
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [errors,setErrors] = useState({
     errName : '',
     errEmail : '',
@@ -25,51 +25,61 @@ const Register = () => {
     }));
   };
 
-  const handleRegister = async () => {
-    try {
-      const res = await fetch('https://huunghi.id.vn/api/user/register',{
-        method : "POST",
-        headers : {
-          "Content-type" : "application/json",
-        },
-        body : JSON.stringify({
-          name : formRegister.name,
-          email : formRegister.email,
-          password : formRegister.password,
-          confirm_password : formRegister.passwordConfirm
-        })
-      });
+const handleRegister = async () => {
+  try {
+    const res = await fetch('https://huunghi.id.vn/api/user/register', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formRegister.name,
+        email: formRegister.email,
+        password: formRegister.password,
+        confirm_password: formRegister.passwordConfirm
+      }),
+    });
 
-      const result = await res.json();
-
-      if(result.status == false){
-        setErrors({
-          errName : result.errors.name,
-          errEmail : result.errors.email,
-          errPassword : result.errors.password,
-          errPasswordConfirm : result.errors.confirm_password
-        })
-        return;
-      }
-
-      localStorage.setItem('user',JSON.stringify(result.data.user))
-      localStorage.setItem('accessToken',JSON.stringify(result.data.token))
-      localStorage.setItem('typeToken',JSON.stringify(result.data.typeToken))
-
-      alert(`${result.message}`);
-      
-      window.location.href = '/userprofile'
-
-
-
-    } catch (error) {
-      console.log(error);
+    // Check xem server có trả JSON hợp lệ không
+    const contentType = res.headers.get("content-type");
+    if (!res.ok || !contentType?.includes("application/json")) {
+      const text = await res.text(); // lấy raw HTML trả về
+      console.error("Server returned non-JSON response:", text);
+      throw new Error("Đăng ký thất bại. Server không trả về JSON hợp lệ.");
     }
+
+    const result = await res.json();
+
+    if (result.status === false) {
+      setErrors({
+        errName: result.errors?.name || '',
+        errEmail: result.errors?.email || '',
+        errPassword: result.errors?.password || '',
+        errPasswordConfirm: result.errors?.confirm_password || '',
+      });
+      return;
+    }
+
+    localStorage.setItem('user', JSON.stringify(result.data.user));
+    localStorage.setItem('accessToken', JSON.stringify(result.data.token));
+    localStorage.setItem('typeToken', JSON.stringify(result.data.typeToken));
+
+    alert(`${result.message}`);
+    window.location.href = '/userprofile';
+
+  } catch (error) {
+    console.error("Lỗi khi gọi API:", error);
+    alert("Đăng ký thất bại. Vui lòng thử lại sau.");
   }
+}
 
   return (
     <div className="min-h-screen bg-gray-100 mt-40">
       {/* Navigation */}
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+        />
       <nav className=" border-b border-gray-200 px-4 py-3">
         <div className="max-w-7xl mx-auto">
           <div className="flex space-x-8 text-sm font-medium text-gray-700">
@@ -123,30 +133,43 @@ const Register = () => {
                 {errors.errEmail}
               </div>
               {/* Password Input */}
-              <div>
+            <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
-                  placeholder="Nhập mật khẩu của bạn"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                  placeholder="Mật khẩu"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-gray-500 pr-12"
                   value={formRegister.password}
                   onChange={handleChangeInput}
                 />
-                {errors.errPassword}
-              </div>             
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
+              </div>
               {/* Password Input Again */}
-              <div>
+            <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="passwordConfirm"
                   placeholder="Xác nhận lại mật khẩu"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 placeholder-gray-500 transition-all"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm placeholder-gray-500 pr-12"
                   value={formRegister.passwordConfirm}
                   onChange={handleChangeInput}
                 />
                 {errors.errPasswordConfirm}
-                
-              </div>              
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
+            </div>              
+
               {/* Submit Button */}
               <button
                 onClick={handleRegister}

@@ -1,66 +1,140 @@
-'use client'
-import React, { useState } from 'react';
-
+"use client"
+import React, { useEffect, useState } from 'react';
+import { useCart } from '../context/CartContext';
+import { CartItem } from '../compoments/CartItem';
 const CartPage = () => {
-  const [selectedProvince, setSelectedProvince] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState();
+  const [selectedDistrict, setSelectedDistrict] = useState<number>(1);
+  const [selectedWard, setSelectedWard] = useState<number>();
+  const [dateDeliver , setDateDeliver] = useState('');
 
+  const [arrProvince, setArrProvince] = useState<any[]>([]);
+  const [arrDistrict, setArrDistrict] = useState<any[]>([]);
+  const [arrWard, setArrWard] = useState<any[]>([]);
 
-  const products = [
-    {
-      id: 1,
-      name: 'Áo Polo Nam',
-      price: '389.000đ',
-      image: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 2,
-      name: 'Áo Thun',
-      price: '319.000đ',
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 3,
-      name: 'Quần Short',
-      price: '349.000đ',
-      image: 'https://images.unsplash.com/photo-1506629905607-48d47d8f4f04?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 4,
-      name: 'Quần Jean',
-      price: '689.000đ',
-      image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
-    },
-    {
-      id: 5,
-      name: 'Quần Jean',
-      price: '689.000đ',
-      image: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=300&h=300&fit=crop',
-      badge: 'Siêu Hot'
+  const { state, dispatch } = useCart();
+  const [carts,setCarts] = useState<CartItem[]>([]);
+  const [voucher,setVoucher] = useState<any>(null);
+
+  useEffect(()=>{
+
+    const fetchCarts = async () => {
+
+      const accessToken = localStorage.getItem("accessToken");
+      const typeToken = localStorage.getItem("typeToken");
+      const user = localStorage.getItem("user");
+
+      if (accessToken && typeToken && user) {
+
+        const parsetoken = JSON.parse(accessToken);
+        const parsetypeToken = JSON.parse(typeToken);
+
+        const res = await fetch('https://huunghi.id.vn/api/cart/getListCartOfUser',{
+          headers : {
+            "Content-Type": "application/json",
+            "Authorization" : `${parsetypeToken} ${parsetoken}`
+          },
+        })
+
+        const result = await res.json();
+        setCarts(result.data.carts);
+
+      }else{
+
+        const localCarts = localStorage.getItem('cart');
+
+        if(localCarts){
+          setCarts(JSON.parse(localCarts));
+        }else{
+          setCarts([]);
+        }
+
+      }
+      const res2 = await fetch('https://huunghi.id.vn/api/function/getProvince');
+      const result2 = await res2.json();
+      const province = result2.province.data;
+      setArrProvince(province);
+
     }
-  ];
-  const cartItems = [
-  {
-    name: "Áo thun xanh",
-    size: "M",
-    color: "Xanh",
-    quantity: 2,
-    price: 150000,
-    image: "/assets/images/zz.webp",
-  },
-  {
-    name: "Quần jean đen",
-    size: "L",
-    color: "Đen",
-    quantity: 1,
-    price: 350000,
-    image: "/assets/images/zzz.webp",
-  },
-  ];
+    fetchCarts();
+
+  },[]);
+
+  const getDistrict = async (idProvince:number) =>{
+    const res = await fetch(`https://huunghi.id.vn/api/function/getDistrict/${idProvince}`)
+    const result = await res.json();
+    const district = result.district.data;
+    setArrDistrict(district);
+  }
+
+  const getWard = async (idDistrict:number) => {
+    const res = await fetch(`https://huunghi.id.vn/api/function/getWard/${idDistrict}`)
+    const result = await res.json();
+    const ward = result.ward.data;
+    setArrWard(ward);
+  }
+  const deliveryDate = async (idDistrict:number,wardCode:number) => {
+    const res = await fetch(`https://huunghi.id.vn/api/function/deliveryDate/idDistrict/${idDistrict}/wardCode/${wardCode}`)
+    const result = await res.json();
+    const date = result.data.date;
+    setDateDeliver( 'Ngày giao hàng dự kiến '+date);
+    console.log(result.data);
+  }
+  const removeCartItem = async (position:number) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const typeToken = localStorage.getItem("typeToken");
+    const user = localStorage.getItem("user");
+    const localCart = localStorage.getItem('cart');
+    let arrCart = [];
+
+    if(localCart){
+      arrCart = JSON.parse(localCart);
+    }
+
+    if(user && accessToken && typeToken ){
+
+      const parsetoken = JSON.parse(accessToken);
+      const parsetypeToken = JSON.parse(typeToken);
+      const currenCart = arrCart[position];
+
+      const res = await fetch(`https://huunghi.id.vn/api/cart/deleteCartOfUser/${currenCart.id_gio_hang}`,{
+        method : "DELETE",
+        headers : {
+          "Content-Type" : "application/json",
+          "Authorization" : `${parsetypeToken} ${parsetoken}`
+        }
+      })
+      const result = await res.json();
+      arrCart.splice(position,1)
+      alert(result.message);
+    }else{
+      arrCart.splice(position,1)
+      localStorage.setItem('cart',JSON.stringify(arrCart));
+    }
+    setCarts(arrCart);
+  }
+  const useVoucher = async (codeVoucher:string,totalOrder:number) => {
+    const res = await fetch(`https://huunghi.id.vn/api/voucher/useVoucher`,{
+      method : "POST",
+      headers : {
+        "Content-Type" : "application/json",
+      },
+      body : JSON.stringify({
+        codeVoucher : codeVoucher,
+        totalOrder : totalOrder
+      })
+    })
+    const result = await res.json();
+    if(result.status == false){
+      alert(result.message);
+    }else{
+      setVoucher(result.data.voucher);
+    }
+    
+  }
+  
+  
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Font Awesome CDN */}
@@ -86,68 +160,36 @@ const CartPage = () => {
           {/* Cart Section */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Giỏ hàng:</h2>
-                <span className="text-blue-600 cursor-pointer hover:underline text-sm sm:text-base">
-                  {cartItems.length} Sản phẩm
-                </span>
+<h1 className="text-xl font-bold mb-4">Giỏ Hàng</h1>
+      {carts.length === 0 ? (
+        <p>Giỏ hàng trống</p>
+      ) : (
+        <div className="space-y-4">
+          {carts.map((item, index) => (
+            <li key={index} className="flex items-center space-x-4 border-b pb-4">
+              <a href={`/product/${item.duong_dan}`}>
+                <img
+                  src={`https://huunghi.id.vn/storage/products/${item.anh_san_pham}`}
+                  alt={item.ten_san_pham}
+                  className="w-20 h-20 object-cover rounded"
+                />
+              </a>
+              <div className="flex-1">
+                <p className="font-semibold">{item.ten_san_pham}</p>
+                <p className="text-sm text-gray-600">Màu: {item.mau_san_pham} | Size: {item.kich_thuoc_san_pham}</p>
+                <p className="text-sm">Số lượng: {item.so_luong_san_pham}</p>
+                <p className="text-sm font-bold">{item.gia_san_pham.toLocaleString('vi-VN')}đ</p>
               </div>
-
-              {cartItems.length === 0 ? (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                  <p className="text-blue-800 text-sm">
-                    Bạn được giảm 10% tối đa 10K, mua thêm 599.000đ nữa để giảm ngay 50K!
-                  </p>
-                  <p className="text-gray-600 text-sm mt-2">
-                    Giỏ hàng của bạn đang trống. Mời bạn mua thêm sản phẩm{" "}
-                    <span className="text-blue-600 cursor-pointer hover:underline">
-                      <a href="/productPage">tại đây</a>
-                    </span>.
-                  </p>
-                </div>
-              ) : (
-            <div className="space-y-4">
-              {cartItems.map((item, index) => (
-                <div key={index} className="flex items-start gap-4 border-b pb-4">
-                  <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
-                  <div className="flex-1">
-                    <h3 className="text-sm sm:text-base font-medium text-gray-800">{item.name}</h3>
-                    <p className=''>
-                    Giá:{(item.price).toLocaleString('vi-VN')}₫
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Size: {item.size} | Màu: {item.color}
-                    </p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <button
-                        // onClick={() => decreaseQuantity(index)}
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        -
-                      </button>
-                      <span className="text-sm text-gray-600">{item.quantity}</span>
-                      <button
-                        // onClick={() => increaseQuantity(index)}
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        +
-                      </button>
-                    </div>
-                    
-                    <p className="text-base float-end font-semibold text-gray-900 mt-2">
-
-                      Tổng tiền: {(item.price * item.quantity).toLocaleString('vi-VN')}₫
-                    </p>
-                  </div>
-                    <button
-                      // onClick={() => removeItem(index)}
-                    className="mt-2 text-red-500 text-sm hover:underline">
-                      X
-                    </button>
-                </div>
-              ))}
-            </div>
-              )}
+              <button
+                onClick={() => removeCartItem(index)}
+                className="text-red-500 text-sm hover:underline"
+              >
+                Xoá
+              </button>
+            </li>
+          ))}
+        </div>
+      )}
             </div>
           </div>
 
@@ -156,19 +198,21 @@ const CartPage = () => {
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 sticky top-8">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông tin đơn hàng</h3>
               
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tạm tính:</span>
-                  <span className="text-gray-900">0đ</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Giá giảm:</span>
-                  <span className="text-gray-900">0đ</span>
-                </div>
-                <div className="flex justify-between text-sm font-semibold">
-                  <span className="text-gray-900">Tổng tiền:</span>
-                  <span className="text-gray-900">0đ</span>
-                </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Tạm tính:</span>
+                <span className="text-gray-900">
+                  {carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0).toLocaleString('vi-VN')}đ
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Giá giảm:</span>
+                <span className="text-gray-900">-{ (voucher ? voucher?.gia_tri_giam : 0).toLocaleString('vi-VN')}đ</span>
+              </div>
+              <div className="flex justify-between text-sm font-semibold">
+                <span className="text-gray-900">Tổng tiền:</span>
+                <span className="text-gray-900">
+                  {(carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0) - (voucher ? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN')}đ
+                </span>
               </div>
 
               {/* Shipping Info */}
@@ -180,28 +224,43 @@ const CartPage = () => {
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                   <select
-                    value={selectedProvince}
-                    onChange={(e) => setSelectedProvince(e.target.value)}
+                    // value={selectedProvince}
+                    onChange={(e:any) => { setSelectedProvince(e.target.value);getDistrict(e.target.value)}}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
-                    <option value="">Chọn tỉnh/thành phố</option>
-                    <option value="hanoi">Hà Nội</option>
-                    <option value="hcm">TP. Hồ Chí Minh</option>
-                    <option value="danang">Đà Nẵng</option>
+                    <option >Chọn tỉnh/thành phố</option>
+                    {arrProvince.map((province:any,index) => (
+                      <option key={index} value={province?.ProvinceID}>{province?.ProvinceName}</option>
+                    ))}
                   </select>
                   
                   <select
                     value={selectedDistrict}
-                    onChange={(e) => setSelectedDistrict(e.target.value)}
+                    onChange={(e:any) => {setSelectedDistrict(e.target.value);getWard(e.target.value)}}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
                     <option value="">Chọn Quận/huyện</option>
-                    <option value="quan1">Quận 1</option>
-                    <option value="quan2">Quận 2</option>
-                    <option value="quan3">Quận 3</option>
+                    {arrDistrict.map((district,index)=>(
+                      <option key={index} value={district?.DistrictID}>{district?.DistrictName}</option>
+                    ))}
                   </select>
+
+                   <select
+                    value={selectedWard}
+                    onChange={(e:any) => {setSelectedWard(e.target.value);deliveryDate(selectedDistrict,e.target.value)}}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  >
+                    <option value="">Chọn Phường/xã</option>
+                    {arrWard?.map((ward,index)=>(
+                      <option key={index} value={ward?.WardCode}>{ward?.WardName}</option>
+                    ))}
+                  </select>
+                  
                 </div>
+                <br></br>
+                {dateDeliver}
               </div>
+              
 
               {/* Order Notes */}
               <div className="mb-6">
@@ -211,6 +270,12 @@ const CartPage = () => {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm h-16 resize-none mb-3"
                 />
                 <input
+                  onKeyDown={(e:any) => { 
+                    if(e.key === 'Enter')
+                    {
+                        useVoucher(e.target.value,carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0))
+                    }
+                  }}
                   type="text"
                   placeholder="Nhập mã khuyến mãi (nếu có)"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
@@ -219,12 +284,16 @@ const CartPage = () => {
 
               {/* Checkout Buttons */}
               <div className="space-y-3">
+                <a href="/pay">
                 <button className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
-                  THANH TOÁN NGAY
-                </button>
+                    THANH TOÁN NGAY
+                  </button>
+                </a>
                 <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
                   <i className="fas fa-shopping-cart"></i>
+                  <a href="/">
                   <span>Tiếp tục mua hàng</span>
+                  </a>
                 </button>
               </div>
             </div>

@@ -1,12 +1,12 @@
 'use client';
 import React from "react";
-import EcommercePage from "../compoments/Cart";
+import CartPage from "../compoments/Cart";
 
-const CartPage=()=>{
+const ShowCart=()=>{
     return (
         <div>
-            <EcommercePage />
+            <CartPage />
         </div>
     )
 }
-export default CartPage;
+export default ShowCart;

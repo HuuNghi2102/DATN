@@ -1,10 +1,12 @@
-"use client"
+'use client'
+import { CartItem } from '../../compoments/CartItem';
 import React,{useState,useEffect} from 'react';
 import { useParams } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'react-slick';
 import productDetailInterface from "../../compoments/productDetailInterface";
+import { useCart } from '@/app/context/CartContext';
 
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
@@ -23,6 +25,7 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <FontAwesomeIcon icon={faChevronRight} />
   </div>
 );
+
 const ProductPageDetail = () => {
   const [selectedSize, setSelectedSize] = useState<any>(null);
   const [selectedColor, setSelectedColor] = useState<any>(null);
@@ -30,35 +33,33 @@ const ProductPageDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState('');
   const [productVariant, setProductVariant] = useState<any>(null); 
 
+
   const [sizes, setSizes] = useState<any[] | []>([]); 
   const [colors, setColors] = useState<any[]>([]);
   const [product, setProduct] = useState<any>(null);
   const [images, setImages] = useState<any[]>([]);
   const [productRelateds, setProductRelateds] = useState<any[]>([]);
+
+const [cartItem,setCartItem] = useState({
+    ten_san_pham: product?.ten_san_pham,
+    anh_san_pham: product?.anh_san_pham,
+    gia_san_pham: product?.gia_da_giam,
+    mau_san_pham: selectedColor?.ten_mau,
+    kich_thuoc_san_pham: selectedSize?.ten_kich_thuoc,
+    so_luong_san_pham: quantity,
+    duong_dan: product?.duong_dan,
+    id_san_pham_bien_the: productVariant?.id_san_pham_bien_the,
+})
   
 
   const params = useParams();
   const { slug } = params;
 
-//   const images = [
-//     '/assets/images/zzz.webp',
-//     '/assets/images/zz.webp',
-//     '/assets/images/zzz.webp',
-//     '/assets/images/zz.webp',
-//     '/assets/images/zzz.webp',
-//   ];
-  
-//   const sizes = ['S', 'M', 'L', 'XL'];
-//   const colors = [
-//     { name: 'white', color: 'bg-white border-gray-300' },
-//     { name: 'black', color: 'bg-black' }
-//   ];
-
   const promoOffers = [
     { code: 'MAY10', discount: '10%', minOrder: '199K' },
     { code: 'MAY30', discount: '30K', minOrder: '599K' },
     { code: 'MAY70', discount: '70K', minOrder: '899K' },
-    { code: 'MAY100', discount: '100K', minOrder: '1199K' }
+    { code: 'MAY100', discount: '100K', minOrder: '1199K'}
   ];
 
 
@@ -66,23 +67,45 @@ const ProductPageDetail = () => {
         if (!slug) return; 
         const fetchProduct = async ()=> {
             try {
+
                 const res = await fetch(`https://huunghi.id.vn/api/product/pageDetailProduct/${slug}`);
                 const result = await res.json();
-                setImages(result.data.product.images);
-                setProduct(result.data.product);
-                setColors(result.data.colors);
-                setSizes(result.data.sizes);
+
+                const arrImages = result.data.product.images;
+                const getProduct = result.data.product;
+                const arrSizes = result.data.sizes
+                const arrColors = result.data.colors;
+
+                setImages(arrImages);
+                setProduct(getProduct);
+                setColors(arrColors);
+                setSizes(arrSizes);
+                
                 // set color, size , image default
-                setSelectedColor(result.data.colors[0]);
-                setSelectedSize(result.data.sizes[0]);
-                setCurrentImageIndex(result.data.product.images[0].link_anh);
+                setSelectedColor(arrColors[0]);
+                setSelectedSize(arrSizes[0]);
+                setCurrentImageIndex(arrImages[0].link_anh);
+
                 // get product
                 const pro = result.data.product;
+
                 // fetch relatedProduct
                 const res2 = await fetch(`https://huunghi.id.vn/api/product/getTenRelatedProduct/${pro?.id_loai_san_pham}`);
                 const result2 = await res2.json();
                 setProductRelateds(result2.data.relatedProducts)
-                handleChangeQuantity(pro.id_san_pham,result.data.colors[0].ten_mau,result.data.sizes[0].id_kich_thuoc);
+                const variant = await handleChangeQuantity(pro.id_san_pham,result.data.colors[0].ten_mau,result.data.sizes[0],quantity);
+                
+                //set default cartItem
+                setCartItem({
+                    ten_san_pham: getProduct.ten_san_pham,
+                    anh_san_pham: arrImages[0].link_anh,
+                    gia_san_pham: getProduct.gia_da_giam,
+                    mau_san_pham: arrColors[0].ten_mau,
+                    kich_thuoc_san_pham: arrSizes[0].ten_kich_thuoc,
+                    so_luong_san_pham: quantity,
+                    duong_dan: getProduct.duong_dan,
+                    id_san_pham_bien_the: variant.id_san_pham_bien_the,
+                })
                 
             } catch (error) {
                 console.log(error);
@@ -91,7 +114,9 @@ const ProductPageDetail = () => {
         fetchProduct();
     },[]);
 
-    const handleChangeQuantity = async (idProduct:number,ten_mau:string,id_kich_thuoc:number) => {
+
+
+    const handleChangeQuantity = async (idProduct:number,ten_mau:string,size:any,quantity:number) => {
         try {
             const res = await fetch(`https://huunghi.id.vn/api/productVariant/getProductBySizeAndColor/${idProduct}`,{
                 method : "POST",
@@ -100,27 +125,102 @@ const ProductPageDetail = () => {
                 },
                 body : JSON.stringify({
                     nameColor : ten_mau,
-                    idSize : id_kich_thuoc
+                    idSize : size?.id_kich_thuoc
                 })
             });
             const result = await res.json();
-            console.log(result);
-            setProductVariant(result.data);
+            const variant = result.data;
+
+            setProductVariant(variant);
+
+            setCartItem({
+                ten_san_pham: product?.ten_san_pham,
+                anh_san_pham: images[0]?.link_anh,
+                gia_san_pham: product?.gia_da_giam,
+                mau_san_pham: ten_mau,
+                kich_thuoc_san_pham: size?.ten_kich_thuoc,
+                so_luong_san_pham: quantity,
+                duong_dan: product?.duong_dan,
+                id_san_pham_bien_the: variant?.id_san_pham_bien_the,
+            })
+            return variant;
             
         } catch (error) {
             console.log(error);
         }
     }
 
+    // console.log(cartItem);
+
+    const addToCart = () => {
+        const localCart = localStorage.getItem('cart');
+        let carts = []
+
+        if(localCart){
+            carts = JSON.parse(localCart);
+        }
+
+        const accessToken = localStorage.getItem("accessToken");
+        const typeToken = localStorage.getItem("typeToken");
+        const user = localStorage.getItem("user");
+        if (accessToken && typeToken && user) {
+            const parsetoken = JSON.parse(accessToken);
+            const parsetypeToken = JSON.parse(typeToken);
+            try {
+              fetch("https://huunghi.id.vn/api/cart/addToCart",{
+                method: "POST",
+                headers: {
+                  "Content-Type" : "application/json",
+                  "Authorization" : `${parsetypeToken} ${parsetoken}`
+                },
+                body: JSON.stringify({
+                  name: cartItem.ten_san_pham,
+                  image: cartItem.anh_san_pham,
+                  slug: cartItem.duong_dan,
+                  size: cartItem.kich_thuoc_san_pham,
+                  color: cartItem.mau_san_pham,
+                  quantity: cartItem.so_luong_san_pham,
+                  price: cartItem.gia_san_pham,
+                  idVariant: cartItem.id_san_pham_bien_the,
+                })
+              })
+              .then(res => res.json())
+              .then(data => {
+                alert(data.message);
+              })
+              .catch(err => console.error('Lỗi tải cart từ server:', err));
+            } catch (error) {
+              console.log(error);
+            }
+        }else{
+
+            let flag:boolean = true;
+
+            carts.forEach((cart:CartItem) => {
+                if(cart.id_san_pham_bien_the == cartItem.id_san_pham_bien_the){
+                    cart.so_luong_san_pham += cartItem.so_luong_san_pham;
+                    flag = false;
+                }
+            })
+
+            console.log(flag);
+
+            if(flag === true){
+                carts.push(cartItem);
+            }
+
+            localStorage.setItem('cart',JSON.stringify(carts));
+        }
+        return  window.location.href = '/cart'
+    }
   
   
 
 
   const productSettings = {
   slidesToShow: 5,
-  slidesToScroll: 2,
+  slidesToScroll: 1,
   autoplay: true,
-  autoplaySpeed: 2000,
   speed: 500,
   dots: true,
   infinite: true,
@@ -158,7 +258,7 @@ const ProductPageDetail = () => {
               <img 
                 src={`https://huunghi.id.vn/storage/products/${currentImageIndex ? currentImageIndex : 'Đang tải' }`} 
                 alt="Product"
-                className="w-full h-96 lg:h-[500px] object-cover"
+                className="w-full h-96 lg:h-[650px] object-cover"
               />
             </div>
             
@@ -184,7 +284,7 @@ const ProductPageDetail = () => {
                 <h1 className="text-xl lg:text-xl font-bold text-gray-900 mb-2">
                     {product ? product.ten_san_pham : 'Đang tải...' }
                 </h1>
-                <div className=" bg-green-500 text-white w-20 px-2 py-1 rounded text-xs font-medium">
+                <div className=" bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium">
                     Còn Hàng
                 </div>
                 <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
@@ -239,7 +339,7 @@ const ProductPageDetail = () => {
                     {colors.map((colorOption,index) => (
                     <button
                         key={colorOption ? colorOption.ten_mau : 'Đang tải...'}
-                        onClick={() => {setSelectedColor(colorOption) ;handleChangeQuantity(product?.id_san_pham, colorOption.ten_mau, selectedSize.id_kich_thuoc); }}
+                        onClick={() => {setSelectedColor(colorOption) ;handleChangeQuantity(product?.id_san_pham, colorOption.ten_mau,selectedSize,quantity); }}
                         style={{backgroundColor: colorOption.ma_mau}}
                         className={`w-8 h-8 rounded-full border-2  ${
                         selectedColor?.ten_mau === colorOption.ten_mau ? 'ring-2 ring-blue-500 ring-offset-2' : ''
@@ -259,10 +359,10 @@ const ProductPageDetail = () => {
                 </button>
                 </div>
                 <div className="flex space-x-2">
-                 {sizes.map((size) => (
+                {sizes.map((size) => (
                     <button
                     key={size.ten_kich_thuoc}
-                    onClick={() => {setSelectedSize(size);handleChangeQuantity(product?.id_san_pham,selectedColor.ten_mau,selectedSize.id_kich_thuoc)}}
+                    onClick={() => {setSelectedSize(size);handleChangeQuantity(product?.id_san_pham,selectedColor.ten_mau,size,quantity)}}
                     className={`w-10 h-10 border rounded text-sm font-medium ${
                         selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
                         ? 'border-red-500 bg-red-50 text-red-600'
@@ -280,18 +380,21 @@ const ProductPageDetail = () => {
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center border rounded">
                     <button
-                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        onClick={() => {setQuantity(Math.max(1, quantity - 1));handleChangeQuantity(product.id_san_pham,selectedColor.ten_mau,selectedSize,Math.max(1, quantity - 1))}}
                         className="px-3 py-2 hover:bg-gray-100"> -
                     </button>
                     <span className="px-4 py-2 min-w-[60px] text-center">{quantity}</span>
                     <button
-                        onClick={() => setQuantity(quantity + 1)}
+                        onClick={() => {setQuantity(quantity + 1);handleChangeQuantity(product.id_san_pham,selectedColor.ten_mau,selectedSize,quantity + 1)}}
                         className="px-3 py-2 hover:bg-gray-100" >
                         +
                     </button>
                     </div>
-                    <button className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors">
-                    THÊM VÀO GIỎ
+                    <button
+                        onClick={addToCart}
+                        className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors"
+                        >
+                        THÊM VÀO GIỎ
                     </button>
                     <button className=" bg-white border-2 border-black text-black py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors">
                         MUA NGAY
@@ -430,14 +533,7 @@ const ProductPageDetail = () => {
                 SẢN PHẨM LIÊN QUAN
                 <div className="w-16 h-0.5 bg-gray-400 mx-auto mt-2"></div>
             </h2>
-        {/* Product Sections */}
-        {[
-            {
-                products: Array(5).fill({ name: 'Quần thun co giãn ICM LOTTEPark', price: '123123' })
-            },
-        ].map((section, index) => (
-            <div key={index} className="my-4">
-
+            <div className="my-4">
                 {/* Slider thay cho grid */}
                 <Slider {...productSettings} className="my-4">
                 {productRelateds.map((product, i) => (
@@ -453,7 +549,7 @@ const ProductPageDetail = () => {
                                     />
                                 </a>
                                 <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                    <FontAwesomeIcon icon={faSearch} className="text-white w-4 pointer-events-auto" />
+                                    <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                                 </div>
                                 <a
                                     href="#"
@@ -471,7 +567,6 @@ const ProductPageDetail = () => {
                 ))}
                 </Slider>
             </div>
-        ))}
         </div>
     </div>
     </div>

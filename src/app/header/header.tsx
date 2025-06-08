@@ -6,17 +6,27 @@ import styles from './header.module.css';
 import userInterface from "../compoments/userInterface";
 
 const Header = () => {
-  const [category, setCategory] = useState<any[]>([]);
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdowns, setActiveDropdowns] = useState<{ [key: number]: boolean }>({});
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const [isClient, setIsClient] = useState(false); // 👈 new
-  const [currentUser,setCurrentUser] = useState<userInterface>();
-
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [activeDropdowns, setActiveDropdowns] = useState<{ [key: number]: boolean }>({});
+    const overlayRef = useRef<HTMLDivElement>(null);
+    const [isClient, setIsClient] = useState(false); // 👈 new
+    const [cartCount, setCartCount] = useState(0);
+    const [category, setCategory] = useState<any[]>([]);
+    const [currentUser,setCurrentUser] = useState<userInterface>();
     useEffect(() => {
     setIsClient(true); // 👈 set khi client mount
-  }, [])
-
+}, [])
+     useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedCart = localStorage.getItem('cart');
+      if (storedCart) {
+        const cartItems = JSON.parse(storedCart);
+        // Đếm tổng số lượng (quantity) của từng item
+        const totalQuantity = cartItems.reduce((sum: number, item: any) => sum + item.so_luong_san_pham, 0);
+        setCartCount(totalQuantity);
+      }
+    }
+  }, []);
   useEffect(() => {
     console.log('isMobileMenuOpen:', isMobileMenuOpen); // Debug trạng thái
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
@@ -78,7 +88,7 @@ const Header = () => {
                 ☰
             </button>
             <div className={styles.logo}>
-                <a href="/"><img src="/assets/images/logoverve.png" alt="160STORE" /></a>
+                <a href="/"><img src="/assets/images/logo.png" alt="160STORE" /></a>
             </div>
 
             <div className={styles['search-container']}>
@@ -124,18 +134,18 @@ const Header = () => {
                 </div>
 
                 <div className={styles['user-control-item']}>
-                <div className={`${styles.icon} ${styles['cart-icon']}`}>
-                    <a href="/cart">
+                    <div className={`${styles.icon} ${styles['cart-icon']}`}>
+                        <a href="/cart">
                         <img
-                        src="https://theme.hstatic.net/1000253775/1001315144/14/shopping-cart.svg?v=2041"
-                        width="24"
-                        height="24"
-                        alt=""
+                            src="https://theme.hstatic.net/1000253775/1001315144/14/shopping-cart.svg?v=2041"
+                            width="24"
+                            height="24"
+                            alt=""
                         />
-                    </a>
-                    <div className={styles['cart-count']}>0</div>
-                </div>
-                <span>Giỏ hàng</span>
+                        </a>
+                        <div className={styles['cart-count']}>{cartCount}</div>
+                    </div>
+                    <span>Giỏ hàng</span>
                 </div>
             </div>
             </div>
