@@ -54,10 +54,8 @@ const CartPage = () => {
       const result2 = await res2.json();
       const province = result2.province.data;
       setArrProvince(province);
-
     }
     fetchCarts();
-
   },[]);
 
   const getDistrict = async (idProvince:number) =>{
@@ -109,8 +107,8 @@ const CartPage = () => {
       alert(result.message);
     }else{
       arrCart.splice(position,1)
-      localStorage.setItem('cart',JSON.stringify(arrCart));
     }
+    localStorage.setItem('cart',JSON.stringify(arrCart));
     setCarts(arrCart);
   }
   const useVoucher = async (codeVoucher:string,totalOrder:number) => {
@@ -130,7 +128,6 @@ const CartPage = () => {
     }else{
       setVoucher(result.data.voucher);
     }
-    
   }
   
   

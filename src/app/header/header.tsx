@@ -16,17 +16,17 @@ const Header = () => {
     useEffect(() => {
     setIsClient(true); // 👈 set khi client mount
 }, [])
-     useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedCart = localStorage.getItem('cart');
-      if (storedCart) {
-        const cartItems = JSON.parse(storedCart);
-        // Đếm tổng số lượng (quantity) của từng item
-        const totalQuantity = cartItems.reduce((sum: number, item: any) => sum + item.so_luong_san_pham, 0);
-        setCartCount(totalQuantity);
-      }
-    }
-  }, []);
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedCart = localStorage.getItem('cart');
+            if (storedCart) {
+                const cartItems = JSON.parse(storedCart);
+                // Đếm tổng số lượng (quantity) của từng item
+                const totalQuantity = cartItems.reduce((sum: number, item: any) => sum + item.so_luong_san_pham, 0);
+                setCartCount(totalQuantity);
+            }
+        }
+  }, [cartCount]);
   useEffect(() => {
     console.log('isMobileMenuOpen:', isMobileMenuOpen); // Debug trạng thái
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';

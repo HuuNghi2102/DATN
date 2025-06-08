@@ -94,7 +94,7 @@ const [cartItem,setCartItem] = useState({
                 const result2 = await res2.json();
                 setProductRelateds(result2.data.relatedProducts)
                 const variant = await handleChangeQuantity(pro.id_san_pham,result.data.colors[0].ten_mau,result.data.sizes[0],quantity);
-                
+
                 //set default cartItem
                 setCartItem({
                     ten_san_pham: getProduct.ten_san_pham,
@@ -186,6 +186,8 @@ const [cartItem,setCartItem] = useState({
               })
               .then(res => res.json())
               .then(data => {
+                carts.push(cartItem);
+                localStorage.setItem('cart',JSON.stringify(carts));
                 alert(data.message);
               })
               .catch(err => console.error('Lỗi tải cart từ server:', err));
