@@ -75,7 +75,7 @@ Khám phá ngay Quần Nam tại 160STORE để hoàn thiện phong cách của 
   const truncatedContent = articleContent.substring(0, 200) + '...';
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
