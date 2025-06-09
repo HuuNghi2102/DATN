@@ -37,7 +37,7 @@ const Header = () => {
                         });
                         if(response.ok){
                             localStorage.removeItem("user");
-                            localStorage.removeItem("accesToken");
+                            localStorage.removeItem("accessToken");
                             localStorage.removeItem("typeToken");
                             localStorage.removeItem("cart");
                             window.location.href = "/login";
@@ -110,7 +110,8 @@ const Header = () => {
 
   
 
-    if (!isClient) return null;
+  if (!isClient) return null;
+
   return (
     <div>
         <header className={styles.header}>
@@ -219,16 +220,15 @@ const Header = () => {
 
             <nav className={styles['nav-container']}>
             <ul className={styles['main-nav']}>
-                <li className={`${styles['nav-item']} ${styles.new}`}>HÀNG MỚI</li>
+                <a href="/collection/new"><li className={`${styles['nav-item']} ${styles.new}`}>HÀNG MỚI</li></a>
                 <li className={styles['nav-item']}>
-                <a href="/productPage">SẢN PHẨM <FontAwesomeIcon icon={faChevronDown} /></a>
+                <a href="/collection/all">SẢN PHẨM <FontAwesomeIcon icon={faChevronDown} /></a>
                 <ul>
-                    <li><a href="#">TẤT CẢ SẢN PHẨM</a></li>
-                    <li><a href="#">HÀNG BÁN CHẠY</a></li>
+                    <li><a href="/collection/all">TẤT CẢ SẢN PHẨM</a></li>
+                    <li><a href="/collection/bestsellers">HÀNG BÁN CHẠY</a></li>
                     <li><a href="#">ÁO</a></li>
                     <li><a href="#">QUẦN</a></li>
                     <li><a href="#">SET QUẦN ÁO</a></li>
-                    <li><a href="#">ĐỒ LÓT - BOXER</a></li>
                     <li><a href="#">PHỤ KIỆN</a></li>
                 </ul>
                 </li>
@@ -238,14 +238,14 @@ const Header = () => {
                     {cate.categories.length > 0 && (
                         <ul>
                             {cate.categories.map((e:any,i:number)=>(
-                                <li key={i}><a href={`collections/${e.duong_dan}`}>{e.ten_loai}</a></li>
+                                <li key={i}><a href={`/collection/${e.duong_dan}`}>{e.ten_loai}</a></li>
                             ))}
                         </ul>
                     )}
                     </li> 
                 ))}
-                <li className={styles['nav-item']} style={{ color: '#ff0000' }}>
-                GIÁ MỚI
+                <li  className={styles['nav-item']} style={{ color: '#ff0000' }}>
+                    <a href="collections/price-new">GIÁ MỚI</a>
                 </li>
                 <li className={styles['nav-item']}>
                 JEANS <FontAwesomeIcon icon={faChevronDown} />
@@ -255,7 +255,9 @@ const Header = () => {
                     <li><a href="#">ICON105 Lightweight™</a></li>
                 </ul>
                 </li>
-                <li className={styles['nav-item']}>TIN THỜI TRANG</li>
+                <li className={styles['nav-item']}>
+                    <a href="/blogs/all">TIN THỜI TRANG</a>
+                </li>
             </ul>
             </nav>
         </header>
@@ -325,7 +327,7 @@ const Header = () => {
                     {label: 'Mũ', link: '#'},
                 ]
                 },
-                { label: 'GIÁ MỚI', link: '#', color: '#ff0000' },
+                { label: 'GIÁ MỚI', link: 'collections/price-new', color: '#ff0000' },
                 {
                 label: 'JEANS',
                 subItems:[
