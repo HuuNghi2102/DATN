@@ -55,7 +55,7 @@
   padding: 15px 20px;
   background-color: rgb(30, 30, 30);
   color: white;
-  gap: 80px;
+  gap: 79px;
 }
 
 /* Logo */
@@ -119,11 +119,50 @@
   margin-left: 20px;
   cursor: pointer;
   font-size: 12px;
+  position: relative;
 }
 
 .user-control-item i {
   font-size: 20px;
   margin-bottom: 5px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 60px;
+  right: -59px;
+  color: #333;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 16px;
+  z-index: 100;
+  width: 400px;
+}
+.dropdownButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.btn {
+  background: black;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  min-width: 160px;
+  font-weight: 600;
+  font-size: 15px;
+  min-height: 50px;
+}
+.btn:hover {
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  border: 1px solid black;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .cart-icon {

@@ -1,7 +1,6 @@
 'use client';
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { CartItem } from '../compoments/CartItem';
-import { log } from 'node:console';
 import addToCart from '../compoments/addToCart';
 
 type Action =
@@ -88,36 +87,20 @@ function cartReducer(state: CartState, action: Action): CartState {
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
-
-  // ✅ Load cart từ localStorage trước (không cần token)
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     const storedCart = localStorage.getItem('cart');
-  //     if (storedCart) {
-  //       try {
-  //         const parsed = JSON.parse(storedCart);
-  //         if (Array.isArray(parsed)) {
-  //           dispatch({ type: 'SET_CART', payload: parsed });
-  //         }
-  //       } catch (e) {
-  //         console.error('Cart JSON không hợp lệ:', e);
-  //       }
-  //     }
-  //   }
-  // }, []);
-
   // ✅ Nếu có token, lấy cart từ server
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const accessToken = localStorage.getItem('accessToken');
-      const typeToken = localStorage.getItem('typeToken') || 'Bearer';
+      const typeToken = localStorage.getItem('typeToken');
 
-      if (accessToken) {
+      if (accessToken && typeToken){
+        const parseaccessToken = JSON.parse(accessToken);
+        const parsetypeToken = JSON.parse(typeToken);
         fetch('https://huunghi.id.vn/api/cart/getListCartOfUser', {
           method: "GET",
           headers: {
             "Content-Type" : "application/json",
-            "Authorization": ` ${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`,
+            "Authorization": ` ${parsetypeToken} ${parseaccessToken}`,
           },
         })
           .then(res => res.json())

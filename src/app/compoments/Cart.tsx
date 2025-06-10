@@ -6,7 +6,7 @@ const CartPage = () => {
   const [selectedProvince, setSelectedProvince] = useState();
   const [selectedDistrict, setSelectedDistrict] = useState<number>(1);
   const [selectedWard, setSelectedWard] = useState<number>();
-  const [dateDeliver , setDateDeliver] = useState('');
+  const [dateDeliver , setDateDeliver] = useState('dd/mm/yy');
 
   const [arrProvince, setArrProvince] = useState<any[]>([]);
   const [arrDistrict, setArrDistrict] = useState<any[]>([]);
@@ -54,10 +54,8 @@ const CartPage = () => {
       const result2 = await res2.json();
       const province = result2.province.data;
       setArrProvince(province);
-
     }
     fetchCarts();
-
   },[]);
 
   const getDistrict = async (idProvince:number) =>{
@@ -77,7 +75,7 @@ const CartPage = () => {
     const res = await fetch(`https://huunghi.id.vn/api/function/deliveryDate/idDistrict/${idDistrict}/wardCode/${wardCode}`)
     const result = await res.json();
     const date = result.data.date;
-    setDateDeliver( 'Ngày giao hàng dự kiến '+date);
+    setDateDeliver(date);
     console.log(result.data);
   }
   const removeCartItem = async (position:number) => {
@@ -109,8 +107,8 @@ const CartPage = () => {
       alert(result.message);
     }else{
       arrCart.splice(position,1)
-      localStorage.setItem('cart',JSON.stringify(arrCart));
     }
+    localStorage.setItem('cart',JSON.stringify(arrCart));
     setCarts(arrCart);
   }
   const useVoucher = async (codeVoucher:string,totalOrder:number) => {
@@ -130,7 +128,6 @@ const CartPage = () => {
     }else{
       setVoucher(result.data.voucher);
     }
-    
   }
   
   
@@ -198,17 +195,17 @@ const CartPage = () => {
             <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 sticky top-8">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông tin đơn hàng</h3>
               
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-sm mb-3">
                 <span className="text-gray-600">Tạm tính:</span>
                 <span className="text-gray-900">
                   {carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0).toLocaleString('vi-VN')}đ
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-sm mb-3">
                 <span className="text-gray-600">Giá giảm:</span>
                 <span className="text-gray-900">-{ (voucher ? voucher?.gia_tri_giam : 0).toLocaleString('vi-VN')}đ</span>
               </div>
-              <div className="flex justify-between text-sm font-semibold">
+              <div className="flex justify-between text-sm mb-3 font-semibold">
                 <span className="text-gray-900">Tổng tiền:</span>
                 <span className="text-gray-900">
                   {(carts.reduce((total, item) => total + item.so_luong_san_pham * item.gia_san_pham, 0) - (voucher ? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN')}đ
@@ -222,7 +219,7 @@ const CartPage = () => {
                   <span className="font-medium text-gray-900">Ước tính thời gian giao hàng</span>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2">
                   <select
                     // value={selectedProvince}
                     onChange={(e:any) => { setSelectedProvince(e.target.value);getDistrict(e.target.value)}}
@@ -244,21 +241,21 @@ const CartPage = () => {
                       <option key={index} value={district?.DistrictID}>{district?.DistrictName}</option>
                     ))}
                   </select>
-
-                   <select
+                </div>
+                  <select
                     value={selectedWard}
                     onChange={(e:any) => {setSelectedWard(e.target.value);deliveryDate(selectedDistrict,e.target.value)}}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 my-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
                     <option value="">Chọn Phường/xã</option>
                     {arrWard?.map((ward,index)=>(
                       <option key={index} value={ward?.WardCode}>{ward?.WardName}</option>
                     ))}
                   </select>
-                  
-                </div>
                 <br></br>
-                {dateDeliver}
+                <h3>
+                  Ngày giao hàng dự kiến : {dateDeliver}
+                </h3>
               </div>
               
 

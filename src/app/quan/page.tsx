@@ -47,6 +47,14 @@ export default function PantsProductPage() {
   const [selectedOption, setSelectedOption] = useState('Sản phẩm nổi bật');
   const [isContentExpanded, setIsContentExpanded] = useState(false);
 
+  const productsPerPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(newProducts.length / productsPerPage);
+  const paginatedProducts = newProducts.slice(
+    (currentPage - 1) * productsPerPage,
+    currentPage * productsPerPage
+  );
+
   const sortOptions = [
     'Sản phẩm nổi bật',
     'Giá: Tăng dần',
@@ -75,7 +83,7 @@ Khám phá ngay Quần Nam tại 160STORE để hoàn thiện phong cách của 
   const truncatedContent = articleContent.substring(0, 200) + '...';
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
@@ -201,11 +209,24 @@ Khám phá ngay Quần Nam tại 160STORE để hoàn thiện phong cách của 
 
 
 
-      <div className="flex justify-center mb-10">
-        <button className="bg-black text-white text-[13px] font-medium px-6 py-2 rounded hover:opacity-50 transition">
-          Xem thêm
-        </button>
-      </div>
+<div className="flex justify-center my-6 gap-2">
+  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+    <button
+      key={page}
+      onClick={() => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      }}
+      className={`px-3 py-1 border text-sm rounded ${
+        currentPage === page
+          ? 'bg-black text-white'
+          : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+      }`}
+    >
+      {page}
+    </button>
+  ))}
+</div>
 
       <div className="mt-6 mb-10 text-center">
         <h2 className="text-[18px] font-bold mb-4">Khám phá Quần Nam Thời Trang tại 160STORE</h2>

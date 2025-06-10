@@ -15,3 +15,6 @@ export default interface userInterface{
   updated_at : string,
   deleted_at :string
 }
+export interface UserControlProps {
+  currentUser: userInterface | null;
+}

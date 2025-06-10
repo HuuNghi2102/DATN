@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useState, useRef } from 'react';
 
 const articles = [
   {
@@ -11,12 +12,38 @@ const articles = [
       'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
     link: '#',
   },
-  
+  // 👉 Thêm nhiều bài viết demo cho đủ trang
+  ...Array.from({ length: 30 }, (_, i) => ({
+    id: i + 2,
+    title: `Bài viết demo số ${i + 2}`,
+    description: 'Đây là mô tả ngắn gọn cho bài viết demo...',
+    date: '01/06/2025',
+    image: 'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
+    link: '#',
+  })),
 ];
 
 const MainContent = () => {
+  const articlesPerPage = 15;
+  const [currentPage, setCurrentPage] = useState(1);
+  const titleRef = useRef<HTMLDivElement>(null);
+
+  const totalPages = Math.ceil(articles.length / articlesPerPage);
+  const currentArticles = articles.slice(
+    (currentPage - 1) * articlesPerPage,
+    currentPage * articlesPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    titleRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-24 md:pt-28 lg:pt-[180px] min-h-screen relative z-10">
+    <div
+      ref={titleRef}
+      className="max-w-[1200px] mx-auto px-4 pt-24 md:pt-28 lg:pt-[180px] min-h-screen relative z-10"
+    >
       {/* Breadcrumb */}
       <nav className="text-xs text-gray-600 mb-4">
         <ul className="flex gap-1">
@@ -32,7 +59,7 @@ const MainContent = () => {
 
         {/* Grid hiển thị bài viết */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {articles.map((article) => (
+          {currentArticles.map((article) => (
             <article
               key={article.id}
               className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col"
@@ -43,13 +70,11 @@ const MainContent = () => {
                 className="w-full h-36 object-cover"
                 loading="lazy"
               />
-
               <div className="p-4 flex flex-col flex-grow">
                 <h2 className="text-sm font-bold mb-2">{article.title}</h2>
                 <p className="text-xs text-gray-600 mb-3 flex-grow">
                   {article.description}
                 </p>
-
                 <div className="flex justify-between items-center text-xs text-gray-500">
                   <time className="flex items-center gap-1">
                     <svg
@@ -79,25 +104,28 @@ const MainContent = () => {
           ))}
         </div>
 
-        {/* Pagination */}
-        <nav className="mt-8 flex justify-center">
-          <ul className="flex gap-2">
-            {[1, 2, 3, 4, 5].map((page) => (
-              <li key={page}>
-                <a
-                  href="#"
-                  className={`px-3 py-1 rounded-md text-sm font-semibold transition ${
-                    page === 1
-                      ? 'bg-black text-white'
-                      : 'bg-gray-100 hover:bg-black hover:text-white'
-                  }`}
-                >
-                  {page}
-                </a>
-              </li>
+   
+         {/* Pagination */}
+          <div className="flex justify-center my-6 gap-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => {
+                  setCurrentPage(page);
+                  window.scrollTo({ top: 0, behavior: 'smooth' }); 
+                }}
+                className={`px-3 py-1 border text-sm rounded ${
+                  currentPage === page
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+                }`}
+              >
+                {page}
+              </button>
             ))}
-          </ul>
-        </nav>
+          </div>
+
+
       </section>
     </div>
   );

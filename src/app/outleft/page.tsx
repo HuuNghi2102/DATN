@@ -1,7 +1,11 @@
 'use client';
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart, faSortAlphaDown , faMagnifyingGlass, faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSortAlphaDown,
+  faMagnifyingGlass,
+  faCartShopping,
+} from '@fortawesome/free-solid-svg-icons';
 
 const categories = [
   { id: 'all', name: 'Tất cả', image: 'https://file.hstatic.net/1000253775/file/all.png' },
@@ -58,12 +62,69 @@ const products = [
     hoverImage: 'https://picsum.photos/300/300?random=8',
     category: 'shirt',
   },
+  {
+    id: '5',
+    name: 'Áo Polo Nam ICONDENIM Fit Basic',
+    originalPrice: '359,000₫',
+    discountedPrice: '259,000₫',
+    discount: '28%',
+    label: 'Hàng Mới',
+    image: 'https://picsum.photos/300/300?random=9',
+    hoverImage: 'https://picsum.photos/300/300?random=10',
+    category: 'polo',
+  },
+  {
+    id: '6',
+    name: 'Áo Sơ Mi Nam ICONDENIM Trắng Classic',
+    originalPrice: '399,000₫',
+    discountedPrice: '299,000₫',
+    discount: '25%',
+    label: '',
+    image: 'https://picsum.photos/300/300?random=11',
+    hoverImage: 'https://picsum.photos/300/300?random=12',
+    category: 'dress-shirt',
+  },
+  {
+    id: '7',
+    name: 'Quần Jeans Nam ICONDENIM Slim Fit',
+    originalPrice: '499,000₫',
+    discountedPrice: '399,000₫',
+    discount: '20%',
+    label: 'Best Seller',
+    image: 'https://picsum.photos/300/300?random=13',
+    hoverImage: 'https://picsum.photos/300/300?random=14',
+    category: 'jeans',
+  },
+  {
+    id: '8',
+    name: 'Áo Khoác Jean Nam ICONDENIM Blue Wash',
+    originalPrice: '599,000₫',
+    discountedPrice: '459,000₫',
+    discount: '23%',
+    label: 'Hàng Mới',
+    image: 'https://picsum.photos/300/300?random=15',
+    hoverImage: 'https://picsum.photos/300/300?random=16',
+    category: 'jacket',
+  },
+  {
+    id: '9',
+    name: 'Áo Thun Nam ICONDENIM Oversize',
+    originalPrice: '299,000₫',
+    discountedPrice: '209,000₫',
+    discount: '30%',
+    label: '',
+    image: 'https://picsum.photos/300/300?random=17',
+    hoverImage: 'https://picsum.photos/300/300?random=18',
+    category: 'shirt',
+  },
 ];
 
 export default function NewProductPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Sản phẩm nổi bật');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 20;
 
   const sortOptions = [
     'Sản phẩm nổi bật',
@@ -77,9 +138,20 @@ export default function NewProductPage() {
     'Tồn kho: Giảm dần',
   ];
 
-  const filteredProducts = selectedCategory === 'all'
-    ? products
-    : products.filter((product) => product.category === selectedCategory);
+  const filteredProducts =
+    selectedCategory === 'all'
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const getLabelColor = (label: string) => {
     if (label === 'Hàng Mới') return 'bg-orange-500';
@@ -98,13 +170,16 @@ export default function NewProductPage() {
         </ul>
       </nav>
 
-      {/* Category Navigation */}
+      {/* Category */}
       <div className="relative">
         <div className="flex justify-center overflow-x-auto space-x-2 pb-2 scrollbar-hide">
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
+              onClick={() => {
+                setSelectedCategory(category.id);
+                setCurrentPage(1); // Reset về trang 1 khi chọn category
+              }}
               className={`category-button flex items-center px-9 py-4 rounded text-sm font-medium ${
                 selectedCategory === category.id ? 'bg-gray-300' : 'bg-white'
               } transition-colors whitespace-nowrap`}
@@ -148,92 +223,88 @@ export default function NewProductPage() {
 
       {/* Product List */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2 mb-4">
-  {filteredProducts.map((product) => (
-    <div
-      key={product.id}
-      className="bg-white p-2 rounded border border-gray-200 group"
+        {currentProducts.map((product) => (
+          <div key={product.id} className="bg-white p-2 rounded border border-gray-200 group">
+            <div className="relative">
+              <img
+                alt={product.name}
+                className="w-full h-auto rounded"
+                src={product.image}
+                loading="lazy"
+              />
+              <img
+                alt={`${product.name} alternate`}
+                className="absolute top-0 left-0 w-full h-auto rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                src={product.hoverImage}
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                <div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-8 h-8 rounded-full flex justify-center items-center text-black text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  title="Xem chi tiết"
+                >
+                  <FontAwesomeIcon icon={faMagnifyingGlass} />
+                </div>
+              </div>
+              {product.label && (
+                <div
+                  className={`absolute top-2 left-2 px-2 py-[2px] text-[11px] font-medium rounded text-white z-30 ${getLabelColor(
+                    product.label
+                  )}`}
+                >
+                  {product.label}
+                </div>
+              )}
+              <a
+                href="#"
+                className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black z-30"
+                aria-label="Thêm vào giỏ"
+                title="Thêm vào giỏ"
+              >
+                <FontAwesomeIcon icon={faCartShopping} />
+              </a>
+            </div>
+            <div className="mt-1 text-sm font-medium text-black leading-[1.25rem]">
+              {product.name}
+            </div>
+            {product.discountedPrice ? (
+              <div className="flex items-center gap-2 mt-0.5 leading-[1.25rem]">
+                <span className="text-red-600 text-sm font-semibold">{product.discountedPrice}</span>
+                <span className="line-through text-gray-500 text-[12px]">
+                  {product.originalPrice}
+                </span>
+                <span className="bg-red-600 text-white text-[11px] font-bold px-1.5 py-[1px] rounded">
+                  {product.discount}
+                </span>
+              </div>
+            ) : (
+              <div className="text-sm font-semibold mt-0.5 leading-[1.25rem]">
+                {product.originalPrice}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center my-6 gap-2">
+  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+    <button
+      key={page}
+      onClick={() => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+      }}
+      className={`px-3 py-1 border text-sm rounded ${
+        currentPage === page
+          ? 'bg-black text-white'
+          : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+      }`}
     >
-      <div className="relative">
-        <img
-          alt={product.name}
-          className="w-full h-auto rounded"
-          height="300"
-          src={product.image}
-          width="300"
-          loading="lazy"
-        />
-        <img
-          alt={`${product.name} alternate`}
-          className="absolute top-0 left-0 w-full h-auto rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
-          height="300"
-          src={product.hoverImage}
-          width="300"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-8 h-8 rounded-full flex justify-center items-center text-black text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            title="Xem chi tiết"
-          >
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </div>
-        </div>
-
-        {/* Label nếu có */}
-        {product.label && (
-          <div
-            className={`absolute top-2 left-2 px-2 py-[2px] text-[11px] font-medium rounded text-white z-30 ${getLabelColor(
-              product.label
-            )}`}
-          >
-            {product.label}
-          </div>
-        )}
-
-        <a
-          href="#"
-          className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black z-30"
-          aria-label="Thêm vào giỏ"
-          title="Thêm vào giỏ"
-        >
-          <FontAwesomeIcon icon={faCartShopping} />
-        </a>
-      </div>
-
-      {/* Tên sản phẩm */}
-      <div className="mt-1 text-sm font-medium text-black leading-[1.25rem]">
-        {product.name}
-      </div>
-
-      {/* Giá sản phẩm */}
-      {product.discountedPrice ? (
-        <div className="flex items-center gap-2 mt-0.5 leading-[1.25rem]">
-          <span className="text-red-600 text-sm font-semibold">
-            {product.discountedPrice}
-          </span>
-          <span className="line-through text-gray-500 text-[12px]">
-            {product.originalPrice}
-          </span>
-          <span className="bg-red-600 text-white text-[11px] font-bold px-1.5 py-[1px] rounded">
-            {product.discount}
-          </span>
-        </div>
-      ) : (
-        <div className="text-sm font-semibold mt-0.5 leading-[1.25rem]">
-          {product.originalPrice}
-        </div>
-      )}
-    </div>
+      {page}
+    </button>
   ))}
 </div>
-
-
-      {/* Xem thêm button */}
-      <div className="flex justify-center mb-10">
-        <button className="bg-black text-white text-[13px] font-medium px-6 py-2 rounded hover:opacity-50 transition">
-          Xem thêm
-        </button>
-      </div>
     </div>
   );
 }
