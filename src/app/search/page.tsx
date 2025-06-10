@@ -1,82 +1,219 @@
 'use client'
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  image: string;
+  badge: string;
+}
 
-export default function SearchInterface() {
-  const [searchQuery, setSearchQuery] = useState('');
+type TabType ='products' | 'articles';
 
-  const handleSearch = () => {
-    // Xử lý tìm kiếm ở đây
-    console.log('Tìm kiếm:', searchQuery);
-  };
+const EcommerceSearchPage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<TabType>('products');
 
-  const handleKeyPress = (e:any) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+  const products: Product[] = [
+    {
+      id: 1,
+      name: 'Áo Sơ Mi Bóng Chày Nam Disney Stitch Striker Edition',
+      price: '399000',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 2,
+      name: 'Áo Thun Nam Disney Stitch 626 Bounce Core Form Oversize',
+      price: '399000',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 3,
+      name: 'Áo Thun Nam Strokes Orgris Form Boxy',
+      price: '299000',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 4,
+      name: 'Áo Thun Nam ICONDENIM The Coastal Frenzy ORGN.S',
+      price: '329000',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 5,
+      name: 'Áo Thun Nam Sundaze Rush Form Regular',
+      price: '329000',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 6,
+      name: 'Áo Thun Nam Fusion Kit-ID Form Regular',
+      price: '279000',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 7,
+      name: 'Áo Thun Nam Disney Stitch Jersey Vibe Form Oversize',
+      price: '399000',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 8,
+      name: 'Áo Tanktop Nam Hoa Tiêt Disney Stitch Chaotic Energy',
+      price: '229,000₫',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 9,
+      name: 'Áo Thun Nam Tiestyle Loang Sundaze Rush Form Boxy',
+      price: '349,000₫',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
+    },
+    {
+      id: 10,
+      name: 'Áo Thun Nam Họa Tiết Disney Stitch Floral Vibes Form Boxy',
+      price: '329,000₫',
+      image: '/api/placeholder/280/280',
+      badge: 'Hàng Mới',
     }
+  ];
+
+  const handleTabClick = (tab: TabType): void => {
+    setActiveTab(tab);
   };
 
   return (
     <div className="min-h-screen bg-gray-50 mt-40">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-gray-200">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16 space-x-8">
-            <a 
-              href="#" 
-              className="text-gray-900 hover:text-gray-700 font-medium text-sm sm:text-base"
-            >
-              Trang chủ
-            </a>
-            <a 
-              href="#" 
-              className="text-gray-600 hover:text-gray-900 font-medium text-sm sm:text-base border-b-2 border-black"
-            >
-              Tìm kiếm
-            </a>
+          <div className="flex items-center justify-between h-16">
+            {/* Navigation */}
+            <nav className="flex space-x-8">
+              <a href="/">
+                <button>
+                  Trang chủ
+                </button>
+              </a>
+              <button>
+                Tìm kiếm
+              </button>
+            </nav>
           </div>
         </div>
-      </nav>
+      </header>
 
       {/* Main Content */}
-      <main className="flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className="w-full max-w-2xl mx-auto text-center">
-          {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 ">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Search Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl lg:text-4xl font-bold text-black mb-4 underline">
             Tìm kiếm
           </h1>
-          
-          {/* Decorative line - hidden on mobile */}
-          <div className="hidden sm:block w-16 h-1 bg-gray-800 mx-auto mb-8 lg:mb-12"></div>
-          
-          {/* Error message */}
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-800 mb-4 sm:mb-6 leading-tight">
-            Không tìm thấy nội dung bạn yêu cầu
-          </h2>
-          
-          {/* Description */}
-          <p className="text-gray-600 text-sm sm:text-base mb-8 sm:mb-12 max-w-lg mx-auto leading-relaxed">
-            Không tìm thấy "". Vui lòng kiểm tra chính tả, sử dụng các từ tổng quát hơn và thử lại!
-          </p>
-          
-          {/* Search Form */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 max-w-md sm:max-w-lg mx-auto">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Tìm kiếm sản phẩm..."
-              className="flex-1 px-4 py-3 mr-3 text-gray-700 bg-white border border-gray-300   focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm sm:text-base"
-            />
-            <button
-              onClick={handleSearch}
-              className="px-6 sm:px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-medium  sm:rounded-l-none transition-colors duration-200 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
-            >
-              Tìm kiếm
-            </button>
+        </div>          
+          {/* Desktop/Tablet - Horizontal Line */}
+          <div className="sm:flex sm:justify-between text-center items-center">
+                <div>
+                <p className="text-gray-600 text-base mb-8">
+                  Kết quả tìm kiếm cho "
+                  <span className="font-semibold">áo</span>
+                  ".
+                </p>
+                </div>
+              
+              {/* Filter Tabs */}
+              <div className="flex justify-center items-center gap-5  mb-12">
+                <button 
+                  onClick={() => handleTabClick('products')}
+                  className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${
+                    activeTab === 'products' 
+                      ? 'bg-black text-white' 
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  }`}
+                  type="button"
+                >
+                  SẢN PHẨM ({products.length})
+                </button>
+                <button 
+                  onClick={() => handleTabClick('articles')}
+                  className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${
+                    activeTab === 'articles' 
+                      ? 'bg-black text-white' 
+                      : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                  }`}
+                  type="button"
+                >
+                  BÀI VIẾT (0)
+                </button>
+              </div>
+            </div>
+          {/* Products Grid */}
+          <div className="flex flex-wrap -mx-2">
+            {products.map((product, i) => (
+              <div key={i} className=" w-1/2 sm:w-1/3 lg:w-1/5 px-2 mb-6">
+                <div className="bg-white p-2 rounded-lg cursor-pointer">
+                  <div className="relative group overflow-hidden">
+                    <a href="#" className="relative">
+                      <img src='/assets/images/zz.webp' alt={product.name} className="w-full h-full object-cover" />
+                      <img
+                        src='/assets/images/zzz.webp'
+                        className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        />
+                    </a>
+                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
+                    </div>
+                      <a
+                        href="#"
+                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                        >
+                        <FontAwesomeIcon icon={faCartShopping} />
+                      </a>
+                    <div className=" absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
+                      <p>New</p>
+                      </div>
+                    </div>
+                    <div className="px-1 mt-2">
+                      <p className="text-sm">{product.name}</p>
+                      <strong className="text-sm">{product.price.toLocaleString() + ' VNĐ'}</strong>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+          {/* Load More Section */}
+          <div className="flex justify-center items-center gap-5 mt-12">
+            <button 
+              className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+              1
+            </button>
+            <button 
+              className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+              2
+            </button>
+            <button 
+              className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+              3
+            </button>            
+          </div>
       </main>
+      {/* Font Awesome CDN */}
+      <link 
+        rel="stylesheet" 
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      />
     </div>
   );
-}
+};
+
+export default EcommerceSearchPage;
