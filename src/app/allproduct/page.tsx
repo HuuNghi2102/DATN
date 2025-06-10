@@ -17,7 +17,7 @@ const products = [
     name: 'Áo Sơmi Nam Kaki Sundaze Rush Form Relax',
     price: '349,000₫',
     label: 'Hàng Mới',
-    image: '/assets/images/sp3.webp'  ,
+    image: '/assets/images/sp3.webp',
     hoverImage: '/assets/images/hoversp2.webp',
   },
   {
@@ -36,11 +36,26 @@ const products = [
     image: '/assets/images/sp4.webp',
     hoverImage: '/assets/images/hover sp4.webp',
   },
-  
+  // Thêm 20 sản phẩm demo
+  ...Array.from({ length: 20 }, (_, i) => ({
+    id: `fake-${i}`,
+    name: `Sản phẩm demo ${i + 1}`,
+    price: `${199000 + i * 1000}₫`,
+    label: 'Hàng Mới',
+    image: '/assets/images/sp1.webp',
+    hoverImage: '/assets/images/hoversp2.webp',
+  })),
 ];
 
 export default function AllProductPage() {
-  const allProducts = products;
+  const perPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(products.length / perPage);
+  const currentProducts = products.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
+
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('Sản phẩm nổi bật');
 
@@ -55,6 +70,11 @@ export default function AllProductPage() {
     'Bán chạy nhất',
     'Tồn kho: Giảm dần',
   ];
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
@@ -108,72 +128,82 @@ export default function AllProductPage() {
         </div>
       </div>
 
-      {/* Product List */}
+      {/* Product Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2 mb-4 z-0">
-  {allProducts.map((product) => (
-    <div key={product.id} className="bg-white p-2 rounded border border-gray-200 group relative">
-      <div className="relative">
-        <img
-          alt={product.name}
-          className="w-full h-auto rounded"
-          src={product.image}
-          loading="lazy"
-        />
-        <img
-          alt={`${product.name} alternate`}
-          className="absolute top-0 left-0 w-full h-auto rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
-          src={product.hoverImage}
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-          <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-8 h-8 rounded-full flex justify-center items-center text-black text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            title="Xem chi tiết"
-          >
-            <FontAwesomeIcon icon={faSearch} />
+        {currentProducts.map((product) => (
+          <div key={product.id} className="bg-white p-2 rounded border border-gray-200 group relative">
+            <div className="relative">
+              <img
+                alt={product.name}
+                className="w-full h-auto rounded"
+                src={product.image}
+                loading="lazy"
+              />
+              <img
+                alt={`${product.name} alternate`}
+                className="absolute top-0 left-0 w-full h-auto rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                src={product.hoverImage}
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                <div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-8 h-8 rounded-full flex justify-center items-center text-black text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  title="Xem chi tiết"
+                >
+                  <FontAwesomeIcon icon={faSearch} />
+                </div>
+              </div>
+              {product.label && (
+                <div
+                  className={`absolute top-2 right-2 px-2 py-[2px] text-[11px] font-semibold rounded z-30 ${
+                    ['Sieu Mat', 'Sieu Nhe'].includes(product.label)
+                      ? 'text-white bg-blue-600'
+                      : 'text-black bg-orange-500'
+                  }`}
+                >
+                  {product.label}
+                </div>
+              )}
+              <a
+                href="#"
+                className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black z-30"
+                aria-label="Thêm vào giỏ"
+                title="Thêm vào giỏ"
+              >
+                <FontAwesomeIcon icon={faShoppingCart} />
+              </a>
+            </div>
+            <div className="mt-1 text-sm font-medium text-black leading-[1.25rem]">
+              {product.name}
+            </div>
+            <div className="text-sm font-semibold mt-0.5 leading-[1.25rem]">
+              {product.price}
+            </div>
           </div>
-        </div>
+        ))}
+      </div>
 
-        {product.label && (
-          <div
-            className={`absolute top-2 right-2 px-2 py-[2px] text-[11px] font-semibold rounded z-30 ${
-              ['Sieu Mat', 'Sieu Nhe'].includes(product.label)
-                ? 'text-white bg-blue-600'
-                : 'text-black bg-orange-500'
+       {/* Pagination */}
+      <div className="flex justify-center my-6 gap-2">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            }}
+            className={`px-3 py-1 border text-sm rounded ${
+              currentPage === page
+                ? 'bg-black text-white'
+                : 'bg-white text-black border-gray-300 hover:bg-gray-100'
             }`}
           >
-            {product.label}
-          </div>
-        )}
-
-        <a
-          href="#"
-          className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black z-30"
-          aria-label="Thêm vào giỏ"
-          title="Thêm vào giỏ"
-        >
-          <FontAwesomeIcon icon={faShoppingCart} />
-        </a>
+            {page}
+          </button>
+        ))}
       </div>
 
-      <div className="mt-1 text-sm font-medium text-black leading-[1.25rem]">
-  {product.name}
-</div>
-<div className="text-sm font-semibold mt-0.5 leading-[1.25rem]">
-  {product.price}
-</div>
 
-    </div>
-  ))}
-</div>
-
-
-      {/* Xem thêm */}
-      <div className="flex justify-center mb-10">
-        <button className="bg-black text-white text-[13px] font-medium px-6 py-2 rounded hover:opacity-50 transition">
-          Xem thêm
-        </button>
-      </div>
     </div>
   );
 }
