@@ -14,10 +14,10 @@ export default function Footer() {
             </button>
           </form>
           <div className="flex gap-2">
-            <img width="40" src="/assets/images/zalo-seeklogo.webp" alt="zalo" />
-            <img width="40" src="/assets/images/Instagram_icon.png.webp" alt="instagram" />
-            <img width="40" src="/assets/images/yt.png" alt="youtube" />
-            <img width="40" src="/assets/images/2023_Facebook_icon.svg.png" alt="facebook" />
+            <img className='max-w-10 h-10'  src="/assets/images/zalo-seeklogo.webp" alt="zalo" />
+            <img className='max-w-10 h-10'  src="/assets/images/Instagram_icon.png.webp" alt="instagram" />
+            <img className='max-w-10 h-10'  src="/assets/images/yt.png" alt="youtube" />
+            <img className='max-w-10 h-10'  src="/assets/images/2023_Facebook_icon.svg.png" alt="facebook" />
           </div>
         </div>
 

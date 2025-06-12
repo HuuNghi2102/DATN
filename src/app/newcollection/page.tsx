@@ -88,7 +88,7 @@ export default function AllProductPage() {
         <ul className="flex items-center gap-1">
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
           <li className="text-gray-500 font-normal">/</li>
-          <li className="text-[12px] font-semibold mt-0.5">Tất Cả Sản Phẩm</li>
+          <li className="text-[12px] font-semibold mt-0.5">Hàng Mới</li>
         </ul>
       </nav>
 

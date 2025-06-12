@@ -168,12 +168,14 @@ const Header = () => {
 
                 <div className={styles['user-control-item']} style={{ position: 'relative' }}>
                 <div className={styles.icon} onClick={handleToggleUserDropdown} style={{ cursor: 'pointer' }}>
+                <a href="/login">
                     <img
                     src="https://theme.hstatic.net/1000253775/1001315144/14/user-account.svg?v=2041"
                     width="24"
                     height="24"
                     alt=""
                     />
+                </a>
                 </div>
 
                 {currentUser ? (
@@ -186,9 +188,11 @@ const Header = () => {
                             <h1 className='text-center text-xl'>THÔNG TIN TÀI KHOẢN</h1>
                             <p className='text-center text-sm'>Số điện thoại: <strong className='text-black'>{currentUser.sdt_user}</strong></p>
                             <div  className={styles.dropdownButtons }>
-                                <button className={styles.btn}>
-                                    <a href="/userprofile">Xem chi tiết</a>
-                                </button>
+                                <a href="/userprofile">
+                                    <button className={styles.btn}>
+                                        Xem chi tiết
+                                    </button>
+                                </a>
                                 <button className={styles.btn} onClick={() => {
                                     setLogoutUser(true)
                                 }}>Đăng xuất</button>

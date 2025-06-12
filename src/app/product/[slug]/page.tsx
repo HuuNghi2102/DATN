@@ -253,32 +253,32 @@ const [cartItem,setCartItem] = useState({
           {/* Product Images */}
             <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative bg-white rounded-lg overflow-hidden shadow-sm">
-              <img 
-                src={`https://huunghi.id.vn/storage/products/${currentImageIndex ? currentImageIndex : 'Đang tải' }`} 
-                alt="Product"
-                className="w-full h-96 lg:h-[650px] object-cover"
-              />
-            </div>
+                <div className="relative bg-white rounded-lg overflow-hidden shadow-sm">
+                    <img 
+                        src={`https://huunghi.id.vn/storage/products/${currentImageIndex ? currentImageIndex : 'Đang tải' }`} 
+                        alt="Product"
+                        className="w-full h-96 lg:h-[650px] object-cover"
+                    />
+                </div>
             
             {/* Thumbnail Images */}
-            <div className="flex space-x-2 overflow-x-auto">
-              { images.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(img.link_anh)}
-                  className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-lg overflow-hidden border-2 ${
-                    currentImageIndex === img.link_anh ? 'border-blue-500' : 'border-gray-200'
-                  }`}
-                >
-                  <img src={`https://huunghi.id.vn/storage/products/${img.link_anh}`} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
+                <div className="flex space-x-2 overflow-x-auto">
+                { images.map((img, index) => (
+                    <button
+                    key={index}
+                    onClick={() => setCurrentImageIndex(img.link_anh)}
+                    className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-lg overflow-hidden border-2 ${
+                        currentImageIndex === img.link_anh ? 'border-blue-500' : 'border-gray-200'
+                    }`}
+                    >
+                    <img src={`https://huunghi.id.vn/storage/products/${img.link_anh}`} alt={`Thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                ))}
+                </div>
             </div>
 
           {/* Product Info */}
-            <div className="space-y-6">
+            <div className="space-y-6 sticky top-0">
             <div>
                 <h1 className="text-xl lg:text-xl font-bold text-gray-900 mb-2">
                     {product ? product.ten_san_pham : 'Đang tải...' }

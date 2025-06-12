@@ -253,7 +253,7 @@ const vouchers = [
                     ))}
                   </Slider>
                   <div className="flex justify-center my-9">
-                    <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+                    <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                       Xem tất cả
                     </button>
                   </div>
@@ -293,7 +293,7 @@ const vouchers = [
                     ))}
                   </Slider>
                   <div className="flex justify-center my-9">
-                    <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+                    <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                       Xem tất cả
                     </button>
                   </div>
@@ -333,7 +333,7 @@ const vouchers = [
                     ))}
                   </Slider>
                   <div className="flex justify-center my-9">
-                    <button className="rounded-lg bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+                    <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
                       Xem tất cả
                     </button>
                   </div>
