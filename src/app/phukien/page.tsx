@@ -220,7 +220,53 @@ export default function AllProductPage() {
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
-      {/* Breadcrumb + Banner + Sort giữ nguyên như cũ */}
+
+      <nav className="text-[11px] font-medium pb-2">
+        <ul className="flex items-center gap-1">
+          <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
+          <li className="text-gray-500 font-normal">/</li>
+          <li className="text-[12px] font-semibold mt-0.5">Phụ Kiện Khác</li>
+        </ul>
+      </nav>
+
+      <div className="mt-1">
+        <img
+          alt="Tất cả sản phẩm banner"
+          className="w-full object-cover"
+          height="300"
+          src="/assets/images/banner spmoi.jpg"
+          width="1200"
+        />
+      </div>
+
+      <div className="flex justify-end mt-4 mb-4 items-center text-black text-[13px] relative z-50">
+        <span className="mr-2 font-semibold">Sắp xếp:</span>
+        <div className="relative">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[12px]"
+          >
+            {selectedOption}
+            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
+          </button>
+          {isOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-lg z-50">
+              {sortOptions.map((option) => (
+                <div
+                  key={option}
+                  onClick={() => {
+                    setSelectedOption(option);
+                    setIsOpen(false);
+                  }}
+                  className="px-3 py-2 text-[10px] cursor-pointer hover:bg-blue-600 hover:text-white"
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Product List */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2 mb-4 z-0">

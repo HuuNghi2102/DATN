@@ -94,7 +94,7 @@ export default function AllProductPage() {
   ];
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[9%]">
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
@@ -121,7 +121,7 @@ export default function AllProductPage() {
         <div className="relative">
           <button
             onClick={() => {setIsOpen(!isOpen);}}
-            className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[10px]"
+            className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[12px]"
           >
             {selectedOption[0]}
             <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
