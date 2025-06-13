@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping,faCalendarDays,faChevronRight } from '@fortawesome/free-solid-svg-icons';
 interface Product {
   id: number;
   name: string;
@@ -87,7 +87,7 @@ const EcommerceSearchPage: React.FC = () => {
       badge: 'Hàng Mới',
     }
   ];
-
+  const [isProductOrPost, setIsProductOrPost] = useState(false || true);
   const handleTabClick = (tab: TabType): void => {
     setActiveTab(tab);
   };
@@ -157,40 +157,71 @@ const EcommerceSearchPage: React.FC = () => {
                 </button>
               </div>
             </div>
-          {/* Products Grid */}
-          <div className="flex flex-wrap -mx-2">
-            {products.map((product, i) => (
-              <div key={i} className=" w-1/2 sm:w-1/3 lg:w-1/5 px-2 mb-6">
-                <div className="bg-white p-2 rounded-lg cursor-pointer">
-                  <div className="relative group overflow-hidden">
-                    <a href="#" className="relative">
-                      <img src='/assets/images/zz.webp' alt={product.name} className="w-full h-full object-cover" />
-                      <img
-                        src='/assets/images/zzz.webp'
-                        className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          {/* Sản phẩm */}
+          {activeTab === 'products' && (
+            <div className="flex flex-wrap -mx-2">
+              {products.map((product, i) => (
+                <div key={i} className=" w-1/2 sm:w-1/3 lg:w-1/5 px-2 mb-6">
+                  <div className="bg-white p-2 rounded-lg cursor-pointer">
+                    <div className="relative group overflow-hidden">
+                      <a href="#" className="relative">
+                        <img src='/assets/images/zz.webp' alt={product.name} className="w-full h-full object-cover" />
+                        <img
+                          src='/assets/images/zzz.webp'
+                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
-                    </a>
-                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      </a>
+                      <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
-                    </div>
+                      </div>
                       <a
                         href="#"
                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
-                        >
+                      >
                         <FontAwesomeIcon icon={faCartShopping} />
                       </a>
-                    <div className=" absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
-                      <p>New</p>
+                      <div className="absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
+                        <p>{product.badge}</p>
                       </div>
                     </div>
                     <div className="px-1 mt-2">
                       <p className="text-sm">{product.name}</p>
-                      <strong className="text-sm">{product.price.toLocaleString() + ' VNĐ'}</strong>
+                      <strong className="text-sm">{product.price.toLocaleString()} VNĐ</strong>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+          {/* bài viết */}
+          {activeTab === 'articles' && (
+            <div className="flex flex-wrap -mx-2">
+              {[1, 2, 3, 4].map((_, index) => (
+                <div key={index} className="w-1/2 h-1/2 sm:w-1/3 lg:w-1/4 px-2 mb-6">
+                  <div className="group">
+                    <div className="h-[220px]">
+                      <a href="#">
+                        <img className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900" src="/assets/images/zzz.webp" alt="" />
+                      </a>
+                    </div>
+                    <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
+                      <h1 className="text-center font-semibold">Top 10 đồ đẹp của shop verve style</h1>
+                      <p className="text-sm text-gray-600 ">áo đẹp là asdasdasde asdada a sdaadssđ a..</p>
+                      <hr className="my-2" />
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-500">
+                          <FontAwesomeIcon icon={faCalendarDays} /> 10/06/2025
+                        </span>
+                        <a href="#" className="text-sm text-gray-500 hover:text-amber-400">
+                          Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           {/* Load More Section */}
           <div className="flex justify-center items-center gap-5 mt-12">
             <button 

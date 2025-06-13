@@ -25,10 +25,9 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <FontAwesomeIcon icon={faChevronRight} />
   </div>
 );
-
 const ProductPageDetail = () => {
-    const [selectedSize, setSelectedSize] = useState<any>(null);
-    const [selectedColor, setSelectedColor] = useState<any>(null);
+    const [selectedSize, setSelectedSize] = useState<any>();
+    const [selectedColor, setSelectedColor] = useState<any>();
     const [quantity, setQuantity] = useState(1);
     const [currentImageIndex, setCurrentImageIndex] = useState('');
     const [productVariant, setProductVariant] = useState<any>(null); 
@@ -53,13 +52,6 @@ const [cartItem,setCartItem] = useState({
 
   const params = useParams();
   const { slug } = params;
-
-  const promoOffers = [
-    { code: 'MAY10', discount: '10%', minOrder: '199K' },
-    { code: 'MAY30', discount: '30K', minOrder: '599K' },
-    { code: 'MAY70', discount: '70K', minOrder: '899K' },
-    { code: 'MAY100', discount: '100K', minOrder: '1199K'}
-  ];
     useEffect(()=>{
         const fetchVoucher = async ()=>{
         try {
@@ -79,21 +71,17 @@ const [cartItem,setCartItem] = useState({
             try {
                 const res = await fetch(`https://huunghi.id.vn/api/product/pageDetailProduct/${slug}`);
                 const result = await res.json();
-
                 if(result.status == false){
                     return window.location.href = '/notFound'
                 }
-
                 const arrImages = result.data.product.images;
                 const getProduct = result.data.product;
                 const arrSizes = result.data.sizes
                 const arrColors = result.data.colors;
-
                 setImages(arrImages);
                 setProduct(getProduct);
                 setColors(arrColors);
                 setSizes(arrSizes);
-                
                 // set color, size , image default
                 setSelectedColor(arrColors[0]);
                 setSelectedSize(arrSizes[0]);
@@ -115,8 +103,7 @@ const [cartItem,setCartItem] = useState({
                     so_luong_san_pham: quantity,
                     duong_dan: getProduct.duong_dan,
                     id_san_pham_bien_the: variant.id_san_pham_bien_the,
-                })
-                
+                }) 
             } catch (error) {
                 console.log(error);
             }
@@ -157,9 +144,7 @@ const [cartItem,setCartItem] = useState({
             console.log(error);
         }
     }
-
     // console.log(cartItem);
-
     const addToCart = () => {
         const localCart = localStorage.getItem('cart');
         let carts = []
