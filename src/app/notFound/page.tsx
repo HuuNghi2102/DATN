@@ -3,7 +3,7 @@ import React from 'react';
 
 const NotFoundPage = () => {
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden mt-40">
+    <div className="min-h-screen bg-black relative overflow-hidden pt-[12%]">
       {/* Animated Stars */}
       <div className="absolute inset-0">
         {[...Array(100)].map((_, i) => (

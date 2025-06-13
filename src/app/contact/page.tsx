@@ -193,13 +193,13 @@ export default function StoreLocationsPage() {
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
-          <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
+          <li className="text-[12px] font-semibold mt-0.5"><a href="/">Trang chủ</a></li>
           <li className="text-gray-500 font-normal">/</li>
-          <li className="text-[12px] font-semibold mt-0.5">Địa Chỉ Cửa Hàng</li>
+          <li className="text-[12px] font-semibold mt-0.5 underline">Địa Chỉ Cửa Hàng</li>
         </ul>
       </nav>
 

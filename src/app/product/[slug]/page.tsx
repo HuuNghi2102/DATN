@@ -7,7 +7,7 @@ import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortaw
 import Slider from 'react-slick';
 import productDetailInterface from "../../compoments/productDetailInterface";
 import { useCart } from '@/app/context/CartContext';
-
+import voucherInterface from '@/app/compoments/vouchersInterface';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
@@ -27,18 +27,17 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
 );
 
 const ProductPageDetail = () => {
-  const [selectedSize, setSelectedSize] = useState<any>(null);
-  const [selectedColor, setSelectedColor] = useState<any>(null);
-  const [quantity, setQuantity] = useState(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState('');
-  const [productVariant, setProductVariant] = useState<any>(null); 
-
-
-  const [sizes, setSizes] = useState<any[] | []>([]); 
-  const [colors, setColors] = useState<any[]>([]);
-  const [product, setProduct] = useState<any>(null);
-  const [images, setImages] = useState<any[]>([]);
-  const [productRelateds, setProductRelateds] = useState<any[]>([]);
+    const [selectedSize, setSelectedSize] = useState<any>(null);
+    const [selectedColor, setSelectedColor] = useState<any>(null);
+    const [quantity, setQuantity] = useState(1);
+    const [currentImageIndex, setCurrentImageIndex] = useState('');
+    const [productVariant, setProductVariant] = useState<any>(null); 
+    const [sizes, setSizes] = useState<any[] | []>([]); 
+    const [colors, setColors] = useState<any[]>([]);
+    const [product, setProduct] = useState<any>(null);
+    const [images, setImages] = useState<any[]>([]);
+    const [productRelateds, setProductRelateds] = useState<any[]>([]);
+    const [voucher, setVoucher] = useState<voucherInterface[]>([]);
 
 const [cartItem,setCartItem] = useState({
     ten_san_pham: product?.ten_san_pham,
@@ -61,13 +60,23 @@ const [cartItem,setCartItem] = useState({
     { code: 'MAY70', discount: '70K', minOrder: '899K' },
     { code: 'MAY100', discount: '100K', minOrder: '1199K'}
   ];
-
+    useEffect(()=>{
+        const fetchVoucher = async ()=>{
+        try {
+            let getAPIvoucher = await fetch('https://huunghi.id.vn/api/voucher/getFourVoucher')
+            let data = await getAPIvoucher.json()
+            setVoucher(data.data.vouchers)
+        } catch (error) {
+            console.log(error);
+        }
+        }
+        fetchVoucher();
+    },[])
 
     useEffect(()=>{
         if (!slug) return; 
         const fetchProduct = async ()=> {
             try {
-
                 const res = await fetch(`https://huunghi.id.vn/api/product/pageDetailProduct/${slug}`);
                 const result = await res.json();
 
@@ -85,16 +94,13 @@ const [cartItem,setCartItem] = useState({
                 setSelectedColor(arrColors[0]);
                 setSelectedSize(arrSizes[0]);
                 setCurrentImageIndex(arrImages[0].link_anh);
-
                 // get product
                 const pro = result.data.product;
-
                 // fetch relatedProduct
                 const res2 = await fetch(`https://huunghi.id.vn/api/product/getTenRelatedProduct/${pro?.id_loai_san_pham}`);
                 const result2 = await res2.json();
                 setProductRelateds(result2.data.relatedProducts)
                 const variant = await handleChangeQuantity(pro.id_san_pham,result.data.colors[0].ten_mau,result.data.sizes[0],quantity);
-
                 //set default cartItem
                 setCartItem({
                     ten_san_pham: getProduct.ten_san_pham,
@@ -130,9 +136,7 @@ const [cartItem,setCartItem] = useState({
             });
             const result = await res.json();
             const variant = result.data;
-
             setProductVariant(variant);
-
             setCartItem({
                 ten_san_pham: product?.ten_san_pham,
                 anh_san_pham: images[0]?.link_anh,
@@ -165,34 +169,34 @@ const [cartItem,setCartItem] = useState({
             const parsetoken = JSON.parse(accessToken);
             const parsetypeToken = JSON.parse(typeToken);
             try {
-              fetch("https://huunghi.id.vn/api/cart/addToCart",{
+                fetch("https://huunghi.id.vn/api/cart/addToCart",{
                 method: "POST",
                 headers: {
-                  "Content-Type" : "application/json",
-                  "Authorization" : `${parsetypeToken} ${parsetoken}`
+                    "Content-Type" : "application/json",
+                    "Authorization" : `${parsetypeToken} ${parsetoken}`
                 },
                 body: JSON.stringify({
-                  name: cartItem.ten_san_pham,
-                  image: cartItem.anh_san_pham,
-                  slug: cartItem.duong_dan,
-                  size: cartItem.kich_thuoc_san_pham,
-                  color: cartItem.mau_san_pham,
-                  quantity: cartItem.so_luong_san_pham,
-                  price: cartItem.gia_san_pham,
-                  idVariant: cartItem.id_san_pham_bien_the,
+                    name: cartItem.ten_san_pham,
+                    image: cartItem.anh_san_pham,
+                    slug: cartItem.duong_dan,
+                    size: cartItem.kich_thuoc_san_pham,
+                    color: cartItem.mau_san_pham,
+                    quantity: cartItem.so_luong_san_pham,
+                    price: cartItem.gia_san_pham,
+                    idVariant: cartItem.id_san_pham_bien_the,
                 })
-              })
-              .then(res => res.json())
-              .then(data => {
+                })
+                .then(res => res.json())
+                .then(data => {
                 carts.push(cartItem);
                 
                 localStorage.setItem('cart',JSON.stringify(carts));
 
                 alert(data.message);
-              })
-              .catch(err => console.error('Lỗi tải cart từ server:', err));
+                })
+                .catch(err => console.error('Lỗi tải cart từ server:', err));
             } catch (error) {
-              console.log(error);
+                console.log(error);
             }
         }else{
             let flag:boolean = true;
@@ -234,9 +238,9 @@ const [cartItem,setCartItem] = useState({
 
     return (
         
-        <div className="min-h-screen bg-gray-50 mt-40">
+        <div className="min-h-screen bg-gray-50 pt-[12%]">
         {/* Header */}
-        <div className="bg-white shadow-sm py-4 pl-10">
+        <div className="bg-white shadow-sm py-4 pl-28">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <span>Trang chủ</span>
@@ -248,7 +252,7 @@ const [cartItem,setCartItem] = useState({
             </div>
         </div>
 
-        <div className="max-w-7xl mx-auto p-4 lg:p-6">
+        <div className="max-w-[1200px] mx-auto py-4 lg:py-6 sm:px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Images */}
             <div className="space-y-4">
@@ -300,10 +304,10 @@ const [cartItem,setCartItem] = useState({
                     <img src="https://file.hstatic.net/1000253775/file/gift_new-removebg-preview_fce03d3cd9d24d0cb0be33ac068e41fc.png" alt="" width={22} height={22} />KHUYẾN MÃI - ƯU ĐÃI
                 </div>
                 <div className="space-y-2 text-sm">
-                    {promoOffers.map((offer, index) => (
+                    {voucher.map((voucher, index) => (
                         <div key={index} className="flex items-center">
                             <i className="fas fa-tag text-orange-500 mr-2"></i>
-                            <span>Nhập mã <strong>{offer.code}</strong> GIẢM {offer.discount} ĐƠN TỪ {offer.minOrder}</span>
+                            <span>Nhập mã <strong>{voucher.ma_giam_gia}</strong> GIẢM {voucher.ma_giam_gia} ĐƠN TỪ {voucher.gia_tri_don_hang}</span>
                         </div>
                     ))}
                     <div className="flex items-center">
@@ -317,12 +321,15 @@ const [cartItem,setCartItem] = useState({
             <div>
                 <p className="text-sm text-gray-600 mb-3">Mã giảm giá bạn có thể sử dụng:</p>
                 <div className="flex flex-wrap gap-2">
-                {promoOffers.map((offer, index) => (
+                {voucher.map((voucher, index) => (
                     <button
-                    key={index}
-                    className="bg-black text-white px-3 py-1 rounded text-sm font-medium hover:bg-gray-800 transition-colors"
-                    >
-                    {offer.code}
+                        key={index}
+                        className="relative bg-black text-white px-4 py-1 rounded text-sm font-medium hover:bg-gray-800 transition-colors">
+                        {voucher.ma_giam_gia}
+                        <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] '>
+                        </div>
+                        <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] right-[-6px] '>
+                        </div>
                     </button>
                 ))}
             </div>

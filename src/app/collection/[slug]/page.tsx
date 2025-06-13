@@ -94,7 +94,7 @@ export default function AllProductPage() {
   ];
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">

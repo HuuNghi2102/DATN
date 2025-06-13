@@ -19,7 +19,7 @@ const PayPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 mt-40">
+    <div className="min-h-screen bg-gray-50 pt-[12%]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column - Order Form */}
@@ -110,7 +110,6 @@ const PayPage = () => {
                         <p className="text-gray-500">Vui lòng chọn tỉnh / thành để có danh sách phương thức vận chuyển.</p>
                     </div>
                     </div>
-
                     {/* Payment Method */}
                     <div className="bg-white rounded-lg shadow p-6">
                         <h3 className="text-lg font-semibold mb-4">Phương thức thanh toán</h3>
@@ -159,7 +158,7 @@ const PayPage = () => {
                 </div>
             {/* Right Column - Order Summary */}
             <div className="lg:col-span-1">
-                <div className="bg-white rounded-lg shadow p-6 sticky top-6">
+                <div className="bg-white rounded-lg shadow p-6 sticky top-44">
                 <div className="flex items-center mb-6">
                     <img 
                     src="/assets/images/zz.webp" 

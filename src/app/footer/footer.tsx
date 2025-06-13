@@ -25,7 +25,7 @@ export default function Footer() {
           <div className="min-w-[250px] flex-1">
             <h3 className="text-lg font-bold uppercase mb-4">GIỚI THIỆU</h3>
             <div className="text-sm mb-2 leading-relaxed">
-              160STORE - Chuỗi Phân Phối Thời Trang Nam Chuẩn Hiệu
+              VerveStyle - Chuỗi Phân Phối Thời Trang Nam Chuẩn Hiệu
             </div>
             <div className="flex items-start text-sm mb-1"><FaPhone className="mr-2 mt-1" /> 02871006789</div>
             <div className="flex items-start text-sm mb-1"><FaEnvelope className="mr-2 mt-1" /> cs@160store.com</div>
@@ -51,7 +51,7 @@ export default function Footer() {
 
           {/* Store Locations */}
           <div className="min-w-[250px] flex-1">
-            <h3 className="text-lg font-bold uppercase mb-4">ĐỊA CHỈ CỬA HÀNG (22 CH)</h3>
+            <h3 className="text-lg font-bold uppercase mb-4">ĐỊA CHỈ CỬA HÀNG</h3>
             {[
               {
                 city: "HỒ CHÍ MINH (10 CH)",

@@ -102,7 +102,7 @@ useEffect(()=>{
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 mt-40">
+    <div className="min-h-screen bg-gray-100 pt-[12%]">
       {/* Font Awesome CDN */}
       <link 
         rel="stylesheet" 
@@ -122,7 +122,7 @@ useEffect(()=>{
         {/* Desktop & Tablet Layout */}
         <div className="hidden md:flex gap-6">
           {/* Sidebar */}
-          <div className="w-80 bg-white rounded-lg shadow-sm">
+          <div className="w-80 bg-white rounded-lg shadow-sm max-h-[530px] sticky top-40">
             <div className="p-4 border-b bg-gray-50 rounded-t-lg">
               <div className="flex items-center gap-2">
                 <i className="fas fa-user text-gray-600"></i>

@@ -23,7 +23,7 @@ export default function SupportRequestWithSidebar() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 mt-40">
+    <div className="min-h-screen bg-gray-100 pt-[12%]">
       {/* Font Awesome */}
       <link 
         rel="stylesheet" 
