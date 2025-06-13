@@ -37,10 +37,14 @@ export default function UserProfile() {
   });
 useEffect(() => {
   const u = localStorage.getItem('user');
-  if(u){
+  const accessTokenLocal = localStorage.getItem('accessToken');
+  const typeTokenLocal = localStorage.getItem('typeToken');
+  if(u && accessTokenLocal && typeTokenLocal){
     const uu = JSON.parse(u);
     setUser(uu);
-  }  
+  }else{
+    alert('Vui lòng đăng nhập')
+  }
 }, []);
 
 useEffect(()=>{

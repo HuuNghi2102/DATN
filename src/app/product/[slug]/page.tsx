@@ -71,6 +71,10 @@ const [cartItem,setCartItem] = useState({
                 const res = await fetch(`https://huunghi.id.vn/api/product/pageDetailProduct/${slug}`);
                 const result = await res.json();
 
+                if(result.status == false){
+                    return window.location.href = '/notFound'
+                }
+
                 const arrImages = result.data.product.images;
                 const getProduct = result.data.product;
                 const arrSizes = result.data.sizes
