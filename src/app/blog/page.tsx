@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const articles = [
   {
@@ -24,15 +24,33 @@ const articles = [
 ];
 
 const MainContent = () => {
-  const articlesPerPage = 15;
+
+  const [posts, setPosts] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+
+
+  const fecthPost = async () => {
+    const responsePost = await fetch(`https://huunghi.id.vn/api/post/listPost?page=${currentPage}`);
+    const result = await responsePost.json();
+    if(responsePost.ok){
+      setPosts(result.data.posts.data);
+      setCurrentPage(result.data.posts.current_page)
+      setTotalPage(result.data.posts.last_page)
+    }else{
+      setPosts([])
+    }
+  }
+
+  useEffect(()=>{
+    fecthPost();
+  },[currentPage])
+
+  const articlesPerPage = 15;
+  
   const titleRef = useRef<HTMLDivElement>(null);
 
-  const totalPages = Math.ceil(articles.length / articlesPerPage);
-  const currentArticles = articles.slice(
-    (currentPage - 1) * articlesPerPage,
-    currentPage * articlesPerPage
-  );
+  
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -59,21 +77,21 @@ const MainContent = () => {
 
         {/* Grid hiển thị bài viết */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {currentArticles.map((article) => (
+          {posts.map((article,index) => (
             <article
-              key={article.id}
+              key={index}
               className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col"
             >
               <img
-                src={article.image}
-                alt={article.title}
+                src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
+                alt={article.ten_bai_viet}
                 className="w-full h-36 object-cover"
                 loading="lazy"
               />
               <div className="p-4 flex flex-col flex-grow">
-                <h2 className="text-sm font-bold mb-2">{article.title}</h2>
+                <h2 className="text-sm font-bold mb-2">{article.ten_bai_viet}</h2>
                 <p className="text-xs text-gray-600 mb-3 flex-grow">
-                  {article.description}
+                  {article.noi_dung_bai_viet.length > 100 ? article.noi_dung_bai_viet.slice(0,127)+'...' : article.noi_dung_bai_viet  }
                 </p>
                 <div className="flex justify-between items-center text-xs text-gray-500">
                   <time className="flex items-center gap-1">
@@ -90,10 +108,10 @@ const MainContent = () => {
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7a2 2 0 002 2z"
                       />
                     </svg>
-                    {article.date}
+                    { new Date(article.created_at).toLocaleDateString('vi-VN')}
                   </time>
                   <a
-                    href={article.link}
+                    href={`/blog/${article.duong_dan}`}
                     className="hover:text-yellow-400 transition"
                   >
                     Xem thêm ›
@@ -107,7 +125,7 @@ const MainContent = () => {
    
          {/* Pagination */}
           <div className="flex justify-center my-6 gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => {

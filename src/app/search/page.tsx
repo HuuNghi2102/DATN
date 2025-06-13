@@ -92,6 +92,7 @@ const EcommerceSearchPage: React.FC = () => {
     setActiveTab(tab);
   };
 
+  
   return (
     <div className="min-h-screen bg-gray-50 mt-40">
       {/* Header */}
