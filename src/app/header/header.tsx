@@ -260,7 +260,7 @@ const Header = () => {
                 </ul>
                 </li>
                 <li className={styles['nav-item']}>
-                    <a href="/blogs/all">TIN THỜI TRANG</a>
+                    <a href="/blog">TIN THỜI TRANG</a>
                 </li>
             </ul>
             </nav>
