@@ -21,14 +21,40 @@ interface User {
 
 export default function UserProfile() {
   const [user, setUser] = useState<User>();
+  const [orders,setOrders] = useState<any[]>();
 
   useEffect(() => {
     const u = localStorage.getItem('user');
-    if (u) {
+    const accessTokenLocal = localStorage.getItem('accessToken');
+    const typeTokenLocal = localStorage.getItem('typeToken'); 
+    if (u && accessTokenLocal && typeTokenLocal) {
       const uu = JSON.parse(u);
+      const accessToken = JSON.parse(accessTokenLocal);
+      const typeToken = JSON.parse(typeTokenLocal);
+
+      const fectchOrder = async () => {
+        const responseOrder = await fetch(`https://huunghi.id.vn/api/order/listOrderOfUser`,{
+          headers : {
+            "Authorization" : `${typeToken} ${accessToken}`
+          }
+        })
+
+        const result = await responseOrder.json();
+
+        const orders = result.data.orders;
+
+        setOrders(orders);
+      }
+
+      fectchOrder();
       setUser(uu);
+    }else{
+      alert('Vui lòng đăng nhập');
     }
+
   }, []);
+
+  
 
   const menuItems = [
     { icon: 'fas fa-user', text: 'Hồ sơ của tôi' },
@@ -111,33 +137,46 @@ export default function UserProfile() {
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Mã đơn hàng</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Tên người nhận</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">SĐT</th>
-            <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Email</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Địa chỉ</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Tổng tiền</th>
-            <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Chi tiết</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Trạng thái</th>
+            <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Hành động</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td className="border border-gray-300 p-3 text-center text-black font-medium">#1</td>
-            <td className="border border-gray-300 p-3 text-center text-black">Chi Hải</td>
-            <td className="border border-gray-300 p-3 text-center text-black">0365999809</td>
-            <td className="border border-gray-300 p-3 text-center text-black whitespace-pre-wrap break-words">
-              chihai@gmail.com
-            </td>
-            <td className="border border-gray-300 p-3 text-center text-black">406/7H</td>
-            <td className="border border-gray-300 p-3 text-center text-black font-medium">299.000đ</td>
-            <td className="border border-gray-300 p-3 text-center">
-              <button className="text-black hover:text-gray-800 font-medium">
-                Xem chi tiết
-              </button>
-            </td>
-            <td className="border border-gray-300 p-3 text-center text-sm text-gray-800">
-              Chờ xác nhận
-            </td>
-          </tr>
-        </tbody>
+        {orders?.map((order,index) => (
+          <tbody key={index}>
+            <tr>
+              <td className="border border-gray-300 p-3 text-center text-black font-medium">#{order.id_don_hang}</td>
+              <td className="border border-gray-300 p-3 text-center text-black">{order.ten_nguoi_nhan}</td>
+              <td className="border border-gray-300 p-3 text-center text-black">{order.so_dien_thoai_nguoi_nhan}</td>
+              <td className="border border-gray-300 p-3 text-center text-black">{order.dia_chi_nguoi_nhan}</td>
+              <td className="border border-gray-300 p-3 text-center text-black font-medium">{order.gia_tong_don_hang.toLocaleString('vi-VN')}đ</td>
+              
+              <td className="border border-gray-300 p-3 text-center text-sm text-gray-800">
+                Chờ xác nhận 
+              </td>
+              <td className="border border-gray-300 p-3 text-center">
+                 <button className="text-black hover:text-gray-800 font-medium">
+                    Xem chi tiết
+                  </button>
+                  {order.trang_thai_don_hang == 'cho_xac_nhan' && (
+                    <button className="text-black hover:text-gray-800 font-medium">
+                      Hủy
+                    </button>
+                  )}
+                  {order.trang_thai_thanh_toan !== 'da_thanh_toan' && order.id_phuong_thuc_thanh_toan !== 1 && (
+                    <a href={`/pagePaymentVNPay?idOrder=${order.id_don_hang}`}>
+                      <button className="text-black hover:text-gray-800 font-medium">
+                        Thanh toán
+                      </button>
+                    </a>
+                    
+                  )} 
+              </td>
+            </tr>
+          </tbody>
+        ))}
+        
       </table>
     </div>
   </div>

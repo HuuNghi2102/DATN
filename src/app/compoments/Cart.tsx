@@ -111,6 +111,8 @@ const CartPage = () => {
     localStorage.setItem('cart',JSON.stringify(arrCart));
     setCarts(arrCart);
   }
+
+  
   const useVoucher = async (codeVoucher:string,totalOrder:number) => {
     const res = await fetch(`https://huunghi.id.vn/api/voucher/useVoucher`,{
       method : "POST",

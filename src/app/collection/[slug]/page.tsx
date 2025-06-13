@@ -49,18 +49,10 @@ export default function AllProductPage() {
   const [products,setProducts] = useState<any[]>([]);
   const [totalPage,setTotalPage] = useState(1);
 
-  const perPage = 20;
-  const totalPages = Math.ceil(products.length / perPage);
-  const currentProducts = products.slice(
-    (currentPage - 1) * perPage,
-    currentPage * perPage
-  );
-
   const params = useParams();
   const {slug} = params;
 
   useEffect(() => {
-
     fetchProducts();
   },[sort,currentPage]);
 
@@ -212,7 +204,12 @@ export default function AllProductPage() {
       {/* Xem thêm */}
             {/* Pagination */}
 <div className="flex justify-center my-6 gap-2">
-  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+  <button
+      className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+    >
+      {'<'}
+  </button>
+  {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
     <button
       key={page}
       onClick={() => {
@@ -228,6 +225,11 @@ export default function AllProductPage() {
       {page}
     </button>
   ))}
+  <button
+      className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+    >
+      {'>'}
+  </button>
 </div>
     </div>
   );
