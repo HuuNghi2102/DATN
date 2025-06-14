@@ -17,6 +17,7 @@ const Header = () => {
     const [currentUser,setCurrentUser] = useState<userInterface>();
     const [showUserDropdown, setShowUserDropdown] = useState(false);
     const [logoutUser, setLogoutUser] = useState(false);
+    const [inputSeach,setInputSearch] = useState('')
     useEffect(() => {
         const logout = async () => {
             try{
@@ -140,9 +141,12 @@ const Header = () => {
             </div>
 
             <div className={styles['search-container']}>
-                <form className={styles['search-form']}>
-                    <input type="text" className={styles['search-input']} placeholder="Bạn đang tìm gì..." />
-                    <button type="submit" className={styles['search-button']}>
+                <form onSubmit={(e:any)=> e.preventDefault()}
+                    className={styles['search-form']}>
+                    <input onChange={(e:any)=> setInputSearch(e.target.value)} type="text" className={styles['search-input']} placeholder="Bạn đang tìm gì..." />
+                    <button
+                        onClick={()=> window.location.href = `/search?q=${inputSeach}`}
+                         type="submit" className={styles['search-button']}>
                         <div className={styles.icon}>
                         <img
                             width="24"

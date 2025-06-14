@@ -112,6 +112,14 @@ const CartPage = () => {
     setCarts(arrCart);
   }
 
+  const redirectPay = () => {
+    if(carts.length < 1){
+     alert('Vui lòng chọn thêm sản phẩm để thanh toán')
+     return;
+    }
+    return window.location.href = '/pay';
+  }
+
   
   const useVoucher = async (codeVoucher:string,totalOrder:number) => {
     const res = await fetch(`https://huunghi.id.vn/api/voucher/useVoucher`,{
@@ -283,11 +291,9 @@ const CartPage = () => {
 
               {/* Checkout Buttons */}
               <div className="space-y-3">
-                <a href="/pay">
-                <button className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
+                <button onClick={() => redirectPay()} className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
                     THANH TOÁN NGAY
                   </button>
-                </a>
                 <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
                   <i className="fas fa-shopping-cart"></i>
                   <a href="/">

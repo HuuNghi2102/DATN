@@ -1,7 +1,9 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping,faCalendarDays,faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { useSearchParams } from 'next/navigation';
+
 interface Product {
   id: number;
   name: string;
@@ -10,11 +12,48 @@ interface Product {
   badge: string;
 }
 
-type TabType ='products' | 'articles';
+type TabType ='product' | 'post';
 
 const EcommerceSearchPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('products');
 
+  const useSearchParam = useSearchParams();
+  const search = useSearchParam.get('q');
+
+  const [activeTab, setActiveTab] = useState<TabType>('product');
+  const [productss,setProductss] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [data,setData] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [pageStart,setPageStart] = useState(1);
+  const [pageEnd,setPageEnd] = useState(1);
+
+  const [countPost,setCountPost] = useState(0);
+  const [countPoruduct,setCountProduct] = useState(0);
+
+  const fetchData = async () => {
+    const resData = await fetch(`https://huunghi.id.vn/api/product/getSearch?page=${currentPage}&type=${activeTab}&search=${search}`);
+    const result = await resData.json();
+    setData(result.data.results.data);
+    setCountPost(result.data.countPost)
+    setCountProduct(result.data.countProduct);
+    setTotalPage(result.data.results.last_page);
+    setPageStart((currentPage - 2) >= 1 ? currentPage - 2 : 1 );
+    setPageEnd(currentPage + 2 >= result.data.results.last_page ? result.data.results.last_page : currentPage + 2 )
+  }
+
+
+
+  useEffect(()=>{
+    fetchData();
+  },[activeTab,currentPage])
+
+  console.log('st',pageStart);
+  console.log('end',pageEnd);
+
+
+
+  console.log(Array.from({length : totalPage}, (_,i) => i + 1 ));
+ 
   const products: Product[] = [
     {
       id: 1,
@@ -87,9 +126,9 @@ const EcommerceSearchPage: React.FC = () => {
       badge: 'Hàng Mới',
     }
   ];
-  const [isProductOrPost, setIsProductOrPost] = useState(false || true);
   const handleTabClick = (tab: TabType): void => {
     setActiveTab(tab);
+    setCurrentPage(1);
   };
 
   
@@ -127,7 +166,7 @@ const EcommerceSearchPage: React.FC = () => {
                 <div>
                 <p className="text-gray-600 text-base mb-8">
                   Kết quả tìm kiếm cho "
-                  <span className="font-semibold">áo</span>
+                  <span className="font-semibold">{search}</span>
                   ".
                 </p>
                 </div>
@@ -135,40 +174,40 @@ const EcommerceSearchPage: React.FC = () => {
               {/* Filter Tabs */}
               <div className="flex justify-center items-center gap-5  mb-12">
                 <button 
-                  onClick={() => handleTabClick('products')}
+                  onClick={() => handleTabClick('product')}
                   className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${
-                    activeTab === 'products' 
+                    activeTab === 'product' 
                       ? 'bg-black text-white' 
                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                   }`}
                   type="button"
                 >
-                  SẢN PHẨM ({products.length})
+                  SẢN PHẨM ({countPoruduct})
                 </button>
                 <button 
-                  onClick={() => handleTabClick('articles')}
+                  onClick={() => handleTabClick('post')}
                   className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${
-                    activeTab === 'articles' 
+                    activeTab === 'post' 
                       ? 'bg-black text-white' 
                       : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                   }`}
                   type="button"
                 >
-                  BÀI VIẾT (0)
+                  BÀI VIẾT ({countPost})
                 </button>
               </div>
             </div>
           {/* Sản phẩm */}
-          {activeTab === 'products' && (
+          {activeTab === 'product' && (
             <div className="flex flex-wrap -mx-2">
-              {products.map((product, i) => (
+              {data.map((product, i) => (
                 <div key={i} className=" w-1/2 sm:w-1/3 lg:w-1/5 px-2 mb-6">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <a href="#" className="relative">
-                        <img src='/assets/images/zz.webp' alt={product.name} className="w-full h-full object-cover" />
+                      <a href={`product/${product.duong_dan}`} className="relative">
+                        <img src={`https://huunghi.id.vn/storage/products/${product?.images?.length > 0 ? product?.images[0]?.link_anh : 'cac'}`} alt={product?.ten_san_pham} className="w-full h-full object-cover" />
                         <img
-                          src='/assets/images/zzz.webp'
+                          src={`https://huunghi.id.vn/storage/products/${product?.images?.length > 1 ? product?.images[1]?.link_anh : 'cac'}`}
                           className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
                       </a>
@@ -186,8 +225,8 @@ const EcommerceSearchPage: React.FC = () => {
                       </div>
                     </div>
                     <div className="px-1 mt-2">
-                      <p className="text-sm">{product.name}</p>
-                      <strong className="text-sm">{product.price.toLocaleString()} VNĐ</strong>
+                      <p className="text-sm">{product.ten_san_pham}</p>
+                      <strong className="text-sm">{product.gia_da_giam?.toLocaleString('vi-VN')} VNĐ</strong>
                     </div>
                   </div>
                 </div>
@@ -195,25 +234,25 @@ const EcommerceSearchPage: React.FC = () => {
             </div>
           )}
           {/* bài viết */}
-          {activeTab === 'articles' && (
+          {activeTab === 'post' && (
             <div className="flex flex-wrap -mx-2">
-              {[1, 2, 3, 4].map((_, index) => (
+              {data.map((post, index) => (
                 <div key={index} className="w-1/2 h-1/2 sm:w-1/3 lg:w-1/4 px-2 mb-6">
                   <div className="group">
                     <div className="h-[220px]">
                       <a href="#">
-                        <img className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900" src="/assets/images/zzz.webp" alt="" />
+                        <img className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900" src={`https://huunghi.id.vn/storage/posts/${post.anh_bai_viet}`} alt="" />
                       </a>
                     </div>
                     <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
-                      <h1 className="text-center font-semibold">Top 10 đồ đẹp của shop verve style</h1>
-                      <p className="text-sm text-gray-600 ">áo đẹp là asdasdasde asdada a sdaadssđ a..</p>
+                      <h1 className="text-center font-semibold">{post.ten_bai_viet}</h1>
+                      <p className="text-sm text-gray-600 ">{post.noi_dung_bai_viet?.length > 65 ? post.noi_dung_bai_viet.slice(0,65)+"..." : post.noi_dung_bai_viet }</p>
                       <hr className="my-2" />
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-500">
-                          <FontAwesomeIcon icon={faCalendarDays} /> 10/06/2025
+                          <FontAwesomeIcon icon={faCalendarDays} /> {new Date(post.created_at).toLocaleDateString()}
                         </span>
-                        <a href="#" className="text-sm text-gray-500 hover:text-amber-400">
+                        <a href={`/post/${post.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
                           Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
                         </a>
                       </div>
@@ -224,19 +263,52 @@ const EcommerceSearchPage: React.FC = () => {
             </div>
           )}
           {/* Load More Section */}
+          
           <div className="flex justify-center items-center gap-5 mt-12">
-            <button 
-              className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
-              1
-            </button>
-            <button 
-              className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
-              2
-            </button>
-            <button 
-              className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
-              3
-            </button>            
+            {currentPage > 1 && (
+              <button
+                onClick={() => setCurrentPage(currentPage -1)}
+                className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+                {`<`}
+              </button>
+            )}
+            {Array.from({length : totalPage}, (_,i) => i + 1 ).map((page,index)=>(
+              page >= pageStart && page <= pageEnd && (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(page)}
+                  className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+                  {page}
+                </button>
+              )
+             
+              // <button
+              //   key={index}
+              //   onClick={()=> setCurrentUser(index+1)}
+              //   className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+              //   {page}
+              // </button>
+            ))}
+            {currentPage < totalPage && (
+              <button
+                className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+                {`...`}
+              </button>
+            )}
+            {currentPage < totalPage && (
+              <button
+                onClick={()=> setCurrentPage(totalPage)}
+                className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+                {totalPage}
+              </button>
+            )}
+            {currentPage < totalPage && (
+              <button 
+                onClick={()=> setCurrentPage(currentPage + 1)}
+                className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
+                {`>`}
+              </button>
+            )}        
           </div>
       </main>
       {/* Font Awesome CDN */}
