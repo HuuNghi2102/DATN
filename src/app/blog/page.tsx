@@ -8,6 +8,8 @@ const MainContent = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [pageStart,setPageStart] = useState(1);
+  const [pageEnd,setPageEnd] = useState(1);
 
 
   const fecthPost = async () => {
@@ -17,6 +19,9 @@ const MainContent = () => {
       setPosts(result.data.posts.data);
       setCurrentPage(result.data.posts.current_page)
       setTotalPage(result.data.posts.last_page)
+      setPageStart((currentPage - 2) >= 1 ? currentPage - 2 : 1 );
+    setPageEnd(currentPage + 2 >= result.data.posts.last_page ? result.data.posts.last_page : currentPage + 2 )
+
     }else{
       setPosts([])
     }
@@ -87,22 +92,55 @@ const MainContent = () => {
    
          {/* Pagination */}
           <div className="flex justify-center my-6 gap-2">
-            {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => {
-                  setCurrentPage(page);
-                  window.scrollTo({ top: 0, behavior: 'smooth' }); 
-                }}
-                className={`px-3 py-1 border text-sm rounded ${
-                  currentPage === page
-                    ? 'bg-black text-white'
-                    : 'bg-white text-black border-gray-300 hover:bg-gray-100'
-                }`}
-              >
-                {page}
-              </button>
-            ))}
+            {currentPage > 1 &&(
+    <button
+      onClick={()=>setCurrentPage(currentPage-1)}
+      className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+    >
+      {'<'}
+  </button>
+  )}
+  {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
+        page >= pageStart && page <= pageEnd && (
+          <button
+            key={page}
+            onClick={() => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            }}
+            className={`px-3 py-1 border text-sm rounded ${
+              currentPage === page
+                ? 'bg-black text-white'
+                : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+            }`}
+          >
+            {page}
+          </button>
+        )
+      ))}
+      {currentPage < totalPage &&(
+        <button
+          className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+        >
+          {`...`}
+      </button>
+      )}
+      {currentPage < totalPage &&(
+        <button
+          onClick={()=>setCurrentPage(totalPage)}
+          className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+        >
+          {totalPage}
+      </button>
+      )}
+      {currentPage < totalPage &&(
+        <button
+          onClick={()=>setCurrentPage(currentPage+1)}
+          className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+        >
+          {'>'}
+      </button>
+      )}
           </div>
 
 
