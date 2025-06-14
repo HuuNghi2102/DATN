@@ -13,10 +13,10 @@ const PaymentSuccess = () => {
 //   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 to-black px-4 pt-[11%]">
       <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
         <svg
-          className="w-20 h-20 mx-auto text-green-500 mb-4"
+          className="w-20 h-20 mx-auto bg-black rounded-full text-white mb-4"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
@@ -28,7 +28,7 @@ const PaymentSuccess = () => {
             d="M5 13l4 4L19 7"
           />
         </svg>
-        <h1 className="text-2xl font-bold text-green-600 mb-2">Thanh toán thành công!</h1>
+        <h1 className="text-2xl font-bold text-black mb-2">Thanh toán thành công!</h1>
         <p className="text-gray-600 mb-4">Cảm ơn bạn đã mua hàng.</p>
 
         {orderId && (
@@ -44,7 +44,7 @@ const PaymentSuccess = () => {
 
         <a
           href="/lich-su-mua-hang"
-          className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+          className="inline-block px-6 py-3 bg-black text-white rounded-lg hover:bg-white border hover:border-black  hover:text-black transition"
         >
           Xem đơn hàng
         </a>

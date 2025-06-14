@@ -1,27 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-
-const articles = [
-  {
-    id: 1,
-    title: 'Top 8+ Các Thương Hiệu Quần Jeans Nổi Tiếng Việt Nam Và Quốc Tế',
-    description:
-      'Quần jeans từ lâu đã trở thành biểu tượng thời trang không thể thiếu trong tủ đồ của mọi người. Trên thế giới...',
-    date: '28/04/2025',
-    image:
-      'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
-    link: '#',
-  },
-  // 👉 Thêm nhiều bài viết demo cho đủ trang
-  ...Array.from({ length: 30 }, (_, i) => ({
-    id: i + 2,
-    title: `Bài viết demo số ${i + 2}`,
-    description: 'Đây là mô tả ngắn gọn cho bài viết demo...',
-    date: '01/06/2025',
-    image: 'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
-    link: '#',
-  })),
-];
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faCartShopping,faCalendarDays,faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const MainContent = () => {
 
@@ -76,51 +56,33 @@ const MainContent = () => {
         <h1 className="text-2xl font-semibold mb-5">Tất cả bài viết</h1>
 
         {/* Grid hiển thị bài viết */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {posts.map((article,index) => (
-            <article
-              key={index}
-              className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col"
-            >
-              <img
-                src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
-                alt={article.ten_bai_viet}
-                className="w-full h-36 object-cover"
-                loading="lazy"
-              />
-              <div className="p-4 flex flex-col flex-grow">
-                <h2 className="text-sm font-bold mb-2">{article.ten_bai_viet}</h2>
-                <p className="text-xs text-gray-600 mb-3 flex-grow">
-                  {article.noi_dung_bai_viet.length > 100 ? article.noi_dung_bai_viet.slice(0,127)+'...' : article.noi_dung_bai_viet  }
-                </p>
-                <div className="flex justify-between items-center text-xs text-gray-500">
-                  <time className="flex items-center gap-1">
-                    <svg
-                      className="w-3 h-3"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7a2 2 0 002 2z"
-                      />
-                    </svg>
-                    { new Date(article.created_at).toLocaleDateString('vi-VN')}
-                  </time>
-                  <a
-                    href={`/blog/${article.duong_dan}`}
-                    className="hover:text-yellow-400 transition"
-                  >
-                    Xem thêm ›
-                  </a>
+            <div className="flex flex-wrap -mx-2">
+              {posts.map((article, index) => (
+                <div key={index} className="w-1/2 h-1/2 sm:w-1/3 lg:w-1/4 px-2 mb-6">
+                  <div className="group">
+                    <div className="h-[220px]">
+                      <a href="#">
+                        <img className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900" src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
+                        alt={article.ten_bai_viet} />
+                      </a>
+                    </div>
+                    <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
+                      <h1 className="text-center font-semibold">{article.ten_bai_viet.length > 50 ? article.ten_bai_viet.slice(0,50)+ '...' : article.ten_bai_viet}</h1>
+                      <p className="text-sm text-gray-600 ">{article.noi_dung_bai_viet.length > 100 ? article.noi_dung_bai_viet.slice(0,65)+'...' : article.noi_dung_bai_viet  }</p>
+                      <hr className="my-2" />
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-500">
+                          <FontAwesomeIcon icon={faCalendarDays} /> { new Date(article.created_at).toLocaleDateString('vi-VN')}
+                        </span>
+                        <a href={`/blog/${article.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
+                          Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+              ))}
+            </div>
 
    
          {/* Pagination */}

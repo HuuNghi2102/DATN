@@ -94,28 +94,29 @@ const EcommerceSearchPage: React.FC = () => {
 
   
   return (
-    <div className="min-h-screen bg-gray-50 mt-40">
+    <div className="min-h-screen bg-gray-50 pt-[12%]">
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Navigation */}
-            <nav className="flex space-x-8">
-              <a href="/">
-                <button>
-                  Trang chủ
-                </button>
-              </a>
-              <button>
-                Tìm kiếm
-              </button>
-            </nav>
-          </div>
-        </div>
+
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-4 py-8">
+        <div className=" mx-auto">
+            <div className="flex items-center justify-between h-16">
+              {/* Navigation */}
+              <nav className="flex space-x-8">
+                <a href="/">
+                  <button>
+                    Trang chủ
+                  </button>
+                </a>
+                <button>
+                  Tìm kiếm
+                </button>
+              </nav>
+            </div>
+        </div>
         {/* Search Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl lg:text-4xl font-bold text-black mb-4 underline">

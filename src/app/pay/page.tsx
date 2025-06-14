@@ -197,37 +197,31 @@ const setLocation = (idWard:number) => {
 const Pay = async () => {
     
     let arrError:any = {}
-    let flag = true; 
-    
+    let flag = true;   
     if(selectedProvince === undefined) {
-        arrError.province = 'Vui lòng chọn tỉnh/thành phố'
+        arrError.province = 'Vui lòng chọn tỉnh/thành phố*'
         flag = false;
     }
-
     if(selectedDistrict === undefined) {
-        arrError.district = 'Vui lòng chọn quận/huyện'
+        arrError.district = 'Vui lòng chọn quận/huyện*'
         flag = false;
     }
-
     if(selectedWard === undefined) {
-        arrError.ward = 'Vui lòng chọn phường/xã'
+        arrError.ward = 'Vui lòng chọn phường/xã*'
         flag = false;
     }
-
     if(orderInfo.phone === '') {
-        arrError.phone = 'Vui lòng nhập số điện thoại';
+        arrError.phone = 'Vui lòng nhập số điện thoại*';
         flag = false;
     }
-    
     if(orderInfo.address === '') {
-        arrError.address = 'Vui lòng nhập địa chỉ';
+        arrError.address = 'Vui lòng nhập địa chỉ*';
         flag = false;
     }
     if(orderInfo.name === '') {
-        arrError.name = 'Vui lòng nhập tên';
+        arrError.name = 'Vui lòng nhập tên*';
         flag = false;
     }
-
     setErrors({...errors,
         name : arrError.name ? arrError.name : '',
         phone : arrError.phone ? arrError.phone : '',
@@ -351,7 +345,7 @@ const Pay = async () => {
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                 placeholder="Nhập họ và tên"
                             />
-                            {errors.name}
+                            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                         </div>
                         <div>
                             <label className="block text-sm text-gray-600 mb-1">Số điện thoại</label>
@@ -361,7 +355,7 @@ const Pay = async () => {
                                 onChange={(e) => setOrderInfo({...orderInfo, phone: e.target.value})}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                             />
-                            {errors.phone}
+                            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                         </div>
                         <div>
                             <label className="block text-sm text-gray-600 mb-1">Địa chỉ</label>
@@ -372,37 +366,40 @@ const Pay = async () => {
                                 onChange={(e) => setOrderInfo({...orderInfo, address: e.target.value})}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                             />
-                            {errors.address}
+                            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-2">
-                            <select
-                                // value={selectedProvince}
-                                onChange={(e:any)=> {
+                            <div>
+                                <select
+                                    // value={selectedProvince}
+                                    onChange={(e:any)=> {
 
-                                    !isNaN(e.target.value) ? setSelectedProvince(e.target.value) : setSelectedProvince(undefined);
+                                        !isNaN(e.target.value) ? setSelectedProvince(e.target.value) : setSelectedProvince(undefined);
 
-                                    setArrDistrict([]);
-                                    setArrWard([]);
+                                        setArrDistrict([]);
+                                        setArrWard([]);
 
-                                    setSelectedDistrict(undefined);
-                                    setSelectedWard(undefined);
+                                        setSelectedDistrict(undefined);
+                                        setSelectedWard(undefined);
 
-                                    !isNaN(e.target.value) ? getDistrict(e.target.value) : setArrDistrict([]);
+                                        !isNaN(e.target.value) ? getDistrict(e.target.value) : setArrDistrict([]);
 
-                                }}
-                                className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
-                                <option>Chọn tỉnh/thành phố</option>
-                                {arrayProvince.map((province,index)=>(
-                                    <option 
-                                        key={index}
-                                        value={province.ProvinceID}
-                                    >
-                                        {province?.ProvinceName}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.province}
-                            <select
+                                    }}
+                                    className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                                    <option>Chọn tỉnh/thành phố</option>
+                                    {arrayProvince.map((province,index)=>(
+                                        <option 
+                                            key={index}
+                                            value={province.ProvinceID}
+                                        >
+                                            {province?.ProvinceName}
+                                        </option>
+                                    ))}
+                                </select>
+                                {errors.province && <p className="text-red-500 text-sm mt-1">{errors.province}</p>}                                    
+                            </div>
+                            <div>
+                                <select
                                 onChange={(e:any) => {
 
                                     !isNaN(e.target.value) ? setSelectedDistrict(e.target.value) : setSelectedDistrict(undefined);
@@ -423,8 +420,10 @@ const Pay = async () => {
                                     </option>
                                 ))}
                             </select>
-                            {errors.district}
-                            <select
+                            {errors.district && <p className="text-red-500 text-sm mt-1">{errors.district}</p>}
+                            </div>
+                            <div>
+                                <select
                                 onChange={(e:any) => {
 
                                     if(!isNaN(e.target.value)) {
@@ -443,7 +442,8 @@ const Pay = async () => {
                                     </option>
                                 ))}
                             </select>
-                            {errors.ward}
+                            {errors.ward && <p className="text-red-500 text-sm mt-1">{errors.ward}</p>}
+                            </div>
                         </div>
 
                         </div>

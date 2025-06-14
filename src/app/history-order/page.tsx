@@ -1,26 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-
-interface User {
-  id_user: number;
-  ten_user: string;
-  anh_dai_dien_user: string;
-  email_user: string;
-  email_verified_at: string;
-  mat_khau_user: string;
-  dia_chi_user: string;
-  sdt_user: string;
-  ma_otp: number;
-  trang_thai: number;
-  id_vai_tro: number;
-  remember_token: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-}
+import userInterface from '../compoments/userInterface';
+import Link from 'next/link';
 
 export default function UserProfile() {
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<userInterface>();
   const [orders,setOrders] = useState<any[]>();
 
   useEffect(() => {
@@ -57,13 +41,13 @@ export default function UserProfile() {
   
 
   const menuItems = [
-    { icon: 'fas fa-user', text: 'Hồ sơ của tôi' },
-    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', active: true },
-    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ' },
-    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ' },
-    { icon: 'fas fa-ticket-alt', text: 'Vouchers' },
-    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem' },
-    { icon: 'fas fa-lock', text: 'Đổi mật khẩu' }
+    { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/userprofile' },
+    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/history-order' ,active: true },
+    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/yeucauhotro' },
+    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/' },
+    { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
+    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
+    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/changePassword' }
   ];
 
   return (
@@ -75,8 +59,8 @@ export default function UserProfile() {
       />
 
       {/* Header Navigation */}
-      <div className="bg-white border-b px-4 py-3">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-white border-b px-40 py-3">
+        <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
             <span>
               <a href="/">Trang chủ</a>
@@ -86,11 +70,11 @@ export default function UserProfile() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="max-w-[1200px] mx-auto p-4">
         {/* Desktop & Tablet Layout */}
         <div className="hidden md:flex gap-6">
           {/* Sidebar */}
-          <div className="w-80 bg-white rounded-lg shadow-sm">
+          <div className="w-80 bg-white rounded-lg shadow-sm max-h-[520px] sticky top-44">
             <div className="p-4 border-b bg-gray-50 rounded-t-lg">
               <div className="flex items-center gap-2">
                 <i className="fas fa-user text-gray-600"></i>
@@ -103,22 +87,24 @@ export default function UserProfile() {
                 Hi, {user?.ten_user || 'Người dùng'}
               </div>
 
-              <ul className="space-y-1">
-                {menuItems.map((item, index) => (
-                  <li key={index}>
+            <ul className="space-y-1">
+              {menuItems.map((item, index) => (
+                <li key={index}>
+                <Link href={item.href}>
                     <button
-                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
                         item.active
-                          ? 'bg-black text-white'
-                          : 'text-gray-700 hover:bg-gray-50'
-                      }`}
+                            ? 'bg-black text-white'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
                     >
-                      <i className={`${item.icon} w-4`}></i>
-                      <span className="text-sm">{item.text}</span>
+                        <i className={`${item.icon} w-4`}></i>
+                        <span className="text-sm">{item.text}</span>
                     </button>
-                  </li>
-                ))}
-              </ul>
+                  </Link>
+                </li>
+              ))}
+            </ul>
             </div>
           </div>
 
@@ -206,16 +192,18 @@ export default function UserProfile() {
               <ul className="space-y-1">
                 {menuItems.map((item, index) => (
                   <li key={index}>
-                    <button
-                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
-                        item.active
-                          ? 'bg-black text-white'
-                          : 'text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      <i className={`${item.icon} w-4`}></i>
-                      <span className="text-sm">{item.text}</span>
-                    </button>
+                    <Link href={item.href}>
+                      <button
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
+                          item.active
+                            ? 'bg-black text-white'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        <i className={`${item.icon} w-4`}></i>
+                        <span className="text-sm">{item.text}</span>
+                      </button>
+                    </Link>
                   </li>
                 ))}
               </ul>
