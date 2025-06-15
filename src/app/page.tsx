@@ -6,7 +6,7 @@ import productsBestSalerInterface from './compoments/productsBestSalerInterface'
 import productsNewInterface from "./compoments/productsNewInterface";
 import {productsCateInterface} from "./compoments/productsCateInterface";
 import productsSalerInterface from './compoments/productsSalerInterface';
-
+import voucherInterface from './compoments/vouchersInterface';
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
 // import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
@@ -28,32 +28,6 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <FontAwesomeIcon icon={faChevronRight} />
   </div>
 );
-const vouchers = [
-  {
-    code: 'MUAHE100',
-    title: 'GIẢM 100K',
-    description: 'giảm 100K (tối đa 500K)',
-    expiry: '31/05/2025',
-  },
-  {
-    code: 'MAY10',
-    title: 'GIẢM 10%',
-    description: 'giảm 10% (tối đa 10K)',
-    expiry: '31/05/2025',
-  },
-  {
-    code: 'MAY10',
-    title: 'GIẢM 10%',
-    description: 'giảm 10% (tối đa 10K)',
-    expiry: '31/05/2025',
-  },
-  {
-    code: 'MAY10',
-    title: 'GIẢM 10%',
-    description: 'giảm 10% (tối đa 10K)',
-    expiry: '31/05/2025',
-  },
-];
   const settings = {
       dots: true,
       infinite: true,
@@ -87,6 +61,8 @@ const vouchers = [
   const [productsSaler, setProductsSaler] =useState<productsNewInterface[]>([]);
   const [productsCate, setproductsCate ] = useState<productsCateInterface[]>([]);
   const [copied, setCopied] = useState<number | null>(null);
+  const [voucher, setVoucher] = useState<voucherInterface[]>([]);
+  // sao chép mã
   const handleCopy = (code: string, index: number) => {
     navigator.clipboard.writeText(code)
       .then(() => {
@@ -152,11 +128,24 @@ const vouchers = [
     };
     fetchProducts();
   },[])
+  // lấy voucher
+  useEffect(()=>{
+    const fetchVoucher = async ()=>{
+      try {
+        let getAPIvoucher = await fetch('https://huunghi.id.vn/api/voucher/getFourVoucher')
+        let data = await getAPIvoucher.json()
+        setVoucher(data.data.vouchers)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchVoucher();
+  },[])
     return (
       <div>
-        <div className="container  mx-auto mt-40 max-w-[1200px]">
+        <div className="container  mx-auto pt-[12%] max-w-[1200px] px-4">
           {/* Banner */}
-          <div className="container mx-auto mt-40 max-w-[1200px] relative">
+          <div className="container mx-auto max-w-[1200px] relative">
         <Slider {...settings}>
           {[
             "/assets/images/banner1.png",
@@ -181,28 +170,28 @@ const vouchers = [
           {/* Scroll ngang */}
             <div className="overflow-x-auto">
             <div className="flex gap-6  pb-2">
-              {vouchers.map((voucher, index) => (
+              {voucher.map((voucher, index) => (
                 <div
                   key={index}
                   className="flex-shrink-0 w-[280px] h-[110px] p-2 border-l-[10px] border-[#FCBF49] rounded-md shadow-md bg-white flex"
                 >
                   <div className="flex items-center justify-center w-[80px] font-bold text-sm">
                     <span className='text-xs mr-2'>
-                      {voucher.code}
+                      {voucher.ma_giam_gia}
                     </span>
                   </div>
                   <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
                     <div className="py-1 pr-2">
-                      <h3 className="font-semibold">{voucher.title}</h3>
-                      <p className="text-xs">{voucher.description}</p> <br />
+                      <h4 className="font-semibold">ĐƠN HÀNG: {voucher.gia_tri_don_hang.toLocaleString('vi-VN')+ ' VNĐ'}</h4>
+                      <h1 className="text-sm">GIẢM: <span className=' text-amber-300 font-semibold'>{voucher.gia_tri_giam.toLocaleString('vi-VN')+ 'VNĐ'}</span></h1> <br />
                       <p className="mt-1">
-                        Mã: <span className="font-semibold">{voucher.code}</span>
+                        Mã: <span className="font-semibold">{voucher.ma_giam_gia}</span>
                       </p>
-                      <p>HSD: {voucher.expiry}</p>
+                      <p>HSD: {voucher.ngay_het_han}</p>
                     </div>
                     <button
-                    onClick={() => handleCopy(voucher.code, index)}
-                    className="absolute right-[-8px] bottom-[-8px] active:bg-amber-300 bg-black text-white rounded-tl-[15px] rounded-tr-[0px] rounded-br-[7px] rounded-bl-[0px] p-[7px] text-xs">
+                    onClick={() => handleCopy(voucher.ma_giam_gia, index)}
+                    className="absolute right-[-8px] bottom-[-8px] active:bg-amber-300 active:text-black bg-black text-white rounded-tl-[15px] rounded-tr-[0px] rounded-br-[7px] rounded-bl-[0px] p-[7px] text-xs">
 
                       {copied === index ? "Đã sao chép" : "Sao chép mã"}
 
@@ -260,7 +249,7 @@ const vouchers = [
                 </div>
                 {/* NewProducts */}
                 <div>
-                  <img src="/assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
+                  <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
                   <Slider {...productSettings} className="my-4">
                     {productsNew.map((product, i) => (
                       <div key={i} className="p-2">

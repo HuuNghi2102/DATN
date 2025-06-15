@@ -74,7 +74,7 @@ const handleRegister = async () => {
 }
 
   return (
-    <div className="min-h-screen bg-gray-100 mt-40">
+    <div className="min-h-screen bg-gray-100 pt-[12%]">
       {/* Navigation */}
         <link 
           rel="stylesheet" 

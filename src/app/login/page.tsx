@@ -64,14 +64,14 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-200 mt-40">
+    <div className="min-h-screen bg-gray-200 pt-[12%]">
       <link 
         rel="stylesheet" 
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
       />
 
       <header className="bg-gray-200 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex justify-center sm:justify-start space-x-8">
             <a href="/" className="text-gray-700 hover:text-gray-900 text-sm font-medium">Trang chủ</a>
             <a href="#" className="text-gray-700 hover:text-gray-900 text-sm font-medium">Tài khoản</a>

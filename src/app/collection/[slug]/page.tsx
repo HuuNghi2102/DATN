@@ -6,12 +6,23 @@ import { useParams } from 'next/navigation';
 
 export default function AllProductPage() {
   const [isOpen, setIsOpen] = useState(false);
+<<<<<<< HEAD
   const [selectedOption, setSelectedOption] = useState<[string, string]>(['Sản phẩm nổi bật', '']);
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState('');
   const [products, setProducts] = useState<any[]>([]);
   const [totalPage, setTotalPage] = useState(1);
   const perPage = 20;
+=======
+  const [selectedOption, setSelectedOption] = useState<[string, string]>(['Sản phẩm nổi bật','']);
+
+  const [currentPage,setCurrentPage] = useState(1);
+  const [sort,setSort] = useState('');
+  const [products,setProducts] = useState<any[]>([]);
+  const [totalPage,setTotalPage] = useState(1);
+  const [pageStart,setPageStart] = useState(1);
+  const [pageEnd,setPageEnd] = useState(1);
+>>>>>>> d7c828cb90116408299e9106d676ec46a8d17669
 
   const params = useParams();
   const { slug } = params;
@@ -21,6 +32,7 @@ export default function AllProductPage() {
   }, [sort, currentPage]);
 
   const fetchProducts = async () => {
+<<<<<<< HEAD
     const response = await fetch(`https://huunghi.id.vn/api/product/showProductPage/${slug}?page=${currentPage}&sort=${sort}`);
     const data = await response.json();
     if (data.status === true) {
@@ -30,6 +42,22 @@ export default function AllProductPage() {
       setTotalPage(data.data.totalPage);
     } else {
       alert(data.message);
+=======
+      const response = await fetch(`https://huunghi.id.vn/api/product/showProductPage/${slug}?page=${currentPage}&sort=${sort}`);
+      const data = await response.json();
+      console.log(data.message);
+      if(data.status == true){
+        setSort(data.data.sort);
+        setCurrentPage(data.data.currentPage);
+        setProducts(data.data.products.data);
+        setTotalPage(data.data.totalPage);
+        setPageStart((currentPage - 2) >= 1 ? currentPage - 2 : 1 );
+        setPageEnd(currentPage + 2 >= data.data.totalPage ? data.data.totalPage : currentPage + 2 )
+      }else{
+        alert(data.message);
+      }
+      console.log('Nay cung sort',data.data.sort);
+>>>>>>> d7c828cb90116408299e9106d676ec46a8d17669
     }
   };
 
@@ -42,7 +70,11 @@ export default function AllProductPage() {
   ];
 
   return (
+<<<<<<< HEAD
     <div className="max-w-[1200px] mx-auto px-4 pt-[7rem] ipad-mini:pt-[7.5rem] ipad-air:pt-[11rem] ipad-pro:pt-[11.5rem] lg:pt-[11%]">
+=======
+    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
+>>>>>>> d7c828cb90116408299e9106d676ec46a8d17669
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
@@ -166,6 +198,74 @@ export default function AllProductPage() {
           </button>
         ))}
       </div>
+<<<<<<< HEAD
+=======
+      </a>
+      <div className="mt-1 text-sm font-medium text-black leading-[1.25rem]">
+  {product.ten_san_pham}
+</div>
+<div className="text-sm font-semibold mt-0.5 leading-[1.25rem]">
+  {product.gia_da_giam.toLocaleString('vi-VN')}đ
+</div>
+
+    </div>
+  ))}
+</div>
+
+      {/* Xem thêm */}
+            {/* Pagination */}
+<div className="flex justify-center my-6 gap-2">
+  {currentPage > 1 &&(
+    <button
+      onClick={()=>setCurrentPage(currentPage-1)}
+      className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+    >
+      {'<'}
+  </button>
+  )}
+  {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
+    page >= pageStart && page <= pageEnd && (
+      <button
+        key={page}
+        onClick={() => {
+          setCurrentPage(page);
+          window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        }}
+        className={`px-3 py-1 border text-sm rounded ${
+          currentPage === page
+            ? 'bg-black text-white'
+            : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+        }`}
+      >
+        {page}
+      </button>
+    )
+  ))}
+  {currentPage < totalPage &&(
+    <button
+      className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+    >
+      {`...`}
+  </button>
+  )}
+  {currentPage < totalPage &&(
+    <button
+      onClick={()=>setCurrentPage(totalPage)}
+      className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+    >
+      {totalPage}
+  </button>
+  )}
+  {currentPage < totalPage &&(
+    <button
+      onClick={()=>setCurrentPage(currentPage+1)}
+      className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+    >
+      {'>'}
+  </button>
+  )}
+</div>
+>>>>>>> d7c828cb90116408299e9106d676ec46a8d17669
     </div>
   );
 }

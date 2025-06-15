@@ -192,13 +192,21 @@ export default function StoreLocationsPage() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="max-w-[1200px] mx-auto px-4 pt-[7rem] ipad-mini:pt-[7.5rem] ipad-air:pt-[11rem] ipad-pro:pt-[11.5rem] lg:pt-[11%]">
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex flex-wrap items-center gap-1">
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
+=======
+    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
+      {/* Breadcrumb */}
+      <nav className="text-[11px] font-medium pb-2">
+        <ul className="flex items-center gap-1">
+          <li className="text-[12px] font-semibold mt-0.5"><a href="/">Trang chủ</a></li>
+>>>>>>> d7c828cb90116408299e9106d676ec46a8d17669
           <li className="text-gray-500 font-normal">/</li>
-          <li className="text-[12px] font-semibold mt-0.5">Địa Chỉ Cửa Hàng</li>
+          <li className="text-[12px] font-semibold mt-0.5 underline">Địa Chỉ Cửa Hàng</li>
         </ul>
       </nav>
 

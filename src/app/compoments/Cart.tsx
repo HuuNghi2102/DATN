@@ -111,6 +111,16 @@ const CartPage = () => {
     localStorage.setItem('cart',JSON.stringify(arrCart));
     setCarts(arrCart);
   }
+
+  const redirectPay = () => {
+    if(carts.length < 1){
+     alert('Vui lòng chọn thêm sản phẩm để thanh toán')
+     return;
+    }
+    return window.location.href = '/pay';
+  }
+
+  
   const useVoucher = async (codeVoucher:string,totalOrder:number) => {
     const res = await fetch(`https://huunghi.id.vn/api/voucher/useVoucher`,{
       method : "POST",
@@ -142,7 +152,7 @@ const CartPage = () => {
 
       {/* Header */}
       <header className="bg-white shadow-sm border-b mt-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-4">
           <div className="flex justify-between items-center py-4">
             <nav className="flex space-x-8">
               <a href="/" className="text-gray-600 hover:text-gray-900">Trang chủ</a>
@@ -152,7 +162,7 @@ const CartPage = () => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Section */}
           <div className="lg:col-span-2">
@@ -281,11 +291,9 @@ const CartPage = () => {
 
               {/* Checkout Buttons */}
               <div className="space-y-3">
-                <a href="/pay">
-                <button className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
+                <button onClick={() => redirectPay()} className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
                     THANH TOÁN NGAY
                   </button>
-                </a>
                 <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
                   <i className="fas fa-shopping-cart"></i>
                   <a href="/">

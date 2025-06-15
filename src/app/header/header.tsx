@@ -17,6 +17,7 @@ const Header = () => {
     const [currentUser,setCurrentUser] = useState<userInterface>();
     const [showUserDropdown, setShowUserDropdown] = useState(false);
     const [logoutUser, setLogoutUser] = useState(false);
+    const [inputSeach,setInputSearch] = useState('')
     useEffect(() => {
         const logout = async () => {
             try{
@@ -140,42 +141,45 @@ const Header = () => {
             </div>
 
             <div className={styles['search-container']}>
-                <form className={styles['search-form']}>
-                <input type="text" className={styles['search-input']} placeholder="Bạn đang tìm gì..." />
-                <button type="submit" className={styles['search-button']}>
-                    <div className={styles.icon}>
-                    <img
-                        width="24"
-                        height="24"
-                        src="https://theme.hstatic.net/1000253775/1001315144/14/search-icon.svg?v=2041"
-                        alt=""
-                    />
-                    </div>
-                </button>
+                <form onSubmit={(e:any)=> e.preventDefault()}
+                    className={styles['search-form']}>
+                    <input onChange={(e:any)=> setInputSearch(e.target.value)} type="text" className={styles['search-input']} placeholder="Bạn đang tìm gì..." />
+                    <button
+                        onClick={()=> window.location.href = `/search?q=${inputSeach}`}
+                         type="submit" className={styles['search-button']}>
+                        <div className={styles.icon}>
+                        <img
+                            width="24"
+                            height="24"
+                            src="https://theme.hstatic.net/1000253775/1001315144/14/search-icon.svg?v=2041"
+                            alt=""
+                        />
+                        </div>
+                    </button>
                 </form>
             </div>
 
             <div className={styles['user-controls']}>
                 <div className={styles['user-control-item']}>
                 <div className={styles.icon}>
+                <a href="/contact">
                     <img
                     src="https://theme.hstatic.net/1000253775/1001315144/14/location.svg?v=2041"
                     alt=""
                     />
+                </a>
                 </div>
                 <span>Cửa hàng</span>
                 </div>
 
                 <div className={styles['user-control-item']} style={{ position: 'relative' }}>
                 <div className={styles.icon} onClick={handleToggleUserDropdown} style={{ cursor: 'pointer' }}>
-                <a href="/login">
                     <img
                     src="https://theme.hstatic.net/1000253775/1001315144/14/user-account.svg?v=2041"
                     width="24"
                     height="24"
                     alt=""
                     />
-                </a>
                 </div>
 
                 {currentUser ? (
@@ -260,7 +264,7 @@ const Header = () => {
                 </ul>
                 </li>
                 <li className={styles['nav-item']}>
-                    <a href="/blogs/all">TIN THỜI TRANG</a>
+                    <a href="/blog">TIN THỜI TRANG</a>
                 </li>
             </ul>
             </nav>
@@ -279,16 +283,16 @@ const Header = () => {
             </div>
 
             <div className={styles['mobile-search-container']}>
-            <form className={styles['mobile-search-form']}>
-                <input
-                type="text"
-                className={styles['search-input']}
-                placeholder="Bạn đang tìm gì..."
-                />
-                <button type="submit" className={styles['search-button']} style={{ fontSize: '23px' }}>
-                <div className={styles.icon}>🔍</div>
-                </button>
-            </form>
+                <form className={styles['mobile-search-form']}>
+                    <input
+                    type="text"
+                    className={styles['search-input']}
+                    placeholder="Bạn đang tìm gì..."
+                    />
+                    <button type="submit" className={styles['search-button']} style={{ fontSize: '23px' }}>
+                    <div className={styles.icon}>🔍</div>
+                    </button>
+                </form>
             </div>
 
             <ul className={styles['mobile-nav-items']}>

@@ -55,7 +55,7 @@
   padding: 15px 20px;
   background-color: rgb(30, 30, 30);
   color: white;
-  gap: 79px;
+  gap: 54px;
 }
 
 /* Logo */
@@ -460,7 +460,7 @@
   align-items: center;
   justify-content: center;
   padding: 15px 20px;
-  background-color: rgba(0, 0, 0, 0.804);
+  background-color: rgb(30, 30, 30);
   color: white;
   gap: 15%;
 }
