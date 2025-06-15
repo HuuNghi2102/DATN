@@ -1,75 +1,65 @@
 'use client';
-import { send } from 'process';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { json } from 'stream/consumers';
 
 export default function SupportRequestWithSidebar() {
   const [user, setUser] = useState<any>(null);
-  const [content,setContent] = useState('')
-  
+  const [content, setContent] = useState('');
 
   useEffect(() => {
-      const u = localStorage.getItem('user');
-      const accessTokenLocal = localStorage.getItem('accessToken');
-      const typeTokenLocal = localStorage.getItem('typeToken');
-      if( u && accessTokenLocal && typeTokenLocal){
-        const users = JSON.parse(u);
-        const accessToken = JSON.parse(accessTokenLocal);
-        const typeToken = JSON.parse(typeTokenLocal);
-        setUser(users);
-      }else{
-        alert('Bạn vui lòng đăng nhập trước')
-        window.location.href = '/login'
-      }      
+    const u = localStorage.getItem('user');
+    const accessTokenLocal = localStorage.getItem('accessToken');
+    const typeTokenLocal = localStorage.getItem('typeToken');
+    if (u && accessTokenLocal && typeTokenLocal) {
+      const users = JSON.parse(u);
+      setUser(users);
+    } else {
+      alert('Bạn vui lòng đăng nhập trước');
+      window.location.href = '/login';
+    }
   }, []);
 
   const send = async () => {
-      if(content == '' ){
-        alert('Vui lòng điền nội dung cần hỗ trợ');
-      }else{
-        const res = await fetch(`https://huunghi.id.vn/api/function/Support`,{
-          method : "POST",
-          headers : {
-            "Content-Type" : "application/json"
-          },
-          body : JSON.stringify({
-            email : user.email_user,
-            name : user.ten_user,
-            content : content
-          })
-        })
-        const result = await res.json();
-
-        alert(result.message)
-      }
-      
+    if (content === '') {
+      alert('Vui lòng điền nội dung cần hỗ trợ');
+    } else {
+      const res = await fetch(`https://huunghi.id.vn/api/function/Support`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email_user,
+          name: user.ten_user,
+          content: content,
+        }),
+      });
+      const result = await res.json();
+      alert(result.message);
     }
-
-  
+  };
 
   const menuItems = [
     { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/userprofile' },
     { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/history-order' },
-    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ' , href: '/yeucauhotro', active: true },
-    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/' },
+    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/yeucauhotro', active: true },
+    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/sodiachi' },
     { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
     { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
-    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/changePassword' }
+    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/changePassword' },
   ];
-  console.log(content);
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-[12%]">
+    <div className="min-h-screen bg-gray-100 pt-[10%]">
       {/* Font Awesome */}
-      <link 
-        rel="stylesheet" 
+      <link
+        rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       />
 
       {/* Breadcrumb */}
-      <div className="bg-white border-b px-4 py-3">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-white border-b px-40 py-3">
+        <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
             <span><a href="/">Trang chủ</a></span> / <span className="font-medium">Yêu cầu hỗ trợ</span>
           </nav>
@@ -77,7 +67,7 @@ export default function SupportRequestWithSidebar() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row gap-6">
+      <div className="max-w-[1200px] mx-auto p-4 flex flex-col md:flex-row gap-6">
         {/* Sidebar */}
         <div className="w-full md:w-80 bg-white rounded-lg shadow-sm">
           <div className="p-4 border-b bg-gray-50 rounded-t-lg">
@@ -94,16 +84,16 @@ export default function SupportRequestWithSidebar() {
               {menuItems.map((item, index) => (
                 <li key={index}>
                   <Link href={item.href}>
-                      <button
-                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
-                          item.active
-                            ? 'bg-black text-white'
-                            : 'text-gray-700 hover:bg-gray-50'
-                        }`}
-                      >
-                        <i className={`${item.icon} w-4`}></i>
-                        <span className="text-sm">{item.text}</span>
-                      </button>
+                    <button
+                      className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
+                        item.active
+                          ? 'bg-black text-white'
+                          : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      <i className={`${item.icon} w-4`}></i>
+                      <span className="text-sm">{item.text}</span>
+                    </button>
                   </Link>
                 </li>
               ))}
@@ -120,7 +110,7 @@ export default function SupportRequestWithSidebar() {
               Loại yêu cầu: yêu cầu hỗ trợ
             </label>
             <textarea
-              onChange={(e:any)=>setContent(e.target.value)}
+              onChange={(e: any) => setContent(e.target.value)}
               className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               placeholder="Nội dung"
               value={content}
@@ -128,7 +118,10 @@ export default function SupportRequestWithSidebar() {
           </div>
 
           <div className="flex space-x-3">
-            <button onClick={()=> send()} className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+            <button
+              onClick={() => send()}
+              className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+            >
               Gửi
             </button>
             <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors">

@@ -51,7 +51,7 @@ export default function UserProfile() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 mt-40">
+    <div className="min-h-screen bg-gray-100 pt-[10%]">
       {/* Font Awesome CDN */}
       <link
         rel="stylesheet"

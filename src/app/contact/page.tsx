@@ -186,25 +186,14 @@ export default function StoreLocationsPage() {
   const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentItems = PRODUCTS.slice(startIdx, startIdx + ITEMS_PER_PAGE);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
-<<<<<<< HEAD
-    <div className="max-w-[1200px] mx-auto px-4 pt-[7rem] ipad-mini:pt-[7.5rem] ipad-air:pt-[11rem] ipad-pro:pt-[11.5rem] lg:pt-[11%]">
-      {/* Breadcrumb */}
-      <nav className="text-[11px] font-medium pb-2">
-        <ul className="flex flex-wrap items-center gap-1">
-          <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
-=======
-    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
-          <li className="text-[12px] font-semibold mt-0.5"><a href="/">Trang chủ</a></li>
->>>>>>> d7c828cb90116408299e9106d676ec46a8d17669
+          <li className="text-[12px] font-semibold mt-0.5">
+            <a href="/">Trang chủ</a>
+          </li>
           <li className="text-gray-500 font-normal">/</li>
           <li className="text-[12px] font-semibold mt-0.5 underline">Địa Chỉ Cửa Hàng</li>
         </ul>
@@ -219,42 +208,41 @@ export default function StoreLocationsPage() {
         />
       </div>
 
-  
       {/* Info boxes */}
-<div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-  <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
-    <img
-      src="https://file.hstatic.net/1000253775/file/doi_tra_new.png"
-      alt="Đổi trả trong 15 ngày"
-      className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-    />
-    <div className="text-xs sm:text-sm text-gray-700 font-semibold">ĐỔI TRẢ TRONG 15 NGÀY</div>
-  </div>
-  <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
-    <img
-      src="https://file.hstatic.net/1000253775/file/icon-02__1__ea7cf09ad85d48d5ae2743045c62a581.png"
-      alt="Bảo hành trong 30 ngày"
-      className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-    />
-    <div className="text-xs sm:text-sm text-gray-700 font-semibold">BẢO HÀNH TRONG 30 NGÀY</div>
-  </div>
-  <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
-    <img
-      src="https://file.hstatic.net/1000253775/file/icon-05_e5ea3b98e4744ee8818614497689d501.png"
-      alt="Phân phối độc quyền"
-      className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-    />
-    <div className="text-xs sm:text-sm text-gray-700 font-semibold">PHÂN PHỐI ĐỘC QUYỀN</div>
-  </div>
-  <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
-    <img
-      src="https://file.hstatic.net/1000253775/file/icon-03__1__82b8a2d63ddf4380b49b55d22b507112.png"
-      alt="Hotline"
-      className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
-    />
-    <div className="text-xs sm:text-sm text-gray-700 font-semibold">HOTLINE - 028 7100 6789</div>
-  </div>
-</div>
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
+          <img
+            src="https://file.hstatic.net/1000253775/file/doi_tra_new.png"
+            alt="Đổi trả trong 15 ngày"
+            className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+          />
+          <div className="text-xs sm:text-sm text-gray-700 font-semibold">ĐỔI TRẢ TRONG 15 NGÀY</div>
+        </div>
+        <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
+          <img
+            src="https://file.hstatic.net/1000253775/file/icon-02__1__ea7cf09ad85d48d5ae2743045c62a581.png"
+            alt="Bảo hành trong 30 ngày"
+            className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+          />
+          <div className="text-xs sm:text-sm text-gray-700 font-semibold">BẢO HÀNH TRONG 30 NGÀY</div>
+        </div>
+        <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
+          <img
+            src="https://file.hstatic.net/1000253775/file/icon-05_e5ea3b98e4744ee8818614497689d501.png"
+            alt="Phân phối độc quyền"
+            className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+          />
+          <div className="text-xs sm:text-sm text-gray-700 font-semibold">PHÂN PHỐI ĐỘC QUYỀN</div>
+        </div>
+        <div className="flex items-center border border-gray-300 rounded-md p-2 sm:p-3 space-x-2 sm:space-x-3 bg-white">
+          <img
+            src="https://file.hstatic.net/1000253775/file/icon-03__1__82b8a2d63ddf4380b49b55d22b507112.png"
+            alt="Hotline"
+            className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0"
+          />
+          <div className="text-xs sm:text-sm text-gray-700 font-semibold">HOTLINE - 028 7100 6789</div>
+        </div>
+      </div>
 
       {/* Filters */}
       <div className="mt-4 flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
@@ -319,23 +307,72 @@ export default function StoreLocationsPage() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center my-4 sm:my-6 gap-2 flex-wrap">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+      <div className="flex justify-center my-6 gap-2">
+        {currentPage > 1 && (
           <button
-            key={page}
             onClick={() => {
-              setCurrentPage(page);
+              setCurrentPage(currentPage - 1);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className={`px-2 sm:px-3 py-1 border text-xs sm:text-sm rounded ${
-              currentPage === page
-                ? 'bg-black text-white'
-                : 'bg-white text-black border-gray-300 hover:bg-gray-100'
-            }`}
+            className="px-3 py-1 border text-sm rounded bg-black text-white"
           >
-            {page}
+            {'<'}
           </button>
-        ))}
+        )}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+          const pageStart = currentPage - 2 >= 1 ? currentPage - 2 : 1;
+          const pageEnd = currentPage + 2 <= totalPages ? currentPage + 2 : totalPages;
+
+          return (
+            page >= pageStart &&
+            page <= pageEnd && (
+              <button
+                key={page}
+                onClick={() => {
+                  setCurrentPage(page);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`px-3 py-1 border text-sm rounded ${
+                  currentPage === page
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+                }`}
+              >
+                {page}
+              </button>
+            )
+          );
+        })}
+        {currentPage < totalPages && (
+          <button
+            onClick={() => {
+              setCurrentPage(currentPage + 1);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="px-3 py-1 border text-sm rounded bg-black text-white"
+          >
+            {'>'}
+          </button>
+        )}
+        {currentPage < totalPages && totalPages > 5 && currentPage < totalPages - 2 && (
+          <>
+            <button
+              className="px-3 py-1 border text-sm rounded bg-black text-white"
+              disabled
+            >
+              {'...'}
+            </button>
+            <button
+              onClick={() => {
+                setCurrentPage(totalPages);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="px-3 py-1 border text-sm rounded bg-black text-white"
+            >
+              {totalPages}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
