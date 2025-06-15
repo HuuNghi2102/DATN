@@ -12,6 +12,11 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      screens: {
+        "ipad-mini": "768px",
+        "ipad-air": "820px",
+        "ipad-pro": "1025px", 
+      },
     },
   },
   plugins: [],

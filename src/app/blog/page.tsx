@@ -12,13 +12,13 @@ const articles = [
       'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
     link: '#',
   },
-  // 👉 Thêm nhiều bài viết demo cho đủ trang
   ...Array.from({ length: 30 }, (_, i) => ({
     id: i + 2,
     title: `Bài viết demo số ${i + 2}`,
     description: 'Đây là mô tả ngắn gọn cho bài viết demo...',
     date: '01/06/2025',
-    image: 'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
+    image:
+      'https://storage.googleapis.com/a1aa/image/86c872df-b08f-4793-3c5b-ec52f24c608a.jpg',
     link: '#',
   })),
 ];
@@ -62,20 +62,28 @@ const MainContent = () => {
           {currentArticles.map((article) => (
             <article
               key={article.id}
-              className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col"
+              className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col group transition-transform duration-300 "
             >
-              <img
-                src={article.image}
-                alt={article.title}
-                className="w-full h-36 object-cover"
-                loading="lazy"
-              />
+              {/* Hình ảnh với hiệu ứng zoom và overlay */}
+              <div className="relative overflow-hidden h-36 transition-transform duration-500 group-hover:scale-110">
+                <img
+                  src={article.image}
+                  alt={article.title}
+                  className="w-full h-full object-cover "
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition duration-300" />
+              </div>
+
+              {/* Nội dung */}
               <div className="p-4 flex flex-col flex-grow">
-                <h2 className="text-sm font-bold mb-2">{article.title}</h2>
-                <p className="text-xs text-gray-600 mb-3 flex-grow">
+                <h2 className="text-sm font-bold mb-2 line-clamp-2">
+                  {article.title}
+                </h2>
+                <p className="text-xs text-gray-600 mb-3 flex-grow line-clamp-2">
                   {article.description}
                 </p>
-                <div className="flex justify-between items-center text-xs text-gray-500">
+                <div className="flex justify-between items-center text-xs text-gray-500 border-t pt-2 mt-auto">
                   <time className="flex items-center gap-1">
                     <svg
                       className="w-3 h-3"
@@ -94,7 +102,7 @@ const MainContent = () => {
                   </time>
                   <a
                     href={article.link}
-                    className="hover:text-yellow-400 transition"
+                    className="text-black hover:text-yellow-500 font-medium transition-colors"
                   >
                     Xem thêm ›
                   </a>
@@ -104,28 +112,25 @@ const MainContent = () => {
           ))}
         </div>
 
-   
-         {/* Pagination */}
-          <div className="flex justify-center my-6 gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => {
-                  setCurrentPage(page);
-                  window.scrollTo({ top: 0, behavior: 'smooth' }); 
-                }}
-                className={`px-3 py-1 border text-sm rounded ${
-                  currentPage === page
-                    ? 'bg-black text-white'
-                    : 'bg-white text-black border-gray-300 hover:bg-gray-100'
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-
-
+        {/* Pagination */}
+        <div className="flex justify-center my-6 gap-2">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => {
+                setCurrentPage(page);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`px-3 py-1 border text-sm rounded ${
+                currentPage === page
+                  ? 'bg-black text-white'
+                  : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
       </section>
     </div>
   );
