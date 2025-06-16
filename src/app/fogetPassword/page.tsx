@@ -3,11 +3,36 @@ import React, { useState } from 'react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
+  const [errorEmail,setErrEmail] = useState('');
 
-  const handleSubmit = () => {
-    console.log('Email submitted:', email);
-    // Handle password reset logic here
-  };
+
+  const handleSubmit = async () => {
+    const res = await fetch(`https://huunghi.id.vn/api/user/sendOTP`,{
+      method : "PUT",
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      body : JSON.stringify({
+        'email' : email
+      })
+    })
+
+    const results = await res.json();
+    
+    if(results.status == false){
+      if(results.errors.length > 0){
+        const arrErr = results.errors;
+        setErrEmail(arrErr.email[0]);
+      }else{
+        setErrEmail(results.message);
+      }
+      return;
+    }
+
+    localStorage.setItem('email',results.email);
+    alert(results.message);
+
+  }
 
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col pt-[11%]">
@@ -66,7 +91,7 @@ export default function ForgotPasswordPage() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm"
                 />
               </div>
-
+              {errorEmail}
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}

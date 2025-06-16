@@ -131,7 +131,7 @@ const LoginPage = () => {
 
               {/* Forgot Password */}
               <div className="text-center">
-                <a href="#" className="text-gray-500 hover:text-gray-700 text-sm">Quên mật khẩu?</a>
+                <a href="/fogetPassword" className="text-gray-500 hover:text-gray-700 text-sm">Quên mật khẩu?</a>
               </div>
 
               {/* Divider */}

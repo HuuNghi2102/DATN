@@ -83,7 +83,7 @@ const VNPayPaymentForm = () => {
 
     const result = await res.json();
 
-    console.log(result);
+    // console.log(result);
 
     if(res.ok){
         window.location.href = result
