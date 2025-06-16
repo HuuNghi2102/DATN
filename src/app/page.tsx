@@ -143,7 +143,7 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   },[])
     return (
       <div>
-        <div className="container  mx-auto pt-[12%] max-w-[1200px] px-4">
+        <div className="container  mx-auto lg:pt-[12%] pt-[20%] max-w-[1200px] px-4">
           {/* Banner */}
           <div className="container mx-auto max-w-[1200px] relative">
         <Slider {...settings}>

@@ -57,7 +57,7 @@ export default function ForgotPasswordPage() {
                 href="#" 
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-gray-900"
               >
-                Đăng nhập
+                Quên mật khẩu
               </a>
             </div>
           </div>
