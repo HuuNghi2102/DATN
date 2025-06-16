@@ -9,11 +9,12 @@ import { log } from 'console';
 
 const Header = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [activeDropdowns, setActiveDropdowns] = useState<{ [key: number]: boolean }>({});
+    const [activeDropdowns, setActiveDropdowns] = useState<{ [key: string|number]: boolean }>({});
     const overlayRef = useRef<HTMLDivElement>(null);
     const [isClient, setIsClient] = useState(false); // 👈 new
     const [cartCount, setCartCount] = useState(0);
     const [category, setCategory] = useState<any[]>([]);
+    const [productNew, setproductNew] = useState<any[]>();
     const [currentUser,setCurrentUser] = useState<userInterface>();
     const [showUserDropdown, setShowUserDropdown] = useState(false);
     const [logoutUser, setLogoutUser] = useState(false);
@@ -81,7 +82,7 @@ const Header = () => {
     
   }, [isMobileMenuOpen]);
 
-  const toggleDropdown = (index: number) => {
+  const toggleDropdown = (index: number|string) => {
     setActiveDropdowns((prev) => ({
       ...prev,
       [index]: !prev[index],
@@ -108,11 +109,7 @@ const Header = () => {
         setCurrentUser(JSON.parse(user)); 
     }
   },[]);
-
-  
-
   if (!isClient) return null;
-
   return (
     <div>
         <header className={styles.header}>
@@ -130,7 +127,6 @@ const Header = () => {
             <button
                 className={styles['mobile-menu-toggle']}
                 onClick={() => {
-                console.log('Toggle clicked'); // Debug nút
                 setMobileMenuOpen(true);
                 }}
             >
@@ -296,62 +292,44 @@ const Header = () => {
             </div>
 
             <ul className={styles['mobile-nav-items']}>
-            {[
-                { label: '🔎 HÀNG MỚI', link: '#' },
-                {
-                    label: 'SẢN PHẨM',
-                    subItems:[
-                    {label: 'Áo Thun', link: '#'},
-                    {label: 'Áo Sơ Mi', link: '#'},
-                    {label: 'Áo Khoác', link: '#'},
-                    {label: 'Quần Jeans', link: '#'},
-                    {label: 'Quần Kaki', link: '#'},
-                ]
-                },
-                {
-                label: 'ÁO NAM',
-                    subItems:[
-                    {label: 'Áo Thun', link: '#'},
-                    {label: 'Áo Sơ Mi', link: '#'},
-                    {label: 'Áo Khoác', link: '#'},
-                    {label: 'Áo Polo', link: '#'},
-                ]
-                },
-                {
-                label: 'QUẦN NAM',
-                subItems:[
-                    {label: 'Quần Jeans', link: '#'},
-                    {label: 'Quần Kaki', link: '#'},
-                    {label: 'Quần Short', link: '#'},
-                    {label: 'Quần Tây', link: '#'},
-                ]
-                },
-                {
-                label: 'PHỤ KIỆN',
-                subItems:[
-                    {label: 'Thắt Lưng', link: '#'},
-                    {label: 'Ví Da', link: '#'},
-                    {label: 'Túi Xách', link: '#'},
-                    {label: 'Mũ', link: '#'},
-                ]
-                },
-                { label: 'GIÁ MỚI', link: 'collections/price-new', color: '#ff0000' },
-                {
-                label: 'JEANS',
-                subItems:[
-                    {label: 'Slim Fit', link: '#'},
-                    {label: 'Skinny', link: '#'},
-                    {label: 'Regular Fit', link: '#'},
-                    {label: 'Baggy', link: '#'},
-                ]
-                },
-                { label: 'TIN THỜI TRANG', link: '#' },
-                ].map((item, index) => (
+            {/* Mục cố định: HÀNG MỚI */}
+            <li className={styles['mobile-nav-item']}>
+                <a href="/hang-moi" className={styles['mobile-nav-link']} style={{ color: 'red' }}>
+                🔎 HÀNG MỚI
+                </a>
+            </li>
+            {/* SẢN PHẨM */}
+            <li className={styles['mobile-nav-item']}>
+            <div className={styles['mobile-nav-link']}>
+                <a href="/collection/all">SẢN PHẨM</a>
+                <button
+                className={styles['mobile-dropdown-toggle']}
+                onClick={() => toggleDropdown('sanpham')}
+                type="button"
+                >
+                {activeDropdowns['sanpham'] ? '-' : '+'}
+                </button>
+            </div>
+            <div
+                className={`${styles['mobile-dropdown-content']} ${
+                activeDropdowns['sanpham'] ? styles.active : ''
+                }`}
+            >
+                <a href="/collection/all" className={styles['mobile-dropdown-item']}>TẤT CẢ SẢN PHẨM</a>
+                <a href="/collection/bestsellers" className={styles['mobile-dropdown-item']}>HÀNG BÁN CHẠY</a>
+                <a href="#" className={styles['mobile-dropdown-item']}>ÁO</a>
+                <a href="#" className={styles['mobile-dropdown-item']}>QUẦN</a>
+                <a href="#" className={styles['mobile-dropdown-item']}>SET QUẦN ÁO</a>
+                <a href="#" className={styles['mobile-dropdown-item']}>PHỤ KIỆN</a>
+            </div>
+            </li>
+            {/* Duyệt danh mục từ API */}
+            {category.map((item, index) => (
                 <li className={styles['mobile-nav-item']} key={index}>
-                    {'subItems' in item ? (
+                {item.categories && item.categories.length > 0 ? (
                     <>
                     <div className={styles['mobile-nav-link']}>
-                        {item.label}
+                        <a href={`/${item.duong_dan}`}>{item.ten_loai.toUpperCase()}</a>
                         <button
                         className={styles['mobile-dropdown-toggle']}
                         onClick={() => toggleDropdown(index)}
@@ -364,29 +342,60 @@ const Header = () => {
                         className={`${styles['mobile-dropdown-content']} ${
                         activeDropdowns[index] ? styles.active : ''
                         }`}
+                    >
+                        {item.categories.map((subItem: any, subIndex: number) => (
+                        <a
+                            key={subIndex}
+                            href={`/${subItem.duong_dan}`}
+                            className={styles['mobile-dropdown-item']}
                         >
-                        {item.subItems?.map((subItem, subIndex) => (
-                            <a
-                                key={subIndex}
-                                href={subItem.link}
-                                className={styles['mobile-dropdown-item']}
-                            >
-                                {subItem.label}
-                            </a>
+                            {subItem.ten_loai}
+                        </a>
                         ))}
                     </div>
                     </>
                 ) : (
-                    <a
-                    href={item.link}
-                    className={styles['mobile-nav-link']}
-                    style={item.color ? { color: item.color } : {}}
-                    >
-                    {item.label}
+                    <a href={`/${item.duong_dan}`} className={styles['mobile-nav-link']}>
+                    {item.ten_loai.toUpperCase()}
                     </a>
                 )}
                 </li>
             ))}
+
+            {/* Mục cố định: GIÁ MỚI */}
+            <li className={styles['mobile-nav-item']}>
+                <a href="/collections/price-new" className={styles['mobile-nav-link']} style={{ color: 'red' }}>
+                GIÁ MỚI
+                </a>
+            </li>
+            {/* Jean */}
+            <li className={styles['mobile-nav-item']}>
+            <div className={styles['mobile-nav-link']}>
+                <a href="/collection/all">JEAN</a>
+                <button
+                className={styles['mobile-dropdown-toggle']}
+                onClick={() => toggleDropdown('sanpham')}
+                type="button"
+                >
+                {activeDropdowns['sanpham'] ? '-' : '+'}
+                </button>
+            </div>
+            <div
+                className={`${styles['mobile-dropdown-content']} ${
+                activeDropdowns['sanpham'] ? styles.active : ''
+                }`}
+            >
+                <a href="#" className={styles['mobile-dropdown-item']}>ProCOOL™</a>
+                <a href="#" className={styles['mobile-dropdown-item']}>SMARTJEAN™</a>
+                <a href="#" className={styles['mobile-dropdown-item']}>ICON105 Lightweight™</a>
+            </div>
+            </li>
+            {/* Mục cố định: TIN THỜI TRANG */}
+            <li className={styles['mobile-nav-item']}>
+                <a href="/tin-thoi-trang" className={styles['mobile-nav-link']}>
+                TIN THỜI TRANG
+                </a>
+            </li>
             </ul>
         </nav>
     </div>

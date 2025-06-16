@@ -4,13 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping,faCalendarDays,faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { useSearchParams } from 'next/navigation';
 
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  badge: string;
-}
 
 type TabType ='product' | 'post';
 
@@ -20,7 +13,6 @@ const EcommerceSearchPage: React.FC = () => {
   const search = useSearchParam.get('q');
 
   const [activeTab, setActiveTab] = useState<TabType>('product');
-  const [productss,setProductss] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [data,setData] = useState<any[]>([]);
   const [totalPage, setTotalPage] = useState(1);
@@ -53,79 +45,7 @@ const EcommerceSearchPage: React.FC = () => {
 
 
   console.log(Array.from({length : totalPage}, (_,i) => i + 1 ));
- 
-  const products: Product[] = [
-    {
-      id: 1,
-      name: 'Áo Sơ Mi Bóng Chày Nam Disney Stitch Striker Edition',
-      price: '399000',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 2,
-      name: 'Áo Thun Nam Disney Stitch 626 Bounce Core Form Oversize',
-      price: '399000',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 3,
-      name: 'Áo Thun Nam Strokes Orgris Form Boxy',
-      price: '299000',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 4,
-      name: 'Áo Thun Nam ICONDENIM The Coastal Frenzy ORGN.S',
-      price: '329000',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 5,
-      name: 'Áo Thun Nam Sundaze Rush Form Regular',
-      price: '329000',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 6,
-      name: 'Áo Thun Nam Fusion Kit-ID Form Regular',
-      price: '279000',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 7,
-      name: 'Áo Thun Nam Disney Stitch Jersey Vibe Form Oversize',
-      price: '399000',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 8,
-      name: 'Áo Tanktop Nam Hoa Tiêt Disney Stitch Chaotic Energy',
-      price: '229,000₫',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 9,
-      name: 'Áo Thun Nam Tiestyle Loang Sundaze Rush Form Boxy',
-      price: '349,000₫',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    },
-    {
-      id: 10,
-      name: 'Áo Thun Nam Họa Tiết Disney Stitch Floral Vibes Form Boxy',
-      price: '329,000₫',
-      image: '/api/placeholder/280/280',
-      badge: 'Hàng Mới',
-    }
-  ];
+
   const handleTabClick = (tab: TabType): void => {
     setActiveTab(tab);
     setCurrentPage(1);
@@ -282,13 +202,6 @@ const EcommerceSearchPage: React.FC = () => {
                   {page}
                 </button>
               )
-             
-              // <button
-              //   key={index}
-              //   onClick={()=> setCurrentUser(index+1)}
-              //   className="bg-black text-white hover:bg-slate-50 border border-black hover:text-black px-5 py-3  font-medium transition-colors duration-300" type="button">
-              //   {page}
-              // </button>
             ))}
             {currentPage < totalPage && (
               <button

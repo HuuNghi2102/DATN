@@ -15,21 +15,16 @@ export default function UserProfile() {
       const uu = JSON.parse(u);
       const accessToken = JSON.parse(accessTokenLocal);
       const typeToken = JSON.parse(typeTokenLocal);
-
       const fectchOrder = async () => {
         const responseOrder = await fetch(`https://huunghi.id.vn/api/order/listOrderOfUser`,{
           headers : {
             "Authorization" : `${typeToken} ${accessToken}`
           }
         })
-
         const result = await responseOrder.json();
-
         const orders = result.data.orders;
-
         setOrders(orders);
       }
-
       fectchOrder();
       setUser(uu);
     }else{

@@ -300,7 +300,7 @@ const Pay = async () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-[12%]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-4 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column - Order Form */}
                 <div className="lg:col-span-2 space-y-6">
@@ -497,12 +497,12 @@ const Pay = async () => {
 
                     {/* Action Buttons */}
                     <div className="flex space-x-4">
-                        <button className="px-6 py-3 text-blue-500 border border-blue-500 rounded-lg hover:bg-blue-50">
+                        <button className="px-6 py-3 text-black border border-black rounded-lg hover:bg-blue-50">
                             Giỏ hàng
                         </button>
                         <button
                             onClick={(e) => Pay()}
-                            className="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg active:bg-gray-600">
                             Hoàn tất đơn hàng
                         </button>
                     </div>
@@ -510,7 +510,7 @@ const Pay = async () => {
             {/* Right Column - Order Summary */}
             <div className="lg:col-span-1">
 
-                <div className="bg-white rounded-lg shadow p-6 sticky top-6">
+                <div className="bg-white rounded-lg shadow p-6 sticky top-44">
                 {carts.map((cart,index)=>(
                     <div key={index} className="flex items-center mb-6">
                         <img 
@@ -535,7 +535,7 @@ const Pay = async () => {
                     placeholder="Mã giảm giá"
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mr-4"
                     />
-                    <button onClick={() => useVoucher(inputDiscount, orderInfo.totalOrder)} className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+                    <button onClick={() => useVoucher(inputDiscount, orderInfo.totalOrder)} className="px-2 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
                     Sử dụng
                     </button>
                 </div>
