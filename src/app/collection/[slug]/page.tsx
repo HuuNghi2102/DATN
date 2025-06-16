@@ -4,41 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faShoppingCart, faSortAlphaDown,faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'next/navigation';
 
-const product = [
-  {
-    id: '1',
-    name: 'Áo Thun Nam Tiedye Loang Sundaze Rush Form Boxy',
-    price: '349,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/hangmoi1.webp',
-    hoverImage: '/assets/images/hoverhangmoi11.webp',
-  },
-  {
-    id: '2',
-    name: 'Áo Thun Nam ICONDENIM The Coastal Frenzy ORGNLS',
-    price: '329,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/hangmoi2.webp',
-    hoverImage: '/assets/images/hoverhangmoi2.webp',
-  },
-  {
-    id: '3',
-    name: 'Túi Tote Nam Pattern Sundaze Rush',
-    price: '249,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/hangmoi3.webp',
-    hoverImage: '/assets/images/hoverhangmoi3.webp',
-  },
-  {
-    id: '4',
-    name: 'Áo Thun Nam Sundaze Rush Form Regular',
-    price: '329,000₫',
-    label: 'Best Seller',
-    image: '/assets/images/hangmoi4.webp',
-    hoverImage: '/assets/images/hoverhangmoi4.jpg',
-  },
-  
-];
 
 export default function AllProductPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,9 +55,9 @@ export default function AllProductPage() {
   ];
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
       {/* Breadcrumb */}
-      <nav className="text-[11px] font-medium pb-2">
+<nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
           <li className="text-gray-500 font-normal">/</li>
@@ -162,7 +127,7 @@ export default function AllProductPage() {
         />
         <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-8 h-8 rounded-full flex justify-center items-center text-black text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white w-8 h-8 rounded-full flex justify-center items-center text-black text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             title="Xem chi tiết"
           >
             <FontAwesomeIcon icon={faSearch} />
@@ -205,7 +170,7 @@ export default function AllProductPage() {
   ))}
 </div>
 
-      {/* Xem thêm */}
+      
             {/* Pagination */}
 <div className="flex justify-center my-6 gap-2">
   {currentPage > 1 &&(

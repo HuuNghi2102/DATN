@@ -104,7 +104,7 @@ export default function AllProductPage() {
         <div className="relative">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[10px]"
+            className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[12px]"
           >
             {selectedOption}
             <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
