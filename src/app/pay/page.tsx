@@ -274,6 +274,9 @@ const Pay = async () => {
                         window.location.href = `/pagePaymentVNPay?idOrder=${idOrder}`
                     }else if(orderInfo.paymentMethod == 1){
                         window.location.href = `/successOrder?idOrder=${idOrder}`
+                    }else if(orderInfo.paymentMethod == 2){
+                        // console.log('aokkk',result.data.linkResponse)
+                        window.location.href = `${result.data.linkResponse}`
                     }
                 }else{
                     alert('Tạo đơn hàng không thành công');

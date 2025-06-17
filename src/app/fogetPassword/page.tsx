@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
     const results = await res.json();
     
     if(results.status == false){
-      if(results.errors.length > 0){
+      if(results.errors.email.length > 0){
         const arrErr = results.errors;
         setErrEmail(arrErr.email[0]);
       }else{

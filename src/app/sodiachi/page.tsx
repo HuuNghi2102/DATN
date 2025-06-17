@@ -1,29 +1,15 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
+// import { Plus } from 'lucide-react';
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState('address');
   const [user, setUser] = useState<any>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
 
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      name: 'Đặng Khoa',
-      phone: '(+84) 933 950 800',
-      address: '406/11 phường Thới An, Quận 12, TP.HCM',
-      isDefault: true,
-    },
-    {
-      id: 2,
-      name: 'Đặng Khoa',
-      phone: '(+84) 933 950 800',
-      address: '213/18g, Lê Văn Khương, khu phố 1, P.Hiệp Thành, Quận 12',
-      fullAddress: 'Phường Hiệp Thành, Quận 12, TP.HCM',
-      isDefault: false,
-    },
+  const [addresses, setAddresses] = useState<any[]>([
+    
   ]);
 
   useEffect(() => {
@@ -34,10 +20,26 @@ export default function AccountPage() {
   }, [addresses]);
 
   useEffect(() => {
+    
     const u = localStorage.getItem('user');
-    if (u) {
+    const accessTokenLocal = localStorage.getItem('accessToken');
+    const typeTokenLocal = localStorage.getItem('typeToken');
+    if (u && accessTokenLocal && typeTokenLocal){
       setUser(JSON.parse(u));
+      const fetchAddress = async () => {
+        const res = await fetch('https://huunghi.id.vn/api/address/listAddress',{
+          headers : {
+            "Content-Type" : "application/json",
+            "Authorization" : `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
+          }
+        })
+        const result = await res.json();
+        const address = result.data.address;
+        setAddresses(address);
+      }
+      fetchAddress();
     }
+    
   }, []);
 
   const handleSetDefault = (id: number) => {
@@ -49,6 +51,8 @@ export default function AccountPage() {
     );
     setSelectedAddressId(id);
   };
+
+  
 
   const menuItems = [
     { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/userprofile' },
@@ -117,26 +121,26 @@ export default function AccountPage() {
 
           <div className="space-y-4">
             {addresses.map((address) => (
-              <div key={address.id} className="border rounded-lg p-6">
+              <div key={address.id_dia_chi_giao_hang} className="border rounded-lg p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       <input
                         type="radio"
                         name="address"
-                        checked={selectedAddressId === address.id}
-                        onChange={() => handleSetDefault(address.id)}
+                        checked={selectedAddressId === address.id_dia_chi_giao_hang}
+                        onChange={() => handleSetDefault(address.id_dia_chi_giao_hang)}
                         className="w-4 h-4 accent-black"
                       />
-                      <span className="font-semibold text-lg">{address.name}</span>
-                      <span className="text-gray-600">{address.phone}</span>
+                      <span className="font-semibold text-lg">{address.ten_nguoi_nhan}</span>
+                      <span className="text-gray-600">{address.so_dien_thoai_nguoi_nhan}</span>
                       <button className="text-blue-500 text-sm hover:underline">Sửa</button>
                     </div>
 
                     <div className="ml-7">
-                      <p className="text-gray-700 mb-1">{address.address}</p>
+                      <p className="text-gray-700 mb-1">{address.dia_chi_nguoi_nhan}</p>
                       {address.fullAddress && (
-                        <p className="text-gray-700 mb-3">{address.fullAddress}</p>
+                        <p className="text-gray-700 mb-3">{address.dia_chi_nguoi_nhan}</p>
                       )}
 
                       {address.isDefault && (

@@ -8,6 +8,11 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState({ email: '', password: '' });
   const { dispatch } = useCart();
+
+  const handleLoginWithGoogle = async ()=> {
+    window.location.href ='https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?client_id=468454109173-taj2jti1ec2nsaiiccuc0pnd22ne78iv.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fhuunghi.id.vn%2Fapi%2Fuser%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&response_type=code&service=lso&o2v=1&flowName=GeneralOAuthFlow';
+  }
+
   const handleLogin = async () => {
     const newError = { email: '', password: '' };
     if (!email) {
@@ -129,6 +134,7 @@ const LoginPage = () => {
                 ĐĂNG NHẬP
               </button>
               <button
+                  onClick={()=>handleLoginWithGoogle()}
                   className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all duration-200 group hover:shadow-md"
                 >
                   <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">

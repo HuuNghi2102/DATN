@@ -31,36 +31,6 @@ export default function ChangePassword() {
   }
 
   const changePass = async () => {
-    let flag = true;
-    const objErr:any = {};
-    if(formPassword.passOld === ''){
-      objErr.passOld = 'Mật khẩu cũ không được để trống';
-      flag = false
-    }
-    if(formPassword.passNew === ''){
-      objErr.passNew = 'Mật khẩu mới không được để trống';
-      flag = false
-    }
-    if(formPassword.passConfirm === ''){
-      objErr.passConfirm = 'Xác nhận mật khẩu không được để trống';
-      flag = false
-    }
-    if(formPassword.passConfirm != formPassword.passNew){
-      objErr.passConfirm = 'Mật khẩu không trùng khớp';
-      flag = false
-    }
-    //  console.log(formPassword.pasN)
-    // console.log(formPassword.passConfirm)
-
-    if(flag != true){
-      setErrPassword({
-        passOld : objErr.passOld ? objErr.passOld : '',
-        passNew : objErr.passNew ? objErr.passNew : '' ,
-        passConfirm : objErr.passConfirm ? objErr.passConfirm : '',
-      })
-      return;
-    }
-
     const res = await fetch('https://huunghi.id.vn/api/user/changePassword',{
       method : "POST",
       headers : {
@@ -85,6 +55,11 @@ export default function ChangePassword() {
         })
         return;
       }
+      setErrPassword({
+        passOld :  '',
+        passNew :  '' ,
+        passConfirm :  '',
+      })
       setMessage(result.message);
       return;
     }else{
@@ -195,11 +170,12 @@ export default function ChangePassword() {
             <input name="passConfirm" id="Confirm" onChange={(e)=> changeValue(e)} type="password" className='w-full h-12 p-4 border-2 rounded-md' value={formPassword.passConfirm}   placeholder='Xác nhận mật khẩu mới' />
             {errPassword.passConfirm}
           </div>
-
+            {message}
           <div className="flex space-x-3 justify-end">
             <button onClick={()=>changePass()} className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors">
               Thay đổi
             </button>
+            
           </div>
         </div>
       </div>

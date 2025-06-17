@@ -35,6 +35,7 @@ export default function SupportRequestWithSidebar() {
         }),
       });
       const result = await res.json();
+      setContent('')
       alert(result.message);
     }
   };
