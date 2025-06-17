@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Plus } from 'lucide-react';
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState('address');

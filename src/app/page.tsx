@@ -1,7 +1,7 @@
 'use client';
 import React,{useState,useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping, faChevronLeft, faChevronRight, faHeart } from '@fortawesome/free-solid-svg-icons';
 import productsBestSalerInterface from './compoments/productsBestSalerInterface';
 import productsNewInterface from "./compoments/productsNewInterface";
 import {productsCateInterface} from "./compoments/productsCateInterface";
@@ -225,9 +225,9 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
                           </div>
                           <a
                             href={`/product/${product.duong_dan}`}
-                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                           >
-                            <FontAwesomeIcon icon={faCartShopping} />
+                            <FontAwesomeIcon icon={faHeart} />
                           </a>
                           <div className=" absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
                             <p>New</p>
@@ -268,9 +268,9 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
                           </div>
                           <a
                             href="#"
-                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                           >
-                            <FontAwesomeIcon icon={faCartShopping} />
+                            <FontAwesomeIcon icon={faHeart} />
                           </a>
                         </div>
                         <div className="px-1 mt-2">
@@ -282,7 +282,7 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
                     ))}
                   </Slider>
                   <div className="flex justify-center my-9">
-                    <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+                    <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-red-500 text-sm sm:text-base">
                       Xem tất cả
                     </button>
                   </div>
@@ -308,9 +308,9 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
                           </div>
                           <a
                             href="#"
-                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                           >
-                            <FontAwesomeIcon icon={faCartShopping} />
+                            <FontAwesomeIcon icon={faHeart} />
                           </a>
                         </div>
                         <div className="px-1 mt-2">
@@ -358,9 +358,9 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
                           </div>
                           <a
                             href="#"
-                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                            className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                           >
-                            <FontAwesomeIcon icon={faCartShopping} />
+                            <FontAwesomeIcon icon={faHeart} />
                           </a>
                         </div>
                         <div className="mt-2 px-1">
