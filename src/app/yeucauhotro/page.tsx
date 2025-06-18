@@ -51,7 +51,7 @@ export default function SupportRequestWithSidebar() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-[10%]">
+    <div className="min-h-screen bg-gray-100 pt-[11%]">
       {/* Font Awesome */}
       <link
         rel="stylesheet"
