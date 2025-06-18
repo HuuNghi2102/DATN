@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping, faChevronDown,faHeart } from '@fortawesome/free-solid-svg-icons';
 import styles from './header.module.css';
 import type userInterface from "../compoments/userInterface";
 import { UserControlProps } from '../compoments/userInterface';
@@ -142,7 +142,7 @@ const Header = () => {
                     <input onChange={(e:any)=> setInputSearch(e.target.value)} type="text" className={styles['search-input']} placeholder="Bạn đang tìm gì..." />
                     <button
                         onClick={()=> window.location.href = `/search?q=${inputSeach}`}
-                         type="submit" className={styles['search-button']}>
+                        type="submit" className={styles['search-button']}>
                         <div className={styles.icon}>
                         <img
                             width="24"
@@ -157,17 +157,13 @@ const Header = () => {
 
             <div className={styles['user-controls']}>
                 <div className={styles['user-control-item']}>
-                <div className={styles.icon}>
-                <a href="/contact">
-                    <img
-                    src="https://theme.hstatic.net/1000253775/1001315144/14/location.svg?v=2041"
-                    alt=""
-                    />
-                </a>
+                    <div className={styles.icon}>
+                        <a href="/wishlist">
+                            <FontAwesomeIcon className='w-6 h-6' icon={faHeart} />
+                        </a>
+                    </div>
+                <span>Wishlist</span>
                 </div>
-                <span>Cửa hàng</span>
-                </div>
-
                 <div className={styles['user-control-item']} style={{ position: 'relative' }}>
                 <div className={styles.icon} onClick={handleToggleUserDropdown} style={{ cursor: 'pointer' }}>
                     <img

@@ -80,11 +80,9 @@ export default function ChangePassword() {
 
 
   useEffect(() => {
-
     const u = localStorage.getItem('user');
     const tokenLocal = localStorage.getItem('accessToken');
     const typeTokenLocal = localStorage.getItem('typeToken');
-
     if (u && tokenLocal && typeTokenLocal) {
       const uu = JSON.parse(u);
       setUser(uu);
@@ -157,25 +155,22 @@ export default function ChangePassword() {
             </ul>
           </div>
         </div>
-
         {/* Main Content */}
         <div className="flex-1 bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-6 text-gray-800">Đổi mật khẩu</h2>
-
           <div className="mb-4">
             <input name="passOld" id="old" onChange={(e)=> changeValue(e)} type="password" className='w-full h-12 p-4 border-2 rounded-md'  value={formPassword.passOld} placeholder='Mật khẩu cũ' /> <br />
-            {errPassword.passOld}
+            {errPassword.passOld && <p className="text-red-500 text-sm">{errPassword.passOld}*</p>}
             <input name="passNew" id="new" onChange={(e)=> changeValue(e)} type="password" className='w-full h-12 p-4 my-3 border-2 rounded-md' value={formPassword.passNew}   placeholder='Mật khẩu mới' /> <br />
-            {errPassword.passNew}
+            {errPassword.passNew && <p className="text-red-500 text-sm">{errPassword.passNew}*</p>}
             <input name="passConfirm" id="Confirm" onChange={(e)=> changeValue(e)} type="password" className='w-full h-12 p-4 border-2 rounded-md' value={formPassword.passConfirm}   placeholder='Xác nhận mật khẩu mới' />
-            {errPassword.passConfirm}
+            {errPassword.passConfirm && <p className="text-red-500 text-sm">{errPassword.passConfirm}*</p>}
           </div>
             {message}
           <div className="flex space-x-3 justify-end">
             <button onClick={()=>changePass()} className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors">
               Thay đổi
             </button>
-            
           </div>
         </div>
       </div>

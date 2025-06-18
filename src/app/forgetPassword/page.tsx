@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
 
     localStorage.setItem('email',JSON.stringify(results.email));
     alert(results.message);
-
+    window.location.href = 'enterCode';
   }
 
   return (
@@ -91,16 +91,15 @@ export default function ForgotPasswordPage() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm"
                 />
               </div>
-              {errorEmail}
+              {errorEmail && <p className="text-red-500 text-sm">{errorEmail}</p>}
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}
                 className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 font-medium text-sm transition duration-200"
               >
-                GỬI
+                Gửi
               </button>
             </div>
-
             {/* Login Link */}
             <div className="mt-6 text-center">
               <a

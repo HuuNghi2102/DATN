@@ -185,6 +185,7 @@ export default function AccountPage() {
                     return;
                 }
 
+
                 if (result.status == true) {
                     // Refresh the address list
                     const res = await fetch('https://huunghi.id.vn/api/address/listAddress', {
