@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    localStorage.setItem('email',results.email);
+    localStorage.setItem('email',JSON.stringify(results.email));
     alert(results.message);
 
   }
