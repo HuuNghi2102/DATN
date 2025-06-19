@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { CartItem } from '../compoments/CartItem';
+import { CartItem } from './CartItem';
 const CartPage = () => {
   const [selectedProvince, setSelectedProvince] = useState();
   const [selectedDistrict, setSelectedDistrict] = useState<number>(1);

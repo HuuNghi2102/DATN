@@ -10,7 +10,7 @@ import voucherInterface from './compoments/vouchersInterface';
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
 // import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
-import './globals.css';
+import '../globals.css';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "

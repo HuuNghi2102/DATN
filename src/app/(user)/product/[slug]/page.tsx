@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'react-slick';
 import productDetailInterface from "../../compoments/productDetailInterface";
-import { useCart } from '@/app/context/CartContext';
-import voucherInterface from '@/app/compoments/vouchersInterface';
+import { useCart } from '@/app/(user)/context/CartContext';
+import voucherInterface from '@/app/(user)/compoments/vouchersInterface';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
