@@ -184,7 +184,7 @@ const Header = () => {
                             <h1 className='text-center text-xl'>THÔNG TIN TÀI KHOẢN</h1>
                             <p className='text-center text-sm'>Số điện thoại: <strong className='text-black'>{currentUser.sdt_user}</strong></p>
                             <div  className={styles.dropdownButtons }>
-                                <a href="/userprofile">
+                                <a href="/user/userprofile">
                                     <button className={styles.btn}>
                                         Xem chi tiết
                                     </button>

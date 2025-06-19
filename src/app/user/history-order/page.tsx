@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import userInterface from '../compoments/userInterface';
+import userInterface from '@/app/compoments/userInterface';
 import Link from 'next/link';
 
 export default function UserProfile() {
@@ -36,13 +36,13 @@ export default function UserProfile() {
   
 
   const menuItems = [
-    { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/userprofile' },
-    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/history-order' ,active: true },
-    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/yeucauhotro' },
-    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/' },
+    { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/user/userprofile' },
+    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order' ,active: true },
+    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro' },
+    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi' },
     { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
     { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
-    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/changePassword' }
+    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' }
   ];
 
   return (
@@ -118,7 +118,7 @@ export default function UserProfile() {
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Mã đơn hàng</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Tên người nhận</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">SĐT</th>
-            <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Địa chỉ</th>
+            {/* <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Địa chỉ</th> */}
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Tổng tiền</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Trạng thái</th>
             <th className="border border-gray-300 p-3 text-center text-sm font-semibold text-gray-700">Hành động</th>
@@ -130,14 +130,14 @@ export default function UserProfile() {
               <td className="border border-gray-300 p-3 text-center text-black font-medium">#{order.id_don_hang}</td>
               <td className="border border-gray-300 p-3 text-center text-black">{order.ten_nguoi_nhan}</td>
               <td className="border border-gray-300 p-3 text-center text-black">{order.so_dien_thoai_nguoi_nhan}</td>
-              <td className="border border-gray-300 p-3 text-center text-black">{order.dia_chi_nguoi_nhan}</td>
+              {/* <td className="border border-gray-300 p-3 text-center text-black">{order.dia_chi_nguoi_nhan.slice(0, 10)+ '...'}</td> */}
               <td className="border border-gray-300 p-3 text-center text-black font-medium">{order.gia_tong_don_hang.toLocaleString('vi-VN')}đ</td>
               
               <td className="border border-gray-300 p-3 text-center text-sm text-gray-800">
                 Chờ xác nhận 
               </td>
               <td className="border border-gray-300 p-3 text-center">
-                 <button className="text-black hover:text-gray-800 font-medium">
+                  <button className="text-black hover:text-gray-800 bg-slate-400 p-2 font-medium">
                     Xem chi tiết
                   </button>
                   {order.trang_thai_don_hang == 'cho_xac_nhan' && (
