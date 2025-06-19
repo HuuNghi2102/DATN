@@ -215,13 +215,13 @@ export default function AccountPage() {
     };
 
     const menuItems = [
-        { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/userprofile' },
-        { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/history-order' },
-        { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/yeucauhotro' },
-        { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '#', active: true },
-        { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/voucher' },
+        { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/user/userprofile' },
+        { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order' },
+        { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro' },
+        { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi', active: true },
+        { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '' },
         { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
-        { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/changePassword' },
+        { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' },
     ];
 
     return (

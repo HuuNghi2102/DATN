@@ -3,7 +3,7 @@ export default interface productsNewInterface{
     ten_san_pham: string;
     images:ProducNewtImage[];
     duong_dan: string;
-    gia_chua_giam: number;
+    gia_chua_giam: number | string;
     pham_tram_giam:number;
     gia_da_giam:number;
     mo_ta_san_pham:string;
