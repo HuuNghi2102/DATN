@@ -226,7 +226,6 @@ const [cartItem,setCartItem] = useState({
 };
 
     return (
-        
         <div className="min-h-screen bg-gray-50 pt-[12%]">
         {/* Header */}
         <div className="bg-white shadow-sm py-4 pl-28">

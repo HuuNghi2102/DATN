@@ -65,7 +65,7 @@ const NotFoundPage = () => {
 
           {/* 404 Text */}
           <div className="mb-8">
-            <h1 className="text-8xl md:text-9xl  text-transparent text-gray-50 font-bold  mb-4 ">
+            <h1 className="text-8xl md:text-9xl  text-transparent text-white z-10 font-bold  mb-4 ">
               404
             </h1>
             <div className="text-xl md:text-2xl font-bold text-white mb-2">
