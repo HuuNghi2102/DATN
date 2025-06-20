@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faChevronLeft, faChevronRight, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping, faChevronLeft, faChevronRight, faHeart, faFire } from '@fortawesome/free-solid-svg-icons';
 import productsBestSalerInterface from './compoments/productsBestSalerInterface';
 import productsNewInterface from "./compoments/productsNewInterface";
 import { productsCateInterface } from "./compoments/productsCateInterface";
@@ -10,7 +10,7 @@ import voucherInterface from './compoments/vouchersInterface';
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
 // import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
-import './globals.css';
+import '../globals.css';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
@@ -229,8 +229,8 @@ const Home = () => {
                       >
                         <FontAwesomeIcon icon={faHeart} />
                       </a>
-                      <div className=" absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
-                        <p>New</p>
+                      <div className=" absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md px-2 py-1 gap-1 items-center flex font-bold">
+                        <FontAwesomeIcon icon={faFire} /> <p> New</p>
                       </div>
                     </div>
                     <div className="px-1 mt-2">

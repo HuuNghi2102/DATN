@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'react-slick';
 import productDetailInterface from "../../compoments/productDetailInterface";
-import { useCart } from '@/app/context/CartContext';
-import voucherInterface from '@/app/compoments/vouchersInterface';
+import { useCart } from '@/app/(user)/context/CartContext';
+import voucherInterface from '@/app/(user)/compoments/vouchersInterface';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
@@ -333,7 +333,7 @@ const [cartItem,setCartItem] = useState({
                     {colors.map((colorOption,index) => (
                     <button
                         key={colorOption ? colorOption.ten_mau : 'Đang tải...'}
-                        onClick={() => {setSelectedColor(colorOption) ;handleChangeQuantity(product?.id_san_pham, colorOption.ten_mau,selectedSize,quantity); }}
+                        onClick={() => {setSelectedColor(colorOption) ;setQuantity(productVariant?.so_luong > 0 ? 1 : 0);handleChangeQuantity(product?.id_san_pham, colorOption.ten_mau,selectedSize,quantity); }}
                         style={{backgroundColor: colorOption.ma_mau}}
                         className={`w-8 h-8 rounded-full border-2  ${
                         selectedColor?.ten_mau === colorOption.ten_mau ? 'ring-2 ring-blue-500 ring-offset-2' : ''
@@ -356,7 +356,7 @@ const [cartItem,setCartItem] = useState({
                 {sizes.map((size) => (
                     <button
                     key={size.ten_kich_thuoc}
-                    onClick={() => {setSelectedSize(size);handleChangeQuantity(product?.id_san_pham,selectedColor.ten_mau,size,quantity)}}
+                    onClick={() => {setSelectedSize(size);setQuantity(productVariant?.so_luong > 0 ? 1 : 0);handleChangeQuantity(product?.id_san_pham,selectedColor.ten_mau,size,quantity)}}
                     className={`w-10 h-10 border rounded text-sm font-medium ${
                         selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
                         ? 'border-red-500 bg-red-50 text-red-600'
@@ -379,7 +379,7 @@ const [cartItem,setCartItem] = useState({
                     </button>
                     <span className="px-4 py-2 min-w-[60px] text-center">{quantity}</span>
                     <button
-                        onClick={() => {setQuantity(quantity + 1);handleChangeQuantity(product.id_san_pham,selectedColor.ten_mau,selectedSize,quantity + 1)}}
+                        onClick={() => {setQuantity(quantity + 1 > productVariant?.so_luong ? productVariant?.so_luong : quantity + 1 );handleChangeQuantity(product.id_san_pham,selectedColor.ten_mau,selectedSize,quantity + 1)}}
                         className="px-3 py-2 hover:bg-gray-100" >
                         +
                     </button>

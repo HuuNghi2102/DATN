@@ -1,4 +1,4 @@
-import { CartItem } from '../compoments/CartItem';
+import { CartItem } from './CartItem';
 const addToCart = (action:CartItem) => {
     const accessToken = localStorage.getItem("accessToken");
     const typeToken = localStorage.getItem("typeToken");

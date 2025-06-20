@@ -61,12 +61,6 @@ const LoginPage = () => {
             carts : arrCarts
           })
         })
-        const result = resAddCart.json();
-        if(resAddCart.ok){
-          alert("Thêm thành công")
-        }else{
-          alert("Thêm thất bại")
-        }
       }
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('accessToken', JSON.stringify(accessToken));
