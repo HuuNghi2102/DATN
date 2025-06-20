@@ -78,7 +78,7 @@ const LoginPage = () => {
       //   dispatch({ type: 'SET_CART', payload: cartResult.cart });
       //   localStorage.setItem('cart', JSON.stringify(cartResult.cart));
       // }
-      window.location.href = '/userprofile';
+      window.location.href = '/user/userprofile';
     } catch (err) {
       console.error(err);
       setError({ ...newError });

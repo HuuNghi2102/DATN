@@ -43,7 +43,7 @@ const pageHandleGoogle = () => {
             localStorage.setItem('accessToken', JSON.stringify(accessToken));
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('typeToken', JSON.stringify('Bearer'));
-            window.location.href = '/userprofile'
+            window.location.href = '/user/userprofile'
         } else {
             alert('Token không hợp lệ vui lòng đăng nhập lại')
             window.location.href = '/login'

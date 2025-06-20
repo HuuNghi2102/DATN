@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMapMarkerAlt,
@@ -10,12 +10,45 @@ import {
   faCopyright,
 } from '@fortawesome/free-solid-svg-icons';
 import { faClock as faClockRegular } from '@fortawesome/free-regular-svg-icons';
+import { useParams } from 'next/navigation';
 
 const IntegratedPage = () => {
+
+  const useParam = useParams();
+  const {slug} = useParam; 
+
   const [shirtShopPage, setShirtShopPage] = useState(1);
   const [articlePage, setArticlePage] = useState(1);
   const [storePage, setStorePage] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
+  const [currentPost,setCurrentPost] = useState<any>();
+  const [arrayPostNew,setArrayPostNew] = useState<any[]>([]);
+
+  useEffect(()=>{
+    fetchBlog();
+  },[]);
+
+  const fetchBlog = async () => {
+    if(!slug){
+      alert('Bài viết không tồn tại');
+      window.location.href = '/blog'
+    }
+
+    const resBlog = await fetch(`https://huunghi.id.vn/api/post/getPost/${slug}`);
+    if(!resBlog.ok){
+      alert('Bài viết không tồn tại');
+      return window.location.href = '/blog'
+    }
+    const result = await resBlog.json();
+    setCurrentPost(result.data.post);
+
+
+    const resBlogNew = await fetch('https://huunghi.id.vn/api/post/getPostNew');
+    const resultPostNew = await resBlogNew.json();
+
+    setArrayPostNew(resultPostNew.data.postsNew);
+
+  }
 
   // Dữ liệu bài viết
   const articles = [
@@ -235,18 +268,19 @@ const IntegratedPage = () => {
             <li className="text-[12px] font-semibold mt-0.5">Top 5 shop bán áo sơ mi nam đẹp ở Gò Vấp</li>
           </ul>
         </nav>
-        <h1 className="font-bold text-[15px] mb-3">Top 5 shop bán áo sơ mi nam đẹp ở Gò Vấp</h1>
+        <h1 className="font-bold text-[15px] mb-3">{currentPost?.ten_bai_viet}</h1>
 
         {/* Nội dung chính */}
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <img
               className="w-full mb-2"
-              src="https://storage.googleapis.com/a1aa/image/abb99482-4b88-4cd1-8521-bc7de5c64779.jpg"
+              src={`https://huunghi.id.vn/storage/posts/${currentPost?.anh_bai_viet}`}
               alt="Shop áo sơ mi nam ở Gò Vấp"
               width={600}
               height={300}
             />
+            {currentPost?.noi_dung_bai_viet}
             <p className="font-bold text-[11px] mb-1">Gò Vấp là một trong những trung tâm mua sắm thời trang nam trẻ, năng động hàng đầu tại TP.HCM...</p>
             <p className="font-bold text-[13px] mb-1">Gò Vấp - Tâm điểm mua sắm thời trang nam trẻ trung</p>
             <p className="mb-3">Gò Vấp từ lâu đã được xem là <span className="font-bold">tâm điểm mua sắm thời trang nam trẻ</span> tại TP.HCM...</p>
@@ -311,22 +345,22 @@ const IntegratedPage = () => {
         {/* Phần bài viết */}
         <div ref={titleRef} className="mt-10">
          
-          <h1 className="font-bold text-[18px] text-center mb-3">TIN TỨC LIÊN QUAN</h1>
+          <h1 className="font-bold text-[18px] text-center mb-3">CÁC BÀI VIẾT MỚI NHẤT</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {currentArticles.map((article) => (
-              <article key={article.id} className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col">
-                <img src={article.image} alt={article.title} className="w-full h-36 object-cover" loading="lazy" />
+            {arrayPostNew.map((article) => (
+              <article key={article.id_bai_viet} className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col">
+                <img src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`} alt={article.ten_bai_viet} className="w-full h-36 object-cover" loading="lazy" />
                 <div className="p-4 flex flex-col flex-grow">
-                  <h2 className="text-sm font-bold mb-2">{article.title}</h2>
-                  <p className="text-xs text-gray-600 mb-3 flex-grow">{article.description}</p>
+                  <h2 className="text-sm font-bold mb-2">{article.ten_bai_viet}</h2>
+                  <p className="text-xs text-gray-600 mb-3 flex-grow">{article.noi_dung_bai_viet.slice(0,50)}</p>
                   <div className="flex justify-between items-center text-xs text-gray-500">
                     <time className="flex items-center gap-1">
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7a2 2 0 002 2z" />
                       </svg>
-                      {article.date}
+                      {new Date(article.created_at).toLocaleDateString('vi-VN')}
                     </time>
-                    <a href={article.link} className="hover:text-yellow-400 transition">Xem thêm ›</a>
+                    <a href={article.duong_dan} className="hover:text-yellow-400 transition">Xem thêm ›</a>
                   </div>
                 </div>
               </article>
