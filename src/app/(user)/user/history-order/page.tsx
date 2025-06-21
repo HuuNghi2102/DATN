@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function UserProfile() {
   const [user, setUser] = useState<userInterface>();
   const [orders, setOrders] = useState<any[]>();
-  const [reload,setReload] = useState<boolean>(true)
+  const [reload, setReload] = useState<boolean>(true)
 
   useEffect(() => {
     const u = localStorage.getItem('user');
@@ -54,11 +54,11 @@ export default function UserProfile() {
 
   const menuItems = [
     { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/user/userprofile' },
-    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order' ,active: true },
+    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order', active: true },
     { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro' },
     { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi' },
     { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
-    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
+    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem' },
     { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' }
   ];
 
@@ -105,8 +105,8 @@ export default function UserProfile() {
                     <Link href={item.href}>
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
-                            ? 'bg-black text-white'
-                            : 'text-gray-700 hover:bg-gray-50'
+                          ? 'bg-black text-white'
+                          : 'text-gray-700 hover:bg-gray-50'
                           }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
@@ -155,38 +155,42 @@ export default function UserProfile() {
                           {order.trang_thai_don_hang == 'giao_thanh_cong' && ('Đã giao')}
                           {order.trang_thai_don_hang == 'da_huy' && ('Đã hủy')}
                         </td>
-                        <td className="border border-gray-300 p-3 text-center">
-                          <button className="text-black hover:text-gray-800 font-medium">
-                            Xem chi tiết
+                        <td className=" border flex border-gray-300 p-5 items-center text-center">
+                          {/* Nút Xem chi tiết */}
+                          <button className="w-full  text-black font-medium py-1 rounded-lg transition-all duration-200">
+                            <i className="fa-solid fa-eye"></i>
                           </button>
+
+                          {/* Nút Hủy */}
                           {order.trang_thai_don_hang == 'cho_xac_nhan' && (
-                            <button onClick={() => destroyOrder(order.id_don_hang)} className="text-black hover:text-gray-800 font-medium">
-                              Hủy
+                            <button
+                              onClick={() => destroyOrder(order.id_don_hang)}
+                              className="w-full  text-black font-medium py-1 rounded-lg transition-all duration-200"
+                            >
+                              <i className="fa-solid fa-trash"></i>
                             </button>
                           )}
-                          {order.trang_thai_thanh_toan !== 'da_thanh_toan' && order.trang_thai_don_hang != 'da_huy' && order.trang_thai_don_hang != 'hoan_hang' && order.id_phuong_thuc_thanh_toan !== 1 && (
-                            <a href={`/pagePaymentVNPay?idOrder=${order.id_don_hang}`}>
-                              <button className="text-black hover:text-gray-800 font-medium">
-                                Thanh toán
-                              </button>
-                            </a>
 
-                          )}
+                          {/* Nút Thanh toán */}
+                          {order.trang_thai_thanh_toan !== 'da_thanh_toan' &&
+                            order.trang_thai_don_hang != 'da_huy' &&
+                            order.trang_thai_don_hang != 'hoan_hang' &&
+                            order.id_phuong_thuc_thanh_toan !== 1 && (
+                              <a href={`/pagePaymentVNPay?idOrder=${order.id_don_hang}`} className="block">
+                                <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
+                                  Thanh toán
+                                </button>
+                              </a>
+                            )}
                         </td>
                       </tr>
                     </tbody>
                   ))}
-
                 </table>
               </div>
             </div>
           </div>
-
-
-
-
         </div>
-
         {/* Mobile Layout */}
         <div className="md:hidden">
           <div className="bg-white rounded-lg shadow-sm">
@@ -197,21 +201,19 @@ export default function UserProfile() {
                 <span className="font-medium">Tài khoản của bạn</span>
               </div>
             </div>
-
             {/* Mobile Menu */}
             <div className="p-2 border-b">
               <div className="text-sm text-gray-600 px-3 py-2">
                 Hi, {user?.ten_user || 'Người dùng'}
               </div>
-
               <ul className="space-y-1">
                 {menuItems.map((item, index) => (
                   <li key={index}>
                     <Link href={item.href}>
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
-                            ? 'bg-black text-white'
-                            : 'text-gray-700 hover:bg-gray-50'
+                          ? 'bg-black text-white'
+                          : 'text-gray-700 hover:bg-gray-50'
                           }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
@@ -221,12 +223,6 @@ export default function UserProfile() {
                   </li>
                 ))}
               </ul>
-            </div>
-
-            {/* Mobile Main Content */}
-            <div className="p-4">
-              <h2 className="text-lg font-medium mb-6">ĐƠN HÀNG CỦA TÔI</h2>
-              <p className="text-gray-600">Chức năng đang được phát triển...</p>
             </div>
           </div>
         </div>

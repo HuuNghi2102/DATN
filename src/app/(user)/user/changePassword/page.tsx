@@ -4,6 +4,7 @@ import userInterface from '../../compoments/userInterface';
 import Link from 'next/link';
 
 export default function ChangePassword() {
+  const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState<userInterface>();
   const [accessToken,setAccessToken] = useState('');
   const [typeToken,setTypeToken] = useState('');
@@ -95,13 +96,13 @@ export default function ChangePassword() {
   }, []);
 
   const menuItems = [
-    { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/userprofile' },
-    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/history-order' },
-    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/yeucauhotro' },
-    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/sodiachi' },
+    { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/user/userprofile' },
+    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order' },
+    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro' },
+    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi' },
     { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
-    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
-    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/changePassword', active: true }
+    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem' },
+    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword', active: true }
   ];
 
   return (
@@ -159,12 +160,42 @@ export default function ChangePassword() {
         <div className="flex-1 bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-6 text-gray-800">Đổi mật khẩu</h2>
           <div className="mb-4">
-            <input name="passOld" id="old" onChange={(e)=> changeValue(e)} type="password" className='w-full h-12 p-4 border-2 rounded-md'  value={formPassword.passOld} placeholder='Mật khẩu cũ' /> <br />
-            {errPassword.passOld && <p className="text-red-500 text-sm">{errPassword.passOld}*</p>}
-            <input name="passNew" id="new" onChange={(e)=> changeValue(e)} type="password" className='w-full h-12 p-4 my-3 border-2 rounded-md' value={formPassword.passNew}   placeholder='Mật khẩu mới' /> <br />
-            {errPassword.passNew && <p className="text-red-500 text-sm">{errPassword.passNew}*</p>}
-            <input name="passConfirm" id="Confirm" onChange={(e)=> changeValue(e)} type="password" className='w-full h-12 p-4 border-2 rounded-md' value={formPassword.passConfirm}   placeholder='Xác nhận mật khẩu mới' />
-            {errPassword.passConfirm && <p className="text-red-500 text-sm">{errPassword.passConfirm}*</p>}
+            {/* mật khẩu cũ */}
+            <div className='relative'>
+              <input name="passOld" id="old" onChange={(e)=> changeValue(e)} type={showPassword ? "text" : "password"} className='w-full h-12 p-4 border-2 rounded-md'  value={formPassword.passOld} placeholder='Mật khẩu cũ' /> <br />
+              {errPassword.passOld && <p className="text-red-500 text-sm">{errPassword.passOld}*</p>}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>              
+            </div>
+            {/* mật khẩu mới */}
+            <div className='relative'>
+              <input name="passNew" id="new" onChange={(e)=> changeValue(e)} type={showPassword ? "text" : "password"} className='w-full h-12 p-4 my-3 border-2 rounded-md' value={formPassword.passNew}   placeholder='Mật khẩu mới' /> <br />
+              {errPassword.passNew && <p className="text-red-500 text-sm">{errPassword.passNew}*</p>}
+              <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-[35px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button> 
+            </div>
+            {/* xác nhận mật khẩu */}
+            <div className='relative'>
+              <input name="passConfirm" id="Confirm" onChange={(e)=> changeValue(e)} type={showPassword ? "text" : "password"} className='w-full h-12 p-4 border-2 rounded-md' value={formPassword.passConfirm}   placeholder='Xác nhận mật khẩu mới' />
+              {errPassword.passConfirm && <p className="text-red-500 text-sm">{errPassword.passConfirm}*</p>}
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>               
+            </div>
           </div>
             {message}
           <div className="flex space-x-3 justify-end">

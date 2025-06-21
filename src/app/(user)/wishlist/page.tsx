@@ -37,7 +37,7 @@ const WishlistPage = () => {
                         </div>
 
                         {/* Product Row */}
-                        <div className="px-6 py-8 border-b border-gray-100">
+                        <div className="px-6  border-b border-gray-100">
                             <div className="flex items-center">
                                 {/* Remove button & Product Info */}
                                 <div className="flex-1 flex items-center space-x-4">
