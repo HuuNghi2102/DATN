@@ -85,7 +85,7 @@ useEffect(()=>{
     { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro' },
     { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi' },
     { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
-    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem' },
+    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
     { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' }
   ];
 

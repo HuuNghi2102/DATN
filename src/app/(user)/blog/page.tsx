@@ -86,7 +86,7 @@ const MainContent = () => {
                       <FontAwesomeIcon icon={faCalendarDays} />{' '}
                       {new Date(article.created_at).toLocaleDateString('vi-VN')}
                     </span>
-                    <a href={`/blog/${article.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
+                    <a href={`/blog-detail/${article.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
                       Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
                     </a>
                   </div>
@@ -109,7 +109,8 @@ const MainContent = () => {
           {Array.from({ length: totalPage }, (_, i) => i + 1).map(
             (page) =>
               page >= pageStart &&
-              page <= pageEnd && (
+              page <= pageEnd && 
+              totalPage > 1 && (
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
@@ -123,7 +124,7 @@ const MainContent = () => {
                 </button>
               ),
           )}
-          {currentPage < totalPage && (
+          {currentPage < totalPage && ( 
             <>
               <button className="px-3 py-1 border text-sm rounded bg-black text-white">{`...`}</button>
               <button

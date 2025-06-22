@@ -1,7 +1,74 @@
 'use client'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const WishlistPage = () => {
+    const [reload,setReload] = useState<boolean>(true);
+    const [listWhistList ,setListWhistList] = useState<any[]>([])
+    const [isUser,setIsUser] = useState<boolean>(false)
+
+
+    useEffect(()=>{
+        const accessTokenLocal = localStorage.getItem('accessToken');
+        const typeTokenLocal = localStorage.getItem('typeToken');
+        const userLocal = localStorage.getItem('user');
+        if(accessTokenLocal && typeTokenLocal && userLocal){
+            const fetchWhistList = async () => {
+                const resWhistList = await fetch('https://huunghi.id.vn/api/whislist/listWhislist',{
+                    headers : {
+                        "Content-Type" : "application/json",
+                        "Authorization" : `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
+                    }
+                })
+                const result = await resWhistList.json();
+                if(!resWhistList.ok){
+                    return setListWhistList([]);
+                }
+                return setListWhistList(result.data.productWhistList);
+            }
+            fetchWhistList();
+            setIsUser(true);
+        }else{
+            const whistlistLocal = localStorage.getItem('whislist');
+            if(whistlistLocal){
+                setListWhistList(JSON.parse(whistlistLocal).length > 0 ? JSON.parse(whistlistLocal) : [])
+            }
+        }
+    },[reload]);
+
+    const removeWhilist = async (position:number) => {
+
+        const user = localStorage.getItem('user');
+        const accessToken = localStorage.getItem('accessToken');
+        const typeToken = localStorage.getItem('typeToken');
+        const arrWhistList = localStorage.getItem('whislist');
+
+        if(user && accessToken && typeToken){
+            const resDelete = await fetch(`https://huunghi.id.vn/api/whislist/deleteWhislist/${position}`,{
+                method : "DELETE",
+                headers : {
+                    "Content-Type" : "application/json",
+                    "Authorization" : `${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`
+                }
+            })
+            if(resDelete.ok){
+                const result = await resDelete.json();
+                alert(result.message);
+            }else{
+                alert('Xóa thất bại');
+            }
+        }else{
+            if(arrWhistList){
+
+                let parseWhistList = JSON.parse(arrWhistList);
+                parseWhistList.splice(position,1);
+                localStorage.setItem('whislist',JSON.stringify(parseWhistList))
+            }else{
+                 localStorage.setItem('whislist',JSON.stringify([]));
+            }
+        }
+        setReload(!reload);
+    }
+
     return (
         <div className="min-h-screen bg-gray-50">
             {/* FontAwesome CDN */}
@@ -35,7 +102,44 @@ const WishlistPage = () => {
                                 <div className="w-32"></div>
                             </div>
                         </div>
+                        {listWhistList.map((e,i)=>(
+                            <div key={i} className="px-6 py-8 border-b border-gray-100">
+                                <div className="flex items-center">
+                                    {/* Remove button & Product Info */}
+                                    <div className="flex-1 flex items-center space-x-4">
+                                        <button onClick={()=>removeWhilist(isUser ? e.id_san_pham_yeu_thich : i)} className="text-gray-300 hover:text-gray-500 transition-colors">
+                                            <i className="fas fa-times text-sm"></i>
+                                        </button>
+                                        <div className="w-16 h-20 rounded-sm flex items-center justify-center">
+                                            <img src={`https://huunghi.id.vn/storage/products/${e.anh_san_pham}`} alt="" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-base font-normal text-gray-800">{e.ten_san_pham}</h3>
+                                        </div>
+                                    </div>
 
+                                    {/* Price */}
+                                    <div className="w-32 text-right">
+                                        <span className="text-base font-medium text-gray-800">{e.gia_san_pham.toLocaleString('vi-VN')}₫</span>
+
+                                    </div>
+
+                                    {/* Stock Status - Empty for desktop as it's shown under price */}
+                                    <div className="w-32">
+                                        <div className="text-xs text-gray-500 mt-1 text-center">In Stock</div>
+                                    </div>
+                                    {/* Action Button */}
+                                    <div className="w-32 text-right">
+                                        <a href={`/product/${e.duong_dan}`}>
+                                            <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
+                                                Move to detail
+                                            </button>
+                                        </a>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                         {/* Product Row */}
                         <div className="px-6  border-b border-gray-100">
                             <div className="flex items-center">
@@ -76,18 +180,31 @@ const WishlistPage = () => {
                             <div className="flex items-center space-x-4">
                                 <span className="text-gray-600 text-sm">Share on:</span>
                                 <div className="flex space-x-2">
-                                    <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-                                        <i className="fab fa-facebook-f text-xs text-gray-600"></i>
-                                    </button>
-                                    <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-                                        <i className="fab fa-twitter text-xs text-gray-600"></i>
-                                    </button>
-                                    <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-                                        <i className="fab fa-pinterest text-xs text-gray-600"></i>
-                                    </button>
-                                    <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-                                        <i className="fas fa-envelope text-xs text-gray-600"></i>
-                                    </button>
+                                    <a href="https://www.facebook.com/sharer.php?u=https://mowgarden.com/wishlist/">
+                                        <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
+                                            <i className="fab fa-facebook-f text-xs text-gray-600"></i>
+                                        </button>
+                                    </a>
+                                    <a href="https://www.twitter.com/share?url=https://mowgarden.com/wishlist/">
+                                        <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
+                                            <i className="fab fa-twitter text-xs text-gray-600"></i>
+                                        </button>
+                                    </a>
+
+                                    <a href="https://www.pinterest.com/pin/create/button/?url=https://mowgarden.com/wishlist/">
+                                        <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
+                                            <i className="fab fa-pinterest text-xs text-gray-600"></i>
+                                        </button>
+                                    </a>
+
+                                    <a href="mail">
+                                        <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
+                                            <i className="fas fa-envelope text-xs text-gray-600"></i>
+                                        </button>
+                                    </a>
+                                    
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
@@ -122,7 +239,7 @@ const WishlistPage = () => {
                                     </div>
 
                                     <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                                        Move to detail
+                                        Move to detailll
                                     </button>
                                 </div>
                             </div>
@@ -154,6 +271,38 @@ const WishlistPage = () => {
                 {/* Mobile Layout */}
                 <div className="block md:hidden pt-[11%]">
                     <div className="bg-white rounded-lg">
+                        {listWhistList.map((e,i)=> (
+                            <div key={i} className="p-4">
+                                <div className="flex items-start space-x-3">
+                                    <button className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
+                                        <i className="fas fa-times text-sm"></i>
+                                    </button>
+
+                                    <div className="w-16 h-20  rounded-sm flex items-center justify-center">
+                                        <img src={`https://huunghi.id.vn/storage/products/${e.anh_san_pham}`} alt="" />
+                                    </div>
+
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="text-base font-normal text-gray-800 mb-3">{e.ten_san_pham}</h3>
+
+                                        <div className="mb-3">
+                                            <div className="flex justify-between items-center mb-1">
+                                                <span className="text-sm text-gray-600">Price:</span>
+                                                <span className="font-medium text-gray-800">{e.gia_san_pham.toLocaleString('vi-VN')}đ</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-sm text-gray-600">Stock:</span>
+                                                <span className="text-sm text-gray-600">In Stock</span>
+                                            </div>
+                                        </div>
+
+                                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
+                                            Move to detaillllllllllegeg
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                         <div className="p-4">
                             <div className="flex items-start space-x-3">
                                 <button className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
@@ -179,7 +328,7 @@ const WishlistPage = () => {
                                     </div>
 
                                     <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                                        Move to detail
+                                        Move to detailhfwifnwkfn
                                     </button>
                                 </div>
                             </div>
@@ -188,9 +337,12 @@ const WishlistPage = () => {
                         {/* Share Section */}
                         <div className="px-4 pb-4">
                             <div className="flex justify-center space-x-2">
-                                <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
-                                    <i className="fab fa-facebook-f text-xs text-gray-600"></i>
-                                </button>
+                                <a href="https://www.facebook.com/sharer.php?u=https://mowgarden.com/wishlist/">
+                                    <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
+                                        <i className="fab fa-facebook-f text-xs text-gray-600"></i>
+                                    </button>
+                                </a>
+                                
                                 <button className="w-8 h-8 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors">
                                     <i className="fab fa-twitter text-xs text-gray-600"></i>
                                 </button>
