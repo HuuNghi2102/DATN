@@ -9,6 +9,8 @@ export default function OrderDetail() {
   const [order, setOrder] = useState<any>(null);
   const [orderItems, setOrderItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [voucher,setVoucher] = useState<any>(null);
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get('idOrder');
@@ -40,9 +42,15 @@ export default function OrderDetail() {
           const result = await response.json();
           
           if (response.ok) {
-
-            setOrder(result.data.orders);
+            const order = result.data.orders
+            setOrder(order);
             setOrderItems(result.data.orders.detail_orders);
+            // if(order.id_ma_giam_gia != null){
+            //   const fetchVoucher = await fetch(`https://huunghi.id.vn/api/voucher/getVoucher/${order.id_ma_giam_gia}`)
+            //   if(fetchVoucher.ok){
+
+            //   }
+            // }
             // console.log(result.data.orders.detail_orders);
           }
         } catch (error) {

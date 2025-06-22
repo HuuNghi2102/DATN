@@ -245,7 +245,7 @@ const Home = () => {
                   </div>
                   <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
                     <div className="py-1 pr-2">
-                      <h4 className="font-semibold">ĐƠN HÀNG: {voucher.gia_tri_don_hang.toLocaleString('vi-VN') + ' VNĐ'}</h4>
+                      <h4 className="font-semibold">ĐƠN HÀNG: {voucher.gia_tri_don_hang.toLocaleString('vi-VN') + ' VNĐ '}</h4>
                       <h1 className="text-sm">GIẢM: <span className=' text-amber-300 font-semibold'>{voucher.gia_tri_giam.toLocaleString('vi-VN') + 'VNĐ'}</span></h1> <br />
                       <p className="mt-1">
                         Mã: <span className="font-semibold">{voucher.ma_giam_gia}</span>
@@ -298,7 +298,7 @@ const Home = () => {
                     </div>
                     <div className="px-1 mt-2">
                       <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'} <del className='text-gray-400 text-xs'> {product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '} <del className='text-gray-400 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
 
                     </div>
                   </div>
@@ -339,7 +339,7 @@ const Home = () => {
                     </div>
                     <div className="px-1 mt-2">
                       <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'}<del className='text-gray-700 text-xs'> {product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
                     </div>
                   </div>
                 </div>
@@ -379,7 +379,7 @@ const Home = () => {
                     </div>
                     <div className="px-1 mt-2">
                       <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'}<del className='text-gray-700 text-xs'> {product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
                     </div>
                   </div>
                 </div>

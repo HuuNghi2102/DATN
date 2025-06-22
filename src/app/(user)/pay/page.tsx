@@ -1,6 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faCartShopping, faCalendarDays, faChevronRight, faBox } from '@fortawesome/free-solid-svg-icons';
 
 const PayPage = () => {
 
@@ -457,8 +459,8 @@ const PayPage = () => {
                         <div className="bg-white rounded-lg shadow p-6">
                             <h3 className="text-lg font-semibold mb-4">Phương thức vận chuyển</h3>
                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <i className="fas fa-file-alt text-gray-400 text-2xl"></i>
+                                <div className="h-16 w-16 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <FontAwesomeIcon className='w-10 h-24' icon={faBox} />
                                 </div>
                                 <p className="text-gray-500">Vui lòng chọn tỉnh / thành để có danh sách phương thức vận chuyển.</p>
                             </div>
@@ -485,18 +487,6 @@ const PayPage = () => {
                                         <span> {method.ten_phuong_thuc}</span>
                                     </label>
                                 ))}
-                                {/* <label className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                            <input
-                                type="radio"
-                                name="payment"
-                                value="vnpay"
-                                checked={orderInfo.paymentMethod === 'vnpay'}
-                                onChange={(e) => setOrderInfo({...orderInfo, paymentMethod: e.target.value})}
-                                className="mr-3"
-                            />
-                                <img src="https://hstatic.net/0/0/global/design/seller/image/payment/vnpay_new.svg?v=6" width={50} height={50} alt="" />
-                                <span> Thanh toán VNPay</span>
-                            </label> */}
                             </div>
                         </div>
 

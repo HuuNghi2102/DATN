@@ -10,9 +10,6 @@ const ProductForm = () => {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const addInventoryItem = () => {
-    setInventoryItems([...inventoryItems, { id: Date.now() }]);
-  };
   
   const removeInventoryItem = (id: number) => {
     setInventoryItems(inventoryItems.filter(item => item.id !== id));
@@ -164,7 +161,7 @@ const ProductForm = () => {
                 </p>
               </div>
             </button>
-                        <label className="form-label block text-sm font-medium text-gray-700 mb-2">
+            <label className="form-label block text-sm font-medium text-gray-700 mb-2">
               Hình ảnh sản phẩm
             </label>
             
@@ -204,15 +201,6 @@ const ProductForm = () => {
               ))}
             </div>
             
-            <button 
-              type="button" 
-              id="addInventoryBtn" 
-              className="btn-add-inventory flex items-center bg-white text-gray-700 px-4 py-2 rounded border border-dashed border-gray-300 cursor-pointer transition-colors mt-2 hover:bg-gray-100 hover:border-gray-400"
-              onClick={addInventoryItem}
-            >
-              <FaPlusCircle className="mr-2 text-primary" />
-              <span>Thêm biến thể</span>
-            </button>
           </div>
           
           <div className="flex justify-end gap-3 mt-8">

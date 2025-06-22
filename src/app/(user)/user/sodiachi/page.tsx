@@ -220,7 +220,7 @@ export default function AccountPage() {
         { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro' },
         { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi', active: true },
         { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '' },
-        { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
+        { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem' },
         { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' },
     ];
 
@@ -351,7 +351,7 @@ export default function AccountPage() {
                                                 required
                                             />
                                         </div>
-                                        {errorFormAddress.ten_nguoi_nhan}
+                                        {errorFormAddress.ten_nguoi_nhan && <p className="text-red-500 text-sm">{errorFormAddress.ten_nguoi_nhan}*</p>}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
                                             <input
@@ -363,7 +363,7 @@ export default function AccountPage() {
                                                 required
                                             />
                                         </div>
-                                        {errorFormAddress.so_dien_thoai_nguoi_nhan}
+                                        {errorFormAddress.so_dien_thoai_nguoi_nhan && <p className="text-red-500 text-sm">{errorFormAddress.so_dien_thoai_nguoi_nhan}*</p>}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Địa chỉ</label>
                                             <input
@@ -375,7 +375,7 @@ export default function AccountPage() {
                                                 required
                                             />
                                         </div>
-                                        {errorFormAddress.dia_chi_nguoi_nhan}
+                                        {errorFormAddress.dia_chi_nguoi_nhan && <p className="text-red-500 text-sm">{errorFormAddress.dia_chi_nguoi_nhan}*</p>}
                                         <div className="flex items-center">
                                             <input
                                                 type="checkbox"
