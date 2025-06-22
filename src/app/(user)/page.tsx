@@ -7,6 +7,7 @@ import productsNewInterface from "./compoments/productsNewInterface";
 import { productsCateInterface } from "./compoments/productsCateInterface";
 import productsSalerInterface from './compoments/productsSalerInterface';
 import voucherInterface from './compoments/vouchersInterface';
+import Link from 'next/link';
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
 // import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
@@ -54,6 +55,68 @@ const productSettings = {
     { breakpoint: 480, settings: { slidesToShow: 2 } },
   ],
 };
+
+const addWhistList= async (name:string,image:string,price:number,slug:string,idPro:number) => {
+
+    const newObj:any = {}
+    newObj.ten_san_pham = name;
+    newObj.anh_san_pham = image;
+    newObj.gia_san_pham = price;
+    newObj.duong_dan = slug;
+    newObj.id_san_pham = idPro;
+    
+
+    const user = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('accessToken');
+    const typeToken = localStorage.getItem('typeToken');
+    const whistList = localStorage.getItem('whislist');
+    if(user && accessToken && typeToken){
+      console.log('accessToken:',JSON.parse(accessToken));
+      console.log('typeToken:',JSON.parse(typeToken));
+      const resAddWhisList = await fetch(`https://huunghi.id.vn/api/whislist/addWhislist`,{
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json",
+          "Authorization" : `${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`
+        },
+        body : JSON.stringify({
+          name : name,
+          image : image,
+          price : price,
+          slug : slug,
+          idPro : idPro
+        })
+      })
+      if(resAddWhisList.ok){
+        const result = await resAddWhisList.json();
+        console.log(result)
+        alert('Thêm sản phẩm vào danh sách thành công');
+      }else{
+        alert('Thêm sản phẩm vào danh sách thất bại');
+      }
+    }else{
+      if(whistList){
+        const parseWhisList = JSON.parse(whistList);
+
+        let flag:boolean = true;
+
+        parseWhisList.forEach((e:any,i:number)=>{
+          if(e.id_san_pham == idPro){
+            flag = false;
+          }
+        })
+
+        if(flag == true){
+          parseWhisList.unshift(newObj);
+        }
+        
+        localStorage.setItem('whislist',JSON.stringify(parseWhisList));
+      }else{
+        localStorage.setItem('whislist',JSON.stringify([newObj]));
+      }
+      alert('Thêm sản phẩm vào danh sách thành công');
+    }
+  }
 const Home = () => {
 
   const [productsBestSaler, setProductsBestSaler] = useState<productsBestSalerInterface[]>([]);
@@ -212,19 +275,19 @@ const Home = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <a href={`/product/${product.duong_dan}`} className="relative">
+                      <Link href={`/product/${product.duong_dan}`} className="relative">
                         <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
                         <img
                           src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
                           alt="product"
                           className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
-                      </a>
+                      </Link>
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                       </div>
                       <a
-                        href={`/product/${product.duong_dan}`}
+                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
@@ -256,19 +319,19 @@ const Home = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <a href={`/product/${product.duong_dan}`} className="relative">
+                      <Link href={`/product/${product.duong_dan}`} className="relative">
                         <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
                         <img
                           src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
                           alt="product"
                           className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
-                      </a>
+                      </Link>
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                       </div>
                       <a
-                        href="#"
+                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
@@ -296,19 +359,19 @@ const Home = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <a href={`/product/${product.duong_dan}`} className="relative">
+                      <Link href={`/product/${product.duong_dan}`} className="relative">
                         <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
                         <img
                           src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
                           alt="product"
                           className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />
-                      </a>
+                      </Link>
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                       </div>
                       <a
-                        href="#"
+                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
@@ -348,19 +411,19 @@ const Home = () => {
                       i < 3 && (
                         <div key={i} className="w-full">
                           <div className="relative group overflow-hidden">
-                            <a href={`/product/${product.duong_dan}`} className='relative'>
+                            <Link href={`/product/${product.duong_dan}`} className='relative'>
                               <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="product" className="w-full" />
                               <img
                                 src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
                                 alt="product"
                                 className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                               />
-                            </a>
+                            </Link>
                             <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                               <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                             </div>
                             <a
-                              href="#"
+                              onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
                               className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                             >
                               <FontAwesomeIcon icon={faHeart} />

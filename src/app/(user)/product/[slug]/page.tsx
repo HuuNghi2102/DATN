@@ -8,6 +8,7 @@ import Slider from 'react-slick';
 import productDetailInterface from "../../compoments/productDetailInterface";
 import { useCart } from '@/app/(user)/context/CartContext';
 import voucherInterface from '@/app/(user)/compoments/vouchersInterface';
+import { useRouter } from 'next/navigation';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
@@ -37,6 +38,7 @@ const ProductPageDetail = () => {
     const [images, setImages] = useState<any[]>([]);
     const [productRelateds, setProductRelateds] = useState<any[]>([]);
     const [voucher, setVoucher] = useState<voucherInterface[]>([]);
+    const [isCart, setIsCart] = useState<boolean>(true);
 
 const [cartItem,setCartItem] = useState({
     ten_san_pham: product?.ten_san_pham,
@@ -49,7 +51,7 @@ const [cartItem,setCartItem] = useState({
     id_san_pham_bien_the: productVariant?.id_san_pham_bien_the,
 })
   
-
+  const router = useRouter();
   const params = useParams();
   const { slug } = params;
     useEffect(()=>{
@@ -145,7 +147,7 @@ const [cartItem,setCartItem] = useState({
         }
     }
     // console.log(cartItem);
-    const addToCart = () => {
+    const addToCart = async (isCart:boolean) => {
         const localCart = localStorage.getItem('cart');
         let carts = []
         if(localCart){
@@ -158,37 +160,41 @@ const [cartItem,setCartItem] = useState({
             const parsetoken = JSON.parse(accessToken);
             const parsetypeToken = JSON.parse(typeToken);
             try {
-                fetch("https://huunghi.id.vn/api/cart/addToCart",{
-                method: "POST",
-                headers: {
-                    "Content-Type" : "application/json",
-                    "Authorization" : `${parsetypeToken} ${parsetoken}`
-                },
-                body: JSON.stringify({
-                    name: cartItem.ten_san_pham,
-                    image: cartItem.anh_san_pham,
-                    slug: cartItem.duong_dan,
-                    size: cartItem.kich_thuoc_san_pham,
-                    color: cartItem.mau_san_pham,
-                    quantity: cartItem.so_luong_san_pham,
-                    price: cartItem.gia_san_pham,
-                    idVariant: cartItem.id_san_pham_bien_the,
+                const res = await fetch("https://huunghi.id.vn/api/cart/addToCart",{
+                    method: "POST",
+                    headers: {
+                        "Content-Type" : "application/json",
+                        "Authorization" : `${parsetypeToken} ${parsetoken}`
+                    },
+                    body: JSON.stringify({
+                        name: cartItem.ten_san_pham,
+                        image: cartItem.anh_san_pham,
+                        slug: cartItem.duong_dan,
+                        size: cartItem.kich_thuoc_san_pham,
+                        color: cartItem.mau_san_pham,
+                        quantity: cartItem.so_luong_san_pham,
+                        price: cartItem.gia_san_pham,
+                        idVariant: cartItem.id_san_pham_bien_the,
+                    })
                 })
-                })
-                .then(res => res.json())
-                .then(data => {
-                carts.push(cartItem);
-                
-                localStorage.setItem('cart',JSON.stringify(carts));
 
-                alert(data.message);
-                })
-                .catch(err => console.error('Lỗi tải cart từ server:', err));
-            } catch (error) {
-                console.log(error);
-            }
+                if(res.ok){
+                    const result = await res.json();
+                    carts.unshift(cartItem);
+                    localStorage.setItem('cart',JSON.stringify(carts));
+                    window.dispatchEvent(new Event('quantityCartChange'));
+
+                    alert(result.message);
+                }else{
+                    alert('Thêm vào giỏ hàng thất bại');
+                }
+            }catch(error){
+                console.log('Lỗi thêm cart => ',error);
+            };
         }else{
+
             let flag:boolean = true;
+
             carts.forEach((cart:CartItem) => {
                 if(cart.id_san_pham_bien_the == cartItem.id_san_pham_bien_the){
                     cart.so_luong_san_pham += cartItem.so_luong_san_pham;
@@ -198,13 +204,20 @@ const [cartItem,setCartItem] = useState({
             console.log(flag);
 
             if(flag === true){
-                carts.push(cartItem);
+                carts.unshift(cartItem);
             }
 
             localStorage.setItem('cart',JSON.stringify(carts));
         }
-        return  window.location.href = '/cart'
+        
+        if(isCart){
+            router.push('/cart');
+        }else{
+            router.push('/pay');
+        }
+        
     }
+
   
   
 
@@ -385,12 +398,14 @@ const [cartItem,setCartItem] = useState({
                     </button>
                     </div>
                     <button
-                        onClick={addToCart}
+                        onClick={()=>{addToCart(true)}}
                         className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors"
                         >
                         THÊM VÀO GIỎ
                     </button>
-                    <button className=" bg-white border-2 border-black text-black py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors">
+                    <button
+                        onClick={()=>{addToCart(false)}}
+                        className=" bg-white border-2 border-black text-black py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors">
                         MUA NGAY
                     </button>
                 </div>

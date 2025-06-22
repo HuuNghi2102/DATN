@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faShoppingCart, faSortAlphaDown,faCartShopping,faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 
 export default function AllProductPage() {
@@ -67,7 +68,7 @@ export default function AllProductPage() {
         })
 
         if(flag == true){
-          parseWhisList.push(newObj);
+          parseWhisList.unshift(newObj);
         }
         
         localStorage.setItem('whislist',JSON.stringify(parseWhisList));
@@ -168,21 +169,21 @@ export default function AllProductPage() {
           )}
         </div>
       </div>
-
+    
       {/* Product List */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2 mb-4 z-0">
                     {products.map((product, i) => (
                       <div key={i} className="p-2">
                         <div className="bg-white p-2 rounded-lg cursor-pointer">
                         <div className="relative group overflow-hidden">
-                          <a href={`/product/${product.duong_dan}`} className="relative">
+                          <Link href={`/product/${product.duong_dan}`} className="relative">
                             <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
                             <img
                               src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
                               alt="product"
                               className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                             />
-                          </a>
+                          </Link>
                           <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                             <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                           </div>

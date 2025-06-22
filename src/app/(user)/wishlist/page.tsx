@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 const WishlistPage = () => {
@@ -23,7 +24,9 @@ const WishlistPage = () => {
                 if(!resWhistList.ok){
                     return setListWhistList([]);
                 }
+                console.log(result.data.productWhistList);
                 return setListWhistList(result.data.productWhistList);
+                return setListWhistList([]);
             }
             fetchWhistList();
             setIsUser(true);
@@ -130,50 +133,17 @@ const WishlistPage = () => {
                                     </div>
                                     {/* Action Button */}
                                     <div className="w-32 text-right">
-                                        <a href={`/product/${e.duong_dan}`}>
+                                        <Link href={`/product/${e.duong_dan}`}>
                                             <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
                                                 Move to detail
                                             </button>
-                                        </a>
+                                        </Link>
                                         
                                     </div>
                                 </div>
                             </div>
                         ))}
                         {/* Product Row */}
-                        <div className="px-6 py-8 border-b border-gray-100">
-                            <div className="flex items-center">
-                                {/* Remove button & Product Info */}
-                                <div className="flex-1 flex items-center space-x-4">
-                                    <button className="text-gray-300 hover:text-gray-500 transition-colors">
-                                        <i className="fas fa-times text-sm"></i>
-                                    </button>
-                                    <div className="w-16 h-20 rounded-sm flex items-center justify-center">
-                                        <img src="/assets/images/zzz.webp" alt="" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-base font-normal text-gray-800">Áo sơ mi</h3>
-                                    </div>
-                                </div>
-
-                                {/* Price */}
-                                <div className="w-32 text-right">
-                                    <span className="text-base font-medium text-gray-800">120.000₫</span>
-
-                                </div>
-
-                                {/* Stock Status - Empty for desktop as it's shown under price */}
-                                <div className="w-32">
-                                    <div className="text-xs text-gray-500 mt-1 text-center">In Stock</div>
-                                </div>
-                                {/* Action Button */}
-                                <div className="w-32 text-right">
-                                    <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                                        Move to detail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Share Section */}
                         <div className="px-6 py-6">

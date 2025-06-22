@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import userInterface from '@/app/(user)/compoments/userInterface';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function UserProfile() {
   const [user, setUser] = useState<userInterface>();
   const [orders, setOrders] = useState<any[]>();
   const [reload,setReload] = useState<boolean>(true)
+  const router = useRouter();
 
   useEffect(() => {
     const u = localStorage.getItem('user');
@@ -30,6 +32,7 @@ export default function UserProfile() {
       setUser(uu);
     } else {
       alert('Vui lòng đăng nhập');
+      router.push('/login')
     }
 
   }, [reload]);
@@ -75,7 +78,7 @@ export default function UserProfile() {
         <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
             <span>
-              <a href="/">Trang chủ</a>
+              <Link href="/">Trang chủ</Link>
             </span>{' '}
             / <span className="font-medium">Tài khoản</span>
           </nav>
@@ -156,21 +159,23 @@ export default function UserProfile() {
                           {order.trang_thai_don_hang == 'da_huy' && ('Đã hủy')}
                         </td>
                         <td className="border border-gray-300 p-3 text-center">
-                          <button className="text-black hover:text-gray-800 font-medium">
-                            Xem chi tiết
-                          </button>
+                          <Link href={`/user/detail-order?idOrder=${order.id_don_hang}`}>
+                            <button className="text-black hover:text-gray-800 font-medium">
+                                Xem chi tiết
+                            </button>
+                          </Link>
+                          
                           {order.trang_thai_don_hang == 'cho_xac_nhan' && (
                             <button onClick={() => destroyOrder(order.id_don_hang)} className="text-black hover:text-gray-800 font-medium">
                               Hủy
                             </button>
                           )}
                           {order.trang_thai_thanh_toan !== 'da_thanh_toan' && order.trang_thai_don_hang != 'da_huy' && order.trang_thai_don_hang != 'hoan_hang' && order.id_phuong_thuc_thanh_toan !== 1 && (
-                            <a href={`/pagePaymentVNPay?idOrder=${order.id_don_hang}`}>
+                            <Link href={`/pagePaymentVNPay?idOrder=${order.id_don_hang}`}>
                               <button className="text-black hover:text-gray-800 font-medium">
                                 Thanh toán
                               </button>
-                            </a>
-
+                            </Link>
                           )}
                         </td>
                       </tr>

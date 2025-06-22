@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState({ email: '', password: '' });
   const { dispatch } = useCart();
+  const router = useRouter();
 
   const handleLoginWithGoogle = async () => {
     window.location.href = 'https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?client_id=468454109173-taj2jti1ec2nsaiiccuc0pnd22ne78iv.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fhuunghi.id.vn%2Fapi%2Fuser%2Fauth%2Fgoogle%2Fcallback&scope=openid%20profile%20email&response_type=code&service=lso&o2v=1&flowName=GeneralOAuthFlow';
@@ -65,6 +67,8 @@ const LoginPage = () => {
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('accessToken', JSON.stringify(accessToken));
       localStorage.setItem('typeToken', JSON.stringify(typeToken));
+      window.dispatchEvent(new Event("userChanged"));
+      window.dispatchEvent(new Event("quantityCartChange"));
 
       // const cartRes = await fetch('https://huunghi.id.vn/api/cart/addToCart', {
       //   method: "POST",
@@ -78,7 +82,7 @@ const LoginPage = () => {
       //   dispatch({ type: 'SET_CART', payload: cartResult.cart });
       //   localStorage.setItem('cart', JSON.stringify(cartResult.cart));
       // }
-      window.location.href = '/user/userprofile';
+      router.push('/user/userprofile');
     } catch (err) {
       console.error(err);
       setError({ ...newError });

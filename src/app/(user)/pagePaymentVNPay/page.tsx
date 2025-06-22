@@ -2,10 +2,12 @@
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from "react";
 
+
 const VNPayPaymentForm = () => {
   const [order,setOrder] = useState<any>();
   const useSearchParam = useSearchParams();
   const idOrder = useSearchParam.get('idOrder');
+  const router = useRouter();
 
   useEffect(() => {
     const userLocal = localStorage.getItem('user');
@@ -22,11 +24,11 @@ const VNPayPaymentForm = () => {
             )
             const result = await res.json();
 
-            const order = result.data.order;
             if(res.ok){
+                const order = result.data.order;
                 if( order.trang_thai_thanh_toan != 'chua_thanh_toan' || order.trang_thai_don_hang != 'cho_xac_nhan'){
                   alert('Đơn hàng không hợp lệ')
-                  window.location.href = '/userprofile'
+                  router.push('/userprofile');
                 }
                 setFormData({...formData,
                     amount : order.gia_tong_don_hang,
@@ -34,7 +36,7 @@ const VNPayPaymentForm = () => {
                 });
             }else{
                 alert('Đơn hàng không tồn tại!')
-                window.location.href = '/cart'
+                router.push('/cart')
             }
             
         }
@@ -43,10 +45,10 @@ const VNPayPaymentForm = () => {
 
         if(Number.isNaN(idOrder)){
             alert('Đơn hàng không tồn tại!')
-            window.location.href = '/cart'
+            router.push('/cart');
         }
         alert('Vui lòng đăng nhập trước!')
-        window.location.href = '/login'
+        router.push('/login');
 
     }
   },[])
@@ -86,7 +88,7 @@ const VNPayPaymentForm = () => {
     // console.log(result);
 
     if(res.ok){
-        window.location.href = result
+        router.push(result);
     }else{
         alert('Thanh toán không thành công')
     }

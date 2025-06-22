@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faCalendarDays, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 
 const MainContent = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -86,9 +87,9 @@ const MainContent = () => {
                       <FontAwesomeIcon icon={faCalendarDays} />{' '}
                       {new Date(article.created_at).toLocaleDateString('vi-VN')}
                     </span>
-                    <a href={`/blog-detail/${article.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
+                    <Link href={`/blog-detail/${article.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
                       Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const PayPage = () => {
 
@@ -37,6 +38,7 @@ const PayPage = () => {
     const [arrayProvince, setArrayProvince] = useState<any[]>([]);
     const [arrDistrict, setArrDistrict] = useState<any[]>([]);
     const [arrWard, setArrWard] = useState<any[]>([]);
+    const router = useRouter();
 
 
     // hàm sử dụng địa chỉ giao hàng có sẵn của người dùng
@@ -103,8 +105,7 @@ const PayPage = () => {
         // kiểm tra xem người dùng đã đăng nhập hay chưa
         if (!userLocal || !accessTokenLocal || !typeTokenLocal) {
             alert('Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục');
-            window.location.href = '/login';
-            return;
+            return router.push('/login');
         }
 
         const accessToken = JSON.parse(accessTokenLocal);
@@ -116,7 +117,7 @@ const PayPage = () => {
             const cartData = JSON.parse(cartLocal);
             if (cartData.length == 0) {
                 alert('Giỏ hàng của bạn đang trống, vui lòng thêm sản phẩm vào giỏ hàng để thanh toán');
-                window.location.href = '/collection/all';
+                router.push('/collection/all');
                 return;
             }
             setOrderInfo({ ...orderInfo, totalOrder: cartData.reduce((total: number, cart: any) => total + (cart.gia_san_pham * cart.so_luong_san_pham), 0) });
@@ -273,12 +274,11 @@ const PayPage = () => {
                         })
 
                         if (orderInfo.paymentMethod == 3) {
-                            window.location.href = `/pagePaymentVNPay?idOrder=${idOrder}`
+                            router.push(`/pagePaymentVNPay?idOrder=${idOrder}`);
                         } else if (orderInfo.paymentMethod == 1) {
-                            window.location.href = `/successOrder?idOrder=${idOrder}`
+                            router.push(`/successOrder?idOrder=${idOrder}`)
                         } else if (orderInfo.paymentMethod == 2) {
-                            // console.log('aokkk',result.data.linkResponse)x1
-                            window.location.href = `${result.data.linkResponse}`
+                            router.push(`${result.data.linkResponse}`) 
                         }
                     } else {
                         alert('Tạo đơn hàng không thành công');
@@ -528,7 +528,7 @@ const PayPage = () => {
                                         <p className="text-sm text-gray-600">Số lượng: {cart.so_luong_san_pham}</p>
                                         <p className="text-sm text-gray-500">{cart.mau_san_pham} / {cart.kich_thuoc_san_pham}</p>
                                     </div>
-                                    <span className="font-semibold">{cart.gia_san_pham.toLocaleString('vi-VN')}đ</span>
+                                    <span className="font-semibold">{cart.so_luong_san_pham} x {cart.gia_san_pham.toLocaleString('vi-VN')}đ</span>
                                 </div>
                             ))}
                             <hr className='mb-2' />

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { CartItem } from './CartItem';
+import { useRouter } from 'next/navigation';
 const CartPage = () => {
   const [selectedProvince, setSelectedProvince] = useState();
   const [selectedDistrict, setSelectedDistrict] = useState<number>(1);
@@ -15,8 +16,10 @@ const CartPage = () => {
   const { state, dispatch } = useCart();
   const [carts,setCarts] = useState<CartItem[]>([]);
   const [voucher,setVoucher] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(()=>{
+
 
     const fetchCarts = async () => {
 
@@ -38,6 +41,8 @@ const CartPage = () => {
 
         const result = await res.json();
         setCarts(result.data.carts);
+        localStorage.setItem('cart',JSON.stringify(result.data.carts));
+        window.dispatchEvent(new Event('quantityCartChange'));
 
       }else{
 
@@ -48,6 +53,8 @@ const CartPage = () => {
         }else{
           setCarts([]);
         }
+
+        window.dispatchEvent(new Event('quantityCartChange'));
 
       }
       const res2 = await fetch('https://huunghi.id.vn/api/function/getProvince');
@@ -110,6 +117,7 @@ const CartPage = () => {
     }
     localStorage.setItem('cart',JSON.stringify(arrCart));
     setCarts(arrCart);
+    window.dispatchEvent(new Event("quantityCartChange"));
   }
 
   const redirectPay = () => {
@@ -117,7 +125,7 @@ const CartPage = () => {
      alert('Vui lòng chọn thêm sản phẩm để thanh toán')
      return;
     }
-    return window.location.href = '/pay';
+    router.push('/pay');
   }
 
   

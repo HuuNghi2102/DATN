@@ -37,7 +37,7 @@ const EcommerceSearchPage: React.FC = () => {
 
   useEffect(()=>{
     fetchData();
-  },[activeTab,currentPage])
+  },[activeTab,currentPage,search])
 
   console.log('st',pageStart);
   console.log('end',pageEnd);
@@ -194,7 +194,7 @@ const EcommerceSearchPage: React.FC = () => {
               </button>
             )}
             {Array.from({length : totalPage}, (_,i) => i + 1 ).map((page,index)=>(
-              page >= pageStart && page <= pageEnd && (
+              page >= pageStart && page <= pageEnd && totalPage > 1 && (
                 <button
                   key={index}
                   onClick={() => setCurrentPage(page)}
