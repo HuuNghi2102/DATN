@@ -177,7 +177,7 @@ export default function UserProfile() {
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
                           item.active
-                            ? 'bg-blue-600 text-white'
+                            ? 'bg-black text-white'
                             : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       >
@@ -199,7 +199,7 @@ export default function UserProfile() {
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-edit"></i>
                     <span>Chỉnh sửa</span>
@@ -249,57 +249,57 @@ export default function UserProfile() {
 
               {isEditing ? (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Tên
+                      <label className="block text-sm font-medium text-gray-700">
+                        Tên:
                       </label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email
+                      <label className="block text-sm font-medium text-gray-700">
+                        Email:
                       </label>
                       <input
                         type="text"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
+                        className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
                         disabled
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Số điện thoại
+                      <label className="block text-sm font-medium text-gray-700">
+                        Số điện thoại:
                       </label>
                       <input
                         type="text"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Địa chỉ
+                      <label className="block text-sm font-medium text-gray-700">
+                        Địa chỉ:
                       </label>
                       <input
                         type="text"
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full mb-2   px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -309,12 +309,12 @@ export default function UserProfile() {
                       onClick={() => setIsEditing(false)}
                       className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors"
                     >
-                      Hủy bỏ
+                      Hủy bỏ:
                     </button>
                     <button
                       onClick={updateUserProfile}
                       disabled={isLoading}
-                      className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+                      className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
                     >
                       {isLoading ? (
                         <>
@@ -332,25 +332,25 @@ export default function UserProfile() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Tên</h3>
-                      <p className="text-lg font-medium text-gray-800">{user?.ten_user || 'Chưa cập nhật'}</p>
+                  <div className=" gap-6">
+                    <div className="bg-gray-50 p-4 rounded-lg mb-2">
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Tên:</h3>
+                      <p className=" font-medium text-gray-800">{user?.ten_user || 'Chưa cập nhật'}</p>
                     </div>
 
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Email</h3>
-                      <p className="text-lg font-medium text-gray-800">{user?.email_user || 'Chưa cập nhật'}</p>
+                    <div className="bg-gray-50 p-4 rounded-lg mb-2">
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Email:</h3>
+                      <p className=" font-medium text-gray-800">{user?.email_user || 'Chưa cập nhật'}</p>
                     </div>
 
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Số điện thoại</h3>
-                      <p className="text-lg font-medium text-gray-800">{user?.sdt_user || 'Chưa cập nhật'}</p>
+                    <div className="bg-gray-50 p-4 rounded-lg mb-2">
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Số điện thoại:</h3>
+                      <p className=" font-medium text-gray-800">{user?.sdt_user || 'Chưa cập nhật'}</p>
                     </div>
 
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Địa chỉ</h3>
-                      <p className="text-lg font-medium text-gray-800">{user?.dia_chi_user || 'Chưa cập nhật'}</p>
+                    <div className="bg-gray-50 p-4 rounded-lg mb-2">
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">Địa chỉ:</h3>
+                      <p className=" font-medium text-gray-800">{user?.dia_chi_user || 'Chưa cập nhật'}</p>
                     </div>
                   </div>
                 </div>
@@ -372,7 +372,7 @@ export default function UserProfile() {
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="px-3 py-1 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors"
+                    className="px-3 py-1 bg-black text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors"
                   >
                     <i className="fas fa-edit mr-1"></i>
                     <span>Chỉnh sửa</span>
@@ -436,7 +436,7 @@ export default function UserProfile() {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
@@ -449,34 +449,34 @@ export default function UserProfile() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
+                      className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-100"
                       disabled
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Số điện thoại
+                      Số điện thoại:
                     </label>
                     <input
                       type="text"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Địa chỉ
+                      Địa chỉ:
                     </label>
                     <input
                       type="text"
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full mb-2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
 
@@ -490,7 +490,7 @@ export default function UserProfile() {
                     <button
                       onClick={updateUserProfile}
                       disabled={isLoading}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center gap-1"
+                      className="px-4 py-2 bg-black text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center gap-1"
                     >
                       {isLoading ? (
                         <>
@@ -509,22 +509,22 @@ export default function UserProfile() {
               ) : (
                 <div className="space-y-4">
                   <div className="border-b pb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Tên</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Tên:</h3>
                     <p className="text-base font-medium text-gray-800">{user?.ten_user || 'Chưa cập nhật'}</p>
                   </div>
 
                   <div className="border-b pb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Email</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Email:</h3>
                     <p className="text-base font-medium text-gray-800">{user?.email_user || 'Chưa cập nhật'}</p>
                   </div>
 
                   <div className="border-b pb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Số điện thoại</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Số điện thoại:</h3>
                     <p className="text-base font-medium text-gray-800">{user?.sdt_user || 'Chưa cập nhật'}</p>
                   </div>
 
                   <div className="pb-2">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Địa chỉ</h3>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">Địa chỉ:</h3>
                     <p className="text-base font-medium text-gray-800">{user?.dia_chi_user || 'Chưa cập nhật'}</p>
                   </div>
                 </div>
@@ -548,7 +548,7 @@ export default function UserProfile() {
                       <button
                         className={`w-full flex items-center gap-2 px-3 py-3 rounded-lg text-left transition-colors text-sm ${
                           item.active
-                            ? 'bg-blue-100 text-blue-600'
+                            ? 'bg-black text-white'
                             : 'text-gray-700 hover:bg-gray-50'
                         }`}
                       >

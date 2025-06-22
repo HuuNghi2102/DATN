@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 const Register = () => {
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors,setErrors] = useState({
     errName : '',
@@ -118,7 +117,7 @@ const handleRegister = async () => {
                   value={formRegister.name}
                   onChange={handleChangeInput}
                 />
-                {errors.errName}
+                {errors.errName && <p className='text-red-500 text-sm'>{errors.errName}*</p>}
               </div>              
               {/* Email Input */}
               <div>
@@ -130,7 +129,7 @@ const handleRegister = async () => {
                   value={formRegister.email}
                   onChange={handleChangeInput}
                 />
-                {errors.errEmail}
+                {errors.errEmail && <p className='text-red-500 text-sm'>{errors.errEmail}*</p>}
               </div>
               {/* Password Input */}
             <div className="relative">
@@ -142,6 +141,7 @@ const handleRegister = async () => {
                   value={formRegister.password}
                   onChange={handleChangeInput}
                 />
+                {errors.errPasswordConfirm && <p className='text-red-500 text-sm'>{errors.errPasswordConfirm}*</p>}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -160,7 +160,7 @@ const handleRegister = async () => {
                   value={formRegister.passwordConfirm}
                   onChange={handleChangeInput}
                 />
-                {errors.errPasswordConfirm}
+                {errors.errPasswordConfirm && <p className='text-red-500 text-sm'>{errors.errPasswordConfirm}*</p>}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
