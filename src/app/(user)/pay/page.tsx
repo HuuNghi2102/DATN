@@ -262,9 +262,6 @@ const PayPage = () => {
                     })
 
                     const result = await res.json();
-
-                    const idOrder = result.data.idOrder;
-
                     if (res.ok) {
                         localStorage.setItem('cart', JSON.stringify([]));
                         const responseDeleteCart = await fetch(`https://huunghi.id.vn/api/cart/deleteAllCartOfUser`, {
@@ -274,7 +271,7 @@ const PayPage = () => {
                                 "Authorization": `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
                             }
                         })
-
+                        const idOrder = result.data.idOrder;
                         if (orderInfo.paymentMethod == 3) {
                             router.push(`/pagePaymentVNPay?idOrder=${idOrder}`);
                         } else if (orderInfo.paymentMethod == 1) {

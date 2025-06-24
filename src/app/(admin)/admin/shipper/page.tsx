@@ -139,7 +139,7 @@ const OrderManagement = () => {
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${order.statusClass}`}>{order.status}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 flex-nowrap flex-row flex-wrap">
+                        <div className="flex items-center gap-2  flex-row flex-wrap">
                           <button className="p-2 border rounded hover:bg-gray-100" onClick={() => toggleOrderDetails(order.id)}><FaEye /></button>
                           <button className="p-2 border rounded hover:bg-gray-100"><FaMapMarkerAlt /></button>
                           <button className="p-2 border rounded hover:bg-gray-100"><FaPhone /></button>

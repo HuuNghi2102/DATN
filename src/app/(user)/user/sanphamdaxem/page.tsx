@@ -226,7 +226,6 @@ export default function UserProfile() {
                                                 <div className="px-1 mt-2">
                                                     <p className="text-sm">{product.ten_san_pham}</p>
                                                     <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'} <del className='text-gray-400 text-xs'> {product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
-
                                                 </div>
                                             </div>
                                         </div>

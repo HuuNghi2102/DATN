@@ -6,12 +6,6 @@ const PaymentSuccess = () => {
   const [orderId, setOrderId] = useState(100);
   const [transactionId, setTransactionId] = useState(2000000);
 
-//   useEffect(() => {
-//     const params = new URLSearchParams(window.location.search);
-//     setOrderId(params.get("order_id"));
-//     setTransactionId(params.get("transaction"));
-//   }, []);
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-800 to-black px-4 pt-[11%]">
       <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
@@ -43,7 +37,7 @@ const PaymentSuccess = () => {
         )}
 
         <a
-          href="/lich-su-mua-hang"
+          href="/user/history-order"
           className="inline-block px-6 py-3 bg-black text-white rounded-lg hover:bg-white border hover:border-black  hover:text-black transition"
         >
           Xem đơn hàng
