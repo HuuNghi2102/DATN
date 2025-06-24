@@ -401,9 +401,9 @@ const Home = () => {
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>
                     <button className="text-white bg-black w-[100px] h-[30px] rounded-[8px] hover:bg-white hover:text-black border hover:border-black transition-all duration-500 text-sm">
-                      <a href={`/collection/${category.duong_dan}`}>
+                      <Link href={`/collection/${category.duong_dan}`}>
                       Xem tất cả
-                      </a>
+                      </Link>
                     </button>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">

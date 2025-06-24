@@ -8,6 +8,7 @@ const CartPage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<number>(1);
   const [selectedWard, setSelectedWard] = useState<number>();
   const [dateDeliver , setDateDeliver] = useState('dd/mm/yy');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [arrProvince, setArrProvince] = useState<any[]>([]);
   const [arrDistrict, setArrDistrict] = useState<any[]>([]);
@@ -42,25 +43,69 @@ const CartPage = () => {
         const result = await res.json();
         setCarts(result.data.carts);
         localStorage.setItem('cart',JSON.stringify(result.data.carts));
-        window.dispatchEvent(new Event('quantityCartChange'));
+
+        
+        const checkCart = await fetch('https://huunghi.id.vn/api/productVariant/checkCart',{
+            method : "PUT",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+              carts : result.data.carts
+            })
+          })
+          
+          const resultCheckCart = await checkCart.json();
+
+          if(resultCheckCart.status == false){
+            alert(resultCheckCart.message);
+          }
+          
+          setCarts(resultCheckCart.data.carts);
+          localStorage.setItem('cart',JSON.stringify(resultCheckCart.data.carts));
+
+          window.dispatchEvent(new Event('quantityCartChange'));
 
       }else{
 
         const localCarts = localStorage.getItem('cart');
 
         if(localCarts){
+
           setCarts(JSON.parse(localCarts));
+          
+          const checkCart = await fetch('https://huunghi.id.vn/api/productVariant/checkCart',{
+            method : "PUT",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+              carts : JSON.parse(localCarts)
+            })
+          })
+          
+          const result = await checkCart.json();
+
+          if(result.status == false){
+            alert(result.message);
+          }
+          setCarts(result.data.carts);
+
+          localStorage.setItem('cart',JSON.stringify(result.data.carts));
+
         }else{
           setCarts([]);
         }
-
         window.dispatchEvent(new Event('quantityCartChange'));
-
       }
+
+      
+
       const res2 = await fetch('https://huunghi.id.vn/api/function/getProvince');
       const result2 = await res2.json();
       const province = result2.province.data;
       setArrProvince(province);
+      setIsLoading(false);
     }
     fetchCarts();
   },[]);
@@ -148,6 +193,25 @@ const CartPage = () => {
     }
   }
   
+  if (isLoading) {
+        return (
+        <div
+            id="loading-screen"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+        >
+            <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+            </div>
+        </div>
+        )
+    }
   
   
   return (

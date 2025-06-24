@@ -2,7 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FaDotCircle } from 'react-icons/fa';
 import { faSearch, faCartShopping, faCalendarDays, faChevronRight, faBox } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 
 const PayPage = () => {
 
@@ -26,6 +28,8 @@ const PayPage = () => {
         phone: '',
         address: '',
         totalOrder: 0,
+        note: '',
+        price_ship : 0,
         paymentMethod: 1,
         location: '',
         idVoucher: null
@@ -40,7 +44,10 @@ const PayPage = () => {
     const [arrayProvince, setArrayProvince] = useState<any[]>([]);
     const [arrDistrict, setArrDistrict] = useState<any[]>([]);
     const [arrWard, setArrWard] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const router = useRouter();
+
+    const [isHiddenShip,setHiddenShip] = useState<boolean>(false)
 
 
     // hàm sử dụng địa chỉ giao hàng có sẵn của người dùng
@@ -142,6 +149,7 @@ const PayPage = () => {
         const responseProvince = await fetch('https://huunghi.id.vn/api/function/getProvince');
         const resultProvince = await responseProvince.json();
         setArrayProvince(resultProvince.province.data);
+        console.log(resultProvince.province.data);
 
         // Lấy danh sách phương thức thanh toán
         const responsePaymentMethods = await fetch('https://huunghi.id.vn/api/paymentMethod/getAllMethod');
@@ -153,6 +161,8 @@ const PayPage = () => {
         const resultDiscount = await responseDiscount.json();
         console.log('resultDiscount', resultDiscount);
         setDiscountOptions(resultDiscount.data.vouchers);
+
+        setIsLoading(false);
 
     }
 
@@ -189,13 +199,23 @@ const PayPage = () => {
         const district = arrDistrict.find(district => district.DistrictID == selectedDistrict);
         const ward = arrWard.find(ward => ward.WardCode === idWard);
 
-        console.log('pro', province.ProvinceName);
-        console.log('dis', district.DistrictName);
+
         setOrderInfo({
             ...orderInfo,
             location: `${orderInfo.address} ${ward.WardName}, ${district.DistrictName}, ${province.ProvinceName}`,
         })
+        if(selectedProvince !== undefined){
+            setShip(selectedProvince);
+        }
 
+    }
+    const setShip = (idProvince:number) => {
+        if(idProvince == 204 || idProvince == 205 || idProvince == 205 || idProvince == 206 || idProvince == 240 || idProvince == 211 ){
+            setOrderInfo({...orderInfo, price_ship: 0});
+        }else{
+            setOrderInfo({...orderInfo, price_ship: 30000});
+        }
+        setHiddenShip(true)
     }
 
     const Pay = async () => {
@@ -254,6 +274,8 @@ const PayPage = () => {
                             name: orderInfo.name,
                             phone: orderInfo.phone,
                             address: orderInfo.address + ' ' + orderInfo.location,
+                            note : orderInfo.note ? orderInfo.note : null,
+                            priceShip : orderInfo.price_ship ? orderInfo.price_ship : 0,
                             totalOrder: orderInfo.totalOrder,
                             idVoucher: orderInfo.idVoucher ? orderInfo.idVoucher : null,
                             idPayment: orderInfo.paymentMethod,
@@ -262,6 +284,9 @@ const PayPage = () => {
                     })
 
                     const result = await res.json();
+                    console.log(result);
+                    const idOrder = result.data.idOrder;
+
                     if (res.ok) {
                         localStorage.setItem('cart', JSON.stringify([]));
                         const responseDeleteCart = await fetch(`https://huunghi.id.vn/api/cart/deleteAllCartOfUser`, {
@@ -271,36 +296,47 @@ const PayPage = () => {
                                 "Authorization": `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
                             }
                         })
-                        const idOrder = result.data.idOrder;
+
                         if (orderInfo.paymentMethod == 3) {
                             router.push(`/pagePaymentVNPay?idOrder=${idOrder}`);
                         } else if (orderInfo.paymentMethod == 1) {
                             router.push(`/successOrder?idOrder=${idOrder}`)
                         } else if (orderInfo.paymentMethod == 2) {
-                            router.push(`${result.data.linkResponse}`) 
+                            router.push(`${result.data.linkResponse}`)
                         }
                     } else {
                         alert('Tạo đơn hàng không thành công');
                     }
                 } catch (error) {
-
                     console.log(error);
-
                 }
             }
         }
-
-
-
-
-
     }
 
 
 
 
 
-    //   const f
+    if (isLoading) {
+        return (
+            <div
+                id="loading-screen"
+                className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+            >
+                <div className="flex flex-col items-center space-y-6">
+                    {/* Logo hoặc icon tùy chọn */}
+                    <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+                    {/* Vòng quay */}
+                    <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+                    {/* Nội dung loading */}
+                    <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 pt-[12%]">
@@ -372,6 +408,20 @@ const PayPage = () => {
                                     />
                                     {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
                                 </div>
+                                <div>
+                                    <label className="block text-sm text-gray-600 mb-1">Ghi chú đơn hàng</label>
+                                    <textarea
+                                        value={orderInfo.note}
+                                        onChange={(e) => setOrderInfo({ ...orderInfo, note: e.target.value })}
+                                        className='w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm' name="" id="">
+
+
+                                    </textarea>
+                                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                                </div>
+                                <div>
+
+                                </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-2">
                                     <div>
                                         <select
@@ -431,6 +481,7 @@ const PayPage = () => {
                                             onChange={(e: any) => {
 
                                                 if (!isNaN(e.target.value)) {
+                                                    
                                                     setLocation(e.target.value);
                                                     setSelectedWard(e.target.value)
                                                 };
@@ -455,13 +506,31 @@ const PayPage = () => {
                         {/* Shipping Method */}
                         <div className="bg-white rounded-lg shadow p-6">
                             <h3 className="text-lg font-semibold mb-4">Phương thức vận chuyển</h3>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                <div className="h-16 w-16 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <FontAwesomeIcon className='w-10 h-24' icon={faBox} />
+                            {!isHiddenShip && (
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                                    <div className="h-16 w-16 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <FontAwesomeIcon className='w-10 h-24' icon={faBox} />
+                                    </div>
+                                    <p className="text-gray-500">Vui lòng chọn tỉnh / thành để có danh sách phương thức vận chuyển.</p>
                                 </div>
-                                <p className="text-gray-500">Vui lòng chọn tỉnh / thành để có danh sách phương thức vận chuyển.</p>
-                            </div>
+                            )}
+                            {isHiddenShip && (
+                                <div className="flex items-center justify-between border rounded-md p-4">
+                                    <div className="flex items-center gap-2">
+                                        <FaDotCircle className="text-blue-500" />
+                                        <span className="text-gray-700">{orderInfo.price_ship == 0 ? 'Free Ship Đơn Hàng Từ 1.000.000đ và các tỉnh lận cận HCM' : 'Phí ship đơn hàng'}</span>
+                                    </div>
+                                    <span className="text-gray-800 font-medium">
+                                        {orderInfo.price_ship == 0 ? '' : '30.000đ' }
+                                    </span>
+                                </div>
+                            )}
                         </div>
+                        
+                        
+                        
+                        
+
                         {/* Payment Method */}
                         <div className="bg-white rounded-lg shadow p-6">
                             <h3 className="text-lg font-semibold mb-4">Phương thức thanh toán</h3>
@@ -489,9 +558,12 @@ const PayPage = () => {
 
                         {/* Action Buttons */}
                         <div className="flex space-x-4">
-                            <button className="px-6 py-3 text-black border border-black rounded-lg hover:bg-blue-50">
-                                Giỏ hàng
-                            </button>
+                            <Link href={`/cart`}>
+                                <button className="px-6 py-3 text-black border border-black rounded-lg hover:bg-blue-50">
+                                    Giỏ hàng
+                                </button>
+                            </Link>
+                            
                             <button
                                 onClick={(e) => Pay()}
                                 className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg active:bg-gray-600">
@@ -542,8 +614,8 @@ const PayPage = () => {
                                             key={index}
                                             onClick={() => setInputDiscount(option.ma_giam_gia)}
                                             className={`px-3 py-1 border rounded-full text-sm transition-colors ${selectedDiscount === option.value
-                                                    ? 'border-blue-500 text-blue-500 bg-blue-50'
-                                                    : 'border-blue-300 text-blue-600 hover:border-blue-500'
+                                                ? 'border-blue-500 text-blue-500 bg-blue-50'
+                                                : 'border-blue-300 text-blue-600 hover:border-blue-500'
                                                 }`}
                                         >
                                             Giảm {option.loai_giam_gia == 'so_tien' ? option.gia_tri_giam.toLocaleString('vi-VN') + ' đ' : option.gia_tri_giam + ' %'}
@@ -565,7 +637,7 @@ const PayPage = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span>Phí vận chuyển</span>
-                                    <span>-</span>
+                                    <span>{orderInfo.price_ship > 0 ? orderInfo.price_ship.toLocaleString('vi-VN')+' đ' : '-' }</span>
                                 </div>
                                 <hr className='mb-2' />
                                 <div className="flex justify-between font-semibold text-lg">
