@@ -9,6 +9,7 @@ export default function AccountPage() {
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [addresses, setAddresses] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [addressForm, setAddressForm] = useState({
         id_dia_chi_giao_hang: null,
         ten_nguoi_nhan: '',
@@ -45,6 +46,7 @@ export default function AccountPage() {
                 const result = await res.json();
                 const address = result.data.address;
                 setAddresses(address);
+                setIsLoading(false);
             }
             fetchAddress();
         }
@@ -223,6 +225,26 @@ export default function AccountPage() {
         { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem' },
         { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' },
     ];
+
+    if (isLoading) {
+        return (
+        <div
+            id="loading-screen"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+        >
+            <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+            </div>
+        </div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 pt-[10%]">

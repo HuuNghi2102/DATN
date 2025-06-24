@@ -10,6 +10,7 @@ export default function OrderDetail() {
   const [orderItems, setOrderItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [voucher,setVoucher] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -44,14 +45,23 @@ export default function OrderDetail() {
           if (response.ok) {
             const order = result.data.orders
             setOrder(order);
+            console.log(order);
             setOrderItems(result.data.orders.detail_orders);
-            // if(order.id_ma_giam_gia != null){
-            //   const fetchVoucher = await fetch(`https://huunghi.id.vn/api/voucher/getVoucher/${order.id_ma_giam_gia}`)
-            //   if(fetchVoucher.ok){
-
-            //   }
-            // }
-            // console.log(result.data.orders.detail_orders);
+            if(order.id_ma_giam_gia !== null){
+              const fetchVoucher = await fetch(`https://huunghi.id.vn/api/voucher/getVoucher/${order.id_ma_giam_gia}`,{
+                headers : {
+                  "Content-Type" : "application/json",
+                  "Authorization" : `${typeToken} ${accessToken}`
+                }
+              })
+              if(fetchVoucher.ok){
+                const result = await fetchVoucher.json();
+                setVoucher(result.data.voucher);
+              }else{
+                alert('Lấy voucher không thành công')
+              }
+            }
+            setIsLoading(false)
           }
         } catch (error) {
           console.error('Error fetching order detail:', error);
@@ -127,35 +137,25 @@ export default function OrderDetail() {
     { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
     { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' }
   ];
-
-  if (loading) {
+  
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 pt-[11%] flex justify-center items-center">
-        <div className="text-center">
-          <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="mt-2">Đang tải thông tin đơn hàng...</p>
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          {/* Logo hoặc icon tùy chọn */}
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+          {/* Vòng quay */}
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+          {/* Nội dung loading */}
+          <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
         </div>
       </div>
-    );
-  }
-
-  if (!order) {
-    return (
-      <div className="min-h-screen bg-gray-100 pt-[11%] flex justify-center items-center">
-        <div className="text-center">
-          <i className="fas fa-exclamation-circle text-4xl text-red-500 mb-4"></i>
-          <h2 className="text-xl font-medium mb-2">Không tìm thấy đơn hàng</h2>
-          <p className="text-gray-600 mb-4">Đơn hàng bạn yêu cầu không tồn tại hoặc đã bị xóa</p>
-          <Link href="/user/history-order">
-            <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
-              Quay lại danh sách đơn hàng
-            </button>
-          </Link>
-        </div>
-      </div>
-    );
+    )
   }
 
   return (
@@ -245,7 +245,7 @@ export default function OrderDetail() {
                       <p><span className="font-medium">Họ tên:</span> {order.ten_nguoi_nhan}</p>
                       <p><span className="font-medium">SĐT:</span> {order.so_dien_thoai_nguoi_nhan}</p>
                       <p><span className="font-medium">Địa chỉ:</span> {order.dia_chi_nguoi_nhan}</p>
-                      <p><span className="font-medium">Ghi chú:</span> {order.ghi_chu || 'Không có ghi chú'}</p>
+                      <p><span className="font-medium">Ghi chú:</span> {order.ghi_chu_don_hang || 'Không có ghi chú'}</p>
                     </div>
                   </div>
 
@@ -307,19 +307,19 @@ export default function OrderDetail() {
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <div className="flex justify-between mb-2">
                         <span>Tạm tính:</span>
-                        <span>{formatPrice(order.gia_tong_don_hang)}</span>
+                        <span>{formatPrice(order.gia_tong_don_hang + (voucher ? voucher.gia_tri_giam : 0))}</span>
                       </div>
                       <div className="flex justify-between mb-2">
                         <span>Phí vận chuyển:</span>
-                        <span>{formatPrice(order.phi_van_chuyen)}</span>
+                        <span>{formatPrice(order.tien_ship)}</span>
                       </div>
                       <div className="flex justify-between mb-2">
                         <span>Giảm giá:</span>
-                        <span>-{formatPrice(order.giam_gia)}</span>
+                        <span>{voucher ? formatPrice(voucher.gia_tri_giam) : 'Không áp dụng'}</span>
                       </div>
                       <div className="flex justify-between font-medium text-lg pt-2 border-t border-gray-200 mt-2">
                         <span>Tổng cộng:</span>
-                        <span>{formatPrice(order.gia_tong_don_hang)}</span>
+                        <span>{formatPrice(order.gia_tong_don_hang + order.tien_ship )}</span>
                       </div>
                     </div>
                   </div>
@@ -439,17 +439,17 @@ export default function OrderDetail() {
                       <div key={index} className="flex border-b pb-3">
                         <div className="w-20 h-20 bg-gray-200 rounded overflow-hidden mr-3">
                           <img 
-                            src={item.hinh_anh || 'https://via.placeholder.com/80'} 
+                            src={`https://huunghi.id.vn/storage/products/${item.anh_san_pham}` || 'https://via.placeholder.com/80'} 
                             alt={item.ten_san_pham} 
                             className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.ten_san_pham}</p>
-                          <p className="text-sm text-gray-600">{item.ten_mau_sac}, {item.ten_kich_thuoc}</p>
+                          <p className="text-sm text-gray-600">{item.mau_san_pham}, {item.kich_thuoc_san_pham}</p>
                           <div className="flex justify-between mt-1">
-                            <span className="text-sm">{formatPrice(item.gia)} x {item.so_luong}</span>
-                            <span className="font-medium">{formatPrice(item.gia * item.so_luong)}</span>
+                            <span className="text-sm">{formatPrice(item.gia_san_pham)} x {item.so_luong_san_pham}</span>
+                            <span className="font-medium">{formatPrice(item.gia_san_pham * item.so_luong_san_pham)}</span>
                           </div>
                         </div>
                       </div>
@@ -462,19 +462,19 @@ export default function OrderDetail() {
                   <div className="space-y-1 text-sm">
                     <div className="flex justify-between">
                       <span>Tạm tính:</span>
-                      <span>{formatPrice(order.gia_tong_don_hang)}</span>
+                      <span>{formatPrice(order.gia_tong_don_hang + (voucher ? voucher.gia_tri_giam : 0))}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Phí vận chuyển:</span>
-                      <span>{formatPrice(order.phi_van_chuyen)}</span>
+                      <span>{formatPrice(order.tien_ship)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Giảm giá:</span>
-                      <span>-{formatPrice(order.giam_gia)}</span>
+                      <span>{voucher ? formatPrice(voucher.gia_tri_giam) : 'Không áp dụng'}</span>
                     </div>
                     <div className="flex justify-between font-medium pt-2 border-t border-gray-200 mt-2">
                       <span>Tổng cộng:</span>
-                      <span>{formatPrice(order.gia_tong_don_hang + order.phi_van_chuyen - order.giam_gia)}</span>
+                      <span>{formatPrice(order.gia_tong_don_hang + order.tien_ship)}</span>
                     </div>
                   </div>
                 </div>

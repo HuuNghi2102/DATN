@@ -7,13 +7,13 @@ import Link from 'next/link';
 
 // Interface for viewed products
 interface ViewedProduct {
-    id_san_pham: number | string;
+    id_san_pham: number;
     ten_san_pham: string;
-    images: ProducNewtImage[];
+    anh_san_pham: string;
     duong_dan: string;
     gia_chua_giam: number | string;
     pham_tram_giam: number;
-    gia_da_giam: number;
+    gia_san_pham: number;
     mo_ta_san_pham: string;
     kiem_tra_san_pham_dac_biet: number;
     trang_thai: number;
@@ -35,6 +35,7 @@ export default function UserProfile() {
     const [user, setUser] = useState<userInterface>();
     const [orders, setOrders] = useState<any[]>();
     const [reload, setReload] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     // Mock data for UI demonstration
     const [viewedProducts, setviewedProducts] = useState<ViewedProduct[]>([]);
 
@@ -46,22 +47,98 @@ export default function UserProfile() {
             const uu = JSON.parse(u);
             const accessToken = JSON.parse(accessTokenLocal);
             const typeToken = JSON.parse(typeTokenLocal);
-            const fectchOrder = async () => {
-                const responseOrder = await fetch(`https://huunghi.id.vn/api/order/listOrderOfUser`, {
-                    headers: {
-                        "Authorization": `${typeToken} ${accessToken}`
-                    }
-                })
-                const result = await responseOrder.json();
-                const orders = result.data.orders;
-                setOrders(orders);
-            }
-            fectchOrder();
             setUser(uu);
+            const fetchProducts = async () => {
+                try {
+                    const res = await fetch('http://huunghi.id.vn/api/viewedProduct/listViewedProduct', {
+                        headers : {
+                            "Content-Type" : "application/json",
+                            "Authorization" : `${typeToken} ${accessToken}`
+                        }
+                    });
+                    const result = await res.json();
+
+                    if(res.ok){
+                        
+                        setviewedProducts(result.data.products);
+                        console.log(result);
+                    }else{
+                        alert('Lấy sản phẩm không thành công');
+                        
+                    }
+                    setIsLoading(false)
+                    
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            fetchProducts();
         } else {
             alert('Vui lòng đăng nhập');
         }
     }, [reload]);
+
+    const addWhistList = async (name:string,image:string,price:number,slug:string,idPro:number) => {
+
+    const newObj:any = {}
+    newObj.ten_san_pham = name;
+    newObj.anh_san_pham = image;
+    newObj.gia_san_pham = price;
+    newObj.duong_dan = slug;
+    newObj.id_san_pham = idPro;
+    
+
+    const user = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('accessToken');
+    const typeToken = localStorage.getItem('typeToken');
+    const whistList = localStorage.getItem('whislist');
+    if(user && accessToken && typeToken){
+      console.log('accessToken:',JSON.parse(accessToken));
+      console.log('typeToken:',JSON.parse(typeToken));
+      const resAddWhisList = await fetch(`https://huunghi.id.vn/api/whislist/addWhislist`,{
+        method : "POST",
+        headers : {
+          "Content-Type" : "application/json",
+          "Authorization" : `${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`
+        },
+        body : JSON.stringify({
+          name : name,
+          image : image,
+          price : price,
+          slug : slug,
+          idPro : idPro
+        })
+      })
+      if(resAddWhisList.ok){
+        const result = await resAddWhisList.json();
+        console.log(result)
+        alert('Thêm sản phẩm vào danh sách thành công');
+      }else{
+        alert('Thêm sản phẩm vào danh sách thất bại');
+      }
+    }else{
+      if(whistList){
+        const parseWhisList = JSON.parse(whistList);
+
+        let flag:boolean = true;
+
+        parseWhisList.forEach((e:any,i:number)=>{
+          if(e.id_san_pham == idPro){
+            flag = false;
+          }
+        })
+
+        if(flag == true){
+          parseWhisList.unshift(newObj);
+        }
+        
+        localStorage.setItem('whislist',JSON.stringify(parseWhisList));
+      }else{
+        localStorage.setItem('whislist',JSON.stringify([newObj]));
+      }
+      alert('Thêm sản phẩm vào danh sách thành công');
+    }
+  }
 
     const clearViewedProducts = () => {
         if (confirm('Bạn có chắc muốn xóa tất cả sản phẩm đã xem?')) {
@@ -91,20 +168,6 @@ export default function UserProfile() {
             minute: '2-digit'
         });
     };
-    useEffect(() => {
-        const fetchProducts = async () => {
-        try {
-            const res = await fetch('http://huunghi.id.vn/api/product/getProductNews');
-            const result = await res.json();
-            setviewedProducts(result.data.productNews);
-            console.log(setviewedProducts);
-
-        } catch (error) {
-            console.log(error);
-        }
-        };
-        fetchProducts();
-    }, [])
     const menuItems = [
         { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/user/userprofile' },
         { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order' },
@@ -114,6 +177,26 @@ export default function UserProfile() {
         { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem', active: true },
         { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' }
     ];
+
+    if (isLoading) {
+        return (
+        <div
+            id="loading-screen"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+        >
+            <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+            </div>
+        </div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 pt-[11%]">
@@ -206,9 +289,9 @@ export default function UserProfile() {
                                             <div className="bg-white p-2 rounded-lg cursor-pointer">
                                                 <div className="relative group overflow-hidden">
                                                     <a href={`/product/${product.duong_dan}`} className="relative">
-                                                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
+                                                        <img src={`https://huunghi.id.vn/storage/products/${product.anh_san_pham}`} alt="aa" className="w-full" />
                                                         <img
-                                                            src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                                                            src={`https://huunghi.id.vn/storage/products/${product.anh_san_pham}`}
                                                             alt="product"
                                                             className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                                         />
@@ -217,7 +300,7 @@ export default function UserProfile() {
                                                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                                                     </div>
                                                     <a
-                                                        href={`/product/${product.duong_dan}`}
+                                                        onClick={()=> addWhistList(product.ten_san_pham,product.anh_san_pham,product.gia_san_pham,product.duong_dan,product.id_san_pham)}
                                                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                                                     >
                                                         <FontAwesomeIcon icon={faHeart} />
@@ -225,7 +308,7 @@ export default function UserProfile() {
                                                 </div>
                                                 <div className="px-1 mt-2">
                                                     <p className="text-sm">{product.ten_san_pham}</p>
-                                                    <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'} <del className='text-gray-400 text-xs'> {product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
+                                                    <strong className="text-sm text-red-500">{product.gia_san_pham.toLocaleString('vi-VN') + ' VNĐ'} <del className='text-gray-400 text-xs'> {product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
 
                                                 </div>
                                             </div>
@@ -306,9 +389,9 @@ export default function UserProfile() {
                                             <div className="bg-white p-2 rounded-lg cursor-pointer">
                                                 <div className="relative group overflow-hidden">
                                                     <a href={`/product/${product.duong_dan}`} className="relative">
-                                                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
+                                                        <img src={`https://huunghi.id.vn/storage/products/${product.anh_san_pham}`} alt="aa" className="w-full" />
                                                         <img
-                                                            src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                                                            src={`https://huunghi.id.vn/storage/products/${product.anh_san_pham}`}
                                                             alt="product"
                                                             className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                                         />
@@ -328,7 +411,7 @@ export default function UserProfile() {
                                                 </div>
                                                 <div className="px-1 mt-2">
                                                     <p className="text-sm">{product.ten_san_pham}</p>
-                                                    <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'} <del className='text-gray-400 text-xs'> {product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
+                                                    <strong className="text-sm text-red-500">{product.gia_san_pham.toLocaleString('vi-VN') + ' VNĐ'} <del className='text-gray-400 text-xs'> {product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
 
                                                 </div>
                                             </div>

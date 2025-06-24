@@ -31,7 +31,7 @@ const VNPayPaymentForm = () => {
                   router.push('/userprofile');
                 }
                 setFormData({...formData,
-                    amount : order.gia_tong_don_hang,
+                    amount : order.gia_tong_don_hang + order.tien_ship,
                     id_order : order.id_don_hang
                 });
             }else{
