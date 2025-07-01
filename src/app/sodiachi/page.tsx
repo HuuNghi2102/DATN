@@ -55,7 +55,7 @@ export default function AccountPage() {
     { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/history-order' },
     { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/yeucauhotro' },
     { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '#', active: true },
-    { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/voucher' },
+    { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
     { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
     { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/changePassword' },
   ];
@@ -150,11 +150,11 @@ export default function AccountPage() {
               </div>
             ))}
 
-            <button className="w-full bg-black text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
-              <div className="flex items-center justify-center space-x-2">
-                <span className="font-medium">Nhập địa chỉ mới</span>
-              </div>
-            </button>
+              <button
+                className="w-full max-w-[300px] bg-black text-white text-center py-3 px-6 rounded-none hover:bg-gray-800 transition-colors"
+              >
+                Nhập địa chỉ mới
+              </button>
           </div>
         </div>
       </div>
