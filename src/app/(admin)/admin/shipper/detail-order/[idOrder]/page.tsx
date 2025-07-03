@@ -1,8 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams,useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaMapMarkerAlt, FaPhone, FaPrint, FaCheck, FaArrowLeft } from 'react-icons/fa';
+import orderInterface from '../../../components/interface/orderInterface';
+import voucherInterface from '../../../components/interface/voucherInterface';
+import detailOrder from '../../../components/interface/detailOrderInterface';
 
 interface OrderItem {
   id_san_pham: number;
@@ -35,43 +38,12 @@ interface OrderInterface {
 
 const OrderDetailShipper = () => {
   const router = useRouter();
-  const [isLoading] = useState(false);
-  const [order, setOrder] = useState<OrderInterface | null>({
-    id_don_hang: 12345,
-    ten_nguoi_nhan: "Nguyễn Văn A",
-    so_dien_thoai_nguoi_nhan: "0987654321",
-    dia_chi_nguoi_nhan: "Số 1, đường ABC, phường XYZ, quận 1, TP.HCM",
-    ten_nguoi_gui: "Cửa hàng Thời Trang HN",
-    so_dien_thoai_nguoi_gui: "0909123456",
-    dia_chi_nguoi_gui: "Số 10, đường DEF, phường UVW, quận 3, TP.HCM",
-    trang_thai_don_hang: "dang_giao",
-    statusClass: "bg-yellow-100 text-yellow-800",
-    chi_tiet_don_hang: [
-      {
-        id_san_pham: 1,
-        ma_san_pham: "SP001",
-        ten_san_pham: "Áo thun nam cổ tròn",
-        so_luong: 2,
-        gia_ban: 150000,
-        hinh_anh: "/sample-product.jpg"
-      },
-      {
-        id_san_pham: 2,
-        ma_san_pham: "SP002",
-        ten_san_pham: "Quần jean nam dài",
-        so_luong: 1,
-        gia_ban: 350000,
-        hinh_anh: "/sample-product.jpg"
-      }
-    ],
-    phi_van_chuyen: 30000,
-    phuong_thuc_thanh_toan: "Thanh toán khi nhận hàng (COD)",
-    ghi_chu: "Giao hàng giờ hành chính",
-    gia_tam_tinh: 650000,
-    giam_gia: 50000,
-    gia_tong_don_hang: 630000,
-    created_at: "2023-11-15 10:30:00"
-  });
+  const useParam = useParams();
+  const { idOrder } = useParam;
+  const [order, setOrder] = useState<orderInterface>();
+  const [voucher, setVoucher] = useState<voucherInterface>();
+  const [detailOrders, setDetailOrder] = useState<detailOrder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const returStatus = (status: string) => {
     switch (status) {
@@ -111,29 +83,99 @@ const OrderDetailShipper = () => {
     }
   }
 
-  const updateStatus = async (orderId: number, newStatus: string) => {
-    const confirm = window.confirm('Bạn có chắc chắn muốn cập nhật đơn hàng này?')
-    if (confirm) {
-      alert(`Đã cập nhật trạng thái đơn hàng #${orderId} thành ${returStatus(newStatus)}`);
-      // Cập nhật trạng thái trong dữ liệu mẫu
-      setOrder(prev => {
-        if (!prev) return null;
-        let newStatusClass = "";
-        switch(newStatus) {
-          case 'dang_giao': newStatusClass = "bg-yellow-100 text-yellow-800"; break;
-          case 'giao_thanh_cong': newStatusClass = "bg-green-100 text-green-800"; break;
-          case 'hoan_hang': newStatusClass = "bg-orange-100 text-orange-800"; break;
-          case 'da_huy': newStatusClass = "bg-red-100 text-red-800"; break;
-          default: newStatusClass = "bg-blue-100 text-blue-800";
-        }
-        return {
-          ...prev,
-          trang_thai_don_hang: newStatus,
-          statusClass: newStatusClass
-        };
-      });
+
+  const fetchDefaultData = async () => {
+
+    if (!idOrder) {
+      alert('Đơn hàng không tồn tại');
+      router.push('/admin/shipper');
+      return;
     }
-  };
+
+    const accessTokenLocal = localStorage.getItem('accessToken');
+    const typeTokenLocal = localStorage.getItem('typeToken');
+    const userLocal = localStorage.getItem('user');
+
+    if (accessTokenLocal && typeTokenLocal && userLocal){
+
+      // setAccessToken(JSON.parse(accessTokenLocal));
+      // setTypeToken(JSON.parse(typeTokenLocal));
+
+      const user = JSON.parse(userLocal);
+      if (user.id_vai_tro == 1 ||  user.id_vai_tro == 3 ) {
+
+        const resGetOrder = await fetch(`https://huunghi.id.vn/api/order/getOrderAdmin/${idOrder}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
+          }
+        })
+
+        if (resGetOrder.ok) {
+
+          const resultGetOrder = await resGetOrder.json();
+          const currentOrder = resultGetOrder.data.order;
+          setOrder(currentOrder);
+          if (currentOrder.id_ma_giam_gia) {
+
+            const resGetVoucher = await fetch(`https://huunghi.id.vn/api/voucher/getVoucher/${currentOrder.id_ma_giam_gia}`, {
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
+              }
+            })
+
+            if (resGetOrder.ok) {
+              const resultGetOrder = await resGetVoucher.json();
+              const getVoucher = resultGetOrder.data.voucher;
+              setVoucher(getVoucher);
+            } else {
+              alert('Lấy mã giảm giá không thành công');
+            }
+          }
+
+          setOrder(currentOrder);
+          setDetailOrder(resultGetOrder.data.order.detail_orders);
+          setIsLoading(false);
+        } else {
+          alert('Đơn hàng không tồn tại');
+          router.push('/admin/orders');
+        }
+      } else {
+        router.push('/user/userprofile');
+      }
+    } else {
+      router.push('/user/login');
+    }
+  }
+
+  useEffect(() => {
+    fetchDefaultData();
+  },[])
+
+  // const updateStatus = async (orderId: number, newStatus: string) => {
+  //   const confirm = window.confirm('Bạn có chắc chắn muốn cập nhật đơn hàng này?')
+  //   if (confirm) {
+  //     alert(`Đã cập nhật trạng thái đơn hàng #${orderId} thành ${returStatus(newStatus)}`);
+  //     // Cập nhật trạng thái trong dữ liệu mẫu
+  //     setOrder(prev => {
+  //       if (!prev) return null;
+  //       let newStatusClass = "";
+  //       switch(newStatus) {
+  //         case 'dang_giao': newStatusClass = "bg-yellow-100 text-yellow-800"; break;
+  //         case 'giao_thanh_cong': newStatusClass = "bg-green-100 text-green-800"; break;
+  //         case 'hoan_hang': newStatusClass = "bg-orange-100 text-orange-800"; break;
+  //         case 'da_huy': newStatusClass = "bg-red-100 text-red-800"; break;
+  //         default: newStatusClass = "bg-blue-100 text-blue-800";
+  //       }
+  //       return {
+  //         ...prev,
+  //         trang_thai_don_hang: newStatus,
+  //         statusClass: newStatusClass
+  //       };
+  //     });
+  //   }
+  // };
 
   if (isLoading) {
     return (
@@ -200,9 +242,9 @@ const OrderDetailShipper = () => {
               <div>
                 <h3 className="font-medium text-gray-700 mb-2">Thông tin người gửi</h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="font-semibold">{order.ten_nguoi_gui}</p>
-                  <p className="text-gray-600">{order.so_dien_thoai_nguoi_gui}</p>
-                  <p className="text-gray-600 mt-2">{order.dia_chi_nguoi_gui}</p>
+                  <p className="font-semibold">Nguyễn Thanh Sang</p>
+                  <p className="text-gray-600">0963004872</p>
+                  <p className="text-gray-600 mt-2">Trung Mỹ Tây 3 Phường Trung Mỹ Tây Quận 12</p>
                 </div>
               </div>
             </div>
@@ -219,13 +261,13 @@ const OrderDetailShipper = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {order.chi_tiet_don_hang.map((item, index) => (
+                  {detailOrders.map((item, index) => (
                     <tr key={index} className="border-t">
                       <td className="px-4 py-3">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-md overflow-hidden">
-                            {item.hinh_anh ? (
-                              <img src={item.hinh_anh} alt={item.ten_san_pham} className="h-full w-full object-cover" />
+                            {item.anh_san_pham ? (
+                              <img src={`https://huunghi.id.vn/storage/products/${item.anh_san_pham}`} alt={item.ten_san_pham} className="h-full w-full object-cover" />
                             ) : (
                               <div className="h-full w-full bg-gray-300 flex items-center justify-center">
                                 <span className="text-xs text-gray-500">No image</span>
@@ -234,13 +276,13 @@ const OrderDetailShipper = () => {
                           </div>
                           <div className="ml-4">
                             <p className="font-medium text-gray-900">{item.ten_san_pham}</p>
-                            <p className="text-gray-500 text-sm">{item.ma_san_pham}</p>
+                            <p className="text-gray-500 text-sm">{item.id_chi_tiet_don_hang}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-gray-600">{item.so_luong}</td>
-                      <td className="px-4 py-3 text-gray-600">{item.gia_ban.toLocaleString('vi-VN')} đ</td>
-                      <td className="px-4 py-3 text-gray-600">{(item.gia_ban * item.so_luong).toLocaleString('vi-VN')} đ</td>
+                      <td className="px-4 py-3 text-gray-600">{item.so_luong_san_pham}</td>
+                      <td className="px-4 py-3 text-gray-600">{item.gia_san_pham.toLocaleString('vi-VN')} đ</td>
+                      <td className="px-4 py-3 text-gray-600">{(item.gia_san_pham * item.so_luong_san_pham).toLocaleString('vi-VN')} đ</td>
                     </tr>
                   ))}
                 </tbody>
@@ -251,9 +293,9 @@ const OrderDetailShipper = () => {
               <div>
                 <h3 className="font-medium text-gray-700 mb-2">Thông tin vận chuyển</h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-600"><span className="font-medium">Phí vận chuyển:</span> {order.phi_van_chuyen.toLocaleString('vi-VN')} đ</p>
-                  <p className="text-gray-600"><span className="font-medium">Phương thức thanh toán:</span> {order.phuong_thuc_thanh_toan}</p>
-                  <p className="text-gray-600"><span className="font-medium">Ghi chú:</span> {order.ghi_chu}</p>
+                  <p className="text-gray-600"><span className="font-medium">Phí vận chuyển:</span> {order.tien_ship.toLocaleString('vi-VN')} đ</p>
+                  <p className="text-gray-600"><span className="font-medium">Phương thức thanh toán:</span> {order.id_phuong_thuc_thanh_toan}</p>
+                  <p className="text-gray-600"><span className="font-medium">Ghi chú:</span> {order.ghi_chu_don_hang}</p>
                   <p className="text-gray-600 mt-2"><span className="font-medium">Ngày tạo đơn:</span> {new Date(order.created_at).toLocaleString('vi-VN')}</p>
                 </div>
               </div>
@@ -263,15 +305,15 @@ const OrderDetailShipper = () => {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex justify-between py-1">
                     <span className="text-gray-600">Tạm tính:</span>
-                    <span className="font-medium">{order.gia_tam_tinh.toLocaleString('vi-VN')} đ</span>
+                    <span className="font-medium">{(order.gia_tong_don_hang + order.tien_ship + (voucher?.gia_tri_giam? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN') } đ</span>
                   </div>
                   <div className="flex justify-between py-1">
                     <span className="text-gray-600">Phí vận chuyển:</span>
-                    <span className="font-medium">{order.phi_van_chuyen.toLocaleString('vi-VN')} đ</span>
+                    <span className="font-medium">{order.tien_ship.toLocaleString('vi-VN')} đ</span>
                   </div>
                   <div className="flex justify-between py-1">
                     <span className="text-gray-600">Giảm giá:</span>
-                    <span className="font-medium text-red-500">-{order.giam_gia.toLocaleString('vi-VN')} đ</span>
+                    <span className="font-medium text-red-500">-{voucher?.gia_tri_giam.toLocaleString('vi-VN')} đ</span>
                   </div>
                   <div className="flex justify-between py-1 border-t border-gray-200 mt-2 pt-2">
                     <span className="text-gray-900 font-semibold">Tổng cộng:</span>
