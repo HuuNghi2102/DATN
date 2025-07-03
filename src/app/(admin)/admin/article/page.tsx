@@ -17,7 +17,7 @@ export default function AdminPostManagement() {
     setShowForm(false);
     setShowConfirmation(true);
   };
-  // fetch show
+  // fetch show article
   useEffect(() => {
     const fetchArticle = async () => {
       try {

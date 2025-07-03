@@ -1,138 +1,149 @@
 import React from 'react';
 import { FaPencilAlt, FaTrash, FaCircle } from 'react-icons/fa';
+import Image from './interface/imageInterface';
+import Size from './interface/sizeInterface';
 
 interface Product {
-  id: string;
-  img: string;
-  name: string;
-  price: string;
-  inventory: {
-    color: string;
-    size: string;
-    quantity: number;
-  }[];
-  status: 'in-stock' | 'low-stock' | 'out-of-stock';
+  id_san_pham: string;
+  images: Image[];
+  ten_san_pham: string;
+  duong_dan: string;
+  gia_chua_giam: number;
+  phan_tram_giam: number;
+  gia_da_giam: number;
+  mo_ta_san_pham: string;
+  trang_thai: number;
+  id_loai_san_pham: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  product_variants: ProductVariant[];
+  product_variants_sum_so_luong : number,
+  product_variants_count : number
 }
 
 interface TableRowProps {
   product: Product;
 }
 
+interface ProductVariant {
+  id_san_pham_bien_the: number;
+  id_san_pham: number;
+  id_kich_thuoc: number;
+  so_luong: number;
+  ma_mau: string;
+  ten_mau: string;
+  created_at: string;
+  updated_at: string;
+  size: Size;
+}
+
 const TableRow: React.FC<TableRowProps> = ({ product }) => {
-  const getColorStyle = (color: string) => {
-    switch (color) {
-      case 'red':
-        return '#ef4444';
-      case 'blue':
-        return '#3b82f6';
-      case 'black':
-        return '#111827';
-      case 'white':
-        return '#ffffff';
-      default:
-        return '#6b7280';
-    }
+  // Nhóm các biến thể theo màu sắc
+  const groupVariantsByColor = () => {
+    const colorMap = new Map<string, { name: string; sizes: string }>();
+    
+    product.product_variants.forEach(variant => {
+      if (!colorMap.has(variant.ma_mau)) {
+        colorMap.set(variant.ma_mau, {
+          name: variant.ten_mau,
+          sizes: ''
+        });
+      }
+      const current = colorMap.get(variant.ma_mau);
+      if (current) {
+        current.sizes += `${current.sizes ? ', ' : ''}${variant.size.ten_kich_thuoc}:${variant.so_luong}`;
+      }
+    });
+    
+    return Array.from(colorMap.entries());
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'in-stock':
-        return 'Còn hàng';
-      case 'low-stock':
-        return 'Sắp hết';
-      case 'out-of-stock':
-        return 'Hết hàng';
-      default:
-        return status;
-    }
-  };
+  const colorGroups = groupVariantsByColor();
 
-  const getColorText = (color: string) => {
-    switch (color) {
-      case 'red':
-        return 'Đỏ';
-      case 'blue':
-        return 'Xanh dương';
-      case 'black':
-        return 'Đen';
-      case 'white':
-        return 'Trắng';
-      default:
-        return color;
+  const getStatusInfo = (quantity: number) => {
+    if(quantity == 0){
+      return { text: 'Hết hàng', style: 'bg-red-100 text-red-800' };
+    }else if(quantity <= 10 ){
+      return { text: 'Sắp hết', style: 'bg-yellow-100 text-yellow-800' };
+    }else{
+      return { text: 'Còn hàng', style: 'bg-green-100 text-green-800' };
     }
   };
 
   return (
     <tr className="hover:bg-gray-50 border-b border-gray-200">
+      {/* ID */}
       <td className="px-4 py-4 text-sm text-gray-700 align-middle">
-        {product.id}
+        #{product.id_san_pham}
       </td>
       
+      {/* Product Info */}
       <td className="px-4 py-4 align-middle">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-md overflow-hidden mr-3 flex-shrink-0">
             <img
-              src={product.img}
-              alt={product.name}
+              src={`https://huunghi.id.vn/storage/products/${product.images[0].link_anh}`}
+              alt={product.ten_san_pham}
               className="w-full h-full object-cover"
             />
           </div>
-          <span className="text-sm font-medium text-gray-900">{product.name}</span>
+          <span className="text-sm font-medium text-gray-900">{product.ten_san_pham}</span>
         </div>
       </td>
       
+      {/* Price */}
       <td className="px-4 py-4 text-sm text-gray-700 align-middle">
-        {product.price}
+        {product.gia_da_giam.toLocaleString('vi-VN')}đ
       </td>
       
+      {/* Inventory - Phiên bản tối ưu */}
       <td className="px-4 py-4 align-middle">
         <div className="flex flex-wrap gap-2">
-          {product.inventory.map((item, index) => (
+          {colorGroups.map(([colorCode, colorData]) => (
             <div 
-              key={index} 
-              className="flex items-center bg-gray-50 rounded-full px-3 py-1 text-xs"
+              key={colorCode} 
+              className="flex items-start bg-gray-50 rounded-lg px-3 py-2 text-xs"
             >
               <FaCircle
-                className="mr-1.5 flex-shrink-0"
+                className="mt-0.5 mr-2 flex-shrink-0"
                 style={{
-                  color: getColorStyle(item.color),
-                  ...(item.color === 'white' && {
+                  color: colorCode,
+                  ...(colorCode === 'white' && {
                     border: '1px solid #d1d5db',
                     boxSizing: 'border-box'
                   })
                 }}
-                size={10}
+                size={12}
               />
-              <span className="whitespace-nowrap">
-                {getColorText(item.color)} - {item.size}: {item.quantity}
-              </span>
+              <div>
+                <div className="font-medium">{colorData.name} - {colorCode} </div>
+                <div className="text-gray-500">{colorData.sizes}</div>
+              </div>
             </div>
           ))}
         </div>
       </td>
       
-      <td className="px-4 py-4 align-middle">
-        <span
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            product.status === 'in-stock'
-              ? 'bg-green-100 text-green-800'
-              : product.status === 'low-stock'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-red-100 text-red-800'
-          }`}
-        >
-          {getStatusText(product.status)}
+      {/* Status - Đảm bảo không bị rớt dòng */}
+      <td className="px-4 py-4 align-middle whitespace-nowrap">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusInfo(product.product_variants_sum_so_luong / product.product_variants_count).style}`}>
+          {getStatusInfo(product.product_variants_sum_so_luong / product.product_variants_count).text}
         </span>
       </td>
       
-      <td className="px-4 py-4 align-middle">
+      {/* Actions */}
+      <td className="px-4 py-4 align-middle whitespace-nowrap">
         <div className="flex space-x-2">
-          <button
-            className="p-2 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-            aria-label="Edit"
-          >
-            <FaPencilAlt size={14} />
-          </button>
+          <a href={`/admin/products/edit-product/${product.duong_dan}`}>
+            <button
+              className="p-2 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+              aria-label="Edit"
+            >
+              <FaPencilAlt size={14} />
+            </button>
+          </a>
+          
           <button
             className="p-2 rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
             aria-label="Delete"

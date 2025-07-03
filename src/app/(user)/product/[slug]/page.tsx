@@ -598,7 +598,9 @@ const ProductPageDetail = () => {
                                 </ul><br />
                                 <hr />
                             </div>
-
+                            <div>
+                                {product.mo_ta_san_pham}
+                            </div>
                             <div>
                                 <h3 className="font-bold text-lg mb-3">▶️CHẤT LIỆU COTTON</h3>
                                 <p className="text-sm leading-relaxed mb-4">

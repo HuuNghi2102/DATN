@@ -271,7 +271,7 @@ const Home = () => {
           <div>
             <img src="../assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
-              {productsBestSaler.map((product, i) => (
+              {productsNew.map((product, i) => (
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
@@ -315,7 +315,7 @@ const Home = () => {
           <div>
             <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
-              {productsNew.map((product, i) => (
+              {productsSaler.map((product, i) => (
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
@@ -355,7 +355,7 @@ const Home = () => {
           <div>
             <img src="/assets/images/banchay_a01333a0db53411883d51490d22b7eab.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
-              {productsSaler.map((product, i) => (
+              {productsBestSaler.map((product, i) => (
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
