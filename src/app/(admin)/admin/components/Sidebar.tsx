@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import {
   FaTachometerAlt, FaBoxOpen, FaTags, FaUsers,
-  FaShoppingBag, FaChartPie, FaCog, FaBars
+  FaShoppingBag, FaChartPie, FaCog, FaBars, FaStar, FaComment, FaImage, FaTicketAlt, FaUsersCog,FaCircle,FaBlog
 } from 'react-icons/fa';
 
 interface SidebarProps {
@@ -38,26 +38,33 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <div className="brand-name text-lg font-semibold text-gray-900">Premium Admin</div>
         </div>
 
-        <nav className="nav flex-1">
-          {[
-            { icon: <FaTachometerAlt />, label: 'Dashboard' },
-            { icon: <FaBoxOpen />, label: 'Sản phẩm' },
-            { icon: <FaTags />, label: 'Danh mục' },
-            { icon: <FaUsers />, label: 'Khách hàng' },
-            { icon: <FaShoppingBag />, label: 'Đơn hàng' },
-            { icon: <FaChartPie />, label: 'Báo cáo' },
-            { icon: <FaCog />, label: 'Cài đặt' },
-          ].map((item, index) => (
-            <a
-              key={index}
-              href="#"
-              className="nav-item flex items-center px-3 py-2 rounded text-gray-700 mb-1 hover:bg-indigo-500 hover:text-white transition-colors"
-            >
-              <div className="mr-3 w-5 text-center">{item.icon}</div>
-              <span>{item.label}</span>
-            </a>
-          ))}
-        </nav>
+<nav className="nav flex-1">
+  {[
+    { icon: <FaTachometerAlt />, label: 'Dashboard', href: '/admin/dashboard' },
+    { icon: <FaBoxOpen />, label: 'Sản phẩm', href: '/admin/products' },
+    { icon: <FaTags />, label: 'Danh mục', href: '/admin/categoryproduct' },
+    { icon: <FaUsers />, label: 'Khách hàng', href: '/admin/quanlykhachhang' },
+    { icon: <FaShoppingBag />, label: 'Đơn hàng', href: '/admin/order' },
+    { icon: <FaStar />, label: 'Đánh giá', href: '/admin/reviews' },
+    { icon: <FaComment />, label: 'Tin nhắn', href: '/admin/message' },
+    { icon: <FaImage />, label: 'Banner', href: '/admin/banner' },
+    { icon: <FaTicketAlt />, label: 'Voucher', href: '/admin/voucher' },
+    { icon: <FaBlog />, label: 'Bài viết', href: '/admin/article' },
+    { icon: <FaChartPie />, label: 'Báo cáo', href: '/admin/reports' },
+    { icon: <FaUsersCog />, label: 'Tài khoản', href: '/admin/userinfo' },
+    { icon: <FaCog />, label: 'Cài đặt', href: '/admin/caidat' },
+  ].map((item, index) => (
+    <a
+      key={index}
+      href={item.href}
+      className="nav-item flex items-center px-3 py-2 rounded text-gray-700 mb-1 hover:bg-indigo-500 hover:text-white transition-colors"
+    >
+      <div className="mr-3 w-5 text-center">{item.icon}</div>
+      <span>{item.label}</span>
+    </a>
+  ))}
+</nav>
+
 
         <div className="user-profile mt-auto pt-4 border-t border-black flex items-center">
           <div className="user-avatar w-9 h-9 rounded-full bg-black mr-3 overflow-hidden">

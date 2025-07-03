@@ -245,7 +245,7 @@ const Home = () => {
                   </div>
                   <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
                     <div className="py-1 pr-2">
-                      <h4 className="font-semibold">ĐƠN HÀNG: {voucher.gia_tri_don_hang.toLocaleString('vi-VN') + ' VNĐ '}</h4>
+                      <h4 className="font-semibold">ĐƠN HÀNG: {voucher.gia_tri_don_hang != null ? ( voucher.gia_tri_don_hang.toLocaleString('vi-VN'))+'đ' : ''}</h4>
                       <h1 className="text-sm">GIẢM: <span className=' text-amber-300 font-semibold'>{voucher.gia_tri_giam.toLocaleString('vi-VN') + 'VNĐ'}</span></h1> <br />
                       <p className="mt-1">
                         Mã: <span className="font-semibold">{voucher.ma_giam_gia}</span>
@@ -306,7 +306,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-black font-semibold h-10 px-5 hover:bg-amber-500 hover:text-black text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -346,7 +346,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-red-500 text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-black h-10 px-5 hover:bg-amber-500 font-semibold text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -386,7 +386,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-black h-10 px-5 hover:bg-amber-500 font-semibold text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -400,7 +400,7 @@ const Home = () => {
                 <div key={index} className="bg-white rounded-[10px] shadow-md p-4">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>
-                    <button className="text-white bg-black w-[100px] h-[30px] rounded-[8px] hover:bg-white hover:text-black border hover:border-black transition-all duration-500 text-sm">
+                    <button className="text-black bg-amber-400 w-[100px] h-[30px] rounded-[8px] hover:bg-amber-500 hover:text-black border hover:border-black transition-all duration-500 text-sm">
                       <Link href={`/collection/${category.duong_dan}`}>
                       Xem tất cả
                       </Link>

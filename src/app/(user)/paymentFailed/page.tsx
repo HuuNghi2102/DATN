@@ -22,7 +22,7 @@ const PaymentFailed = () => {
           </Link>
           <Link
             href="/pay"
-            className="px-4 py-2 bg-black border border-black text-white rounded-lg hover:bg-white hover:text-black transition"
+            className="px-4 py-2 bg-amber-400 border border-black text-black rounded-lg hover:bg-white hover:text-black transition"
           >
             Thử lại
           </Link>

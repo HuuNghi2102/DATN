@@ -83,7 +83,7 @@ const NotFoundPage = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button 
               onClick={() => window.location.href = '/'}
-              className="group px-8 py-4 bg-black border-2 text-white font-semibold rounded-full hover:from-cyan-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="group px-8 py-4 bg-amber-400 border-2 text-black font-semibold rounded-full hover:from-cyan-600 hover:to-amber-500 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <i className="fas fa-home mr-2"></i>
               Return to Earth

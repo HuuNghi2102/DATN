@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,7 +66,7 @@ const handleRegister = async () => {
     localStorage.setItem('typeToken', JSON.stringify(result.data.typeToken));
 
     alert(`${result.message}`);
-    router.push('/userprofile');
+    router.push('/user/userprofile');
 
   } catch (error) {
     console.error("Lỗi khi gọi API:", error);
@@ -176,7 +176,7 @@ const handleRegister = async () => {
               <button
                 onClick={handleRegister}
                 type="submit"
-                className="w-full bg-black text-white py-3 px-4 rounded-md font-medium hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+                className="w-full bg-amber-400 text-black font-semibold py-3 px-4 rounded-md  hover:bg-amber-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
               >
                 GỬI MÃ XÁC NHẬN
               </button>

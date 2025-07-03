@@ -1,63 +1,34 @@
 
 "use client";
 
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faTrash, faPencil, faPlus } from '@fortawesome/free-solid-svg-icons';
+import articleInterface from "../types/article";
+import { getAPIArticle } from "../services/articleService";
 export default function AdminPostManagement() {
-  const [posts, setPosts] = useState([
-    {
-      id: "#BV001",
-      title: "Hướng dẫn sử dụng sản phẩm mới",
-      slug: "huong-dan-su-dung",
-      category: "Tin tức",
-      date: "15/06/2023",
-      status: true,
-      thumbnail: "https://via.placeholder.com/40"
-    },
-    {
-      id: "#BV002",
-      title: "Khuyến mãi mùa hè 2023",
-      slug: "khuyen-mai-mua-he",
-      category: "Khuyến mãi",
-      date: "10/06/2023",
-      status: true,
-      thumbnail: "https://via.placeholder.com/40"
-    },
-    {
-      id: "#BV003",
-      title: "Bài viết chưa hoàn thiện",
-      slug: "bai-viet-dang-draft",
-      category: "Blog",
-      date: "05/06/2023",
-      status: false,
-      thumbnail: "https://via.placeholder.com/40"
-    },
-    {
-      id: "#BV004",
-      title: "Sự kiện ra mắt sản phẩm mới",
-      slug: "su-kien-ra-mat",
-      category: "Sự kiện",
-      date: "01/06/2023",
-      status: true,
-      thumbnail: "https://via.placeholder.com/40"
-    }
-  ]);
-
+  const [posts, setPosts] = useState<articleInterface[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const toggleStatus = (index) => {
-    const updated = [...posts];
-    updated[index].status = !updated[index].status;
-    setPosts(updated);
-  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     setShowForm(false);
     setShowConfirmation(true);
   };
-
+  // fetch show
+  useEffect(() => {
+    const fetchArticle = async () => {
+      try {
+        const data = await getAPIArticle();
+        setPosts(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchArticle();
+  })
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -66,9 +37,6 @@ export default function AdminPostManagement() {
           <p className="text-gray-500 text-sm">Tạo mới và quản lý các bài viết trên website</p>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 border rounded text-sm font-medium text-gray-700 bg-white shadow">
-            <i className="fas fa-file-export mr-2"></i>Xuất file
-          </button>
           <button
             className="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium"
             onClick={() => {
@@ -76,7 +44,7 @@ export default function AdminPostManagement() {
               setShowConfirmation(false);
             }}
           >
-            <i className="fas fa-plus mr-2"></i>Thêm mới
+            <FontAwesomeIcon icon={faPlus} />Thêm mới
           </button>
         </div>
       </div>
@@ -98,7 +66,7 @@ export default function AdminPostManagement() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Nội dung bài viết</label>
-              <textarea rows="6" className="w-full border px-3 py-2 rounded"></textarea>
+              <textarea className="w-full border px-3 py-2 rounded"></textarea>
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">Ảnh đại diện</label>
@@ -162,7 +130,7 @@ export default function AdminPostManagement() {
               <th className="px-4 py-2 text-left">ID</th>
               <th className="px-4 py-2 text-left">Tiêu đề</th>
               <th className="px-4 py-2 text-left">Đường dẫn</th>
-              <th className="px-4 py-2 text-left">Danh mục</th>
+              <th className="px-4 py-2 text-left">Nội dung</th>
               <th className="px-4 py-2 text-left">Ngày đăng</th>
               <th className="px-4 py-2 text-left">Trạng thái</th>
               <th className="px-4 py-2 text-left">Thao tác</th>
@@ -170,33 +138,32 @@ export default function AdminPostManagement() {
           </thead>
           <tbody>
             {posts.map((post, index) => (
-              <tr key={post.id} className="border-t">
-                <td className="px-4 py-3 font-medium text-gray-800">{post.id}</td>
+              <tr key={index} className="border-t">
+                <td className="px-4 py-3 font-medium text-gray-800">{post.id_bai_viet}</td>
                 <td className="px-4 py-3 flex items-center gap-3">
-                  <img src={post.thumbnail} alt="Bài viết" className="w-10 h-10 rounded object-cover" />
-                  <span>{post.title}</span>
+                  <img src={`https://huunghi.id.vn/storage/posts/${post.anh_bai_viet}`} alt="Bài viết" className="w-10 h-10 rounded object-cover" />
+                  <span>{post.ten_bai_viet}</span>
                 </td>
-                <td className="px-4 py-3 text-gray-700">{post.slug}</td>
-                <td className="px-4 py-3 text-gray-700">{post.category}</td>
-                <td className="px-4 py-3 text-gray-700">{post.date}</td>
-                <td className="px-4 py-3">
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={post.status}
-                      onChange={() => toggleStatus(index)}
-                    />
-                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <td className="px-4 py-3 text-gray-700">{post.duong_dan}</td>
+                <td className="px-4 py-3 text-gray-700">{post.noi_dung_bai_viet}</td>
+                <td className="px-4 py-3 text-gray-700">{new Date(post.created_at).toLocaleDateString('vi-VN')}</td>
+                <td >
+                  <label
+                    className={`relative inline-flex text-xs items-center px-3 py-1 text-white rounded-full cursor-pointer 
+                      ${post.trang_thai === 1 ? 'bg-green-500' : 'bg-red-500'}`}
+                  >
+                    {post.trang_thai === 1 ? 'Hoạt động' : 'Không hoạt động'}
                   </label>
                 </td>
                 <td className="px-4 py-3">
-                  <button className="text-indigo-600 hover:text-indigo-800 mr-2">
-                    <i className="fas fa-pencil-alt"></i>
-                  </button>
-                  <button className="text-red-500 hover:text-red-700">
-                    <i className="fas fa-trash"></i>
-                  </button>
+                  <div className="flex gap-2">
+                    <button className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600">
+                      <FontAwesomeIcon icon={faPencil} />
+                    </button>
+                    <button className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 text-red-600">
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

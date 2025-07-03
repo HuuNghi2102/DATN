@@ -108,7 +108,7 @@ const PaymentSuccess = () => {
         )} */}
         <Link
           href={`/user/detail-order?idOrder=${order?.id_don_hang}`}
-          className="inline-block px-6 py-3 bg-black text-white rounded-lg hover:bg-white border hover:border-black  hover:text-black transition"
+          className="inline-block px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-white border hover:border-black  hover:text-black transition"
         >
           Xem đơn hàng
         </Link>

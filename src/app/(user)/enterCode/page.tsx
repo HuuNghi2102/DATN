@@ -146,7 +146,7 @@ export default function EnterCodePage() {
                                     {error && <p className="text-red-500 text-sm">{error}</p>}
                                     <button
                                         onClick={verifyCode}
-                                        className="mt-4 w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 font-medium text-sm transition duration-200"
+                                        className="mt-4 w-full bg-amber-400 text-black py-3 px-4 rounded-md hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 font-medium text-sm transition duration-200"
                                     >
                                         Xác minh mã
                                     </button>
@@ -174,7 +174,7 @@ export default function EnterCodePage() {
                                     {error && <p className="text-red-500 text-sm">{error}</p>}
                                     <button
                                         onClick={() => changePassword()}
-                                        className="mt-4 w-full bg-black text-white py-3 px-4 rounded-md active:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 font-medium text-sm transition duration-200"
+                                        className="mt-4 w-full bg-amber-400 text-black py-3 px-4 rounded-md active:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 font-medium text-sm transition duration-200"
                                     >
                                         Xác nhận đổi mật khẩu
                                     </button>
