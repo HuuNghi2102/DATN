@@ -234,13 +234,13 @@ setOrders(listOrder);
                         <div className="font-semibold">{order.ten_nguoi_nhan}</div>
                         <div className="text-xs text-gray-500">{order.so_dien_thoai_nguoi_nhan}</div>
                       </td>
-                      <td className="px-6 py-4">{order.dia_chi_nguoi_nhan}</td>
-                      <td className="px-6 py-4">{order.gia_tong_don_hang.toLocaleString('vi-VN')} đ</td>
+                      <td className="px-6 py-4">{order.dia_chi_nguoi_nhan.slice(0,45 )+'...'}</td>
+                      <td className="px-6 py-4">{order.gia_tong_don_hang.toLocaleString('vi-VN')}VNĐ</td>
                       <td className="px-6 py-4">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${order.statusClass}`}>{returStatus(order.trang_thai_don_hang)}</span>
+                        <span className={`inline-block text-white px-3 bg-green-500 py-1 rounded-full text-xs font-medium ${order.trang_thai_don_hang}`}>{returStatus(order.trang_thai_don_hang)}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 flex-nowrap flex-row flex-wrap">
+                        <div className="flex items-center gap-2 flex-nowrap flex-row ">
                           <Link href={`/admin/shipper/detail-order/${order.id_don_hang}`}>
                             <button className="p-2 border rounded hover:bg-gray-100" ><FaEye /></button>
                           </Link>

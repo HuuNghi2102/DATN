@@ -21,13 +21,19 @@ interface sideBar{
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   const sideBarAdmin = [
-            { icon: <FaTachometerAlt />, label: 'Dashboard' , slug : '/admin'},
-            { icon: <FaBoxOpen />, label: 'Sản phẩm' , slug : '/admin/products'},
-            { icon: <FaTags />, label: 'Danh mục' , slug : '/admin'},
-            { icon: <FaUsers />, label: 'Khách hàng' , slug : '/admin/users'},
-            { icon: <FaShoppingBag />, label: 'Đơn hàng' , slug : '/admin/orders/'},
-            { icon: <FaChartPie />, label: 'Báo cáo' , slug : '/admin'},
-            { icon: <FaCog />, label: 'Cài đặt' ,slug : '/admin' },
+    { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin/dashboard' },
+    { icon: <FaBoxOpen />, label: 'Sản phẩm', slug: '/admin/products' },
+    { icon: <FaTags />, label: 'Danh mục', slug: '/admin/categoryproduct' },
+    { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/quanlykhachhang' },
+    { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders' },
+    { icon: <FaStar />, label: 'Đánh giá', slug: '/admin/reviews' },
+    { icon: <FaComment />, label: 'Tin nhắn', slug: '/admin/message' },
+    { icon: <FaImage />, label: 'Banner', slug: '/admin/banner' },
+    { icon: <FaTicketAlt />, label: 'Voucher', slug: '/admin/voucher' },
+    { icon: <FaBlog />, label: 'Bài viết', slug: '/admin/article' },
+    { icon: <FaChartPie />, label: 'Báo cáo', slug: '/admin/reports' },
+    { icon: <FaUsersCog />, label: 'Tài khoản', slug: '/admin/userinfo' },
+    { icon: <FaCog />, label: 'Cài đặt', slug: '/admin/caidat' },
           ]
 
   const sideBarShipper = [
