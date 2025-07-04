@@ -21,15 +21,15 @@ const Dashboard = () => {
 
   const [chartData, setChartData] = useState([]);
 
-  useEffect(() => {
-    fetch('/api/dashboard')
-      .then((res) => res.json())
-      .then((json) => {
-        setData(json);
-        setChartData(json.chartData || []);
-      })
-      .catch((err) => console.error('Lỗi khi tải dữ liệu:', err));
-  }, []);
+  // useEffect(() => {
+  //   fetch('/api/dashboard')
+  //     .then((res) => res.json())
+  //     .then((json) => {
+  //       setData(json);
+  //       setChartData(json.chartData || []);
+  //     })
+  //     .catch((err) => console.error('Lỗi khi tải dữ liệu:', err));
+  // }, []);
 
   const stats = [
     {

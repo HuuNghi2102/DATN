@@ -3,8 +3,13 @@
 import { FaBars, FaPlus } from 'react-icons/fa';
 import ProductForm from './ProductForm';
 import ProductList from './ProductList';
+import { useState } from 'react';
 
 export default function ProductsPage() {
+  const [flagAdd,setFlagAdd] = useState<boolean>(false);
+  const changeFlagAddProduct = () => {
+    setFlagAdd(!flagAdd);
+  }
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
@@ -19,9 +24,8 @@ export default function ProductsPage() {
           </button>
         </div>
       </header>
-
-      <ProductForm />
-      <ProductList />
+      <ProductForm onProductAdded={changeFlagAddProduct} />
+      <ProductList changeFlag={flagAdd} />
     </div>
   );
 }

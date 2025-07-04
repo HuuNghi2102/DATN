@@ -566,7 +566,7 @@ const PayPage = () => {
                             
                             <button
                                 onClick={(e) => Pay()}
-                                className="flex-1 px-6 py-3 bg-gray-900 text-white rounded-lg active:bg-gray-600">
+                                className="flex-1 px-6 py-3 bg-amber-400 text-black rounded-lg active:bg-amber-500">
                                 Hoàn tất đơn hàng
                             </button>
                         </div>
@@ -599,7 +599,7 @@ const PayPage = () => {
                                     placeholder="Mã giảm giá"
                                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mr-4"
                                 />
-                                <button onClick={() => useVoucher(inputDiscount, orderInfo.totalOrder)} className="px-2 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+                                <button onClick={() => useVoucher(inputDiscount, orderInfo.totalOrder)} className="px-2 py-2 bg-white text-black border border-black rounded-lg active:bg-gray-100">
                                     Sử dụng
                                 </button>
                             </div>

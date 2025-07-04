@@ -204,7 +204,7 @@ const Header = () => {
                         ☰
                     </button>
                     <div className={styles.logo}>
-                        <Link href="/"><img src="/assets/images/LogoAgain.png" alt="160STORE" /></Link>
+                        <Link href="/"><img src="/assets/images/Logo.png" alt="160STORE" /></Link>
                     </div>
 
                     <div className={styles['search-container']}>

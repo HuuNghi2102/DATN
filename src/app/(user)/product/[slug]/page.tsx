@@ -3,7 +3,7 @@ import { CartItem } from '../../compoments/CartItem';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping, faChevronLeft, faChevronRight, faHeart } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'react-slick';
 import productDetailInterface from "../../compoments/productDetailInterface";
 import { useCart } from '@/app/(user)/context/CartContext';
@@ -30,6 +30,67 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
         <FontAwesomeIcon icon={faChevronRight} />
     </div>
 );
+const addWhistList = async (name: string, image: string, price: number, slug: string, idPro: number) => {
+
+    const newObj: any = {}
+    newObj.ten_san_pham = name;
+    newObj.anh_san_pham = image;
+    newObj.gia_san_pham = price;
+    newObj.duong_dan = slug;
+    newObj.id_san_pham = idPro;
+
+
+    const user = localStorage.getItem('user');
+    const accessToken = localStorage.getItem('accessToken');
+    const typeToken = localStorage.getItem('typeToken');
+    const whistList = localStorage.getItem('whislist');
+    if (user && accessToken && typeToken) {
+        console.log('accessToken:', JSON.parse(accessToken));
+        console.log('typeToken:', JSON.parse(typeToken));
+        const resAddWhisList = await fetch(`https://huunghi.id.vn/api/whislist/addWhislist`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`
+            },
+            body: JSON.stringify({
+                name: name,
+                image: image,
+                price: price,
+                slug: slug,
+                idPro: idPro
+            })
+        })
+        if (resAddWhisList.ok) {
+            const result = await resAddWhisList.json();
+            console.log(result)
+            alert('Thêm sản phẩm vào danh sách thành công');
+        } else {
+            alert('Thêm sản phẩm vào danh sách thất bại');
+        }
+    } else {
+        if (whistList) {
+            const parseWhisList = JSON.parse(whistList);
+
+            let flag: boolean = true;
+
+            parseWhisList.forEach((e: any, i: number) => {
+                if (e.id_san_pham == idPro) {
+                    flag = false;
+                }
+            })
+
+            if (flag == true) {
+                parseWhisList.unshift(newObj);
+            }
+
+            localStorage.setItem('whislist', JSON.stringify(parseWhisList));
+        } else {
+            localStorage.setItem('whislist', JSON.stringify([newObj]));
+        }
+        alert('Thêm sản phẩm vào danh sách thành công');
+    }
+}
 const ProductPageDetail = () => {
     const [selectedSize, setSelectedSize] = useState<any>();
     const [selectedColor, setSelectedColor] = useState<any>();
@@ -44,7 +105,6 @@ const ProductPageDetail = () => {
     const [voucher, setVoucher] = useState<voucherInterface[]>([]);
     const [isCart, setIsCart] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
     const [cartItem, setCartItem] = useState({
         ten_san_pham: product?.ten_san_pham,
         anh_san_pham: product?.anh_san_pham,
@@ -128,10 +188,10 @@ const ProductPageDetail = () => {
         fetchProduct();
         // lấy voucher
         const fetchVoucher = async () => {
-            
+
         }
         fetchVoucher();
-        
+
     }, []);
 
 
@@ -174,7 +234,7 @@ const ProductPageDetail = () => {
         if (localCart) {
             carts = JSON.parse(localCart);
         }
-        if(productVariant.so_luong < 1){
+        if (productVariant.so_luong < 1) {
             alert('Loại sản phẩm hiện này hiện đang hết hàng! Quý khách vui lòng quay lại sao');
             return;
         }
@@ -346,7 +406,7 @@ const ProductPageDetail = () => {
                                 {voucher.map((voucher, index) => (
                                     <div key={index} className="flex items-center">
                                         <i className="fas fa-tag text-orange-500 mr-2"></i>
-                                        <span>Nhập mã <strong>{voucher.ma_giam_gia}</strong> GIẢM {voucher.ma_giam_gia} ĐƠN TỪ {voucher.gia_tri_don_hang}</span>
+                                        <span>Nhập mã <strong>{voucher.ma_giam_gia}</strong> GIẢM {voucher.ma_giam_gia} ĐƠN TỪ {voucher.gia_tri_don_hang.toLocaleString()+ "VNĐ"}</span>
                                     </div>
                                 ))}
                                 <div className="flex items-center">
@@ -355,9 +415,8 @@ const ProductPageDetail = () => {
                                 </div>
                             </div>
                         </div>
-
                         {/* Promo Codes */}
-                        <div>
+                        {/* <div>
                             <p className="text-sm text-gray-600 mb-3">Mã giảm giá bạn có thể sử dụng:</p>
                             <div className="flex flex-wrap gap-2">
                                 {voucher.map((voucher, index) => (
@@ -372,7 +431,7 @@ const ProductPageDetail = () => {
                                     </button>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Color Selection */}
                         <div>
@@ -407,12 +466,12 @@ const ProductPageDetail = () => {
                                     <button
                                         key={size.ten_kich_thuoc}
                                         onClick={() => { setSelectedSize(size); setQuantity(1); handleChangeQuantity(product?.id_san_pham, selectedColor.ten_mau, size, quantity) }}
-                                        className={`w-10 h-10 border rounded text-sm font-medium ${selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
+                                        className={`w-20 h-10 border rounded text-sm font-medium ${selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
                                             ? 'border-red-500 bg-red-50 text-red-600'
                                             : 'border-gray-300 hover:border-gray-400'
                                             }`}
                                     >
-                                        {size.ten_kich_thuoc}
+                                        <p className='text-sm'>{size.ten_kich_thuoc}</p>
                                     </button>
                                 ))}
                             </div>
@@ -428,14 +487,14 @@ const ProductPageDetail = () => {
                                     </button>
                                     <span className="px-4 py-2 min-w-[60px] text-center">{quantity}</span>
                                     <button
-                                        onClick={() => { setQuantity(productVariant?.so_luong == 0 ? 1 : (quantity + 1 > productVariant?.so_luong ? productVariant?.so_luong  : quantity + 1)); handleChangeQuantity(product.id_san_pham, selectedColor.ten_mau, selectedSize, quantity + 1 > productVariant?.so_luong ? productVariant?.so_luong : quantity + 1) }}
+                                        onClick={() => { setQuantity(productVariant?.so_luong == 0 ? 1 : (quantity + 1 > productVariant?.so_luong ? productVariant?.so_luong : quantity + 1)); handleChangeQuantity(product.id_san_pham, selectedColor.ten_mau, selectedSize, quantity + 1 > productVariant?.so_luong ? productVariant?.so_luong : quantity + 1) }}
                                         className="px-3 py-2 hover:bg-gray-100" >
                                         +
                                     </button>
                                 </div>
                                 <button
                                     onClick={() => { addToCart(true) }}
-                                    className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors"
+                                    className="flex-1 bg-blue-600  text-white py-3 px-6 rounded font-medium hover:bg-blue-700 transition-colors"
                                 >
                                     THÊM VÀO GIỎ
                                 </button>
@@ -539,7 +598,9 @@ const ProductPageDetail = () => {
                                 </ul><br />
                                 <hr />
                             </div>
-
+                            <div>
+                                {product.mo_ta_san_pham}
+                            </div>
                             <div>
                                 <h3 className="font-bold text-lg mb-3">▶️CHẤT LIỆU COTTON</h3>
                                 <p className="text-sm leading-relaxed mb-4">
@@ -597,10 +658,10 @@ const ProductPageDetail = () => {
                                                 <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                                             </div>
                                             <a
-                                                href="#"
-                                                className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                                                onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
+                                                className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                                             >
-                                                <FontAwesomeIcon icon={faCartShopping} />
+                                                <FontAwesomeIcon icon={faHeart} />
                                             </a>
                                         </div>
                                         <div className="px-1 mt-2">

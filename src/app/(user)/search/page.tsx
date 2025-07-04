@@ -116,7 +116,7 @@ const EcommerceSearchPage: React.FC = () => {
             <button
               onClick={() => handleTabClick('product')}
               className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${activeTab === 'product'
-                  ? 'bg-black text-white'
+                  ? 'bg-amber-400 text-white'
                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               type="button"
@@ -126,7 +126,7 @@ const EcommerceSearchPage: React.FC = () => {
             <button
               onClick={() => handleTabClick('post')}
               className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${activeTab === 'post'
-                  ? 'bg-black text-white'
+                  ? 'bg-amber-400 text-white'
                   : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               type="button"
