@@ -11,25 +11,25 @@ import {
 } from "react-icons/fi";
 
 interface orderInterface {
-  id_don_hang?: number;
-  ten_nguoi_nhan?: string;
-  dia_chi_nguoi_nhan?: string;
-  so_dien_thoai_nguoi_nhan?: string;
-  ghi_chu_don_hang?: string;
-  gia_tong_don_hang?: number;
-  ten_nguoixacnhan?: string;
-  ma_giao_dich?: number;
-  trang_thai_don_hang?: string;
-  trang_thai_thanh_toan?: string;
-  link_thanh_toan?: string;
-  id_nguoi_xac_nhan?: number;
-  id_khach_hang?: number;
-  id_ma_giam_gia?: number;
-  id_phuong_thuc_thanh_toan?: number;
-  created_at?: string;
-  updated_at?: string;
-  deleted_at?: string;
-  tien_ship?: number;
+  id_don_hang: number;
+  ten_nguoi_nhan: string;
+  dia_chi_nguoi_nhan: string;
+  so_dien_thoai_nguoi_nhan: string;
+  ghi_chu_don_hang: string;
+  gia_tong_don_hang: number;
+  ten_nguoixacnhan: string;
+  ma_giao_dich: number;
+  trang_thai_don_hang: string;
+  trang_thai_thanh_toan: string;
+  link_thanh_toan: string;
+  id_nguoi_xac_nhan: number;
+  id_khach_hang: number;
+  id_ma_giam_gia: number;
+  id_phuong_thuc_thanh_toan: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  tien_ship: number;
   detail_orders?: detailOrder[];
 }
 
@@ -68,7 +68,9 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'da_huy'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'da_huy'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
@@ -87,7 +89,9 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'cho_lay_hang'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'cho_lay_hang'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
@@ -106,7 +110,9 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'da_huy'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'da_huy'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
@@ -125,7 +131,9 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'chu_y'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'chu_y'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
@@ -252,7 +260,7 @@ const OrderDetailPage = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Chi tiết đơn hàng #DH{order?.id_don_hang}</h1>
-            <p className="text-sm text-gray-500">Ngày đặt hàng: {new Date(order?.created_at).toLocaleDateString('vi-VN')} - {new Date(order?.created_at).toLocaleTimeString('vi-VN')} </p>
+            <p className="text-sm text-gray-500">Ngày đặt hàng: {new Date(order?.created_at ?  order?.created_at : "").toLocaleDateString('vi-VN')} - {new Date(order?.created_at).toLocaleTimeString('vi-VN')} </p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -356,7 +364,7 @@ const OrderDetailPage = () => {
             <h2 className="text-lg font-semibold text-gray-800 mb-4">Tổng thanh toán</h2>
             <table className="w-full text-sm">
               <tbody>
-                {[['Tạm tính:', ((order?.gia_tong_don_hang ? order?.gia_tong_don_hang : 0) - (order?.tien_ship ? order?.tien_ship : 0) + (voucher?.gia_tri_giam ? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN') + 'đ'], ['Phí vận chuyển:', order?.tien_ship.toLocaleString('vi-VN') + 'đ'], ['Giảm giá:', (voucher ? voucher?.gia_tri_giam : 0).toLocaleString('vi-VN') + 'đ'], ['Tổng cộng:', order?.gia_tong_don_hang.toLocaleString('vi-VN') + 'đ']].map(([label, value], idx) => (
+                {[['Tạm tính:', ((order?.gia_tong_don_hang ? order?.gia_tong_don_hang : 0) - (order?.tien_ship ? order?.tien_ship : 0) + (voucher?.gia_tri_giam ? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN') + 'đ'], ['Phí vận chuyển:', (order?.tien_ship ? order?.tien_ship : 0).toLocaleString('vi-VN') + 'đ'], ['Giảm giá:', (voucher ? voucher?.gia_tri_giam : 0 ).toLocaleString('vi-VN') + 'đ'], ['Tổng cộng:', order?.gia_tong_don_hang.toLocaleString('vi-VN') + 'đ']].map(([label, value], idx) => (
                   <tr key={idx} className={idx === 3 ? 'font-semibold text-gray-800' : ''}>
                     <td className="text-gray-500">{label}</td>
                     <td className="text-right font-medium">{value}</td>

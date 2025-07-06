@@ -9,6 +9,7 @@ import Link from 'next/link';
 
 //array status order of shipper
 const statusOrderOfShipper = [
+  {status : 'Tất cả đơn hàng', codeStatus : ''},
   {status : 'Đơn hàng chờ nhận', codeStatus : 'cho_lay_hang' },
   {status : 'Đang giao', codeStatus : 'dang_giao'},
   {status : 'Đang hoàn hàng', codeStatus : 'hoan_hang'},
@@ -70,7 +71,7 @@ const OrderManagement = () => {
 
         if (resOrders.ok) {
           const listOrder = resultOrder.data.orders.data;
-setOrders(listOrder);
+          setOrders(listOrder);
 
           setTotalPages(resultOrder.data.orders.last_page);
           setCurrentPage(resultOrder.data.orders.current_page);
@@ -97,6 +98,11 @@ setOrders(listOrder);
     }else{
       router.push('/login');
     }
+  }
+
+  const positionMap = (position:string) => {
+    console.log(position);
+    router.push(`https://www.google.com/maps/dir/?api=1&destination=${position}`)
   }
 
 
@@ -154,7 +160,7 @@ setOrders(listOrder);
         }else{
           setOrders(orders.filter((o,i) => o.id_don_hang != orderId ))
         }
-// setTotalCateOrder(newStatus);
+        // setTotalCateOrder(newStatus);
       }else{
         alert('Cập nhật không thành công');
       }
@@ -244,8 +250,10 @@ setOrders(listOrder);
                           <Link href={`/admin/shipper/detail-order/${order.id_don_hang}`}>
                             <button className="p-2 border rounded hover:bg-gray-100" ><FaEye /></button>
                           </Link>
-                          <button className="p-2 border rounded hover:bg-gray-100"><FaMapMarkerAlt /></button>
-                          <button className="p-2 border rounded hover:bg-gray-100"><FaPhone /></button>
+                          <button onClick={()=>positionMap(order.dia_chi_nguoi_nhan)} className="p-2 border rounded hover:bg-gray-100"><FaMapMarkerAlt /></button>
+                          <Link href={`tel:${order.so_dien_thoai_nguoi_nhan}`}>
+                            <button className="p-2 border rounded hover:bg-gray-100"><FaPhone /></button>
+                          </Link>
                           {nextSatatusOrder(order.trang_thai_don_hang).map((e,i)=>(
                             <button onClick={()=>updateStatus(order.id_don_hang,e.nextStatus)} key={i} className={`px-3 py-2 text-xs bg-${e.className}-600 text-white rounded hover:bg-${e.className}-700 font-medium whitespace-nowrap`}>{e.status}</button>
                           ))}

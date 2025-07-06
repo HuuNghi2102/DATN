@@ -217,6 +217,7 @@ const OrderManager = () => {
       case 'cho_xac_nhan':
         return [
           { action: 'confirm', icon: 'check', color: 'green',codeNextStatus : "dang_chuan_bi_hang" , nextStatus: 'Đang chuẩn bị hàng', title: 'Xác nhận đơn' },
+          { action: 'confirm',icon: 'exclamation-triangle',color: 'yellow',codeNextStatus: 'chu_y',nextStatus: 'Chú ý',title: 'Chú ý'},
           { action: 'cancel', icon: 'times', color: 'red',codeNextStatus : "da_huy" , nextStatus: 'Đã hủy', title: 'Hủy đơn hàng' }
         ];
       case 'chu_y':
@@ -232,7 +233,7 @@ const OrderManager = () => {
       case 'cho_lay_hang':
         return [
           // { action: 'ship', icon: 'truck', color: 'purple',  codeNextStatus : "dang_giao", nextStatus: 'Đang giao', title: 'Bắt đầu giao hàng' },
-          { action: 'cancel', icon: 'times', color: 'red',codeNextStatus : "da_huy", nextStatus: 'Đã hủy', title: 'Hủy đơn hàng' }
+          { action: 'cancel', icon: 'times', color: 'red', codeNextStatus : "da_huy", nextStatus: 'Đã hủy', title: 'Hủy đơn hàng' }
         ];
       case 'dang_giao':
         return [
@@ -502,7 +503,7 @@ const OrderManager = () => {
                     Khách hàng
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Sản phẩm
+                    Địa chỉ
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Ngày đặt
@@ -530,8 +531,8 @@ const OrderManager = () => {
                         <div className="text-sm text-gray-500">{order.so_dien_thoai_nguoi_nhan}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex flex-col space-y-2">
-                          {order.dia_chi_nguoi_nhan}
+                        <div className="flex flex-col space-y-2 text-sm">
+                          {order.dia_chi_nguoi_nhan.slice(0,30)}...
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -581,7 +582,7 @@ const OrderManager = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="px-6 py-12 text-center">
+                    <td className="px-6 py-12 text-center">
                       <div className="flex flex-col items-center justify-center text-gray-400">
                         <i className="fas fa-box-open text-4xl mb-3"></i>
                         <p className="text-lg font-medium">Không tìm thấy đơn hàng nào</p>
