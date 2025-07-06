@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { icon: <FaTags />, label: 'Danh mục', slug: '/admin/categoryproduct' },
     { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/users' },
     { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders' },
-    { icon: <FaStar />, label: 'Đánh giá', slug: '/admin/reviews' },
+    { icon: <FaStar />, label: 'Đánh giá', slug: '/admin/evalue' },
     { icon: <FaComment />, label: 'Tin nhắn', slug: '/admin/message' },
     { icon: <FaImage />, label: 'Banner', slug: '/admin/banner' },
     { icon: <FaTicketAlt />, label: 'Voucher', slug: '/admin/voucher' },
@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { icon: <FaChartPie />, label: 'Báo cáo', slug: '/admin/reports' },
     { icon: <FaUsersCog />, label: 'Tài khoản', slug: '/admin/userinfo' },
     { icon: <FaCog />, label: 'Cài đặt', slug: '/admin/caidat' },
-          ]
+  ]
 
   const sideBarShipper = [
             { icon: <FaTachometerAlt />, label: 'Dashboard' , slug : '/admin'},

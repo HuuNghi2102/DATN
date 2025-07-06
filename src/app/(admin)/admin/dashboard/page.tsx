@@ -553,7 +553,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="mt-3 text-center">
-              <Link href={`/admin/voucher`}>
+              <Link href={`/admin/evalue`}>
                 <button className="text-indigo-600 hover:underline text-sm font-medium">
                   Xem tất cả đánh giá
                 </button>
