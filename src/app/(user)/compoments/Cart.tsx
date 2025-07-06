@@ -1,4 +1,6 @@
 "use client"
+import { toast } from "react-toastify";
+
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { CartItem } from './CartItem';
@@ -8,6 +10,7 @@ const CartPage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<number>(1);
   const [selectedWard, setSelectedWard] = useState<number>();
   const [dateDeliver , setDateDeliver] = useState('dd/mm/yy');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [arrProvince, setArrProvince] = useState<any[]>([]);
   const [arrDistrict, setArrDistrict] = useState<any[]>([]);
@@ -42,25 +45,69 @@ const CartPage = () => {
         const result = await res.json();
         setCarts(result.data.carts);
         localStorage.setItem('cart',JSON.stringify(result.data.carts));
-        window.dispatchEvent(new Event('quantityCartChange'));
+
+        
+        const checkCart = await fetch('https://huunghi.id.vn/api/productVariant/checkCart',{
+            method : "PUT",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+              carts : result.data.carts
+            })
+          })
+          
+          const resultCheckCart = await checkCart.json();
+
+          if(resultCheckCart.status == false){
+            toast.error(resultCheckCart.message);
+          }
+          
+          setCarts(resultCheckCart.data.carts);
+          localStorage.setItem('cart',JSON.stringify(resultCheckCart.data.carts));
+
+          window.dispatchEvent(new Event('quantityCartChange'));
 
       }else{
 
         const localCarts = localStorage.getItem('cart');
 
         if(localCarts){
+
           setCarts(JSON.parse(localCarts));
+          
+          const checkCart = await fetch('https://huunghi.id.vn/api/productVariant/checkCart',{
+            method : "PUT",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({
+              carts : JSON.parse(localCarts)
+            })
+          })
+          
+          const result = await checkCart.json();
+
+          if(result.status == false){
+            toast.success(result.message);
+          }
+          setCarts(result.data.carts);
+
+          localStorage.setItem('cart',JSON.stringify(result.data.carts));
+
         }else{
           setCarts([]);
         }
-
         window.dispatchEvent(new Event('quantityCartChange'));
-
       }
+
+      
+
       const res2 = await fetch('https://huunghi.id.vn/api/function/getProvince');
       const result2 = await res2.json();
       const province = result2.province.data;
       setArrProvince(province);
+      setIsLoading(false);
     }
     fetchCarts();
   },[]);
@@ -111,7 +158,7 @@ const CartPage = () => {
       })
       const result = await res.json();
       arrCart.splice(position,1)
-      alert(result.message);
+      toast.success(result.message);
     }else{
       arrCart.splice(position,1)
     }
@@ -122,7 +169,7 @@ const CartPage = () => {
 
   const redirectPay = () => {
     if(carts.length < 1){
-     alert('Vui lòng chọn thêm sản phẩm để thanh toán')
+     toast.warn('Vui lòng chọn thêm sản phẩm để thanh toán');
      return;
     }
     router.push('/pay');
@@ -142,12 +189,32 @@ const CartPage = () => {
     })
     const result = await res.json();
     if(result.status == false){
-      alert(result.message);
+      toast.error(result.message);
     }else{
       setVoucher(result.data.voucher);
+      toast.success("Áp dụng mã giảm giá thành công!");
     }
   }
   
+  if (isLoading) {
+        return (
+        <div
+            id="loading-screen"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+        >
+            <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+            </div>
+        </div>
+        )
+    }
   
   
   return (
@@ -299,7 +366,7 @@ const CartPage = () => {
 
               {/* Checkout Buttons */}
               <div className="space-y-3">
-                <button onClick={() => redirectPay()} className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors">
+                <button onClick={() => redirectPay()} className="w-full bg-amber-400 text-black py-3 rounded-lg font-medium hover:bg-amber-500 transition-colors">
                     THANH TOÁN NGAY
                   </button>
                 <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">

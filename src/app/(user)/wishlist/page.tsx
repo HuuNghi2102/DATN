@@ -1,4 +1,7 @@
 'use client'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
@@ -6,6 +9,7 @@ const WishlistPage = () => {
     const [reload,setReload] = useState<boolean>(true);
     const [listWhistList ,setListWhistList] = useState<any[]>([])
     const [isUser,setIsUser] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     useEffect(()=>{
@@ -36,6 +40,7 @@ const WishlistPage = () => {
                 setListWhistList(JSON.parse(whistlistLocal).length > 0 ? JSON.parse(whistlistLocal) : [])
             }
         }
+        setIsLoading(false);
     },[reload]);
 
     const removeWhilist = async (position:number) => {
@@ -55,21 +60,43 @@ const WishlistPage = () => {
             })
             if(resDelete.ok){
                 const result = await resDelete.json();
-                alert(result.message);
+                toast.success(result.message);
             }else{
-                alert('Xóa thất bại');
+                toast.error('Xóa thất bại');
             }
         }else{
             if(arrWhistList){
+              
 
                 let parseWhistList = JSON.parse(arrWhistList);
                 parseWhistList.splice(position,1);
                 localStorage.setItem('whislist',JSON.stringify(parseWhistList))
             }else{
+                toast.info('Wishlist trống');
                  localStorage.setItem('whislist',JSON.stringify([]));
             }
         }
         setReload(!reload);
+    }
+
+    if (isLoading) {
+        return (
+        <div
+            id="loading-screen"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+        >
+            <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+            </div>
+        </div>
+        )
     }
 
     return (
@@ -143,40 +170,6 @@ const WishlistPage = () => {
                                 </div>
                             </div>
                         ))}
-                        {/* Product Row */}
-                        <div className="px-6  border-b border-gray-100">
-                            <div className="flex items-center">
-                                {/* Remove button & Product Info */}
-                                <div className="flex-1 flex items-center space-x-4">
-                                    <button className="text-gray-300 hover:text-gray-500 transition-colors">
-                                        <i className="fas fa-times text-sm"></i>
-                                    </button>
-                                    <div className="w-16 h-20 rounded-sm flex items-center justify-center">
-                                        <img src="/assets/images/zzz.webp" alt="" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-base font-normal text-gray-800">Áo sơ mi</h3>
-                                    </div>
-                                </div>
-
-                                {/* Price */}
-                                <div className="w-32 text-right">
-                                    <span className="text-base font-medium text-gray-800">120.000₫</span>
-
-                                </div>
-
-                                {/* Stock Status - Empty for desktop as it's shown under price */}
-                                <div className="w-32">
-                                    <div className="text-xs text-gray-500 mt-1 text-center">In Stock</div>
-                                </div>
-                                {/* Action Button */}
-                                <div className="w-32 text-right">
-                                    <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                                        Move to detail
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Share Section */}
                         <div className="px-6 py-6">
@@ -205,9 +198,6 @@ const WishlistPage = () => {
                                             <i className="fas fa-envelope text-xs text-gray-600"></i>
                                         </button>
                                     </a>
-                                    
-                                    
-                                    
                                 </div>
                             </div>
                         </div>
@@ -222,14 +212,11 @@ const WishlistPage = () => {
                                 <button className="text-gray-300 hover:text-gray-500 transition-colors mt-2">
                                     <i className="fas fa-times text-sm"></i>
                                 </button>
-
                                 <div className="w-20 h-24 rounded-sm flex items-center justify-center">
                                     <img src="/assets/images/zzz.webp" alt="" />
                                 </div>
-
                                 <div className="flex-1">
                                     <h3 className="text-xl font-normal text-gray-800 mb-4">Áo sơ mi</h3>
-
                                     <div className="flex space-x-8 mb-4">
                                         <div>
                                             <span className="text-sm text-gray-600">Price:</span>
@@ -240,7 +227,6 @@ const WishlistPage = () => {
                                             <span className="text-sm text-gray-600 ml-2">In Stock</span>
                                         </div>
                                     </div>
-
                                     <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
                                         Move to detailll
                                     </button>
@@ -306,36 +292,6 @@ const WishlistPage = () => {
                                 </div>
                             </div>
                         ))}
-                        <div className="p-4">
-                            <div className="flex items-start space-x-3">
-                                <button className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
-                                    <i className="fas fa-times text-sm"></i>
-                                </button>
-
-                                <div className="w-16 h-20  rounded-sm flex items-center justify-center">
-                                    <img src="/assets/images/zzz.webp" alt="" />
-                                </div>
-
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="text-base font-normal text-gray-800 mb-3">Áo sơ mi</h3>
-
-                                    <div className="mb-3">
-                                        <div className="flex justify-between items-center mb-1">
-                                            <span className="text-sm text-gray-600">Price:</span>
-                                            <span className="font-medium text-gray-800">120.000₫</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-sm text-gray-600">Stock:</span>
-                                            <span className="text-sm text-gray-600">In Stock</span>
-                                        </div>
-                                    </div>
-
-                                    <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                                        Move to detailhfwifnwkfn
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Share Section */}
                         <div className="px-4 pb-4">

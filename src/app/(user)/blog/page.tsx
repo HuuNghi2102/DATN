@@ -10,6 +10,7 @@ const MainContent = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [pageStart, setPageStart] = useState(1);
   const [pageEnd, setPageEnd] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchPost = async () => {
     const responsePost = await fetch(`https://huunghi.id.vn/api/post/listPost?page=${currentPage}`);
@@ -21,6 +22,8 @@ const MainContent = () => {
     } else {
       setPosts([]);
     }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -39,6 +42,26 @@ const MainContent = () => {
     setCurrentPage(page);
     titleRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          {/* Logo hoặc icon tùy chọn */}
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+          {/* Vòng quay */}
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+          {/* Nội dung loading */}
+          <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -59,50 +82,60 @@ const MainContent = () => {
         <h1 className="text-2xl font-semibold mb-5 text-center md:text-left">Tất cả bài viết</h1>
 
         {/* Grid hiển thị bài viết */}
-        <div className="flex flex-wrap -mx-2">
-          {posts.map((article, index) => (
-            <div key={index} className="w-full md:w-1/4 px-2 mb-6">
-              <div className="group">
-                <div className="h-[220px]">
-                  <a href="#">
-                    <img
-                      className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900"
-                      src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
-                      alt={article.ten_bai_viet}
-                    />
-                  </a>
-                </div>
-                <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
-                  <h1 className="text-center font-semibold">
-                    {article.ten_bai_viet.length > 50 ? article.ten_bai_viet.slice(0, 50) + '...' : article.ten_bai_viet}
-                  </h1>
-                  <p className="text-sm text-gray-600">
-                    {article.noi_dung_bai_viet.length > 100
-                      ? article.noi_dung_bai_viet.slice(0, 65) + '...'
-                      : article.noi_dung_bai_viet}
-                  </p>
-                  <hr className="my-2" />
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-500">
-                      <FontAwesomeIcon icon={faCalendarDays} />{' '}
-                      {new Date(article.created_at).toLocaleDateString('vi-VN')}
-                    </span>
-                    <Link href={`/blog-detail/${article.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
-                      Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+      {/* Grid hiển thị bài viết */}
+<div className="flex flex-wrap -mx-2">
+  {posts.map((article, index) => (
+    <div key={index} className="w-full md:w-1/2 lg:w-1/4 px-2 mb-6">
+      <div className="group">
+        {/* Ảnh bài viết với aspect-ratio và object-top */}
+        <div className="aspect-[4/3] overflow-hidden rounded">
+          <a href="#">
+            <img
+              className="object-cover object-top w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-all duration-500"
+              src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
+              alt={article.ten_bai_viet}
+            />
+          </a>
         </div>
+
+        {/* Nội dung bài viết */}
+        <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
+          <h1 className="text-center font-semibold">
+            {article.ten_bai_viet.length > 50
+              ? article.ten_bai_viet.slice(0, 50) + '...'
+              : article.ten_bai_viet}
+          </h1>
+          <p className="text-sm text-gray-600">
+            {article.noi_dung_bai_viet.length > 100
+              ? article.noi_dung_bai_viet.slice(0, 65) + '...'
+              : article.noi_dung_bai_viet}
+          </p>
+          <hr className="my-2" />
+          <div className="flex justify-between">
+            <span className="text-sm text-gray-500">
+              <FontAwesomeIcon icon={faCalendarDays} />{' '}
+              {new Date(article.created_at).toLocaleDateString('vi-VN')}
+            </span>
+            <Link
+              href={`/blog-detail/${article.duong_dan}`}
+              className="text-sm text-gray-500 hover:text-amber-400"
+            >
+              Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
 
         {/* Pagination */}
         <div className="flex justify-center my-6 gap-2">
           {currentPage > 1 && (
             <button
               onClick={() => handlePageChange(currentPage - 1)}
-              className="px-3 py-1 border text-sm rounded bg-black text-white"
+              className="px-4 py-2 border text-sm  bg-black text-white"
             >
               {'<'}
             </button>
@@ -115,7 +148,7 @@ const MainContent = () => {
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-1 border text-sm rounded ${
+                  className={`px-4 py-2 border text-sm  ${
                     currentPage === page
                       ? 'bg-black text-white'
                       : 'bg-white text-black border-gray-300 hover:bg-gray-100'
@@ -127,16 +160,16 @@ const MainContent = () => {
           )}
           {currentPage < totalPage && ( 
             <>
-              <button className="px-3 py-1 border text-sm rounded bg-black text-white">{`...`}</button>
+              <button className="px-4 py-2 border text-sm  bg-black text-white">{`...`}</button>
               <button
                 onClick={() => handlePageChange(totalPage)}
-                className="px-3 py-1 border text-sm rounded bg-black text-white"
+                className="px-4 py-2 border text-sm  bg-black text-white"
               >
                 {totalPage}
               </button>
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
-                className="px-3 py-1 border text-sm rounded bg-black text-white"
+                className="px-4 py-2 border text-sm  bg-black text-white"
               >
                 {'>'}
               </button>

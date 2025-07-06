@@ -1,7 +1,8 @@
 'use client';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from "react";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const VNPayPaymentForm = () => {
   const [order,setOrder] = useState<any>();
@@ -27,15 +28,15 @@ const VNPayPaymentForm = () => {
             if(res.ok){
                 const order = result.data.order;
                 if( order.trang_thai_thanh_toan != 'chua_thanh_toan' || order.trang_thai_don_hang != 'cho_xac_nhan'){
-                  alert('Đơn hàng không hợp lệ')
+                  toast.error('Đơn hàng không hợp lệ');
                   router.push('/userprofile');
                 }
                 setFormData({...formData,
-                    amount : order.gia_tong_don_hang,
+                    amount : order.gia_tong_don_hang + order.tien_ship,
                     id_order : order.id_don_hang
                 });
             }else{
-                alert('Đơn hàng không tồn tại!')
+                toast.error('Đơn hàng không tồn tại!')
                 router.push('/cart')
             }
             
@@ -44,10 +45,10 @@ const VNPayPaymentForm = () => {
     }else{
 
         if(Number.isNaN(idOrder)){
-            alert('Đơn hàng không tồn tại!')
+            toast.error('Đơn hàng không tồn tại!')
             router.push('/cart');
         }
-        alert('Vui lòng đăng nhập trước!')
+        toast.error('Vui lòng đăng nhập trước!')
         router.push('/login');
 
     }
@@ -90,7 +91,7 @@ const VNPayPaymentForm = () => {
     if(res.ok){
         router.push(result);
     }else{
-        alert('Thanh toán không thành công')
+        toast.error('Thanh toán không thành công');
     }
 
   };

@@ -6,6 +6,7 @@ import "./globals.css";
 import Header from "./(user)/header/header";
 import Footer from "./(user)/footer/footer";
 import { Providers } from "./providers"; // 👈 dùng wrapper
+import { ToastContainer } from "react-toastify";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           {/* <Header /> */}
             {children}
+            <ToastContainer position="top-center" autoClose={2000} theme="light" />
           {/* <Footer /> */}
         </Providers>
       </body>

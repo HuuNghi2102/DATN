@@ -1,8 +1,8 @@
 
 "use client";
-
 import { useState } from "react";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 export default function CustomerManager() {
   const [customers] = useState([
@@ -156,15 +156,15 @@ export default function CustomerManager() {
                       {cus.group}
                     </span>
                   </td>
-                  <td className="px-4 py-3 flex gap-2">
-                    <button className="text-indigo-600 hover:text-indigo-800" title="Xem chi tiết">
-                      <i className="fas fa-eye"></i>
+                  <td className="">
+                    <button className="text-indigo-600 mx-1 hover:text-indigo-800" title="Xem chi tiết">
+                      <FontAwesomeIcon icon={faEye} />
                     </button>
-                    <button className="text-yellow-600 hover:text-yellow-800" title="Chỉnh sửa">
-                      <i className="fas fa-pencil-alt"></i>
+                    <button className="text-yellow-600 mx-1 hover:text-yellow-800" title="Chỉnh sửa">
+                      <FontAwesomeIcon icon={faPencil} />
                     </button>
-                    <button className="text-red-500 hover:text-red-700" title="Xóa">
-                      <i className="fas fa-trash"></i>
+                    <button className="text-red-500 mx-1 hover:text-red-700" title="Xóa">
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </td>
                 </tr>

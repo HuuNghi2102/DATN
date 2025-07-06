@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -83,6 +85,7 @@ const LoginPage = () => {
       //   localStorage.setItem('cart', JSON.stringify(cartResult.cart));
       // }
       router.push('/user/userprofile');
+      toast.success("Đăng nhập thành công!");
     } catch (err) {
       console.error(err);
       setError({ ...newError });
@@ -150,7 +153,7 @@ const LoginPage = () => {
               <button
                 type="button"
                 onClick={handleLogin}
-                className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors duration-200 text-sm"
+                className="w-full bg-amber-400 text-white py-3 rounded-lg font-semibold hover:bg-amber-500 transition-colors duration-200 text-sm"
               >
                 ĐĂNG NHẬP
               </button>
@@ -182,7 +185,7 @@ const LoginPage = () => {
 
               {/* Register Link */}
               <div className="text-center">
-                <a href="/register" className="text-gray-700 hover:text-gray-900 font-medium text-sm">Đăng ký</a>
+                <Link href="/register" className="text-gray-700 hover:text-gray-900 font-medium text-sm">Đăng ký</Link>
               </div>
             </div>
           </div>

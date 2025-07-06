@@ -1,21 +1,22 @@
 'use client';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart, faSortAlphaDown,faCartShopping,faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faShoppingCart, faSortAlphaDown, faCartShopping, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 
-
 export default function AllProductPage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<[string, string]>(['Sản phẩm nổi bật','']);
+  const [selectedOption, setSelectedOption] = useState<[string, string]>(['Sản phẩm nổi bật', '']);
 
-  const [currentPage,setCurrentPage] = useState(1);
-  const [sort,setSort] = useState('');
-  const [products,setProducts] = useState<any[]>([]);
-  const [totalPage,setTotalPage] = useState(1);
-  const [pageStart,setPageStart] = useState(1);
-  const [pageEnd,setPageEnd] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sort, setSort] = useState('');
+  const [products, setProducts] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [pageStart, setPageStart] = useState(1);
+  const [pageEnd, setPageEnd] = useState(1);
 
   const addWhistList= async (name:string,image:string,price:number,slug:string,idPro:number) => {
 
@@ -50,41 +51,41 @@ export default function AllProductPage() {
       })
       if(resAddWhisList.ok){
         const result = await resAddWhisList.json();
-        console.log(result)
-        alert('Thêm sản phẩm vào danh sách thành công');
-      }else{
-        alert('Thêm sản phẩm vào danh sách thất bại');
+        console.log(result);
+        toast.success('Thêm sản phẩm vào danh sách thành công');
+      } else {
+        toast.error('Thêm sản phẩm vào danh sách thất bại');
       }
-    }else{
-      if(whistList){
+    } else {
+      if (whistList) {
         const parseWhisList = JSON.parse(whistList);
 
-        let flag:boolean = true;
+        let flag: boolean = true;
 
-        parseWhisList.forEach((e:any,i:number)=>{
-          if(e.id_san_pham == idPro){
+        parseWhisList.forEach((e: any, i: number) => {
+          if (e.id_san_pham == idPro) {
             flag = false;
           }
-        })
+        });
 
         if(flag == true){
           parseWhisList.unshift(newObj);
         }
-        
-        localStorage.setItem('whislist',JSON.stringify(parseWhisList));
-      }else{
-        localStorage.setItem('whislist',JSON.stringify([newObj]));
+
+        localStorage.setItem('whislist', JSON.stringify(parseWhisList));
+      } else {
+        localStorage.setItem('whislist', JSON.stringify([newObj]));
       }
-      alert('Thêm sản phẩm vào danh sách thành công');
+      toast.success('Thêm sản phẩm vào danh sách thành công');
     }
-  }
+  };
 
   const params = useParams();
-  const {slug} = params;
+  const { slug } = params;
 
   useEffect(() => {
     fetchProducts();
-  },[sort,currentPage]);
+  }, [sort, currentPage]);
 
   const fetchProducts = async () => {
       const response = await fetch(`https://huunghi.id.vn/api/product/showProductPage/${slug}?page=${currentPage}&sort=${sort}`);
@@ -98,7 +99,7 @@ export default function AllProductPage() {
         setPageStart((currentPage - 2) >= 1 ? currentPage - 2 : 1 );
         setPageEnd(currentPage + 2 >= data.data.totalPage ? data.data.totalPage : currentPage + 2 )
       }else{
-        alert(data.message);
+        toast.error(data.message);
       }
       console.log('Nay cung sort',data.data.sort);
     }
@@ -124,15 +125,15 @@ export default function AllProductPage() {
         <ul className="flex items-center gap-1">
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
           <li className="text-gray-500 font-normal">/</li>
-          <li className="text-[12px] font-semibold mt-0.5">Tất Cả Sản Phẩm</li>
+          <li className="text-[12px] sm:text-[13px] md:text-[14px] font-semibold mt-0.5">Tất Cả Sản Phẩm</li>
         </ul>
       </nav>
 
       {/* Banner */}
-      <div className="mt-1">
+      <div className="mt-2 sm:mt-3 md:mt-4">
         <img
           alt="Tất cả sản phẩm banner"
-          className="w-full object-cover"
+          className="w-full object-cover rounded-md"
           height="300"
           src="/assets/images/banner spmoi.jpg"
           width="1200"
@@ -140,7 +141,7 @@ export default function AllProductPage() {
       </div>
 
       {/* Sort dropdown */}
-      <div className="flex justify-end mt-4 mb-4 items-center text-black text-[13px] relative z-50">
+      <div className="flex justify-end mt-3 sm:mt-4 md:mt-5 mb-3 sm:mb-4 md:mb-5 items-center text-black text-[11px] sm:text-[12px] md:text-[13px] relative z-50">
         <span className="mr-2 font-semibold">Sắp xếp:</span>
         <div className="relative">
           <button
@@ -148,7 +149,7 @@ export default function AllProductPage() {
             className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[10px]"
           >
             {selectedOption[0]}
-            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
+            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-1 sm:ml-2 text-[15px] sm:text-[17px]" />
           </button>
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-lg z-50">
@@ -160,7 +161,7 @@ export default function AllProductPage() {
                     setIsOpen(false);
                     setSort(option[1]);
                   }}
-                  className="px-3 py-2 text-[10px] cursor-pointer hover:bg-blue-600 hover:text-white"
+                  className="px-2 sm:px-3 py-1 sm:py-2 text-[9px] sm:text-[10px] md:text-[11px] cursor-pointer hover:bg-blue-600 hover:text-white"
                 >
                   {option[0]}
                 </div>
@@ -169,7 +170,7 @@ export default function AllProductPage() {
           )}
         </div>
       </div>
-    
+
       {/* Product List */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2 mb-4 z-0">
                     {products.map((product, i) => (

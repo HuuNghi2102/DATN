@@ -24,14 +24,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <>
         <Providers>
           <Header />
             {children}
           <Footer />
         </Providers>
-      </body>
-    </html>
+      </>
   );
 }

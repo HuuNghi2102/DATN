@@ -1,4 +1,6 @@
 'use client';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -23,6 +25,7 @@ const IntegratedPage = () => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [currentPost,setCurrentPost] = useState<any>();
   const [arrayPostNew,setArrayPostNew] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(()=>{
     fetchBlog();
@@ -30,13 +33,13 @@ const IntegratedPage = () => {
 
   const fetchBlog = async () => {
     if(!slug){
-      alert('Bài viết không tồn tại');
+      toast.error('Bài viết không tồn tại');
       window.location.href = '/blog'
     }
 
     const resBlog = await fetch(`https://huunghi.id.vn/api/post/getPost/${slug}`);
     if(!resBlog.ok){
-      alert('Bài viết không tồn tại');
+      toast.error('Bài viết không tồn tại');
       return window.location.href = '/blog'
     }
     const result = await resBlog.json();
@@ -45,9 +48,10 @@ const IntegratedPage = () => {
 
     const resBlogNew = await fetch('https://huunghi.id.vn/api/post/getPostNew');
     const resultPostNew = await resBlogNew.json();
-
     setArrayPostNew(resultPostNew.data.postsNew);
 
+    setIsLoading(false);
+    
   }
 
   // Dữ liệu bài viết
@@ -255,6 +259,26 @@ const IntegratedPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          {/* Logo hoặc icon tùy chọn */}
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+          {/* Vòng quay */}
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+          {/* Nội dung loading */}
+          <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-white text-black text-[13px] leading-[18px] pt-[9%]">
       <div className="max-w-[1200px] mx-auto px-4 py-3">
@@ -448,6 +472,8 @@ const IntegratedPage = () => {
           </div>
         </div>
       </div>
+            <ToastContainer position="top-center" autoClose={3000} />
+
     </div>
   );
 };

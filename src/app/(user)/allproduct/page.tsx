@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faShoppingCart, faSortAlphaDown } from '@fortawesome/free-solid-svg-icons';
+import { toast } from "react-toastify";
+
+
 
 const products = [
   {
@@ -71,9 +74,10 @@ export default function AllProductPage() {
     'Tồn kho: Giảm dần',
   ];
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleAddToCart = (productName: string) => {
+    toast.success(`Đã thêm "${productName}" vào giỏ hàng!`, {
+      position: 'top-right',
+    });
   };
 
   return (

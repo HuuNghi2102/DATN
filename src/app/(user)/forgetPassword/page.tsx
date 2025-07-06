@@ -1,4 +1,6 @@
 'use client'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState } from 'react';
 
 export default function ForgotPasswordPage() {
@@ -30,7 +32,7 @@ export default function ForgotPasswordPage() {
     }
 
     localStorage.setItem('email',JSON.stringify(results.email));
-    alert(results.message);
+    toast.success(results.message);
     window.location.href = 'enterCode';
   }
 
@@ -95,7 +97,7 @@ export default function ForgotPasswordPage() {
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}
-                className="w-full bg-black text-white py-3 px-4 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 font-medium text-sm transition duration-200"
+                className="w-full bg-amber-400 text-black py-3 px-4 rounded-md hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 font-medium text-sm transition duration-200"
               >
                 Gửi
               </button>
@@ -112,13 +114,6 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </main>
-
-      {/* Responsive Design Information */}
-      <div className="fixed bottom-4 right-4 bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium">
-        <span className="block sm:hidden">Mobile</span>
-        <span className="hidden sm:block md:hidden">Tablet</span>
-        <span className="hidden md:block">Desktop</span>
-      </div>
     </div>
   );
 }

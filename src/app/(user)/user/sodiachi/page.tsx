@@ -1,6 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AccountPage() {
     const [activeTab, setActiveTab] = useState('address');
@@ -9,6 +11,7 @@ export default function AccountPage() {
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [addresses, setAddresses] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [addressForm, setAddressForm] = useState({
         id_dia_chi_giao_hang: null,
         ten_nguoi_nhan: '',
@@ -45,6 +48,7 @@ export default function AccountPage() {
                 const result = await res.json();
                 const address = result.data.address;
                 setAddresses(address);
+                setIsLoading(false);
             }
             fetchAddress();
         }
@@ -56,8 +60,11 @@ export default function AccountPage() {
                 ...addr,
                 isDefault: addr.id_dia_chi_giao_hang === id,
             }))
+            
         );
         setSelectedAddressId(id);
+        toast.success('Đã đặt làm địa chỉ mặc định!');
+
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,13 +126,19 @@ export default function AccountPage() {
                     });
                     const updatedResult = await res.json();
                     setAddresses(updatedResult.data.address);
+                    toast.success('Xóa địa chỉ thành công!');
+
                 }
             } catch (error) {
                 console.error('Error deleting address:', error);
+                toast.error('Xóa địa chỉ thất bại!');
             }
         } else {
-            alert('Bạn vui lòng đăng nhập để tiếp tục!');
-            window.location.href = '/login';
+           toast.error('Bạn vui lòng đăng nhập để tiếp tục!');
+setTimeout(() => {
+    window.location.href = '/login';
+}, 1000);
+
         }
     };
 
@@ -204,12 +217,14 @@ export default function AccountPage() {
                         dia_chi_nguoi_nhan: '',
                     });
                     setIsEditing(false);
+                    toast.success(isEditing ? 'Cập nhật địa chỉ thành công!' : 'Thêm địa chỉ mới thành công!');
                 }
             } catch (error) {
                 console.error('Error saving address:', error);
+                toast.error('Có lỗi xảy ra, vui lòng thử lại sau!');
             }
         } else {
-            alert('Bạn vui lòng đăng nhập để tiếp tục!');
+            toast.error('Bạn vui lòng đăng nhập để tiếp tục!');
             window.location.href = '/login';
         }
     };
@@ -223,6 +238,26 @@ export default function AccountPage() {
         { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem' },
         { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' },
     ];
+
+    if (isLoading) {
+        return (
+        <div
+            id="loading-screen"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+        >
+            <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+            </div>
+        </div>
+        )
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 pt-[10%]">
@@ -412,6 +447,8 @@ export default function AccountPage() {
                     </div>
                 </div>
             </div>
+            <ToastContainer position="top-center" autoClose={3000} />
+
         </div>
     );
 }

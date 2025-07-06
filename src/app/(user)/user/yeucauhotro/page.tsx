@@ -1,6 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SupportRequestWithSidebar() {
   const [user, setUser] = useState<any>(null);
@@ -14,14 +16,14 @@ export default function SupportRequestWithSidebar() {
       const users = JSON.parse(u);
       setUser(users);
     } else {
-      alert('Bạn vui lòng đăng nhập trước');
+      toast.info('Bạn vui lòng đăng nhập trước');
       window.location.href = '/login';
     }
   }, []);
 
   const send = async () => {
     if (content === '') {
-      alert('Vui lòng điền nội dung cần hỗ trợ');
+      toast.warn('Vui lòng điền nội dung cần hỗ trợ');
     } else {
       const res = await fetch(`https://huunghi.id.vn/api/function/Support`, {
         method: 'POST',
@@ -36,7 +38,7 @@ export default function SupportRequestWithSidebar() {
       });
       const result = await res.json();
       setContent('')
-      alert(result.message);
+      toast.success(result.message);
     }
   };
 

@@ -1,4 +1,6 @@
 'use client';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight, faHeart, faFire } from '@fortawesome/free-solid-svg-icons';
@@ -91,9 +93,9 @@ const addWhistList= async (name:string,image:string,price:number,slug:string,idP
       if(resAddWhisList.ok){
         const result = await resAddWhisList.json();
         console.log(result)
-        alert('Thêm sản phẩm vào danh sách thành công');
+        toast.success('Thêm sản phẩm vào danh sách thành công');
       }else{
-        alert('Thêm sản phẩm vào danh sách thất bại');
+        toast.error('Thêm sản phẩm vào danh sách thất bại');
       }
     }else{
       if(whistList){
@@ -115,7 +117,7 @@ const addWhistList= async (name:string,image:string,price:number,slug:string,idP
       }else{
         localStorage.setItem('whislist',JSON.stringify([newObj]));
       }
-      alert('Thêm sản phẩm vào danh sách thành công');
+      toast.success('Thêm sản phẩm vào danh sách thành công');
     }
   }
 const Home = () => {
@@ -256,6 +258,7 @@ const Home = () => {
                   </div>
                   <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
                     <div className="py-1 pr-2">
+
                       <h4 className="font-semibold">
   ĐƠN HÀNG: {typeof voucher.gia_tri_don_hang === 'number'
     ? voucher.gia_tri_don_hang.toLocaleString('vi-VN') + ' VNĐ'
@@ -274,7 +277,7 @@ const Home = () => {
                         Mã: <span className="font-semibold">{voucher.ma_giam_gia}</span>
                       </p>
                       <p>HSD: {voucher.ngay_het_han}</p>
-                    </div>
+                    </div>  
                     <button
                       onClick={() => handleCopy(voucher.ma_giam_gia, index)}
                       className="absolute right-[-8px] bottom-[-8px] active:bg-amber-300 active:text-black bg-black text-white rounded-tl-[15px] rounded-tr-[0px] rounded-br-[7px] rounded-bl-[0px] p-[7px] text-xs">
@@ -294,7 +297,7 @@ const Home = () => {
           <div>
             <img src="../assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
-              {productsBestSaler.map((product, i) => (
+              {productsNew.map((product, i) => (
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
@@ -329,7 +332,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-black font-semibold h-10 px-5 hover:bg-amber-500 hover:text-black text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -337,46 +340,6 @@ const Home = () => {
           {/* NewProducts */}
           <div>
             <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
-            <Slider {...productSettings} className="my-4">
-              {productsNew.map((product, i) => (
-                <div key={i} className="p-2">
-                  <div className="bg-white p-2 rounded-lg cursor-pointer">
-                    <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative">
-                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
-                        <img
-                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
-                          alt="product"
-                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        />
-                      </Link>
-                      <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
-                      </div>
-                      <a
-                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
-                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
-                      >
-                        <FontAwesomeIcon icon={faHeart} />
-                      </a>
-                    </div>
-                    <div className="px-1 mt-2">
-                      <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Slider>
-            <div className="flex justify-center my-9">
-              <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-red-500 text-sm sm:text-base">
-                Xem tất cả
-              </button>
-            </div>
-          </div>
-          {/* ProductSaler */}
-          <div>
-            <img src="/assets/images/banchay_a01333a0db53411883d51490d22b7eab.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
               {productsSaler.map((product, i) => (
                 <div key={i} className="p-2">
@@ -409,7 +372,47 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg border-2 bg-black text-white h-10 px-5 hover:bg-white hover:text-black text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-black h-10 px-5 hover:bg-amber-500 font-semibold text-sm sm:text-base">
+                Xem tất cả
+              </button>
+            </div>
+          </div>
+          {/* ProductSaler */}
+          <div>
+            <img src="/assets/images/banchay_a01333a0db53411883d51490d22b7eab.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
+            <Slider {...productSettings} className="my-4">
+              {productsBestSaler.map((product, i) => (
+                <div key={i} className="p-2">
+                  <div className="bg-white p-2 rounded-lg cursor-pointer">
+                    <div className="relative group overflow-hidden">
+                      <Link href={`/product/${product.duong_dan}`} className="relative">
+                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
+                        <img
+                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                          alt="product"
+                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        />
+                      </Link>
+                      <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
+                      </div>
+                      <a
+                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
+                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                      >
+                        <FontAwesomeIcon icon={faHeart} />
+                      </a>
+                    </div>
+                    <div className="px-1 mt-2">
+                      <p className="text-sm">{product.ten_san_pham}</p>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+            <div className="flex justify-center my-9">
+              <button className="rounded-lg  bg-amber-400 text-black h-10 px-5 hover:bg-amber-500 font-semibold text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -423,10 +426,10 @@ const Home = () => {
                 <div key={index} className="bg-white rounded-[10px] shadow-md p-4">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>
-                    <button className="text-white bg-black w-[100px] h-[30px] rounded-[8px] hover:bg-white hover:text-black border hover:border-black transition-all duration-500 text-sm">
-                      <a href={`/collection/${category.duong_dan}`}>
+                    <button className="text-black bg-amber-400 w-[100px] h-[30px] rounded-[8px] hover:bg-amber-500 hover:text-black border hover:border-black transition-all duration-500 text-sm">
+                      <Link href={`/collection/${category.duong_dan}`}>
                       Xem tất cả
-                      </a>
+                      </Link>
                     </button>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -487,6 +490,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
