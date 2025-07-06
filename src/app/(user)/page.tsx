@@ -8,6 +8,7 @@ import { productsCateInterface } from "./compoments/productsCateInterface";
 import productsSalerInterface from './compoments/productsSalerInterface';
 import voucherInterface from './compoments/vouchersInterface';
 import Link from 'next/link';
+import Bannerinterface from './compoments/Bannerinterface';
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
 // import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
@@ -125,6 +126,7 @@ const Home = () => {
   const [productsCate, setproductsCate] = useState<productsCateInterface[]>([]);
   const [copied, setCopied] = useState<number | null>(null);
   const [voucher, setVoucher] = useState<voucherInterface[]>([]);
+  const [banners, setBanners] = useState<Bannerinterface[]>([]);
   // sao chép mã
   const handleCopy = (code: string, index: number) => {
     navigator.clipboard.writeText(code)
@@ -204,20 +206,29 @@ const Home = () => {
     }
     fetchVoucher();
   }, [])
+  // lấy banner
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        let getAPIbanner = await fetch('http://huunghi.id.vn/api/banner/getBannerIndex')
+        let data = await getAPIbanner.json()
+        setBanners(data.data.banners)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchBanner();
+  }, [])
   return (
     <div>
       <div className="container  mx-auto lg:pt-[12%] pt-[20%] max-w-[1200px] px-4">
         {/* Banner */}
         <div className="container mx-auto max-w-[1200px] relative">
           <Slider {...settings}>
-            {[
-              "/assets/images/banner1.png",
-              "/assets/images/banner2.png",
-              "/assets/images/banner3.png",
-            ].map((src, index) => (
+            {banners.map((banner, index) => (
               <div key={index}>
                 <img
-                  src={src}
+                  src={`https://huunghi.id.vn/storage/banners/${banner.link_banner}`}
                   alt={`Banner ${index + 1}`}
                   className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
                 />
@@ -245,8 +256,20 @@ const Home = () => {
                   </div>
                   <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
                     <div className="py-1 pr-2">
-                      <h4 className="font-semibold">ĐƠN HÀNG: {voucher.gia_tri_don_hang.toLocaleString('vi-VN') + ' VNĐ '}</h4>
-                      <h1 className="text-sm">GIẢM: <span className=' text-amber-300 font-semibold'>{voucher.gia_tri_giam.toLocaleString('vi-VN') + 'VNĐ'}</span></h1> <br />
+                      <h4 className="font-semibold">
+  ĐƠN HÀNG: {typeof voucher.gia_tri_don_hang === 'number'
+    ? voucher.gia_tri_don_hang.toLocaleString('vi-VN') + ' VNĐ'
+    : 'Không xác định'}
+</h4>
+
+<h1 className="text-sm">
+  GIẢM: <span className=' text-amber-300 font-semibold'>
+    {typeof voucher.gia_tri_giam === 'number'
+      ? voucher.gia_tri_giam.toLocaleString('vi-VN') + ' VNĐ'
+      : 'Không xác định'}
+  </span>
+</h1>
+
                       <p className="mt-1">
                         Mã: <span className="font-semibold">{voucher.ma_giam_gia}</span>
                       </p>
