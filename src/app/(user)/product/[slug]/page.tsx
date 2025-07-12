@@ -96,6 +96,9 @@ const addWhistList = async (name: string, image: string, price: number, slug: st
 const ProductPageDetail = () => {
     const [selectedSize, setSelectedSize] = useState<any>();
     const [selectedColor, setSelectedColor] = useState<any>();
+    const [activeTab, setActiveTab] = useState<'danhgia' | 'mota'>('danhgia');
+    const [reviewStar, setReviewStar] = useState(5);
+    const [showReviewForm, setShowReviewForm] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [currentImageIndex, setCurrentImageIndex] = useState('');
     const [productVariant, setProductVariant] = useState<any>(null);
@@ -583,63 +586,151 @@ const ProductPageDetail = () => {
                 <div className="mt-12 bg-white rounded-lg shadow-sm">
                     <div className="border-b border-gray-200">
                         <nav className="flex space-x-8 px-6" aria-label="Tabs">
-                            <button className="border-b-2 border-blue-500 py-4 px-1 text-sm font-medium text-blue-600">
-                                MÔ TẢ
-                            </button>
-                            <button className="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                CHÍNH SÁCH GIAO HÀNG
-                            </button>
-                            <button className="border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                                CHÍNH SÁCH ĐỔI HÀNG
-                            </button>
-                        </nav>
-                    </div>
-                    <div className="p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">
-                            160STORE - {product ? product.ten_san_pham : 'Đang tải...'}
-                        </h2>
+  <button
+    onClick={() => setActiveTab('danhgia')}
+    className={`py-4 px-1 text-sm font-medium border-b-2 ${
+        
+      activeTab === 'danhgia'
+        ? 'border-blue-500 text-blue-600'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+    }`}
+  >
+    ĐÁNH GIÁ
+  </button>
+  <button
+    onClick={() => setActiveTab('mota')}
+    className={`py-4 px-1 text-sm font-medium border-b-2 ${
+      activeTab === 'mota'
+        ? 'border-blue-500 text-blue-600'
+        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+    }`}
+>
+    MÔ TẢ
+  </button>
+</nav>
 
-                        <div className="space-y-6 text-gray-700">
-                            <div>
-                                <ul className="list-disc list-inside space-y-1 text-sm">
-                                    <li><strong>Chất liệu:</strong> Cotton</li>
-                                    <li><strong>Form:</strong> Boxy</li>
-                                </ul><br />
-                                <hr />
-                            </div>
-                            <div>
-                                {product.mo_ta_san_pham}
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-lg mb-3">▶️CHẤT LIỆU COTTON</h3>
-                                <p className="text-sm leading-relaxed mb-4">
-                                    Vải cotton mềm mại, thoáng khí và khả năng thấm hút mồ hôi tốt, giúp da luôn khô thoáng và dễ chịu. Nhờ cấu trúc sợi bông đặt chất, vải cotton có độ bền cao, hạn chế co rút sau nhiều lần giặt.
-                                </p>
-                                <p className="text-sm leading-relaxed mb-4">
-                                    Đồng thời, chất liệu này có khả năng co giãn nhẹ, mang lại sự thoải mái khi vận động.
-                                </p>
-                            </div>
+</div>
+ <div className="p-6">
+  {activeTab === 'mota' && (
+    <>
+      <h2 className="text-xl font-bold text-gray-900 mb-4">
+        160STORE - {product ? product.ten_san_pham : 'Đang tải...'}
+      </h2>
 
-                            <div>
-                                <h3 className="font-bold text-lg mb-3">▶️THIẾT KẾ CÁ TÍNH</h3>
-                                <p className="text-sm leading-relaxed mb-4">
-                                    Áo nổi bật với 2 đường sọc tương phản màu áo chạy dài từ có đến vai giúp tạo hiệu ứng cho phần vai trông rộng và cân đối hơn. Logo in nổi ở giữa ngực mang đến sự tính tế và cá tính, tạo điểm nhấn cho tổng thể thiết kế, đặc biệt phù hợp nhiều phong cách khác nhau từ casual đến streetwear.
-                                </p>
-                            </div>
+      <div className="space-y-6 text-gray-700">
+        <div>
+          <ul className="list-disc list-inside space-y-1 text-sm">
+            <li><strong>Chất liệu:</strong> Cotton</li>
+            <li><strong>Form:</strong> Boxy</li>
+          </ul><br />
+          <hr />
+        </div>
 
-                            <div>
-                                <h3 className="font-bold text-lg mb-3">▶️FORM BOXY</h3>
-                                <p className="text-sm leading-relaxed mb-4">
-                                    Form dáng mới nhất tại 160STORE với đường cắt thoáng và phần vai hơi xuôi, tạo nên vẻ ngoài phóng khoáng, hiện đại. Nhờ thiết kế rộng vừa phải, form này giúp che khuyết điểm tốt, phù hợp với nhiều dáng người và vẫn đảm bảo sự thoải mái khi vận động.
-                                </p>
-                            </div>
+        <div>{product?.mo_ta_san_pham}</div>
 
-                            <div className="flex items-center text-sm text-gray-600">
-                                <i className="fas fa-tag mr-2"></i>
-                                <span>🔍ATI00560</span>
-                            </div>
-                        </div>
-                    </div>
+        <div>
+          <h3 className="font-bold text-lg mb-3">▶️CHẤT LIỆU COTTON</h3>
+          <p className="text-sm leading-relaxed mb-4">
+            Vải cotton mềm mại, thoáng khí và khả năng thấm hút mồ hôi tốt...
+          </p>
+          <p className="text-sm leading-relaxed mb-4">
+            Đồng thời, chất liệu này có khả năng co giãn nhẹ...
+          </p>
+        </div>
+
+        <div>
+          <h3 className="font-bold text-lg mb-3">▶️THIẾT KẾ CÁ TÍNH</h3>
+          <p className="text-sm leading-relaxed mb-4">
+            Áo nổi bật với 2 đường sọc tương phản màu áo...
+          </p>
+        </div>
+
+        <div>
+          <h3 className="font-bold text-lg mb-3">▶️FORM BOXY</h3>
+          <p className="text-sm leading-relaxed mb-4">
+            Form dáng mới nhất tại 160STORE với đường cắt thoáng...
+          </p>
+        </div>
+
+        <div className="flex items-center text-sm text-gray-600">
+          <i className="fas fa-tag mr-2"></i>
+          <span>🔍ATI00560</span>
+        </div>
+      </div>
+    </>
+  )}
+
+  {activeTab === 'danhgia' && (
+  <div>
+    <h2 className="text-xl font-bold text-gray-900 mb-4">Đánh giá sản phẩm</h2>
+
+    {/* Nút ẩn/hiện form */}
+    <button
+      onClick={() => setShowReviewForm(!showReviewForm)}
+      className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+    >
+      {showReviewForm ? 'Ẩn form đánh giá' : 'Viết đánh giá'}
+    </button>
+
+    {/* Form viết đánh giá - ĐÃ ĐƯA LÊN TRÊN */}
+    {showReviewForm && (
+      <div className="bg-gray-50 border rounded-lg p-4 space-y-4 mb-6">
+        <h3 className="text-lg font-semibold text-gray-800">Viết đánh giá của bạn</h3>
+
+        <div className="flex flex-col space-y-2">
+          <label className="text-sm font-medium text-gray-700">Chọn số sao</label>
+          <div className="flex space-x-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <svg
+                key={star}
+                onClick={() => setReviewStar(star)}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill={star <= reviewStar ? "#FACC15" : "#D1D5DB"}
+                className="w-6 h-6 cursor-pointer hover:scale-110 transition-transform"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.37 2.448a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.538 1.118l-3.37-2.448a1 1 0 00-1.176 0l-3.37 2.448c-.783.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.065 9.384c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.957z" />
+              </svg>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col space-y-2">
+          <label className="text-sm font-medium text-gray-700">Nội dung đánh giá</label>
+          <textarea
+            rows={4}
+            placeholder="Hãy chia sẻ cảm nhận của bạn về sản phẩm..."
+            className="px-3 py-2 border rounded-md resize-none focus:outline-none focus:ring focus:border-blue-300"
+          ></textarea>
+        </div>
+
+        <button
+          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
+          onClick={() => toast.success('Cảm ơn bạn đã gửi đánh giá!')}
+        >
+          Gửi đánh giá
+        </button>
+      </div>
+    )}
+
+    {/* Danh sách đánh giá mẫu */}
+    <div className="space-y-4 text-sm text-gray-700">
+      <div>
+        <p><strong>Nguyễn Văn A</strong> - ★★★★☆</p>
+        <p>Áo chất lượng, vải mát nhưng giao hơi chậm.</p>
+      </div>
+      <hr />
+      <div>
+        <p><strong>Trần Thị B</strong> - ★★★★★</p>
+        <p>Đẹp hơn mong đợi, giao hàng nhanh, đóng gói kỹ. Sẽ mua lại.</p>
+      </div>
+    </div>
+  </div>
+)}
+
+
+</div>
+
                 </div>
 
                 {/* Related Products */}
