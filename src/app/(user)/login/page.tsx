@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from "react-toastify";
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -87,7 +89,7 @@ const LoginPage = () => {
       }else{
         router.push('/admin');
       }
-      
+      toast.success("Đăng nhập thành công!");
     } catch (err) {
       console.error(err);
       setError({ ...newError });

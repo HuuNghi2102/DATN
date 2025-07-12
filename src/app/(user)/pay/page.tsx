@@ -1,4 +1,6 @@
 'use client'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -90,7 +92,7 @@ const PayPage = () => {
         })
         const result = await res.json();
         if (result.status == false) {
-            alert(result.message);
+            toast.error(result.message);
         } else {
             setSelectedDiscount(result.data.voucher)
             const voucher: any = result.data.voucher;
@@ -113,7 +115,7 @@ const PayPage = () => {
 
         // kiểm tra xem người dùng đã đăng nhập hay chưa
         if (!userLocal || !accessTokenLocal || !typeTokenLocal) {
-            alert('Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục');
+            toast.error('Bạn chưa đăng nhập, vui lòng đăng nhập để tiếp tục');
             return router.push('/login');
         }
 
@@ -125,7 +127,7 @@ const PayPage = () => {
         if (cartLocal) {
             const cartData = JSON.parse(cartLocal);
             if (cartData.length == 0) {
-                alert('Giỏ hàng của bạn đang trống, vui lòng thêm sản phẩm vào giỏ hàng để thanh toán');
+                toast.error('Giỏ hàng của bạn đang trống, vui lòng thêm sản phẩm vào giỏ hàng để thanh toán');
                 router.push('/collection/all');
                 return;
             }
@@ -305,7 +307,7 @@ const PayPage = () => {
                             router.push(`${result.data.linkResponse}`)
                         }
                     } else {
-                        alert('Tạo đơn hàng không thành công');
+                        toast.error('Tạo đơn hàng không thành công');
                     }
                 } catch (error) {
                     console.log(error);

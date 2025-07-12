@@ -1,4 +1,6 @@
 'use client';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -31,13 +33,13 @@ const IntegratedPage = () => {
 
   const fetchBlog = async () => {
     if(!slug){
-      alert('Bài viết không tồn tại');
+      toast.error('Bài viết không tồn tại');
       window.location.href = '/blog'
     }
 
     const resBlog = await fetch(`https://huunghi.id.vn/api/post/getPost/${slug}`);
     if(!resBlog.ok){
-      alert('Bài viết không tồn tại');
+      toast.error('Bài viết không tồn tại');
       return window.location.href = '/blog'
     }
     const result = await resBlog.json();
@@ -470,6 +472,8 @@ const IntegratedPage = () => {
           </div>
         </div>
       </div>
+            <ToastContainer position="top-center" autoClose={3000} />
+
     </div>
   );
 };

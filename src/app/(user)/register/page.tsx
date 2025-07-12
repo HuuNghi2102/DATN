@@ -1,4 +1,6 @@
 'use client';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 const Register = () => {
@@ -65,12 +67,12 @@ const handleRegister = async () => {
     localStorage.setItem('accessToken', JSON.stringify(result.data.token));
     localStorage.setItem('typeToken', JSON.stringify(result.data.typeToken));
 
-    alert(`${result.message}`);
+    toast.success(`${result.message}`);
     router.push('/user/userprofile');
 
   } catch (error) {
     console.error("Lỗi khi gọi API:", error);
-    alert("Đăng ký thất bại. Vui lòng thử lại sau.");
+    toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
   }
 }
 
@@ -178,7 +180,7 @@ const handleRegister = async () => {
                 type="submit"
                 className="w-full bg-amber-400 text-black font-semibold py-3 px-4 rounded-md  hover:bg-amber-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
               >
-                GỬI MÃ XÁC NHẬN
+               Đăng ký
               </button>
 
               {/* Back Link */}
@@ -194,6 +196,7 @@ const handleRegister = async () => {
           </div>
         </div>
       </main>
+      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 };

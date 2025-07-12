@@ -104,8 +104,8 @@ const ProductList = ({changeFlag} : { changeFlag : boolean}) => {
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Mã SP</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Tên sản phẩm</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Giá</th>
-                <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Tồn kho</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Trạng thái</th>
+                <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Tồn kho</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Thao tác</th>
               </tr>
             </thead>

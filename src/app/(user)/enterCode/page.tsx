@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function EnterCodePage() {
     const [code, setCode] = useState('');
     const [isCodeVerified, setIsCodeVerified] = useState(false);
@@ -75,7 +76,7 @@ export default function EnterCodePage() {
             })
             const result = await res.json();
             if (result.status == true) {
-                alert("Đổi mật khẩu thành công!");
+                toast.success("Đổi mật khẩu thành công!");
                 window.location.href = "/login";
             }
             else {

@@ -1,4 +1,7 @@
 'use client'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import React, { useEffect, useState } from 'react';
 import userInterface from '../../compoments/userInterface';
 import Link from 'next/link';
@@ -28,7 +31,7 @@ useEffect(() => {
     const uu = JSON.parse(u);
     setUser(uu);
   }else{
-    alert('Vui lòng đăng nhập')
+    toast.error('Vui lòng đăng nhập')
   }
 }, []);
 
@@ -47,7 +50,7 @@ useEffect(()=>{
 
   const updateUserProfile = async () => {
     if(formData.name == '' || formData.email == '' || formData.phone == '' || formData.address == ''){
-      alert('Bạn vui lòng điền đẩy đủ thông tin');
+      toast.error('Bạn vui lòng điền đẩy đủ thông tin');
       return
     }
     const tokenLocal = localStorage.getItem('accessToken');
@@ -65,11 +68,17 @@ useEffect(()=>{
           address : formData.address,
         })
       });
-      const result = await res.json();
+     const result = await res.json();
 
-      localStorage.setItem('user',JSON.stringify(result.data.user));
+if (result.status === true) {
+  localStorage.setItem('user', JSON.stringify(result.data.user));
+  toast.success('Cập nhật thành công');
+} else {
+  toast.error(result.message || 'Cập nhật thất bại');
+}
+
     }else{
-      alert('Bạn chưa đăng nhập');
+      toast.error('Bạn chưa đăng nhập');
     }      
   }
 
@@ -297,7 +306,7 @@ useEffect(()=>{
                   <input
                     type="email"
                     name="email"
-                    value={formData.name}
+                    value={formData.email}
                     onChange={handleInputChange}
                     className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -339,6 +348,7 @@ useEffect(()=>{
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }

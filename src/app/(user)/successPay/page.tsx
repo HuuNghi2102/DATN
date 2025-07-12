@@ -1,4 +1,6 @@
 'use client'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -15,7 +17,7 @@ const PaymentSuccess = () => {
     if(id){
       fetchOrder();
     }else{
-      alert('Đơn hàng không tồn tại!')
+      toast.error('Đơn hàng không tồn tại!');
       router.push('/history-order');
     }
     
@@ -38,11 +40,11 @@ const PaymentSuccess = () => {
         setOrder(result.data.order);
         setIsLoading(false);
       }else{
-        alert('Đơn hàng không tồn tại!')
+        toast.error('Đơn hàng không tồn tại!')
         router.push('/history-order');
       }
     }else{
-      alert('Vui lòng đăng nhập!')
+      toast.error('Vui lòng đăng nhập!')
       router.push('/login');
     }
   }

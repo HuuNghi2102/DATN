@@ -1,4 +1,7 @@
 'use client';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import React, { useEffect, useState } from 'react';
 import userInterface from '@/app/(user)/compoments/userInterface';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -63,8 +66,7 @@ export default function UserProfile() {
                         setviewedProducts(result.data.products);
                         console.log(result);
                     }else{
-                        alert('Lấy sản phẩm không thành công');
-                        
+                        toast.error('Lấy sản phẩm không thành công');
                     }
                     setIsLoading(false)
                     
@@ -74,7 +76,7 @@ export default function UserProfile() {
             };
             fetchProducts();
         } else {
-            alert('Vui lòng đăng nhập');
+            toast.error('Vui lòng đăng nhập');
         }
     }, [reload]);
 
@@ -93,8 +95,6 @@ export default function UserProfile() {
     const typeToken = localStorage.getItem('typeToken');
     const whistList = localStorage.getItem('whislist');
     if(user && accessToken && typeToken){
-      console.log('accessToken:',JSON.parse(accessToken));
-      console.log('typeToken:',JSON.parse(typeToken));
       const resAddWhisList = await fetch(`https://huunghi.id.vn/api/whislist/addWhislist`,{
         method : "POST",
         headers : {
@@ -112,9 +112,9 @@ export default function UserProfile() {
       if(resAddWhisList.ok){
         const result = await resAddWhisList.json();
         console.log(result)
-        alert('Thêm sản phẩm vào danh sách thành công');
+        toast.success('Thêm sản phẩm vào danh sách thành công');
       }else{
-        alert('Thêm sản phẩm vào danh sách thất bại');
+        toast.error('Thêm sản phẩm vào danh sách thất bại');
       }
     }else{
       if(whistList){
@@ -136,16 +136,43 @@ export default function UserProfile() {
       }else{
         localStorage.setItem('whislist',JSON.stringify([newObj]));
       }
-      alert('Thêm sản phẩm vào danh sách thành công');
+      toast.success('Thêm sản phẩm vào danh sách thành công');
     }
   }
-
-    const clearViewedProducts = () => {
-        if (confirm('Bạn có chắc muốn xóa tất cả sản phẩm đã xem?')) {
-            // Functionality to be implemented
-            console.log('Clear all viewed products');
+const clearViewedProducts = () => {
+    toast.info(
+        <div className="text-center p-2">
+            <p className="text-sm text-gray-700 font-medium">
+                Bạn có chắc muốn <span className="text-red-500 font-semibold">xóa tất cả</span> sản phẩm đã xem?
+            </p>
+            <div className="mt-3 flex justify-center gap-2">
+                <button
+                    onClick={() => {
+                        setviewedProducts([]); // clear state
+                        localStorage.removeItem('viewedProducts');
+                        toast.dismiss(); // đóng toast
+                        toast.success('Đã xóa tất cả sản phẩm đã xem');
+                    }}
+                    className="px-4 py-1 bg-red-500 hover:bg-red-600 text-white rounded shadow-sm text-sm transition-colors"
+                >
+                    Đồng ý
+                </button>
+                <button
+                    onClick={() => toast.dismiss()}
+                    className="px-4 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded shadow-sm text-sm transition-colors"
+                >
+                    Hủy
+                </button>
+            </div>
+        </div>,
+        {
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
         }
-    };
+    );
+};
+
 
     const removeViewedProduct = (productId: string | number) => {
         // Functionality to be implemented
@@ -423,6 +450,8 @@ export default function UserProfile() {
                     </div>
                 </div>
             </div>
+            <ToastContainer position="top-center" autoClose={3000} />
+
         </div>
     );
 }

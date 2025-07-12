@@ -108,7 +108,7 @@ export default function ProductForm({ product, categories, typeToken, accessToke
         <section className="bg-white shadow rounded-lg overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                 <h2 className="text-lg font-semibold">Thông tin cơ bản</h2>
-                {formData.trang_thai == 1 ?
+                {product.trang_thai == 1 ?
                     <div className="inline-flex items-center px-3 py-1 text-sm font-medium bg-emerald-100 text-emerald-800 rounded">
                         <i className="fas fa-circle text-[0.5rem] mr-1"></i>
                         Đang bán

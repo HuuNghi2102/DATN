@@ -1,4 +1,7 @@
 'use client'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import React, { useEffect, useState, useRef } from 'react';
 import userInterface from '../../compoments/userInterface';
 import Link from 'next/link';
@@ -37,7 +40,7 @@ export default function UserProfile() {
         setAvatarPreview(uu.avatar_user);
       }
     } else {
-      alert('Vui lòng đăng nhập');
+      toast.info('Vui lòng đăng nhập');
     }
   }, []);
 
@@ -74,7 +77,7 @@ export default function UserProfile() {
 
   const updateUserProfile = async () => {
     if (formData.name === '' || formData.email === '' || formData.phone === '' || formData.address === '') {
-      alert('Bạn vui lòng điền đầy đủ thông tin');
+      toast.warn('Bạn vui lòng điền đầy đủ thông tin');
       return;
     }
     
@@ -104,16 +107,16 @@ export default function UserProfile() {
           localStorage.setItem('user', JSON.stringify(result.data.user));
           setUser(result.data.user);
           setIsEditing(false);
-          alert('Cập nhật thông tin thành công!');
+          toast.success('Cập nhật thông tin thành công!');
         } else {
-          alert(result.message || 'Có lỗi xảy ra khi cập nhật thông tin');
+          toast.error(result.message || 'Có lỗi xảy ra khi cập nhật thông tin');
         }
       } else {
-        alert('Bạn chưa đăng nhập');
+        toast.error('Bạn chưa đăng nhập');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Có lỗi xảy ra khi cập nhật thông tin');
+      toast.error('Có lỗi xảy ra khi cập nhật thông tin');
     } finally {
       setIsLoading(false);
     }
@@ -149,7 +152,7 @@ export default function UserProfile() {
       <div className="bg-white border-b px-4 md:px-40 py-3 shadow-sm">
         <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
-            <span><a href="/" className="hover:text-blue-600">Trang chủ</a></span> / <span className="font-medium text-gray-800">Tài khoản</span>
+            <span><Link href="/" className="hover:text-blue-600">Trang chủ</Link></span> / <span className="font-medium text-gray-800">Tài khoản</span>
           </nav>
         </div>
       </div>
@@ -571,6 +574,19 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
+      <ToastContainer
+  position="top-center"
+  autoClose={3000}
+  hideProgressBar={false}
+  newestOnTop={false}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="light"
+/>
+
     </div>
   );
 }

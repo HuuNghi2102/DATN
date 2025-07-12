@@ -4,18 +4,20 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import {
   FaTachometerAlt, FaBoxOpen, FaTags, FaUsers,
-  FaShoppingBag, FaChartPie, FaCog, FaBars, FaStar, FaComment, FaImage, FaTicketAlt, FaUsersCog,FaCircle,FaBlog
+  FaShoppingBag, FaChartPie, FaCog, FaBars, FaStar, FaComment, FaImage, FaTicketAlt, FaUsersCog, FaCircle, FaBlog
 } from 'react-icons/fa';
+import { FaSignOutAlt } from 'react-icons/fa';
+import { toast } from "react-toastify";
 
 
 interface SidebarProps {
   className?: string;
 }
 
-interface sideBar{
+interface sideBar {
   icon: React.ReactElement;
   label: string;
-  slug : string;
+  slug: string;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ className }) => {
@@ -37,20 +39,20 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   ]
 
   const sideBarShipper = [
-            { icon: <FaTachometerAlt />, label: 'Dashboard' , slug : '/admin'},
-            { icon: <FaShoppingBag />, label: 'Đơn hàng' , slug : '/admin/shipper/'},
-            { icon: <FaChartPie />, label: 'Báo cáo' , slug : '/admin'},
-          ]
-  
+    { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin' },
+    { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/shipper/' },
+    { icon: <FaChartPie />, label: 'Báo cáo', slug: '/admin' },
+  ]
+
   const sideBarBlogger = [
-            { icon: <FaTachometerAlt />, label: 'Dashboard' , slug : '/admin'},
-            { icon: <FaBoxOpen />, label: 'Sản phẩm' , slug : '/admin/products'},
-            { icon: <FaTags />, label: 'Danh mục' , slug : '/admin'},
-            { icon: <FaUsers />, label: 'Khách hàng' , slug : '/admin/users'},
-            { icon: <FaShoppingBag />, label: 'Đơn hàng' , slug : '/admin/orders/'},
-            { icon: <FaChartPie />, label: 'Báo cáo' , slug : '/admin'},
-            { icon: <FaCog />, label: 'Cài đặt' ,slug : '/admin' },
-          ]
+    { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin' },
+    { icon: <FaBoxOpen />, label: 'Sản phẩm', slug: '/admin/products' },
+    { icon: <FaTags />, label: 'Danh mục', slug: '/admin' },
+    { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/users' },
+    { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders/' },
+    { icon: <FaChartPie />, label: 'Báo cáo', slug: '/admin' },
+    { icon: <FaCog />, label: 'Cài đặt', slug: '/admin' },
+  ]
 
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -59,34 +61,66 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   const defaultData = async () => {
 
-      const accessTokenLocal = localStorage.getItem('accessToken');
-      const typeTokenLocal = localStorage.getItem('typeToken');
-      const userLocal = localStorage.getItem('user');
+    const accessTokenLocal = localStorage.getItem('accessToken');
+    const typeTokenLocal = localStorage.getItem('typeToken');
+    const userLocal = localStorage.getItem('user');
 
-      if (accessTokenLocal && typeTokenLocal && userLocal){
+    if (accessTokenLocal && typeTokenLocal && userLocal) {
 
-        const user = JSON.parse(userLocal);
+      const user = JSON.parse(userLocal);
 
-        if (user.id_vai_tro == 1 || user.id_vai_tro == 3 || user.id_vai_tro == 4 ) {
+      if (user.id_vai_tro == 1 || user.id_vai_tro == 3 || user.id_vai_tro == 4) {
 
-          if(user.id_vai_tro == 1){
-            setSelectedSideBar(sideBarAdmin)
-          }else if(user.id_vai_tro == 3){
-            setSelectedSideBar(sideBarShipper)
-          }else{
-            setSelectedSideBar(sideBarBlogger)
-          }
-        }else{
-          router.push('/user/userprofile');
+        if (user.id_vai_tro == 1) {
+          setSelectedSideBar(sideBarAdmin)
+        } else if (user.id_vai_tro == 3) {
+          setSelectedSideBar(sideBarShipper)
+        } else {
+          setSelectedSideBar(sideBarBlogger)
         }
-      }else{
-        router.push('/user/login');
+      } else {
+        router.push('/user/userprofile');
       }
+    } else {
+      router.push('/login');
+    }
   }
+
+  const handleLogout = async() => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const typeToken = localStorage.getItem("typeToken");
+
+      if (accessToken && typeToken) {
+        const parseaccessToken = JSON.parse(accessToken);
+        const parsetypeToken = JSON.parse(typeToken);
+        console.log(parseaccessToken);
+        console.log(parsetypeToken);
+        const response = await fetch("https://huunghi.id.vn/api/user/logout", {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `${parsetypeToken} ${parseaccessToken}`,
+          }
+        });
+        if (response.ok) {
+          localStorage.removeItem("user");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("typeToken");
+          localStorage.removeItem("cart");
+          router.push("/login");
+        } else {
+          toast.error('Không thể đăng xuất');
+        }
+      }
+    } catch (error) {
+      console.log('Lỗi: ', error);
+    }
+  };
 
   useEffect(() => {
     defaultData();
-  },[])
+  }, [])
 
   console.log(selectedSideBar);
 
@@ -126,10 +160,18 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               <div className="mr-3 w-5 text-center">{item.icon}</div>
               <span>{item.label}</span>
             </Link>
+
           ))}
+          <button
+            onClick={handleLogout}
+            className="nav-item flex items-center px-3 py-2 rounded text-red-700 mb-1 hover:bg-indigo-500 hover:text-white transition-colors"
+          >
+            <FaSignOutAlt className="mr-3 w-5 text-center" /> Đăng xuất
+          </button>
         </nav>
 
         <div className="user-profile mt-auto pt-4 border-t border-black flex items-center">
+
           <div className="user-avatar w-9 h-9 rounded-full bg-black mr-3 overflow-hidden">
             <img
               src="https://randomuser.me/api/portraits/women/45.jpg"
@@ -144,6 +186,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             </div>
           </Link>
         </div>
+
       </aside>
 
       {/* Overlay on Mobile */}

@@ -170,13 +170,13 @@ const OrderManager = () => {
     
     const newId = `#DH${new Date().getFullYear()}${Math.floor(10000 + Math.random() * 90000)}`;
     
-    setOrders([...orders, { 
-      ...newOrder, 
-      id: newId, 
-      date: new Date().toISOString().slice(0, 10), 
-      products: productArray, 
-      status: 'Chờ xác nhận' 
-    }]);
+    // setOrders([...orders, { 
+    //   ...newOrder, 
+    //   id: newId, 
+    //   date: new Date().toISOString().slice(0, 10), 
+    //   products: productArray, 
+    //   status: 'Chờ xác nhận' 
+    // }]);
     
     setNewOrder({ customer: '', phone: '', products: '', total: '' });
     setShowForm(false);
@@ -199,6 +199,7 @@ const OrderManager = () => {
 
   const returStatus = (status:string) => {
     switch (status) {
+      case '': return `Tất cả đơn hàng`;
       case 'cho_xac_nhan': return `Chờ xác nhận`;
       case 'chu_y': return `Chú ý`;
       case 'dang_chuan_bi_hang': return `Đang chuẩn bị hàng`;
@@ -410,29 +411,48 @@ const OrderManager = () => {
 
         {/* Status Tabs */}
         <div className="mb-6">
-          <div className="flex overflow-x-auto pb-2">
-            <div className="flex space-x-1">
+          <div className="w-full overflow-x-auto pb-2">
+            <div className="flex">
               {statusTabs.map((tab) => {
                 return (
                   <button
                     key={tab.status}
                     onClick={() => {setActiveTab(tab.codeStatus);setCurrentPage(1)}}
-                    className={`flex items-center px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors ${
+                    className={`flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors min-w-fit mx-0.5 ${
                       activeTab === tab.codeStatus
                         ? 'bg-indigo-600 text-white shadow-md' 
                         : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
                     }`}
                   >
-                    <i className={`fas fa-${tab.icon} mr-2`}></i>
-                    {tab.status}
-                    {tab.totalOrder > 0 && (
-                      <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                        activeTab === tab.status 
-                          ? 'bg-white text-indigo-600' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {tab.totalOrder}
-                      </span>
+                    {/* Khi không active - chỉ hiện icon + số lượng */}
+                    {activeTab !== tab.codeStatus && (
+                      <div className="flex items-center justify-between w-full px-3">
+                        <span className="flex-1"></span> {/* Spacer bên trái */}
+                        <div className="flex items-center gap-x-2">
+                          <i className={`fas fa-${tab.icon}`}></i>
+                          {tab.totalOrder > 0 && (
+                            <span className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full text-xs">
+                              {tab.totalOrder}
+                            </span>
+                          )}
+                        </div>
+                        <span className="flex-1"></span> {/* Spacer bên phải */}
+                      </div>
+                    )}
+
+                    {/* Khi active - hiện đầy đủ icon + tên + số lượng */}
+                    {activeTab === tab.codeStatus && (
+                      <div className="flex items-center justify-between w-full px-3">
+                        <i className={`fas fa-${tab.icon}`}></i>
+                        <span className="truncate max-w-[100px] mx-2 text-center">
+                          {returStatus(tab.status)}
+                        </span>
+                        {tab.totalOrder > 0 && (
+                          <span className="bg-white text-indigo-600 px-1.5 py-0.5 rounded-full text-xs">
+                            {tab.totalOrder}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </button>
                 );

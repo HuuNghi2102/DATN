@@ -1,6 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AccountPage() {
     const [activeTab, setActiveTab] = useState('address');
@@ -58,8 +60,11 @@ export default function AccountPage() {
                 ...addr,
                 isDefault: addr.id_dia_chi_giao_hang === id,
             }))
+            
         );
         setSelectedAddressId(id);
+        toast.success('Đã đặt làm địa chỉ mặc định!');
+
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,13 +126,19 @@ export default function AccountPage() {
                     });
                     const updatedResult = await res.json();
                     setAddresses(updatedResult.data.address);
+                    toast.success('Xóa địa chỉ thành công!');
+
                 }
             } catch (error) {
                 console.error('Error deleting address:', error);
+                toast.error('Xóa địa chỉ thất bại!');
             }
         } else {
-            alert('Bạn vui lòng đăng nhập để tiếp tục!');
-            window.location.href = '/login';
+           toast.error('Bạn vui lòng đăng nhập để tiếp tục!');
+setTimeout(() => {
+    window.location.href = '/login';
+}, 1000);
+
         }
     };
 
@@ -206,12 +217,14 @@ export default function AccountPage() {
                         dia_chi_nguoi_nhan: '',
                     });
                     setIsEditing(false);
+                    toast.success(isEditing ? 'Cập nhật địa chỉ thành công!' : 'Thêm địa chỉ mới thành công!');
                 }
             } catch (error) {
                 console.error('Error saving address:', error);
+                toast.error('Có lỗi xảy ra, vui lòng thử lại sau!');
             }
         } else {
-            alert('Bạn vui lòng đăng nhập để tiếp tục!');
+            toast.error('Bạn vui lòng đăng nhập để tiếp tục!');
             window.location.href = '/login';
         }
     };
@@ -434,6 +447,8 @@ export default function AccountPage() {
                     </div>
                 </div>
             </div>
+            <ToastContainer position="top-center" autoClose={3000} />
+
         </div>
     );
 }
