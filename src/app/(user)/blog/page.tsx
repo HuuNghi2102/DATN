@@ -60,7 +60,7 @@ const MainContent = () => {
           <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (

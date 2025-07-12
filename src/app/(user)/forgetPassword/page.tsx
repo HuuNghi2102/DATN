@@ -1,4 +1,6 @@
 'use client'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState } from 'react';
 
 export default function ForgotPasswordPage() {
@@ -30,7 +32,7 @@ export default function ForgotPasswordPage() {
     }
 
     localStorage.setItem('email',JSON.stringify(results.email));
-    alert(results.message);
+    toast.success(results.message);
     window.location.href = 'enterCode';
   }
 

@@ -1,4 +1,6 @@
 'use client';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useState } from 'react';
 import userInterface from '../../compoments/userInterface';
 import Link from 'next/link';
@@ -75,7 +77,7 @@ export default function ChangePassword() {
         passConfirm :  '',
       })
       localStorage.setItem('accessToken',JSON.stringify(result.data.token));
-      alert(result.message);
+      toast.success(result.message);
     }
   }
 
@@ -90,7 +92,7 @@ export default function ChangePassword() {
       setAccessToken(JSON.parse(tokenLocal));
       setTypeToken(JSON.parse(typeTokenLocal));
     }else{
-      alert('Bạn vui lòng đăng nhập!');
+      toast.error('Bạn vui lòng đăng nhập!');
       window.location.href = '/login'
     }
   }, []);
@@ -205,6 +207,8 @@ export default function ChangePassword() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
+
     </div>
   );
 }

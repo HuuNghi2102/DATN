@@ -1,47 +1,197 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import { ToastContainer, toast } from 'react-toastify';
+interface userInterface{
+    id_user? : number,
+    ten_user? : string,
+    anh_dai_dien_user? : string,
+    email_user? : string,
+    email_verified_at? : string,
+    mat_khau_user? : string,
+    dia_chi_user? : string,
+    sdt_user? : string,
+    ma_otp? : number,
+    trang_thai? : number,
+    id_vai_tro? : number,
+    remember_token? : string,
+    created_at? : string,
+    updated_at? : string,
+    deleted_at? : string,
+    expires_at? : string,
+}
 
 const AccountSettingsPage = () => {
-  const [avatarPreview, setAvatarPreview] = useState('https://randomuser.me/api/portraits/women/45.jpg');
+  
+  const [avatarPreview, setAvatarPreview] = useState<string>('https://tse2.mm.bing.net/th/id/OIP.HAV08yo3UOY-ot3zO_bwewAAAA?pid=Api&P=0&h=220');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
-  const [profileData, setProfileData] = useState({
-    name: 'Nguyễn Thị An',
-    email: 'nguyenthian@example.com',
-    phone: '0987654321',
-    address: '123 Đường ABC, Quận 1, TP.HCM',
-    role: 'Khách hàng',
-    joinDate: '15/02/2023',
-    status: 'Hoạt động',
-    verified: true,
-    lastLogin: 'Hôm nay, 14:30',
-    loyaltyPoints: 1250,
-    orderCount: 12,
-    membershipLevel: 'Vàng'
-  });
+  const [profileData, setProfileData] = useState<userInterface | null>(null);
+  const [userCurrent, setUserCurrent] = useState<userInterface | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [typeToken, setTypeToken] = useState('');
+  const [accessToken, setAccessToken] = useState('');
+
+  const [errPassword,setErrPassword] = useState({
+    passOld : '',
+    passNew : '',
+    passConfirm : '',
+  })
+  const [errProfile,setErrProfile] = useState({
+    ten_user : '',
+    sdt_user : '',
+    dia_chi_user : '',
+  })
+  const [formPassword,setFormPassword] = useState({
+    passOld : '',
+    passNew : '',
+    passConfirm : '',
+  })
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatarPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+    const data = new FormData();
+    data.append('image',file as File);
+    data.append('_method', 'PATCH');
+
+    const resChangeAvatar = await fetch('https://huunghi.id.vn/api/user/changeAvatar',{
+      method: "POST",
+      headers: {
+        'Authorization': `${typeToken} ${accessToken}`
+      },
+      body: data
+    });
+
+    if(resChangeAvatar.ok){
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setAvatarPreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+      const result = await resChangeAvatar.json();
+      const newUser =  result.data.user;
+      localStorage.setItem('user', JSON.stringify(newUser));
+      alert('Cập nhật ảnh đại diện thành công');
+    }else{
+      alert('Cập nhật ảnh đại diện không thành công');
     }
   };
 
-  const handleProfileSubmit = (e: React.FormEvent) => {
+  const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+        setIsLoading(true);
+        try {
+          const tokenLocal = localStorage.getItem('accessToken');
+          if (tokenLocal) {
+            const token = JSON.parse(tokenLocal);
+            const formDataToSend = new FormData();
+            formDataToSend.append('name', profileData?.ten_user ? profileData?.ten_user : '');
+            formDataToSend.append('phone', profileData?.sdt_user ? profileData?.sdt_user : '');
+            formDataToSend.append('address', profileData?.dia_chi_user ? profileData?.dia_chi_user : '');
+            // if (avatarPreview) {
+            //   formDataToSend.append('image', avatarPreview);
+            // }
+    
+            const res = await fetch('https://huunghi.id.vn/api/user/changeImformationUser', {
+              method: "POST",
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              body: formDataToSend
+            });
+            const result = await res.json();
+    
+            if (result.status == true) {
+              localStorage.setItem('user', JSON.stringify(result.data.user));
+              setProfileData(result.data.user);
+              toast.success('Cập nhật thông tin thành công!');
+            } else {
+              
+              if(result.errors){
+                const err = result.errors;
+                setErrProfile({
+                  ten_user : err?.name ? err?.name[0] : '',
+                  sdt_user : err?.phone ? err?.phone[0] : '',
+                  dia_chi_user : err?.address ? err?.address[0] : '',
+                })
+                            setProfileData((prev) => ({
+              ...prev,
+              ten_user : userCurrent?.ten_user ? userCurrent?.ten_user : '',
+              sdt_user : userCurrent?.sdt_user,
+              dia_chi_user : userCurrent?.dia_chi_user,
+            }));
+                return;
+              }
+              toast.error(result.message || 'Có lỗi xảy ra khi cập nhật thông tin');
+            }
+          } else {
+            toast.error('Bạn chưa đăng nhập');
+          }
+        } catch (error) {
+          console.error('Error updating profile:', error);
+          toast.error('Có lỗi xảy ra khi cập nhật thông tin');
+        } finally {
+          setIsLoading(false);
+        }
     setIsEditingProfile(false);
     alert('Thông tin cá nhân đã được cập nhật!');
   };
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsEditingPassword(false);
-    alert('Mật khẩu đã được thay đổi thành công!');
+    console.log('ok');
+    const res = await fetch('https://huunghi.id.vn/api/user/changePassword',{
+          method : "POST",
+          headers : {
+            "Content-Type" : "application/json",
+            "Authorization" : `${typeToken} ${accessToken}`
+          },
+          body : JSON.stringify({
+            password : formPassword.passOld,
+            newPassword : formPassword.passNew,
+            confirmPassword : formPassword.passConfirm,
+          })
+        })
+        const result = await res.json();
+    
+        if(result.status == false){
+          if(result.errors){
+            const err = result.errors
+            setErrPassword({
+              passOld : err.password  ? err?.password[0] : '',
+              passNew : err.newPassword ?  err?.newPassword[0] : '' ,
+              passConfirm : err.confirmPassword ? err?.confirmPassword[0] : '',
+            })
+            return;
+          }
+          setErrPassword({
+            passOld :  '',
+            passNew :  '' ,
+            passConfirm :  '',
+          })
+          toast.error(result.message);
+          return;
+        }else{
+          setErrPassword({
+            passOld :  '',
+            passNew : '' ,  
+            passConfirm :  '',
+          })
+          setFormPassword({
+            passOld :  '',
+            passNew : '' ,
+            passConfirm :  '',
+          })
+          localStorage.setItem('accessToken',JSON.stringify(result.data.token));
+          setAccessToken(result.data.token);
+          toast.success(result.message);
+          setIsEditingPassword(false);
+        }
   };
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,12 +203,39 @@ const AccountSettingsPage = () => {
   };
 
   const getRoleIcon = () => {
-    switch(profileData.role) {
-      case 'Admin': return <i className="fas fa-crown text-purple-500"></i>;
-      case 'Shipper': return <i className="fas fa-motorcycle text-blue-500"></i>;
+    switch(profileData?.id_vai_tro) {
+      case 1: return <i className="fas fa-crown text-purple-500"></i>;
+      case 3: return <i className="fas fa-motorcycle text-blue-500"></i>;
       default: return <i className="fas fa-user text-green-500"></i>;
     }
   };
+
+  const changeValue = (e:any) => {
+    const {name , value} = e.target;
+    setFormPassword((element) => ({
+      ...element,
+      [name] : value
+    }))
+  }
+
+  const fetchDefaultData = () => {
+    const accessTokenLocal = localStorage.getItem('accessToken');
+    const typeTokenLocal = localStorage.getItem('typeToken');
+    const userLocal = localStorage.getItem('user');
+
+    if (accessTokenLocal && typeTokenLocal && userLocal) {
+      const user = JSON.parse(userLocal);
+      setAccessToken(JSON.parse(accessTokenLocal));
+      setTypeToken(JSON.parse(typeTokenLocal));
+      setProfileData(user);
+      setUserCurrent(user);
+      setAvatarPreview(user.anh_dai_dien_user ? `https://huunghi.id.vn/storage/avatars/${user.anh_dai_dien_user}` : 'https://tse2.mm.bing.net/th/id/OIP.HAV08yo3UOY-ot3zO_bwewAAAA?pid=Api&P=0&h=220');
+    }
+  }
+
+  useEffect(() => {
+    fetchDefaultData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -91,87 +268,48 @@ const AccountSettingsPage = () => {
                     <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
                   </label>
                 </div>
-                <h2 className="text-lg font-semibold text-gray-800">{profileData.name}</h2>
-                <p className="text-gray-500 text-sm">{profileData.email}</p>
-                
+                <h2 className="text-lg font-semibold text-gray-800">{userCurrent?.ten_user}</h2>
+                <p className="text-gray-500 text-sm">{userCurrent?.email_user}</p>
+                {/* <p className="text-gray-500 text-sm">{userCurrent?.sdt_user}</p>
+                <p className="text-gray-500 text-sm">{userCurrent?.dia_chi_user}</p> */}
+
                 <div className="mt-3 flex items-center">
                   <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                    profileData.role === 'Admin' ? 'bg-purple-100 text-purple-800' :
-                    profileData.role === 'Shipper' ? 'bg-blue-100 text-blue-800' :
+                    userCurrent?.id_vai_tro === 1 ? 'bg-purple-100 text-purple-800' :
+                    userCurrent?.id_vai_tro === 3 ? 'bg-blue-100 text-blue-800' :
                     'bg-green-100 text-green-800'
                   }`}>
-                    {getRoleIcon()} {profileData.role}
+                    {getRoleIcon()} {userCurrent?.id_vai_tro === 1 ? 'Admin' : userCurrent?.id_vai_tro === 2 ? 'Người dùng' : userCurrent?.id_vai_tro === 3 ? 'Shipper' : 'Blogger'}
                   </span>
-                  {profileData.verified && (
+                  {/* {profileData.verified && (
                     <span className="ml-2 text-green-500" title="Đã xác minh">
                       <i className="fas fa-check-circle"></i>
                     </span>
-                  )}
+                  )} */}
                 </div>
               </div>
 
               <div className="mt-6 space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Thành viên từ:</span>
-                  <span className="text-gray-700 font-medium">{profileData.joinDate}</span>
+                  <span className="text-gray-700 font-medium">{new Date(profileData?.created_at ? profileData.created_at : '').toLocaleDateString('vi-VN')}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Trạng thái:</span>
                   <span className={`font-medium ${
-                    profileData.status === 'Hoạt động' ? 'text-green-600' : 'text-red-600'
+                    profileData?.trang_thai === 1 ? 'text-green-600' : 'text-red-600'
                   }`}>
-                    {profileData.status}
+                    {profileData?.trang_thai === 1 ? 'Hoạt động' : 'Ngừng hoạt động'}
                   </span>
                 </div>
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <span className="text-gray-500">Đăng nhập cuối:</span>
                   <span className="text-gray-700 font-medium">{profileData.lastLogin}</span>
-                </div>
+                </div> */}
               </div>
             </div>
 
-            {/* Account Stats */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-md font-semibold text-gray-800 mb-4">Thống kê tài khoản</h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="p-2 rounded-full bg-blue-50 text-blue-500 mr-3">
-                      <i className="fas fa-shopping-bag text-sm"></i>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Đơn hàng</p>
-                      <p className="font-medium text-gray-800">{profileData.orderCount}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="p-2 rounded-full bg-yellow-50 text-yellow-500 mr-3">
-                      <i className="fas fa-coins text-sm"></i>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Điểm tích lũy</p>
-                      <p className="font-medium text-gray-800">{profileData.loyaltyPoints}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="p-2 rounded-full bg-amber-50 text-amber-500 mr-3">
-                      <i className="fas fa-medal text-sm"></i>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-500">Hạng thành viên</p>
-                      <p className="font-medium text-gray-800">{profileData.membershipLevel}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
 
           {/* Main Content */}
@@ -207,41 +345,46 @@ const AccountSettingsPage = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-2">Họ và tên</label>
                       <input 
                         type="text" 
-                        name="name"
-                        value={profileData.name}
+                        name="ten_user"
+                        value={profileData?.ten_user}
                         onChange={handleProfileChange}
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500" 
                       />
+                      {errProfile.ten_user && <p className="text-xs text-red-500 mt-2">{errProfile.ten_user}*</p>}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                      <input 
+                      <input
+                        disabled
                         type="email" 
-                        name="email"
-                        value={profileData.email}
+                        name="email_user"
+                        value={profileData?.email_user}
                         onChange={handleProfileChange}
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500" 
                       />
+                      
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
                       <input 
                         type="tel" 
-                        name="phone"
-                        value={profileData.phone}
+                        name="sdt_user"
+                        value={profileData?.sdt_user}
                         onChange={handleProfileChange}
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500" 
                       />
+                      {errProfile.sdt_user && <p className="text-xs text-red-500 mt-2">{errProfile.sdt_user}*</p>}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Địa chỉ</label>
                       <input 
                         type="text" 
-                        name="address"
-                        value={profileData.address}
+                        name="dia_chi_user"
+                        value={profileData?.dia_chi_user}
                         onChange={handleProfileChange}
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500" 
                       />
+                      {errProfile.dia_chi_user && <p className="text-xs text-red-500 mt-2">{errProfile.dia_chi_user}*</p>}
                     </div>
                   </div>
                   <div className="flex justify-end gap-3 mt-6">
@@ -265,19 +408,19 @@ const AccountSettingsPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-500 mb-1">Họ và tên</label>
-                      <p className="text-gray-800 font-medium">{profileData.name}</p>
+                      <p className="text-gray-800 font-medium">{profileData?.ten_user}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-500 mb-1">Email</label>
-                      <p className="text-gray-800 font-medium">{profileData.email}</p>
+                      <p className="text-gray-800 font-medium">{profileData?.email_user}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-500 mb-1">Số điện thoại</label>
-                      <p className="text-gray-800 font-medium">{profileData.phone}</p>
+                      <p className="text-gray-800 font-medium">{profileData?.sdt_user}</p>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-500 mb-1">Địa chỉ</label>
-                      <p className="text-gray-800 font-medium">{profileData.address}</p>
+                      <p className="text-gray-800 font-medium">{profileData?.dia_chi_user}</p>
                     </div>
                   </div>
                 </div>
@@ -313,29 +456,41 @@ const AccountSettingsPage = () => {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Mật khẩu hiện tại</label>
-                      <input 
-                        type="password" 
+                      <input
+                        onChange={(e)=> changeValue(e)} 
+                        name='passOld'
+                        type="password"
+                        value={formPassword.passOld}
                         placeholder="Nhập mật khẩu hiện tại" 
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500" 
                       />
+                      {errPassword.passOld && <p className="text-xs text-red-500 mt-2">{errPassword.passOld}*</p>}
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Mật khẩu mới</label>
-                        <input 
-                          type="password" 
+                        <input
+                          onChange={(e)=> changeValue(e)} 
+                          name='passNew'
+                          type="password"
+                          value={formPassword.passNew}
                           placeholder="Nhập mật khẩu mới" 
                           className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500" 
                         />
-                        <p className="text-xs text-gray-500 mt-2">Tối thiểu 8 ký tự</p>
+                        {errPassword.passNew && <p className="text-xs text-red-500 mt-2">{errPassword.passNew}*</p>}
+                        
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Xác nhận mật khẩu</label>
-                        <input 
-                          type="password" 
+                        <input
+                          onChange={(e)=> changeValue(e)} 
+                          name='passConfirm'
+                          type="password"
+                          value={formPassword.passConfirm}
                           placeholder="Nhập lại mật khẩu mới" 
                           className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500" 
                         />
+                        {errPassword.passConfirm && <p className="text-xs text-red-500 mt-2">{errPassword.passConfirm}*</p>}
                       </div>
                     </div>
                   </div>

@@ -16,6 +16,38 @@ import SizeInterface from '../../../components/interface/sizeInterface';
 
 
 export default function ProductEditPage() {
+    const basicColors = [
+        { nameColor: 'Đỏ', codeColor: '#FF0000' },
+        { nameColor: 'Xanh lá cây', codeColor: '#00FF00' },
+        { nameColor: 'Xanh dương', codeColor: '#0000FF' },
+        { nameColor: 'Vàng', codeColor: '#FFFF00' },
+        { nameColor: 'Lục lam (Cyan)', codeColor: '#00FFFF' },
+        { nameColor: 'Tím đỏ (Magenta)', codeColor: '#FF00FF' },
+        { nameColor: 'Đen', codeColor: '#000000' },
+        { nameColor: 'Trắng', codeColor: '#FFFFFF' },
+        { nameColor: 'Xám', codeColor: '#808080' },
+        { nameColor: 'Cam', codeColor: '#FFA500' },
+        { nameColor: 'Hồng', codeColor: '#FFC0CB' },
+        { nameColor: 'Nâu', codeColor: '#A52A2A' },
+        { nameColor: 'Tím', codeColor: '#800080' },
+        { nameColor: 'Xanh lục nhạt (Lime)', codeColor: '#00FF00' },
+        { nameColor: 'Xanh biển đậm (Navy)', codeColor: '#000080' },
+        { nameColor: 'Xanh da trời', codeColor: '#87CEEB' },
+        { nameColor: 'Xanh ngọc', codeColor: '#40E0D0' },
+        { nameColor: 'Vàng kem (Beige)', codeColor: '#F5F5DC' },
+        { nameColor: 'Vàng nghệ (Gold)', codeColor: '#FFD700' },
+        { nameColor: 'Xanh rêu', codeColor: '#556B2F' },
+        { nameColor: 'Xanh lá mạ', codeColor: '#7CFC00' },
+        { nameColor: 'Xanh cổ vịt', codeColor: '#008080' },
+        { nameColor: 'Xanh pastel', codeColor: '#B0E0E6' },
+        { nameColor: 'Hồng pastel', codeColor: '#FFD1DC' },
+        { nameColor: 'Nâu đất', codeColor: '#8B4513' },
+        { nameColor: 'Đỏ đô', codeColor: '#800000' },
+        { nameColor: 'Xám bạc', codeColor: '#C0C0C0' },
+        { nameColor: 'Xám đậm', codeColor: '#505050' },
+        { nameColor: 'Hồng cánh sen', codeColor: '#FF69B4' },
+        { nameColor: 'Cam cháy', codeColor: '#FF4500' }
+    ];
     const params = useParams();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -152,6 +184,10 @@ export default function ProductEditPage() {
         fetchDefaultData();
     },[]);
 
+    const changeProduct = (newProduct: ProductInterFace) => {
+        setProduct(newProduct);
+    }
+
     console.log(categories);
 
     if (isLoading) {
@@ -174,33 +210,10 @@ export default function ProductEditPage() {
                 <HearderEdit />
                 <div className="space-y-6">
                     {product && categories &&  <ProductForm  product={product} categories={categories} typeToken={typeToken} accessToken={accessToken} />}
-                    {images && product && <ProductImages typeToken={typeToken} accessToken={accessToken} product={product} images={images}/> }
+                    {images && product && <ProductImages typeToken={typeToken} accessToken={accessToken} product={product} images={images} /> }
                     {variants && product && <InventoryManager variants={variants} sizes={sizes} product={product} typeToken={typeToken} accessToken={accessToken}/> }
-                    <AdvancedSettings />
-                    <div className="flex justify-between mt-8">
-                        <button
-                            type="button"
-                            className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-100"
-                        >
-                            <i className="fas fa-times mr-2"></i> Hủy bỏ
-                        </button>
+                    { product && <AdvancedSettings product={product} typeToken={typeToken} accessToken={accessToken} onChangeProduct={changeProduct} /> }
 
-                        <div className="flex gap-3">
-                            <button
-                                type="button"
-                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-100"
-                            >
-                                <i className="fas fa-eye mr-2"></i> Xem trước
-                            </button>
-                            <button
-                                type="submit"
-                                form="productForm"
-                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-700"
-                            >
-                                <i className="fas fa-save mr-2"></i> Lưu thay đổi
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </main>
         </div>

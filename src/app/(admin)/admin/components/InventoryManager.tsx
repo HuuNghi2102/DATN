@@ -7,33 +7,70 @@ import productInterface from './interface/productInterface';
 
 interface Props {
     variants: productVariant[],
-    sizes : sizeInterface[]
-    product : productInterface,
-    typeToken : string,
+    sizes: sizeInterface[]
+    product: productInterface,
+    typeToken: string,
     accessToken: string,
 }
 
-export default function InventoryManager({ variants: initialVariants,sizes,product,typeToken, accessToken}: Props) {
+export default function InventoryManager({ variants: initialVariants, sizes, product, typeToken, accessToken }: Props) {
+    const basicColors = [
+        { nameColor: 'Đỏ', codeColor: '#FF0000' },
+        { nameColor: 'Xanh lá cây', codeColor: '#00FF00' },
+        { nameColor: 'Xanh dương', codeColor: '#0000FF' },
+        { nameColor: 'Vàng', codeColor: '#FFFF00' },
+        { nameColor: 'Lục lam (Cyan)', codeColor: '#00FFFF' },
+        { nameColor: 'Tím đỏ (Magenta)', codeColor: '#FF00FF' },
+        { nameColor: 'Đen', codeColor: '#000000' },
+        { nameColor: 'Trắng', codeColor: '#FFFFFF' },
+        { nameColor: 'Xám', codeColor: '#808080' },
+        { nameColor: 'Cam', codeColor: '#FFA500' },
+        { nameColor: 'Hồng', codeColor: '#FFC0CB' },
+        { nameColor: 'Nâu', codeColor: '#A52A2A' },
+        { nameColor: 'Tím', codeColor: '#800080' },
+        { nameColor: 'Xanh lục nhạt (Lime)', codeColor: '#00FF00' },
+        { nameColor: 'Xanh biển đậm (Navy)', codeColor: '#000080' },
+        { nameColor: 'Xanh da trời', codeColor: '#87CEEB' },
+        { nameColor: 'Xanh ngọc', codeColor: '#40E0D0' },
+        { nameColor: 'Vàng kem (Beige)', codeColor: '#F5F5DC' },
+        { nameColor: 'Vàng nghệ (Gold)', codeColor: '#FFD700' },
+        { nameColor: 'Xanh rêu', codeColor: '#556B2F' },
+        { nameColor: 'Xanh lá mạ', codeColor: '#7CFC00' },
+        { nameColor: 'Xanh cổ vịt', codeColor: '#008080' },
+        { nameColor: 'Xanh pastel', codeColor: '#B0E0E6' },
+        { nameColor: 'Hồng pastel', codeColor: '#FFD1DC' },
+        { nameColor: 'Nâu đất', codeColor: '#8B4513' },
+        { nameColor: 'Đỏ đô', codeColor: '#800000' },
+        { nameColor: 'Xám bạc', codeColor: '#C0C0C0' },
+        { nameColor: 'Xám đậm', codeColor: '#505050' },
+        { nameColor: 'Hồng cánh sen', codeColor: '#FF69B4' },
+        { nameColor: 'Cam cháy', codeColor: '#FF4500' }
+    ];
     const [variants, setVariants] = useState<productVariant[]>(initialVariants);
     const [showForm, setShowForm] = useState(false);
-    const [currentVariant, setCurrentVariant] = useState<productVariant | null>( null);
-    const [listSize , setListSize] = useState<sizeInterface[]>(sizes);
+    const [currentVariant, setCurrentVariant] = useState<productVariant | null>(null);
+    const [listSize, setListSize] = useState<sizeInterface[]>(sizes);
     const [isEditing, setIsEditing] = useState(false);
 
     const handleAddNew = () => {
         setCurrentVariant({
-            id_san_pham_bien_the : 0,
-            id_san_pham : 0,
-            id_kich_thuoc :  1,
-            so_luong : 0,
-            ma_mau : '',
-            ten_mau : '',
-            created_at : '',
-            updated_at : '',
+            id_san_pham_bien_the: 0,
+            id_san_pham: 0,
+            id_kich_thuoc: 1,
+            so_luong: 0,
+            ma_mau: '',
+            ten_mau: '',
+            created_at: '',
+            updated_at: '',
         });
         setIsEditing(false);
         setShowForm(true);
     };
+
+    const handleChangeColorForm = (codeColor : string) => {
+        const color = basicColors.find((color) => color.codeColor === codeColor);
+        setCurrentVariant({...currentVariant!, ma_mau: color?.codeColor ? color?.codeColor : codeColor , ten_mau: color?.nameColor ? color?.nameColor : ''});
+    }
 
     const handleEdit = (variant: productVariant) => {
         setCurrentVariant(variant);
@@ -47,23 +84,23 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
             return;
         }
 
-        const resDeleteVariant = await fetch(`https://huunghi.id.vn/api/productVariant/deleteProductVariant/${idVariant}`,{
-                method : "DELETE",
-                headers : {
-                    "Content-Type" : "application/json",
-                    "Authorization" : `${typeToken} ${accessToken}`
-                }
-            })
-
-            const resultDeleteVariant = await  resDeleteVariant.json();
-
-            if(resultDeleteVariant.status == true){
-                alert('Xóa biển thể thành công');
-                setVariants(variants.filter((v,i) => v.id_san_pham_bien_the != idVariant));
-            }else{
-                alert('Xóa biến thể không thành công');
-                console.log(resultDeleteVariant);
+        const resDeleteVariant = await fetch(`https://huunghi.id.vn/api/productVariant/deleteProductVariant/${idVariant}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `${typeToken} ${accessToken}`
             }
+        })
+
+        const resultDeleteVariant = await resDeleteVariant.json();
+
+        if (resultDeleteVariant.status == true) {
+            alert('Xóa biển thể thành công');
+            setVariants(variants.filter((v, i) => v.id_san_pham_bien_the != idVariant));
+        } else {
+            alert('Xóa biến thể không thành công');
+            console.log(resultDeleteVariant);
+        }
     };
 
     const handleSave = async () => {
@@ -73,13 +110,13 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
             return;
         }
 
-        
+
 
         let flag = true;
 
         variants.forEach((v) => v.ma_mau == currentVariant.ma_mau && v.id_kich_thuoc == currentVariant.id_kich_thuoc ? flag = false : "");
 
-        if(flag != true){
+        if (flag != true) {
             alert('Biến thể đã tồn tại');
             return;
         }
@@ -87,63 +124,63 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
         if (isEditing) {
 
             // Update existing variant
-            const resUpdateVariant = await fetch(`https://huunghi.id.vn/api/productVariant/updateProductVariant/${currentVariant.id_san_pham_bien_the}`,{
-                method : "PUT",
-                headers : {
-                    "Content-Type" : "application/json",
-                    "Authorization" : `${typeToken} ${accessToken}`
+            const resUpdateVariant = await fetch(`https://huunghi.id.vn/api/productVariant/updateProductVariant/${currentVariant.id_san_pham_bien_the}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `${typeToken} ${accessToken}`
                 },
-                body : JSON.stringify({
-                    nameColor : currentVariant.ten_mau,
-                    color : currentVariant.ma_mau,
+                body: JSON.stringify({
+                    nameColor: currentVariant.ten_mau,
+                    color: currentVariant.ma_mau,
                     idSize: currentVariant.id_kich_thuoc,
-                    quantity : currentVariant.so_luong
+                    quantity: currentVariant.so_luong
                 })
             })
 
-            const resultUpdateVariant = await  resUpdateVariant.json();
+            const resultUpdateVariant = await resUpdateVariant.json();
 
-            if(resultUpdateVariant.status == true){
-                setVariants(variants.map(v => 
+            if (resultUpdateVariant.status == true) {
+                setVariants(variants.map(v =>
                     currentVariant.id_san_pham_bien_the === v.id_san_pham_bien_the
-                        ? currentVariant 
+                        ? currentVariant
                         : v
                 ));
                 alert('Cập nhật biển thể thành công');
-            }else{
+            } else {
                 alert('Cập nhật biển thể thành công');
                 console.log(resultUpdateVariant);
             }
-            
-            
-            
+
+
+
         } else {
             // Add new variant
-            const resAddVariant = await fetch(`https://huunghi.id.vn/api/productVariant/addProductVariant/${product.id_san_pham}`,{
-                method : "POST",
-                headers : {
-                    "Content-Type" : "application/json",
-                    "Authorization" : `${typeToken} ${accessToken}`
+            const resAddVariant = await fetch(`https://huunghi.id.vn/api/productVariant/addProductVariant/${product.id_san_pham}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `${typeToken} ${accessToken}`
                 },
-                body : JSON.stringify({
-                    nameColor : currentVariant.ten_mau,
-                    color : currentVariant.ma_mau,
+                body: JSON.stringify({
+                    nameColor: currentVariant.ten_mau,
+                    color: currentVariant.ma_mau,
                     idSize: currentVariant.id_kich_thuoc,
-                    quantity : currentVariant.so_luong
+                    quantity: currentVariant.so_luong
                 })
             })
 
-            const resultAddVariant = await  resAddVariant.json();
+            const resultAddVariant = await resAddVariant.json();
 
-            if(resultAddVariant.status == true){
+            if (resultAddVariant.status == true) {
                 const newVariant = resultAddVariant.data;
                 setVariants([...variants, newVariant]);
                 alert('Thêm biển thể thành công');
-            }else{
+            } else {
                 alert('Cập nhật biển thể thành công');
-                console.log( resultAddVariant);
+                console.log(resultAddVariant);
             }
-            
+
         }
 
         setShowForm(false);
@@ -172,33 +209,28 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
                     <FaBoxes className="text-indigo-500 mr-2" /> Quản lý tồn kho theo màu/size
                 </div>
 
-                
+
                 {/* Danh sách biến thể */}
                 <div className="space-y-4">
                     {variants.map((variant, index) => (
                         <div
-                            key={index} 
-                            className="relative border border-dashed border-gray-300 bg-gray-100 p-4 rounded grid grid-cols-1 md:grid-cols-4 gap-4"
+                            key={index}
+                            className="relative border border-dashed border-gray-300 bg-gray-100 p-4 rounded grid grid-cols-1 md:grid-cols-3 gap-4"
                         >
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Tên màu *</label>
-                                <input
-                                    type="text"
+                                <select
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                    value={variant.ten_mau}
-                                    readOnly
-                                    placeholder='vd: Đen'
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Mã màu *</label>
-                                <input
-                                    type="text"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                    value={variant.ma_mau}
-                                    readOnly
-                                    placeholder='vd: Đen'
-                                />
+                                    value={variant.id_kich_thuoc}
+                                    disabled
+                                >
+                                    <option
+                                        key={variant.id_san_pham_bien_the}
+                                        value={variant.ma_mau}
+                                    >
+                                        {variant.ten_mau}
+                                    </option>
+                                </select>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Kích thước *</label>
@@ -207,12 +239,12 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
                                     value={variant.id_kich_thuoc}
                                     disabled
                                 >
-                                    {sizes.map((s,i) => (
+                                    {sizes.map((s, i) => (
                                         <option
                                             // {s.id_kich_thuoc === variant.id_kich_thuoc ? 'selected' : ''}  
-                                            key={i} 
+                                            key={i}
                                             value={s.id_kich_thuoc}
-                                            >
+                                        >
                                             {s.ten_kich_thuoc}
                                         </option>
                                     ))}
@@ -253,9 +285,21 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
                         <h3 className="text-md font-medium mb-4 ">
                             <strong>{isEditing ? 'Sửa biến thể' : 'Thêm biến thể mới'}</strong>
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Tên màu *</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Kích thước *</label>
+                                <select
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    value={currentVariant.ma_mau}
+                                    required
+                                    onChange={(e) => handleChangeColorForm(e.target.value)}
+                                >
+                                    {basicColors.map((s, i) => (
+                                        <option key={i} value={s.codeColor}>{s.nameColor}</option>
+                                    ))}
+
+                                </select>
+                                {/* <label className="block text-sm font-medium text-gray-700 mb-1">Tên màu *</label>
                                 <input
                                     type="text"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -263,9 +307,9 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
                                     onChange={(e) => handleChange('ten_mau', e.target.value)}
                                     placeholder='vd: Đen'
                                     required
-                                />
+                                /> */}
                             </div>
-                            <div>
+                            {/* <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Mã màu *</label>
                                 <input
                                     type="text"
@@ -275,7 +319,7 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
                                     placeholder='vd: #000000'
                                     required
                                 />
-                            </div>
+                            </div> */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Kích thước *</label>
                                 <select
@@ -284,10 +328,10 @@ export default function InventoryManager({ variants: initialVariants,sizes,produ
                                     required
                                     onChange={(e) => handleChange('id_kich_thuoc', e.target.value)}
                                 >
-                                    {sizes.map((s,i) => (
+                                    {sizes.map((s, i) => (
                                         <option key={i} value={s.id_kich_thuoc}>{s.ten_kich_thuoc}</option>
                                     ))}
-                                    
+
                                 </select>
                             </div>
                             <div>

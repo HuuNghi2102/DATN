@@ -1,4 +1,6 @@
 'use client'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { CartItem } from '../../compoments/CartItem';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
@@ -64,9 +66,9 @@ const addWhistList = async (name: string, image: string, price: number, slug: st
         if (resAddWhisList.ok) {
             const result = await resAddWhisList.json();
             console.log(result)
-            alert('Thêm sản phẩm vào danh sách thành công');
+            toast.success('Thêm sản phẩm vào danh sách thành công');
         } else {
-            alert('Thêm sản phẩm vào danh sách thất bại');
+            toast.error('Thêm sản phẩm vào danh sách thất bại');
         }
     } else {
         if (whistList) {
@@ -235,7 +237,7 @@ const ProductPageDetail = () => {
             carts = JSON.parse(localCart);
         }
         if (productVariant.so_luong < 1) {
-            alert('Loại sản phẩm hiện này hiện đang hết hàng! Quý khách vui lòng quay lại sao');
+            toast.error('Loại sản phẩm hiện này hiện đang hết hàng! Quý khách vui lòng quay lại sau');
             return;
         }
 
@@ -266,8 +268,9 @@ const ProductPageDetail = () => {
 
                 if (res.ok) {
                     const result = await res.json();
+                   
                 } else {
-                    alert('Thêm vào giỏ hàng thất bại');
+                    toast.success('Thêm vào giỏ hàng thành công');
                 }
             } catch (error) {
                 console.log('Lỗi thêm cart => ', error);
@@ -291,7 +294,7 @@ const ProductPageDetail = () => {
         localStorage.setItem('cart', JSON.stringify(carts));
 
         if (isCart) {
-            alert('Thêm vào giỏ hàng thành công');
+            toast('Thêm vào giỏ hàng thành công');
             router.push('/cart');
         } else {
             router.push('/pay');
@@ -434,48 +437,54 @@ const ProductPageDetail = () => {
                         </div> */}
 
                         {/* Color Selection */}
-                        <div>
-                            <div className="flex items-center mb-3">
-                                <span className="text-sm font-medium mr-2">Màu sắc:</span>
-                                <span className="text-sm text-gray-600 capitalize">{selectedColor?.ten_mau}</span>
-                            </div>
-                            <div className="flex space-x-2">
-                                {colors.map((colorOption, index) => (
-                                    <button
-                                        key={colorOption ? colorOption.ten_mau : 'Đang tải...'}
-                                        onClick={() => { setSelectedColor(colorOption); setQuantity(1); handleChangeQuantity(product?.id_san_pham, colorOption.ten_mau, selectedSize, quantity); }}
-                                        style={{ backgroundColor: colorOption.ma_mau }}
-                                        className={`w-8 h-8 rounded-full border-2  ${selectedColor?.ten_mau === colorOption.ten_mau ? 'ring-2 ring-blue-500 ring-offset-2' : ''
-                                            }`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
+                        {colors.length > 1 && (
+                            <div>
+                                <div className="flex items-center mb-3">
+                                    <span className="text-sm font-medium mr-2">Màu sắc:</span>
+                                    <span className="text-sm text-gray-600 capitalize">{selectedColor?.ten_mau}</span>
+                                </div>
+                                <div className="flex space-x-2">
+                                    {colors.map((colorOption, index) => (
+                                        <button
+                                            key={colorOption ? colorOption.ten_mau : 'Đang tải...'}
+                                            onClick={() => { setSelectedColor(colorOption); setQuantity(1); handleChangeQuantity(product?.id_san_pham, colorOption.ten_mau, selectedSize, quantity); }}
+                                            style={{ backgroundColor: colorOption.ma_mau }}
+                                            className={`w-8 h-8 rounded-full border-2  ${selectedColor?.ten_mau === colorOption.ten_mau ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                                                }`}
+                                        />
+                                    ))}
+                                </div>
+                            </div>)
+                        }
+                        
 
                         {/* Size Selection */}
-                        <div>
-                            <div className="flex items-center justify-between mb-3">
-                                <span className="text-sm font-medium">Kích thước: {selectedSize?.ten_kich_thuoc}</span>
-                                <button className="text-sm text-blue-600 hover:underline">
-                                    <i className="fas fa-ruler mr-1"></i>
-                                    Hướng dẫn chọn size
-                                </button>
-                            </div>
-                            <div className="flex space-x-2">
-                                {sizes.map((size) => (
-                                    <button
-                                        key={size.ten_kich_thuoc}
-                                        onClick={() => { setSelectedSize(size); setQuantity(1); handleChangeQuantity(product?.id_san_pham, selectedColor.ten_mau, size, quantity) }}
-                                        className={`w-20 h-10 border rounded text-sm font-medium ${selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
-                                            ? 'border-red-500 bg-red-50 text-red-600'
-                                            : 'border-gray-300 hover:border-gray-400'
-                                            }`}
-                                    >
-                                        <p className='text-sm'>{size.ten_kich_thuoc}</p>
+                        {sizes.length > 1 && (
+                            <div>
+                                <div className="flex items-center justify-between mb-3">
+                                    <span className="text-sm font-medium">Kích thước: {selectedSize?.ten_kich_thuoc}</span>
+                                    <button className="text-sm text-blue-600 hover:underline">
+                                        <i className="fas fa-ruler mr-1"></i>
+                                        Hướng dẫn chọn size
                                     </button>
-                                ))}
+                                </div>
+                                <div className="flex space-x-2">
+                                    {sizes.map((size) => (
+                                        <button
+                                            key={size.ten_kich_thuoc}
+                                            onClick={() => { setSelectedSize(size); setQuantity(1); handleChangeQuantity(product?.id_san_pham, selectedColor.ten_mau, size, quantity) }}
+                                            className={`w-20 h-10 border rounded text-sm font-medium ${selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
+                                                ? 'border-red-500 bg-red-50 text-red-600'
+                                                : 'border-gray-300 hover:border-gray-400'
+                                                }`}
+                                        >
+                                            <p className='text-sm'>{size.ten_kich_thuoc}</p>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
+                        
 
                         {/* Quantity and Actions */}
                         <div className="space-y-4">

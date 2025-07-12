@@ -235,7 +235,7 @@ export default function UserDetailPage() {
                 <div className="text-center mb-6">
                   <h2 className="text-xl font-bold text-gray-800">{user?.ten_user}</h2>
                   <p className="text-gray-500 text-sm mt-1">
-                    Thành viên từ: {new Date(user?.created_at).toLocaleDateString("vi-VN")}
+                    Thành viên từ: {new Date(user?.created_at ? user?.created_at : '').toLocaleDateString("vi-VN")}
                   </p>
                   <div className={`mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${user?.trang_thai === 1 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                     }`}>
@@ -399,7 +399,7 @@ export default function UserDetailPage() {
                     <div>
                       <label className="block text-sm font-medium text-gray-600 mb-1.5">Ngày tạo tài khoản</label>
                       <p className="px-4 py-2.5 bg-gray-50 rounded-lg text-gray-700">
-                        {new Date(user?.created_at).toLocaleString("vi-VN", {
+                        {new Date(user?.created_at ? user?.created_at : '').toLocaleString("vi-VN", {
                           day: 'numeric',
                           month: 'long',
                           year: 'numeric',

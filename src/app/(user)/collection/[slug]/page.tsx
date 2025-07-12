@@ -1,10 +1,13 @@
 'use client';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart, faSortAlphaDown, faCartShopping, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-
+import Bannerinterface from '../../compoments/Bannerinterface';
+import Slider from 'react-slick';
+import { faSearch, faCartShopping,faSortAlphaDown, faChevronLeft, faChevronRight, faHeart, faFire } from '@fortawesome/free-solid-svg-icons';
 
 export default function AllProductPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +19,39 @@ export default function AllProductPage() {
   const [totalPage, setTotalPage] = useState(1);
   const [pageStart, setPageStart] = useState(1);
   const [pageEnd, setPageEnd] = useState(1);
+  const [banners, setBanners] = useState<Bannerinterface[]>([]);
+
+  const NextArrow = ({ onClick }: { onClick?: () => void }) => (
+  <div
+    className="absolute top-1/2 text-white text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    onClick={onClick}
+  >
+    <FontAwesomeIcon icon={faChevronRight} />
+  </div>
+);
+
+const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
+  <div
+    className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    onClick={onClick}
+  >
+    <FontAwesomeIcon icon={faChevronLeft} />
+  </div>
+);
+
+  const settings = {
+  dots: true,
+  infinite: true,
+  autoplaySpeed: 3000,
+  speed: 200,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+};
+
+
+
 
   const addWhistList = async (name: string, image: string, price: number, slug: string, idPro: number) => {
 
@@ -50,10 +86,10 @@ export default function AllProductPage() {
       })
       if (resAddWhisList.ok) {
         const result = await resAddWhisList.json();
-        console.log(result)
-        alert('Thêm sản phẩm vào danh sách thành công');
+        console.log(result);
+        toast.success('Thêm sản phẩm vào danh sách thành công');
       } else {
-        alert('Thêm sản phẩm vào danh sách thất bại');
+        toast.error('Thêm sản phẩm vào danh sách thất bại');
       }
     } else {
       if (whistList) {
@@ -65,7 +101,7 @@ export default function AllProductPage() {
           if (e.id_san_pham == idPro) {
             flag = false;
           }
-        })
+        });
 
         if (flag == true) {
           parseWhisList.unshift(newObj);
@@ -75,9 +111,9 @@ export default function AllProductPage() {
       } else {
         localStorage.setItem('whislist', JSON.stringify([newObj]));
       }
-      alert('Thêm sản phẩm vào danh sách thành công');
+      toast.success('Thêm sản phẩm vào danh sách thành công');
     }
-  }
+  };
 
   const params = useParams();
   const { slug } = params;
@@ -98,7 +134,7 @@ export default function AllProductPage() {
       setPageStart((currentPage - 2) >= 1 ? currentPage - 2 : 1);
       setPageEnd(currentPage + 2 >= data.data.totalPage ? data.data.totalPage : currentPage + 2)
     } else {
-      alert(data.message);
+      toast.error(data.message);
     }
     console.log('Nay cung sort', data.data.sort);
   }
@@ -117,30 +153,65 @@ export default function AllProductPage() {
     // 'Tồn kho: Giảm dần',
   ];
 
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        let getAPIbanner = await fetch('http://huunghi.id.vn/api/banner/getBannerByPage?position=trang_san_pham');
+        let data = await getAPIbanner.json()
+        setBanners(data.data.banners)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchBanner();
+  }, [])
+
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
           <li className="text-gray-500 font-normal">/</li>
-          <li className="text-[12px] font-semibold mt-0.5">Tất Cả Sản Phẩm</li>
+          <li className="text-[12px] sm:text-[13px] md:text-[14px] font-semibold mt-0.5">Tất Cả Sản Phẩm</li>
         </ul>
       </nav>
 
       {/* Banner */}
-      <div className="mt-1">
-        <img
-          alt="Tất cả sản phẩm banner"
-          className="w-full object-cover"
-          height="300"
-          src="/assets/images/banner spmoi.jpg"
-          width="1200"
-        />
-      </div>
+      {banners.length > 1 && (
+            <Slider {...settings}>
+              {banners.map((banner, index) => (
+                <div key={index}>
+                  <img
+                    src={`https://huunghi.id.vn/storage/banners/${banner.link_banner}`}
+                    alt={`Banner ${index + 1}`}
+                    className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
+                  />
+                </div>
+              ))}
+            </Slider>
+          )}
+          {banners.length > 0 && banners.length < 2 &&
+            banners.map((banner, index) => (
+              <div key={index}>
+                <img
+                  src={`https://huunghi.id.vn/storage/banners/${banner.link_banner}`}
+                  alt={`Banner ${index + 1}`}
+                  className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
+                />
+              </div>
+            ))}
+          {banners.length == 0 && (
+            <div >
+              <img
+                src={`https://huunghi.id.vn/storage/banners/686eab4e4c4e9-banner spmoi.jpg`}
+                alt={`Banner `}
+                className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
+              />
+          </div>)}
 
       {/* Sort dropdown */}
-      <div className="flex justify-end mt-4 mb-4 items-center text-black text-[13px] relative z-50">
+      <div className="flex justify-end mt-3 sm:mt-4 md:mt-5 mb-3 sm:mb-4 md:mb-5 items-center text-black text-[11px] sm:text-[12px] md:text-[13px] relative z-50">
         <span className="mr-2 font-semibold">Sắp xếp:</span>
         <div className="relative">
           <button
@@ -148,7 +219,7 @@ export default function AllProductPage() {
             className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[10px]"
           >
             {selectedOption[0]}
-            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
+            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-1 sm:ml-2 text-[15px] sm:text-[17px]" />
           </button>
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-lg z-50">
@@ -160,7 +231,7 @@ export default function AllProductPage() {
                     setIsOpen(false);
                     setSort(option[1]);
                   }}
-                  className="px-3 py-2 text-[10px] cursor-pointer hover:bg-blue-600 hover:text-white"
+                  className="px-2 sm:px-3 py-1 sm:py-2 text-[9px] sm:text-[10px] md:text-[11px] cursor-pointer hover:bg-blue-600 hover:text-white"
                 >
                   {option[0]}
                 </div>
@@ -196,7 +267,7 @@ export default function AllProductPage() {
               </div>
               <div className="px-1 mt-2">
                 <p className="text-sm">{product.ten_san_pham}</p>
-                <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'}</strong>
+                <strong className="text-sm">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ'}</strong>
               </div>
             </div>
           </div>
@@ -209,7 +280,7 @@ export default function AllProductPage() {
         {currentPage > 1 && (
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
-            className={`px-4 py-2 border text-sm  bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
           >
             {'<'}
           </button>
@@ -222,7 +293,7 @@ export default function AllProductPage() {
                 setCurrentPage(page);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`px-4 py-2 border text-sm ${currentPage === page
+              className={`px-3 py-1 border text-sm rounded ${currentPage === page
                   ? 'bg-black text-white'
                   : 'bg-white text-black border-gray-300 hover:bg-gray-100'
                 }`}
@@ -233,7 +304,7 @@ export default function AllProductPage() {
         ))}
         {currentPage < totalPage && (
           <button
-            className={`px-4 py-2 border text-sm  bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
           >
             {`...`}
           </button>
@@ -241,7 +312,7 @@ export default function AllProductPage() {
         {currentPage < totalPage && (
           <button
             onClick={() => setCurrentPage(totalPage)}
-            className={`px-4 py-2 border text-sm  bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
           >
             {totalPage}
           </button>
@@ -249,7 +320,7 @@ export default function AllProductPage() {
         {currentPage < totalPage && (
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
-            className={`px-4 py-2 border text-sm  bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
           >
             {'>'}
           </button>

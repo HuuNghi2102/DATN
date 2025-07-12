@@ -1,4 +1,6 @@
 'use client';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight, faHeart, faFire } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +10,7 @@ import { productsCateInterface } from "./compoments/productsCateInterface";
 import productsSalerInterface from './compoments/productsSalerInterface';
 import voucherInterface from './compoments/vouchersInterface';
 import Link from 'next/link';
+import Bannerinterface from './compoments/Bannerinterface';
 // import { ProducSalerImage } from './compoments/productsSalerInterface';
 // import { ProducNewtImage } from './compoments/productsNewInterface';
 import Slider from 'react-slick';
@@ -56,67 +59,67 @@ const productSettings = {
   ],
 };
 
-const addWhistList= async (name:string,image:string,price:number,slug:string,idPro:number) => {
+const addWhistList = async (name: string, image: string, price: number, slug: string, idPro: number) => {
 
-    const newObj:any = {}
-    newObj.ten_san_pham = name;
-    newObj.anh_san_pham = image;
-    newObj.gia_san_pham = price;
-    newObj.duong_dan = slug;
-    newObj.id_san_pham = idPro;
-    
+  const newObj: any = {}
+  newObj.ten_san_pham = name;
+  newObj.anh_san_pham = image;
+  newObj.gia_san_pham = price;
+  newObj.duong_dan = slug;
+  newObj.id_san_pham = idPro;
 
-    const user = localStorage.getItem('user');
-    const accessToken = localStorage.getItem('accessToken');
-    const typeToken = localStorage.getItem('typeToken');
-    const whistList = localStorage.getItem('whislist');
-    if(user && accessToken && typeToken){
-      console.log('accessToken:',JSON.parse(accessToken));
-      console.log('typeToken:',JSON.parse(typeToken));
-      const resAddWhisList = await fetch(`https://huunghi.id.vn/api/whislist/addWhislist`,{
-        method : "POST",
-        headers : {
-          "Content-Type" : "application/json",
-          "Authorization" : `${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`
-        },
-        body : JSON.stringify({
-          name : name,
-          image : image,
-          price : price,
-          slug : slug,
-          idPro : idPro
-        })
+
+  const user = localStorage.getItem('user');
+  const accessToken = localStorage.getItem('accessToken');
+  const typeToken = localStorage.getItem('typeToken');
+  const whistList = localStorage.getItem('whislist');
+  if (user && accessToken && typeToken) {
+    console.log('accessToken:', JSON.parse(accessToken));
+    console.log('typeToken:', JSON.parse(typeToken));
+    const resAddWhisList = await fetch(`https://huunghi.id.vn/api/whislist/addWhislist`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `${JSON.parse(typeToken)} ${JSON.parse(accessToken)}`
+      },
+      body: JSON.stringify({
+        name: name,
+        image: image,
+        price: price,
+        slug: slug,
+        idPro: idPro
       })
-      if(resAddWhisList.ok){
-        const result = await resAddWhisList.json();
-        console.log(result)
-        alert('Thêm sản phẩm vào danh sách thành công');
-      }else{
-        alert('Thêm sản phẩm vào danh sách thất bại');
-      }
-    }else{
-      if(whistList){
-        const parseWhisList = JSON.parse(whistList);
-
-        let flag:boolean = true;
-
-        parseWhisList.forEach((e:any,i:number)=>{
-          if(e.id_san_pham == idPro){
-            flag = false;
-          }
-        })
-
-        if(flag == true){
-          parseWhisList.unshift(newObj);
-        }
-        
-        localStorage.setItem('whislist',JSON.stringify(parseWhisList));
-      }else{
-        localStorage.setItem('whislist',JSON.stringify([newObj]));
-      }
-      alert('Thêm sản phẩm vào danh sách thành công');
+    })
+    if (resAddWhisList.ok) {
+      const result = await resAddWhisList.json();
+      console.log(result)
+      toast.success('Thêm sản phẩm vào danh sách thành công');
+    } else {
+      toast.error('Thêm sản phẩm vào danh sách thất bại');
     }
+  } else {
+    if (whistList) {
+      const parseWhisList = JSON.parse(whistList);
+
+      let flag: boolean = true;
+
+      parseWhisList.forEach((e: any, i: number) => {
+        if (e.id_san_pham == idPro) {
+          flag = false;
+        }
+      })
+
+      if (flag == true) {
+        parseWhisList.unshift(newObj);
+      }
+
+      localStorage.setItem('whislist', JSON.stringify(parseWhisList));
+    } else {
+      localStorage.setItem('whislist', JSON.stringify([newObj]));
+    }
+    toast.success('Thêm sản phẩm vào danh sách thành công');
   }
+}
 const Home = () => {
 
   const [productsBestSaler, setProductsBestSaler] = useState<productsBestSalerInterface[]>([]);
@@ -125,6 +128,7 @@ const Home = () => {
   const [productsCate, setproductsCate] = useState<productsCateInterface[]>([]);
   const [copied, setCopied] = useState<number | null>(null);
   const [voucher, setVoucher] = useState<voucherInterface[]>([]);
+  const [banners, setBanners] = useState<Bannerinterface[]>([]);
   // sao chép mã
   const handleCopy = (code: string, index: number) => {
     navigator.clipboard.writeText(code)
@@ -204,26 +208,55 @@ const Home = () => {
     }
     fetchVoucher();
   }, [])
+  // lấy banner
+  useEffect(() => {
+    const fetchBanner = async () => {
+      try {
+        let getAPIbanner = await fetch('http://huunghi.id.vn/api/banner/getBannerByPage');
+        let data = await getAPIbanner.json()
+        setBanners(data.data.banners)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchBanner();
+  }, [])
   return (
     <div>
       <div className="container  mx-auto lg:pt-[12%] pt-[20%] max-w-[1200px] px-4">
         {/* Banner */}
         <div className="container mx-auto max-w-[1200px] relative">
-          <Slider {...settings}>
-            {[
-              "/assets/images/banner1.png",
-              "/assets/images/banner2.png",
-              "/assets/images/banner3.png",
-            ].map((src, index) => (
+          {banners.length > 1 && (
+            <Slider {...settings}>
+              {banners.map((banner, index) => (
+                <div key={index}>
+                  <img
+                    src={`https://huunghi.id.vn/storage/banners/${banner.link_banner}`}
+                    alt={`Banner ${index + 1}`}
+                    className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
+                  />
+                </div>
+              ))}
+            </Slider>
+          )}
+          {banners.length > 0 && banners.length < 2 &&
+            banners.map((banner, index) => (
               <div key={index}>
                 <img
-                  src={src}
+                  src={`https://huunghi.id.vn/storage/banners/${banner.link_banner}`}
                   alt={`Banner ${index + 1}`}
                   className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
                 />
               </div>
             ))}
-          </Slider>
+          {banners.length == 0 && (
+            <div >
+              <img
+                src="https://huunghi.id.vn/storage/banners/686ab21974554-z6778486945667_89987ff369f0f557ce5582da4ca199e1.jpg"
+                alt={`Banner `}
+                className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
+              />
+          </div>)}
         </div>
         {/* Voucher Section */}
         <div className="my-4">
@@ -245,8 +278,21 @@ const Home = () => {
                   </div>
                   <div className="text-xs border-l border-dashed border-black pl-2 relative w-full">
                     <div className="py-1 pr-2">
-                      <h4 className="font-semibold">ĐƠN HÀNG: {voucher.gia_tri_don_hang != null ? ( voucher.gia_tri_don_hang.toLocaleString('vi-VN'))+'đ' : ''}</h4>
-                      <h1 className="text-sm">GIẢM: <span className=' text-amber-300 font-semibold'>{voucher.gia_tri_giam.toLocaleString('vi-VN') + 'VNĐ'}</span></h1> <br />
+
+                      <h4 className="font-semibold">
+                        ĐƠN HÀNG: {typeof voucher.gia_tri_don_hang === 'number'
+                          ? voucher.gia_tri_don_hang.toLocaleString('vi-VN') + ' VNĐ'
+                          : 'Không xác định'}
+                      </h4>
+
+                      <h1 className="text-sm">
+                        GIẢM: <span className=' text-amber-300 font-semibold'>
+                          {typeof voucher.gia_tri_giam === 'number'
+                            ? voucher.gia_tri_giam.toLocaleString('vi-VN') + ' VNĐ'
+                            : 'Không xác định'}
+                        </span>
+                      </h1>
+
                       <p className="mt-1">
                         Mã: <span className="font-semibold">{voucher.ma_giam_gia}</span>
                       </p>
@@ -285,7 +331,7 @@ const Home = () => {
                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                       </div>
                       <a
-                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
+                        onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
@@ -296,7 +342,7 @@ const Home = () => {
                     </div>
                     <div className="px-1 mt-2">
                       <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '} <del className='text-gray-400 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '} <del className='text-gray-400 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
 
                     </div>
                   </div>
@@ -329,7 +375,7 @@ const Home = () => {
                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                       </div>
                       <a
-                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
+                        onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
@@ -337,7 +383,7 @@ const Home = () => {
                     </div>
                     <div className="px-1 mt-2">
                       <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                     </div>
                   </div>
                 </div>
@@ -369,7 +415,7 @@ const Home = () => {
                         <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                       </div>
                       <a
-                        onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
+                        onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
                         className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
@@ -377,7 +423,7 @@ const Home = () => {
                     </div>
                     <div className="px-1 mt-2">
                       <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? ( product.gia_chua_giam.toLocaleString('vi-VN'))+'đ' : ''}</del></strong>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                     </div>
                   </div>
                 </div>
@@ -400,7 +446,7 @@ const Home = () => {
                     <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>
                     <button className="text-white bg-amber-400 w-[100px] h-[30px] rounded-[8px] hover:bg-amber-500 transition-all duration-500 text-sm">
                       <Link href={`/collection/${category.duong_dan}`}>
-                      Xem tất cả
+                        Xem tất cả
                       </Link>
                     </button>
                   </div>
@@ -421,7 +467,7 @@ const Home = () => {
                               <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                             </div>
                             <a
-                              onClick={()=>addWhistList(product.ten_san_pham,product.images[0]?.link_anh,product.gia_da_giam,product.duong_dan,product.id_san_pham)}
+                              onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
                               className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                             >
                               <FontAwesomeIcon icon={faHeart} />
@@ -462,6 +508,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

@@ -1,4 +1,6 @@
 'use client';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useEffect, useState } from 'react';
 import userInterface from '@/app/(user)/compoments/userInterface';
 import Link from 'next/link';
@@ -32,7 +34,7 @@ export default function UserProfile() {
       fectchOrder();
       setUser(uu);
     } else {
-      alert('Vui lòng đăng nhập');
+      toast.error('Vui lòng đăng nhập');
     }
   }, [reload]);
 
@@ -48,7 +50,7 @@ export default function UserProfile() {
     });
     const result = await res.json();
     setReload(!reload);
-    alert(result.message);
+    toast.success(result.message);
   };
 
   const menuItems = [
@@ -233,6 +235,7 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }

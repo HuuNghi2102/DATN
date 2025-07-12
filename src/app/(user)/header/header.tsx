@@ -1,4 +1,6 @@
 'use client';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronDown, faHeart } from '@fortawesome/free-solid-svg-icons';
@@ -53,7 +55,7 @@ const Header = () => {
                     window.dispatchEvent(new Event("quantityCartChange"));  
                     router.push("/login");
                 } else {
-                    alert('Không thể đăng xuất')
+                    toast.error('Không thể đăng xuất');
                 }
             }
         } catch (error) {

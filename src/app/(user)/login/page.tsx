@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { toast } from "react-toastify";
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -82,7 +84,12 @@ const LoginPage = () => {
       //   dispatch({ type: 'SET_CART', payload: cartResult.cart });
       //   localStorage.setItem('cart', JSON.stringify(cartResult.cart));
       // }
-      router.push('/user/userprofile');
+      if(user.id_vai_tro == 2){
+        router.push('/user/userprofile');
+      }else{
+        router.push('/admin');
+      }
+      toast.success("Đăng nhập thành công!");
     } catch (err) {
       console.error(err);
       setError({ ...newError });

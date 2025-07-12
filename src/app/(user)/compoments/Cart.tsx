@@ -1,4 +1,6 @@
 "use client"
+import { toast } from "react-toastify";
+
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { CartItem } from './CartItem';
@@ -58,7 +60,7 @@ const CartPage = () => {
           const resultCheckCart = await checkCart.json();
 
           if(resultCheckCart.status == false){
-            alert(resultCheckCart.message);
+            toast.error(resultCheckCart.message);
           }
           
           setCarts(resultCheckCart.data.carts);
@@ -87,7 +89,7 @@ const CartPage = () => {
           const result = await checkCart.json();
 
           if(result.status == false){
-            alert(result.message);
+            toast.success(result.message);
           }
           setCarts(result.data.carts);
 
@@ -156,7 +158,7 @@ const CartPage = () => {
       })
       const result = await res.json();
       arrCart.splice(position,1)
-      alert(result.message);
+      toast.success(result.message);
     }else{
       arrCart.splice(position,1)
     }
@@ -167,7 +169,7 @@ const CartPage = () => {
 
   const redirectPay = () => {
     if(carts.length < 1){
-     alert('Vui lòng chọn thêm sản phẩm để thanh toán')
+     toast.warn('Vui lòng chọn thêm sản phẩm để thanh toán');
      return;
     }
     router.push('/pay');
@@ -187,9 +189,10 @@ const CartPage = () => {
     })
     const result = await res.json();
     if(result.status == false){
-      alert(result.message);
+      toast.error(result.message);
     }else{
       setVoucher(result.data.voucher);
+      toast.success("Áp dụng mã giảm giá thành công!");
     }
   }
   

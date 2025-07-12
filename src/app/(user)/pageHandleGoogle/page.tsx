@@ -1,4 +1,6 @@
 'use client'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { redirect, useSearchParams } from "next/navigation"
 import { useRouter } from 'next/navigation';
 import { useEffect } from "react";
@@ -12,7 +14,7 @@ const pageHandleGoogle = () => {
         if (accessToken) {
             fetchUser();
         } else {
-            alert('Token không hợp lệ vui lòng đăng nhập lại')
+            toast.error('Token không hợp lệ vui lòng đăng nhập lại');
             window.location.href = '/login';
         }
     }, [])
@@ -47,7 +49,7 @@ const pageHandleGoogle = () => {
             localStorage.setItem('typeToken', JSON.stringify('Bearer'));
             router.push('/user/userprofile'); 
         } else {
-            alert('Token không hợp lệ vui lòng đăng nhập lại')
+            toast.error('Token không hợp lệ vui lòng đăng nhập lại');
             router.push('/login');
         }
     }

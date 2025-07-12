@@ -1,4 +1,7 @@
 'use client'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
@@ -57,17 +60,19 @@ const WishlistPage = () => {
             })
             if(resDelete.ok){
                 const result = await resDelete.json();
-                alert(result.message);
+                toast.success(result.message);
             }else{
-                alert('Xóa thất bại');
+                toast.error('Xóa thất bại');
             }
         }else{
             if(arrWhistList){
+              
 
                 let parseWhistList = JSON.parse(arrWhistList);
                 parseWhistList.splice(position,1);
                 localStorage.setItem('whislist',JSON.stringify(parseWhistList))
             }else{
+                toast.info('Wishlist trống');
                  localStorage.setItem('whislist',JSON.stringify([]));
             }
         }

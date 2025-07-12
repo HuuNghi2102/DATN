@@ -1,4 +1,7 @@
 'use client';
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 import React, { useEffect, useState } from 'react';
 import userInterface from '@/app/(user)/compoments/userInterface';
 import Link from 'next/link';
@@ -24,7 +27,7 @@ export default function OrderDetail() {
     if (u && accessTokenLocal && typeTokenLocal) {
 
         if(!orderId){
-            alert('Đơn hàng không tồn tại');
+             toast.error('Đơn hàng không tồn tại');
             router.push('/login');
         }
 
@@ -58,7 +61,7 @@ export default function OrderDetail() {
                 const result = await fetchVoucher.json();
                 setVoucher(result.data.voucher);
               }else{
-                alert('Lấy voucher không thành công')
+                toast.error('Lấy voucher không thành công')
               }
             }
             setIsLoading(false)
@@ -74,8 +77,8 @@ export default function OrderDetail() {
 
       setUser(uu);
     } else {
-      
-      alert('Vui lòng đăng nhập');
+
+      toast.error('Vui lòng đăng nhập');
       router.push('/login');
     }
   }, [orderId]);
@@ -100,14 +103,14 @@ export default function OrderDetail() {
       
       const result = await res.json();
       if (res.ok) {
-        alert(result.message);
+        toast.success(result.message);
         router.push('/user/history-order');
       } else {
-        alert(result.message || 'Có lỗi xảy ra khi hủy đơn hàng');
+        toast.error(result.message || 'Có lỗi xảy ra khi hủy đơn hàng');
       }
     } catch (error) {
       console.error('Error canceling order:', error);
-      alert('Có lỗi xảy ra khi hủy đơn hàng');
+      toast.error('Có lỗi xảy ra khi hủy đơn hàng');
     }
   };
 
@@ -513,6 +516,7 @@ export default function OrderDetail() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }

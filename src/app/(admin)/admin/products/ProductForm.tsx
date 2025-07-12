@@ -8,6 +8,40 @@ import categoryProductInterface from '../components/interface/categoryProInterfa
 import { useRouter } from 'next/navigation';
 
 const ProductForm = ({onProductAdded} : {onProductAdded : ()=> void}) => {
+
+  const basicColors = [
+    { nameColor: 'Đỏ', codeColor: '#FF0000' },
+    { nameColor: 'Xanh lá cây', codeColor: '#00FF00' },
+    { nameColor: 'Xanh dương', codeColor: '#0000FF' },
+    { nameColor: 'Vàng', codeColor: '#FFFF00' },
+    { nameColor: 'Lục lam (Cyan)', codeColor: '#00FFFF' },
+    { nameColor: 'Tím đỏ (Magenta)', codeColor: '#FF00FF' },
+    { nameColor: 'Đen', codeColor: '#000000' },
+    { nameColor: 'Trắng', codeColor: '#FFFFFF' },
+    { nameColor: 'Xám', codeColor: '#808080' },
+    { nameColor: 'Cam', codeColor: '#FFA500' },
+    { nameColor: 'Hồng', codeColor: '#FFC0CB' },
+    { nameColor: 'Nâu', codeColor: '#A52A2A' },
+    { nameColor: 'Tím', codeColor: '#800080' },
+    { nameColor: 'Xanh lục nhạt (Lime)', codeColor: '#00FF00' },
+    { nameColor: 'Xanh biển đậm (Navy)', codeColor: '#000080' },
+    { nameColor: 'Xanh da trời', codeColor: '#87CEEB' },
+    { nameColor: 'Xanh ngọc', codeColor: '#40E0D0' },
+    { nameColor: 'Vàng kem (Beige)', codeColor: '#F5F5DC' },
+    { nameColor: 'Vàng nghệ (Gold)', codeColor: '#FFD700' },
+    { nameColor: 'Xanh rêu', codeColor: '#556B2F' },
+    { nameColor: 'Xanh lá mạ', codeColor: '#7CFC00' },
+    { nameColor: 'Xanh cổ vịt', codeColor: '#008080' },
+    { nameColor: 'Xanh pastel', codeColor: '#B0E0E6' },
+    { nameColor: 'Hồng pastel', codeColor: '#FFD1DC' },
+    { nameColor: 'Nâu đất', codeColor: '#8B4513' },
+    { nameColor: 'Đỏ đô', codeColor: '#800000' },
+    { nameColor: 'Xám bạc', codeColor: '#C0C0C0' },
+    { nameColor: 'Xám đậm', codeColor: '#505050' },
+    { nameColor: 'Hồng cánh sen', codeColor: '#FF69B4' },
+    { nameColor: 'Cam cháy', codeColor: '#FF4500' }
+  ];
+
   const [inventoryItems, setInventoryItems] = useState([{ id: 1 }]);
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
@@ -202,6 +236,11 @@ const ProductForm = ({onProductAdded} : {onProductAdded : ()=> void}) => {
     } else {
       router.push('/login');
     }
+  }
+
+  const handleChangeColorForm = (codeColor : string) => {
+    const color = basicColors.find((color) => color.codeColor === codeColor);
+    setProduct({...product,variant :{...product.variant , codeColor : color?.codeColor , nameColor : color?.nameColor}});
   }
 
 
@@ -408,27 +447,16 @@ const ProductForm = ({onProductAdded} : {onProductAdded : ()=> void}) => {
 
             <div id="inventoryContainer">
               <div className="inventory-item bg-gray-100 p-4 rounded border border-dashed border-gray-300 mb-4 relative">
-                <div className="inventory-grid grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="inventory-grid grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="form-group">
-                    <label className="form-label block text-sm font-medium text-gray-700 mb-1">Tên màu</label>
-                    <input 
-                      type="text"
-                      value={product.variant.nameColor}
-                      onChange={(e:any) => {setProduct({...product, variant : {...product.variant, nameColor : e.target.value}})}}
-                      className='form-control w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary-light outline-none text-sm'
-                      placeholder="vd: Đen"
-                    />
-                    {errProduct.nameColor && <p className="text-red-500 text-sm mt-1">{errProduct.nameColor}</p>}
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label block text-sm font-medium text-gray-700 mb-1">Mã màu</label>
-                    <input
-                      value={product.variant.codeColor}
-                      onChange={(e:any) => {setProduct({...product,variant :{...product.variant , codeColor : e.target.value}})}}
-                      type="text" 
-                      placeholder="vd: #00FF00"
-                      className='form-control w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary-light outline-none text-sm' />
-                      {errProduct.codeColor && <p className="text-red-500 text-sm mt-1">{errProduct.codeColor}</p>}
+                    <label className="form-label block text-sm font-medium text-gray-700 mb-1">Màu</label>
+                    <select onChange={(e:any) => handleChangeColorForm(e.target.value)} className="form-control w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary-light outline-none text-sm">
+                      {/* <option value="">Chọn size</option> */}
+                      {basicColors?.map((e, i) => (
+                        <option key={i} value={e.codeColor}>{e.nameColor}</option>
+                      ))}
+                    </select>
+                    {errProduct.idSize && <p className="text-red-500 text-sm mt-1">{errProduct.idSize}</p>}
                   </div>
                   <div className="form-group">
                     <label className="form-label block text-sm font-medium text-gray-700 mb-1">Kích thước</label>

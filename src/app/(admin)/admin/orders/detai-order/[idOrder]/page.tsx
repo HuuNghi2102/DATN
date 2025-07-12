@@ -5,31 +5,32 @@ import '@/app/globals.css';
 import { useParams, useRouter } from 'next/navigation';
 import detailOrder from '../../../components/interface/detailOrderInterface';
 import voucherInterface from '../../../components/interface/voucherInterface';
+import userInterface from '../../../components/interface/userInterface';
 import {
   FiArrowLeft, FiEdit, FiSave, FiUser, FiMail,
   FiPhone, FiMapPin, FiShield, FiLock, FiCalendar
 } from "react-icons/fi";
 
 interface orderInterface {
-  id_don_hang?: number;
-  ten_nguoi_nhan?: string;
-  dia_chi_nguoi_nhan?: string;
-  so_dien_thoai_nguoi_nhan?: string;
-  ghi_chu_don_hang?: string;
-  gia_tong_don_hang?: number;
-  ten_nguoixacnhan?: string;
-  ma_giao_dich?: number;
-  trang_thai_don_hang?: string;
-  trang_thai_thanh_toan?: string;
-  link_thanh_toan?: string;
-  id_nguoi_xac_nhan?: number;
-  id_khach_hang?: number;
-  id_ma_giam_gia?: number;
-  id_phuong_thuc_thanh_toan?: number;
-  created_at?: string;
-  updated_at?: string;
-  deleted_at?: string;
-  tien_ship?: number;
+  id_don_hang: number;
+  ten_nguoi_nhan: string;
+  dia_chi_nguoi_nhan: string;
+  so_dien_thoai_nguoi_nhan: string;
+  ghi_chu_don_hang: string;
+  gia_tong_don_hang: number;
+  ten_nguoixacnhan: string;
+  ma_giao_dich: number;
+  trang_thai_don_hang: string;
+  trang_thai_thanh_toan: string;
+  link_thanh_toan: string;
+  id_nguoi_xac_nhan: number;
+  id_khach_hang: number;
+  id_ma_giam_gia: number;
+  id_phuong_thuc_thanh_toan: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  tien_ship: number;
   detail_orders?: detailOrder[];
 }
 
@@ -47,14 +48,10 @@ const OrderDetailPage = () => {
   const [deliveryStatus, setDeliveryStatus] = useState('Đang vận chuyển');
   const [orderNote, setOrderNote] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [shipper,setShipper] = useState<userInterface | null>(null);
 
   const [typeToken, setTypeToken] = useState('');
   const [accessToken, setAccessToken] = useState('');
-
-
-  const handleUpdateShipping = () => {
-    alert(`Cập nhật vận chuyển với mã: ${trackingCode}, trạng thái: ${deliveryStatus}`);
-  };
 
   const handleCancelOrder = async () => {
     const confirm = window.confirm('Bạn có chắc muốn hủy đơn hàng này không?');
@@ -68,7 +65,9 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'da_huy'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'da_huy'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
@@ -87,7 +86,9 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'cho_lay_hang'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'cho_lay_hang'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
@@ -95,9 +96,9 @@ const OrderDetailPage = () => {
   };
 
   const handleConfirm = async () => {
-    const confirm = window.confirm('Bạn có chắc muốn hủy đơn hàng này không?');
+    const confirm = window.confirm('Bạn có chắc muốn xác nhận đơn hàng này không?');
     if (confirm) {
-      const resChangeStatusOrder = await fetch(`https://huunghi.id.vn/api/order/changeStatusOrderAdmin/${order?.id_don_hang}?status=da_huy` ,{
+      const resChangeStatusOrder = await fetch(`https://huunghi.id.vn/api/order/changeStatusOrderAdmin/${order?.id_don_hang}?status=dang_chuan_bi_hang` ,{
         method : "PUT",
         headers : {
           "Content-Type" : "application/json",
@@ -106,7 +107,9 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'da_huy'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'dang_chuan_bi_hang'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
@@ -125,15 +128,13 @@ const OrderDetailPage = () => {
       });
 
       if(resChangeStatusOrder.ok){
-        setOrder({...order, trang_thai_don_hang : 'chu_y'})
+        if(order){
+          setOrder({...order, trang_thai_don_hang : 'chu_y'})
+        }
       }else{
         alert('Cập nhật không thành công');
       }
     }
-  };
-
-  const handleUpdateNote = () => {
-    alert(`Cập nhật ghi chú đơn hàng: ${orderNote}`);
   };
 
   const fetchDefaultData = async () => {
@@ -187,6 +188,22 @@ const OrderDetailPage = () => {
 
           setOrder(currentOrder);
           setDetailOrder(resultGetOrder.data.order.detail_orders);
+          if(currentOrder.id_shipper){
+            const resGetShipper = await fetch(`https://huunghi.id.vn/api/user/getUser/${currentOrder.id_shipper}`, {
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
+              }
+            })
+
+            if (resGetShipper.ok) {
+              const resultGetShipper = await resGetShipper.json();
+              const getShipper = resultGetShipper.data.user;
+              setShipper(getShipper);
+            } else {
+              alert('Lấy thông tin người giao hàng không thành công');
+            }
+          }
           setIsLoading(false);
         } else {
           alert('Đơn hàng không tồn tại');
@@ -252,20 +269,10 @@ const OrderDetailPage = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Chi tiết đơn hàng #DH{order?.id_don_hang}</h1>
-            <p className="text-sm text-gray-500">Ngày đặt hàng: {new Date(order?.created_at).toLocaleDateString('vi-VN')} - {new Date(order?.created_at).toLocaleTimeString('vi-VN')} </p>
+            <p className="text-sm text-gray-500">Ngày đặt hàng: {new Date(order?.created_at ?  order?.created_at : "").toLocaleDateString('vi-VN')} - {new Date(order?.created_at).toLocaleTimeString('vi-VN')} </p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button className="btn btn-outline px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-100">
-            <i className="fas fa-print mr-2"></i> In đơn
-          </button>
-          <button
-            onClick={handleUpdateNote}
-            className="btn btn-primary px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
-          >
-            <i className="fas fa-pen mr-2"></i> Cập nhật
-          </button>
-        </div>
+        
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -356,7 +363,7 @@ const OrderDetailPage = () => {
             <h2 className="text-lg font-semibold text-gray-800 mb-4">Tổng thanh toán</h2>
             <table className="w-full text-sm">
               <tbody>
-                {[['Tạm tính:', ((order?.gia_tong_don_hang ? order?.gia_tong_don_hang : 0) - (order?.tien_ship ? order?.tien_ship : 0) + (voucher?.gia_tri_giam ? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN') + 'đ'], ['Phí vận chuyển:', order?.tien_ship.toLocaleString('vi-VN') + 'đ'], ['Giảm giá:', (voucher ? voucher?.gia_tri_giam : 0).toLocaleString('vi-VN') + 'đ'], ['Tổng cộng:', order?.gia_tong_don_hang.toLocaleString('vi-VN') + 'đ']].map(([label, value], idx) => (
+                {[['Tạm tính:', ((order?.gia_tong_don_hang ? order?.gia_tong_don_hang : 0) - (order?.tien_ship ? order?.tien_ship : 0) + (voucher?.gia_tri_giam ? voucher?.gia_tri_giam : 0)).toLocaleString('vi-VN') + 'đ'], ['Phí vận chuyển:', (order?.tien_ship ? order?.tien_ship : 0).toLocaleString('vi-VN') + 'đ'], ['Giảm giá:', (voucher ? voucher?.gia_tri_giam : 0 ).toLocaleString('vi-VN') + 'đ'], ['Tổng cộng:', order?.gia_tong_don_hang.toLocaleString('vi-VN') + 'đ']].map(([label, value], idx) => (
                   <tr key={idx} className={idx === 3 ? 'font-semibold text-gray-800' : ''}>
                     <td className="text-gray-500">{label}</td>
                     <td className="text-right font-medium">{value}</td>
@@ -366,68 +373,94 @@ const OrderDetailPage = () => {
             </table>
           </div>
 
-          <div className="bg-white rounded shadow p-4">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Cập nhật trạng thái đơn hàng</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm text-gray-500">Mã vận đơn</label>
-                <input
-                  type="text"
-                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded text-sm"
-                  value={trackingCode}
-                  onChange={(e) => setTrackingCode(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="text-sm text-gray-500">Trạng thái</label>
-                <select
-                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded text-sm"
-                  value={deliveryStatus}
-                  onChange={(e) => setDeliveryStatus(e.target.value)}
-                >
-                  <option>Chờ xử lý</option>
-                  <option>Đang vận chuyển</option>
-                  <option>Đã giao</option>
-                  <option>Đã hủy</option>
-                </select>
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 mt-3">
-              {(order?.trang_thai_don_hang == 'cho_xac_nhan' || order?.trang_thai_don_hang == 'dang_chuan_bi_hang' || order?.trang_thai_don_hang == 'chu_y' || order?.trang_thai_don_hang == 'cho_lay_hang') && (
-                <button
-                  onClick={handleCancelOrder}
-                  className="px-4 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600"
-                >
-                  Hủy đơn hàng
-              </button>
-              )}
-              {(order?.trang_thai_don_hang == 'cho_xac_nhan' || order?.trang_thai_don_hang == 'chu_y') && (
-               <button
-                onClick={handleConfirm}
-                className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700"
-              >
-                 Xác nhận
-              </button>
-              )}
-              {order?.trang_thai_don_hang == 'cho_xac_nhan' && (
-               <button
-                onClick={handleAttention}
-                className="px-4 py-2 bg-yellow-500 text-white rounded text-sm hover:bg-yellow-600"
-              >
-                 Chú ý
-              </button>
-              )}
-              {order?.trang_thai_don_hang == 'dang_chuan_bi_hang' && (
-               <button
-                onClick={handlePrepareOrderSuccess}
-                className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700"
-              >
-                 Đơn hàng sẵn sàng
-              </button>
-              )}
-              
-            </div>
+<div className="bg-white rounded shadow p-4">
+  <h2 className="text-lg font-semibold text-gray-800 mb-4">Vận chuyển & Trạng thái</h2>
+  
+  <div className="space-y-4">
+    {/* Thông tin shipper - Phiên bản dọc */}
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">Thông tin Shipper</label>
+      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+        {/* Tên shipper */}
+        <div className="flex items-start">
+          <div className="flex-shrink-0 mt-0.5">
+            <FiUser className="h-5 w-5 text-gray-400" />
           </div>
+          <div className="ml-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Tên shipper</p>
+            <p className="text-sm font-medium text-gray-900">
+              {shipper ? shipper.ten_user : 'Chưa cập nhật'}
+            </p>
+          </div>
+        </div>
+        
+        {/* Số điện thoại */}
+        <div className="flex items-start">
+          <div className="flex-shrink-0 mt-0.5">
+            <FiPhone className="h-5 w-5 text-gray-400" />
+          </div>
+          <div className="ml-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Số điện thoại</p>
+            <p className="text-sm font-medium text-gray-900">
+              {shipper ? shipper.sdt_user : 'Chưa cập nhật'}
+            </p>
+          </div>
+        </div>
+        
+        {/* Đơn vị vận chuyển */}
+        <div className="flex items-start">
+          <div className="flex-shrink-0 mt-0.5">
+            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Đơn vị vận chuyển</p>
+            <p className="text-sm font-medium text-gray-900">
+              {shipper ? shipper.email_user : 'Chưa cập nhật'}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {/* Các nút thao tác */}
+  <div className="flex justify-end gap-2 mt-4">
+    {(order?.trang_thai_don_hang == 'cho_xac_nhan' || order?.trang_thai_don_hang == 'dang_chuan_bi_hang' || order?.trang_thai_don_hang == 'chu_y' || order?.trang_thai_don_hang == 'cho_lay_hang') && (
+      <button
+        onClick={handleCancelOrder}
+        className="px-4 py-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors"
+      >
+        Hủy đơn hàng
+      </button>
+    )}
+    {(order?.trang_thai_don_hang == 'cho_xac_nhan' || order?.trang_thai_don_hang == 'chu_y') && (
+      <button
+        onClick={handleConfirm}
+        className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 transition-colors"
+      >
+        Xác nhận
+      </button>
+    )}
+    {order?.trang_thai_don_hang == 'cho_xac_nhan' && (
+      <button
+        onClick={handleAttention}
+        className="px-4 py-2 bg-yellow-500 text-white rounded text-sm hover:bg-yellow-600 transition-colors"
+      >
+        Chú ý
+      </button>
+    )}
+    {order?.trang_thai_don_hang == 'dang_chuan_bi_hang' && (
+      <button
+        onClick={handlePrepareOrderSuccess}
+        className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 transition-colors"
+      >
+        Đơn hàng sẵn sàng
+      </button>
+    )}
+  </div>
+</div>
         </div>
       </div>
     </div>

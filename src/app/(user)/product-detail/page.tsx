@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faCartShopping, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import Slider from 'react-slick';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
     className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
@@ -66,6 +69,7 @@ const ProductPageDetail = () => {
     return (
         
         <div className="min-h-screen bg-gray-50 mt-40">
+            
         {/* Header */}
         <div className="bg-white shadow-sm py-4 pl-10">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -219,12 +223,20 @@ const ProductPageDetail = () => {
                         +
                     </button>
                     </div>
-                    <button className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors">
-                    THÊM VÀO GIỎ
-                    </button>
-                    <button className=" bg-white border-2 border-black text-black py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors">
-                        MUA NGAY
-                    </button>
+                    <button
+  onClick={() => toast.success('Đã thêm sản phẩm vào giỏ hàng!')}
+  className="flex-1 bg-black text-white py-3 px-6 rounded font-medium hover:bg-gray-800 transition-colors"
+>
+  THÊM VÀO GIỎ
+</button>
+
+                   <button
+  onClick={() => toast.success('Bạn đã chọn MUA NGAY!')}
+  className=" bg-white border-2 border-black text-black py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors"
+>
+  MUA NGAY
+</button>
+
                 </div>
 
             </div>
@@ -403,6 +415,7 @@ const ProductPageDetail = () => {
         ))}
         </div>
     </div>
+    <ToastContainer position="top-right" autoClose={2000} />
     </div>
 );
 };
