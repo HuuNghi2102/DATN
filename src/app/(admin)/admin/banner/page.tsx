@@ -1,5 +1,5 @@
 'use client';
-
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -10,7 +10,10 @@ const DELETE_BANNER_URL = 'http://huunghi.id.vn/api/banner/deleteBanner/';
 interface Banner {
   id: number;
   link_banner: string;
+  trang_thai: number;
+  vi_tri: string;
   created_at: string;
+  updated_at: string;
 }
 
 const BannerManagerPage = () => {
@@ -20,7 +23,7 @@ const BannerManagerPage = () => {
   const [form, setForm] = useState({
     title: '',
     position: '',
-    status: 'Đang hoạt động',
+    status: 1 | 0,
     image: null as File | null,
   });
 
@@ -59,21 +62,23 @@ const BannerManagerPage = () => {
     const data = new FormData();
     data.append('title', form.title);
     data.append('position', form.position);
-    data.append('status', form.status);
+    data.append('status', (form.status).toString());
     if (!form.image) return alert('Vui lòng chọn ảnh banner');
     data.append('image', form.image);
 
     try {
-      await axios.post(POST_BANNER_URL, data, {
+      const res = await axios.post(POST_BANNER_URL, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${JSON.parse(token)}`,
         },
       });
 
+       
+
       setShowForm(false);
-      setForm({ title: '', position: '', status: 'Đang hoạt động', image: null });
-      fetchBanners(); // ✅ Tải lại danh sách từ server để dữ liệu đúng
+      setForm({ title: '', position: '', status: 1, image: null });
+      setBanners((prev) => [res.data.banner,...prev]);
     } catch (err: any) {
       const message = err.response?.data
         ? JSON.stringify(err.response.data)
@@ -90,12 +95,74 @@ const BannerManagerPage = () => {
       await axios.delete(`${DELETE_BANNER_URL}${id}`, {
         headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
       });
-      fetchBanners(); // ✅ Tải lại danh sách sau khi xoá
+      setBanners(banners.filter((banner) => banner.id !== id));
     } catch (err) {
       console.error('❌ Lỗi xoá banner:', err);
       alert('Không thể xoá banner. Kiểm tra lại quyền hoặc trạng thái server.');
     }
   };
+
+
+
+  //
+  // Thêm các hàm xử lý mới vào component
+const handleMoveToTop = async (id: number) => {
+  const token = localStorage.getItem('accessToken');
+  try {
+    await axios.put(`http://huunghi.id.vn/api/banner/moveToTop/${id}`, {}, {
+      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+    });
+    fetchBanners();
+  } catch (err) {
+    console.error('Lỗi khi đưa banner lên đầu:', err);
+    alert('Không thể thay đổi vị trí banner');
+  }
+};
+
+const handleToggleStatus = async (id: number) => {
+  console.log(id);
+  const token = localStorage.getItem('accessToken');
+  try {
+    await axios.patch(`http://huunghi.id.vn/api/banner/changeStatus/${id}`, {}, {
+      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+    });
+    setBanners(banners.map( (banner) => banner.id == id ? {...banner, trang_thai : banner.trang_thai == 1 ?  0 : 1} : banner))
+  } catch (err) {
+    console.error('Lỗi khi thay đổi trạng thái:', err);
+    alert('Không thể thay đổi trạng thái banner');
+  }
+};
+
+const handleChangePosition = async (id: number, newPosition: string) => {
+  const token = localStorage.getItem('accessToken');
+  try {
+    await axios.patch(`http://huunghi.id.vn/api/banner/changePosition/${id}`, {
+      position: newPosition
+    }, {
+      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+    });
+    setBanners(banners.map( (banner) => banner.id == id ? {...banner, vi_tri : newPosition} : banner))
+  } catch (err) {
+    console.error('Lỗi khi thay đổi vị trí:', err);
+    alert('Không thể thay đổi vị trí banner');
+  }
+
+};
+
+const handleChangePriority = async (id: number, priority: number) => {
+  const token = localStorage.getItem('accessToken');
+  try {
+    await axios.put(`http://huunghi.id.vn/api/banner/changePriority/${id}`, {
+      priority
+    }, {
+      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+    });
+    fetchBanners();
+  } catch (err) {
+    console.error('Lỗi khi thay đổi ưu tiên:', err);
+    alert('Không thể thay đổi độ ưu tiên');
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -114,14 +181,15 @@ const BannerManagerPage = () => {
           onSubmit={handleSubmit}
           className="bg-white rounded shadow p-6 mb-8 grid gap-4 md:grid-cols-2"
         >
-          <input
-            name="title"
-            type="text"
-            value={form.title}
+          <select
+            name="status"
+            value={form.position}
             onChange={handleChange}
-            placeholder="Tiêu đề"
             className="border p-2 rounded w-full"
-          />
+          >
+            <option value="1">Hoạt động</option>
+            <option value="0">Không hoạt động</option>
+          </select>
           <select
             name="position"
             value={form.position}
@@ -129,11 +197,8 @@ const BannerManagerPage = () => {
             className="border p-2 rounded w-full"
           >
             <option value="">-- Vị trí hiển thị --</option>
-            <option value="top">Đầu trang</option>
-            <option value="middle">Giữa trang</option>
-            <option value="popup">Popup</option>
-            <option value="mobile">Mobile</option>
-            <option value="sidebar">Sidebar</option>
+            <option value="trang_chu">Trang chủ</option>
+            <option value="trang_san_pham">Trang sản phẩm</option>
           </select>
 
           <div className="col-span-2">
@@ -177,7 +242,9 @@ const BannerManagerPage = () => {
             <thead className="bg-gray-100">
               <tr>
                 <th className="p-3 font-medium">Hình ảnh</th>
-                <th className="p-3 font-medium">Tiêu đề</th>
+                <th className="p-3 font-medium">Vị trí</th>
+                <th className="p-3 font-medium">Trạng thái</th>
+  
                 <th className="p-3 font-medium">Ngày tạo</th>
                 <th className="p-3 font-medium">Thao tác</th>
               </tr>
@@ -192,25 +259,46 @@ const BannerManagerPage = () => {
                       className="w-32 h-16 object-cover rounded"
                     />
                   </td>
-                  <td className="p-3">{banner.link_banner}</td>
+                  <td className="p-3">
+                    <select
+                      value={banner.vi_tri}
+                      onChange={(e) => handleChangePosition(banner.id, e.target.value)}
+                      className="border p-1 rounded text-xs"
+                    >
+                      <option value="trang_chu">Trang chủ</option>
+                      <option value="trang_san_pham">Trang sản phẩm</option>
+                    </select>
+                  </td>
+                  <td className="p-3">
+                    <span
+                      onClick={() => handleToggleStatus(banner.id)}
+                      className={`px-2 py-1 rounded-full text-xs cursor-pointer ${banner.trang_thai == 1
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-yellow-100 text-yellow-800'
+                        }`}
+                    >
+                      {banner.trang_thai == 1 ? 'Đang hoạt động' : 'Tạm ngưng'}
+                    </span>
+                  </td>
                   <td className="p-3">
                     {banner.created_at
                       ? new Date(banner.created_at).toLocaleString()
                       : 'N/A'}
                   </td>
-                  <td className="p-3">
+                  <td className="p-3 space-x-2">
                     <button
                       onClick={() => handleDelete(banner.id)}
                       className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                      title="Xóa"
                     >
-                      Xoá
+                      <i className="fas fa-trash"></i>
                     </button>
                   </td>
                 </tr>
               ))}
               {banners.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="p-4 text-center text-gray-500">
+                  <td colSpan={6} className="p-4 text-center text-gray-500">
                     Chưa có banner nào
                   </td>
                 </tr>

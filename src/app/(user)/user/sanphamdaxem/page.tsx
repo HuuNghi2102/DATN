@@ -95,8 +95,6 @@ export default function UserProfile() {
     const typeToken = localStorage.getItem('typeToken');
     const whistList = localStorage.getItem('whislist');
     if(user && accessToken && typeToken){
-      console.log('accessToken:',JSON.parse(accessToken));
-      console.log('typeToken:',JSON.parse(typeToken));
       const resAddWhisList = await fetch(`https://huunghi.id.vn/api/whislist/addWhislist`,{
         method : "POST",
         headers : {

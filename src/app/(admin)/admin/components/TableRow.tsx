@@ -71,11 +71,19 @@ const TableRow: React.FC<TableRowProps> = ({ product }) => {
     }
   };
 
+  const StatusProduct = (status: number) => {
+    if(status == 0){
+      return { text: 'Ngưng bán', style: 'bg-red-100 text-red-800' };
+    }else{
+      return { text: 'Đang bán', style: 'bg-green-100 text-green-800' };
+    }
+  };
+
   return (
     <tr className="hover:bg-gray-50 border-b border-gray-200">
       {/* ID */}
       <td className="px-4 py-4 text-sm text-gray-700 align-middle">
-        #{product.id_san_pham}
+        #SP{product.id_san_pham}
       </td>
       
       {/* Product Info */}
@@ -96,10 +104,20 @@ const TableRow: React.FC<TableRowProps> = ({ product }) => {
       <td className="px-4 py-4 text-sm text-gray-700 align-middle">
         {product.gia_da_giam.toLocaleString('vi-VN')}đ
       </td>
+
+
+      {/* Status - Đảm bảo không bị rớt dòng */}
+      <td className="px-4 py-4 align-middle whitespace-nowrap">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${StatusProduct(product.trang_thai).style}`}>
+          {StatusProduct(product.trang_thai).text}
+        </span>
+      </td>
       
-      {/* Inventory - Phiên bản tối ưu */}
+      {/* Inventory - Phiên bản tối ưu
       <td className="px-4 py-4 align-middle">
         <div className="flex flex-wrap gap-2">
+
+          
           {colorGroups.map(([colorCode, colorData]) => (
             <div 
               key={colorCode} 
@@ -123,7 +141,7 @@ const TableRow: React.FC<TableRowProps> = ({ product }) => {
             </div>
           ))}
         </div>
-      </td>
+      </td> */}
       
       {/* Status - Đảm bảo không bị rớt dòng */}
       <td className="px-4 py-4 align-middle whitespace-nowrap">

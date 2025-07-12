@@ -1,10 +1,10 @@
 import { log } from "console";
 import interfaceVoucher from "../types/voucher";
 import { CreateVoucher } from "../types/voucher";
-export const getAPIVouchers = async (): Promise<interfaceVoucher[]> => {
+export const getAPIVouchers = async ():Promise<interfaceVoucher[]> => {
     try {
-    const accessToken = localStorage.getItem("accessToken");
-    const typeToken = localStorage.getItem("typeToken");
+        const accessToken = localStorage.getItem("accessToken");
+        const typeToken = localStorage.getItem("typeToken");
     if (accessToken && typeToken) {
         const parseaccessToken = JSON.parse(accessToken);
         const parsetypeToken = JSON.parse(typeToken);

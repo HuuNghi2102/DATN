@@ -45,6 +45,9 @@ const OrderDetailShipper = () => {
   const [detailOrders, setDetailOrder] = useState<detailOrder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [typeToken, setTypeToken] = useState('');
+  const [accessToken, setAccessToken] = useState('');
+
   const returStatus = (status: string) => {
     switch (status) {
       case 'cho_xac_nhan': return `Chờ xác nhận`;
@@ -83,6 +86,24 @@ const OrderDetailShipper = () => {
     }
   }
 
+  const positionMap = (position:string) => {
+    console.log(position);
+    router.push(`https://www.google.com/maps/dir/?api=1&destination=${position}`)
+  }
+
+  const getPaymentMethod = (idPayment:number) => {
+    switch(idPayment){
+      case 1: 
+        return 'Thanh Toán Khi Nhận Hàng';
+      case 2:
+        return 'PayPal';
+      case 3:
+        return 'VNPay';
+      default:
+        return 'Thanh Toán Khi Nhận Hàng';
+    }
+  }
+
 
   const fetchDefaultData = async () => {
 
@@ -98,8 +119,8 @@ const OrderDetailShipper = () => {
 
     if (accessTokenLocal && typeTokenLocal && userLocal){
 
-      // setAccessToken(JSON.parse(accessTokenLocal));
-      // setTypeToken(JSON.parse(typeTokenLocal));
+      setAccessToken(JSON.parse(accessTokenLocal));
+      setTypeToken(JSON.parse(typeTokenLocal));
 
       const user = JSON.parse(userLocal);
       if (user.id_vai_tro == 1 ||  user.id_vai_tro == 3 ) {
@@ -153,29 +174,27 @@ const OrderDetailShipper = () => {
     fetchDefaultData();
   },[])
 
-  // const updateStatus = async (orderId: number, newStatus: string) => {
-  //   const confirm = window.confirm('Bạn có chắc chắn muốn cập nhật đơn hàng này?')
-  //   if (confirm) {
-  //     alert(`Đã cập nhật trạng thái đơn hàng #${orderId} thành ${returStatus(newStatus)}`);
-  //     // Cập nhật trạng thái trong dữ liệu mẫu
-  //     setOrder(prev => {
-  //       if (!prev) return null;
-  //       let newStatusClass = "";
-  //       switch(newStatus) {
-  //         case 'dang_giao': newStatusClass = "bg-yellow-100 text-yellow-800"; break;
-  //         case 'giao_thanh_cong': newStatusClass = "bg-green-100 text-green-800"; break;
-  //         case 'hoan_hang': newStatusClass = "bg-orange-100 text-orange-800"; break;
-  //         case 'da_huy': newStatusClass = "bg-red-100 text-red-800"; break;
-  //         default: newStatusClass = "bg-blue-100 text-blue-800";
-  //       }
-  //       return {
-  //         ...prev,
-  //         trang_thai_don_hang: newStatus,
-  //         statusClass: newStatusClass
-  //       };
-  //     });
-  //   }
-  // };
+  const updateStatus = async (orderId:number, newStatus:string) => {
+    const confirm = window.confirm('Bạn có chắc chắn muốn cập nhật đơn hàng này?')
+    if(confirm){
+      const resChangeStatusOrder = await fetch(`https://huunghi.id.vn/api/order/changeStatusOrderAdmin/${orderId}?status=${newStatus}` ,{
+        method : "PUT",
+        headers : {
+          "Content-Type" : "application/json",
+          "Authorization" : `${typeToken} ${accessToken}`
+        }
+      });
+      if(resChangeStatusOrder.ok){
+        if(order){
+          setOrder({...order , trang_thai_don_hang : newStatus })
+        }
+        // setTotalCateOrder(newStatus);
+      }else{
+        alert('Cập nhật không thành công');
+      }
+    }
+    
+  };
 
   if (isLoading) {
     return (
@@ -294,8 +313,8 @@ const OrderDetailShipper = () => {
                 <h3 className="font-medium text-gray-700 mb-2">Thông tin vận chuyển</h3>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="text-gray-600"><span className="font-medium">Phí vận chuyển:</span> {order.tien_ship.toLocaleString('vi-VN')} đ</p>
-                  <p className="text-gray-600"><span className="font-medium">Phương thức thanh toán:</span> {order.id_phuong_thuc_thanh_toan}</p>
-                  <p className="text-gray-600"><span className="font-medium">Ghi chú:</span> {order.ghi_chu_don_hang}</p>
+                  <p className="text-gray-600"><span className="font-medium">Phương thức thanh toán:</span> {getPaymentMethod(order.id_phuong_thuc_thanh_toan)}</p>
+                  <p className="text-gray-600"><span className="font-medium">Ghi chú:</span> {order.ghi_chu_don_hang ? order.ghi_chu_don_hang : 'Không' }</p>
                   <p className="text-gray-600 mt-2"><span className="font-medium">Ngày tạo đơn:</span> {new Date(order.created_at).toLocaleString('vi-VN')}</p>
                 </div>
               </div>
@@ -313,7 +332,7 @@ const OrderDetailShipper = () => {
                   </div>
                   <div className="flex justify-between py-1">
                     <span className="text-gray-600">Giảm giá:</span>
-                    <span className="font-medium text-red-500">-{voucher?.gia_tri_giam.toLocaleString('vi-VN')} đ</span>
+                    <span className="font-medium text-red-500">{(voucher?.gia_tri_giam ? voucher?.gia_tri_giam : 0 ).toLocaleString('vi-VN')} đ</span>
                   </div>
                   <div className="flex justify-between py-1 border-t border-gray-200 mt-2 pt-2">
                     <span className="text-gray-900 font-semibold">Tổng cộng:</span>
@@ -331,7 +350,7 @@ const OrderDetailShipper = () => {
           </div>
           <div className="p-6 flex flex-wrap gap-4">
             <button 
-              onClick={() => alert('Mở bản đồ đến địa chỉ giao hàng')}
+              onClick={() => positionMap(order.dia_chi_nguoi_nhan)}
               className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex items-center"
             >
               <FaMapMarkerAlt className="mr-2" /> Xem bản đồ

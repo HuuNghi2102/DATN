@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FaDotCircle } from 'react-icons/fa';
+import userInterface from '../compoments/userInterface';
 import { faSearch, faCartShopping, faCalendarDays, faChevronRight, faBox } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
@@ -36,22 +37,18 @@ const PayPage = () => {
         location: '',
         idVoucher: null
     });
-
     const [discountOptions, setDiscountOptions] = useState<any[]>([]);
     const [addressOfUser, setAddressOfUser] = useState<any[]>([]);
     const [carts, setCarts] = useState<any[]>([]);
     const [arrMethodPayment, setArrMethodPayment] = useState<any[]>([]);
-
-
+    const [logoutUser, setLogoutUser] = useState(false);
     const [arrayProvince, setArrayProvince] = useState<any[]>([]);
     const [arrDistrict, setArrDistrict] = useState<any[]>([]);
     const [arrWard, setArrWard] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const router = useRouter();
-
     const [isHiddenShip,setHiddenShip] = useState<boolean>(false)
-
-
+    const [getUser, setgetUser] = useState<userInterface>()
     // hàm sử dụng địa chỉ giao hàng có sẵn của người dùng
     const changeAdress = (id_address: number) => {
 
@@ -76,8 +73,6 @@ const PayPage = () => {
             address: address?.dia_chi_nguoi_nhan
         })
     }
-
-
     // hàm sử dụng mã giảm giá
     const useVoucher = async (codeVoucher: string, totalOrder: number) => {
         const res = await fetch(`https://huunghi.id.vn/api/voucher/useVoucher`, {
@@ -103,11 +98,8 @@ const PayPage = () => {
             });
         }
     }
-
-
     // hàm lấy dữ liệu ban đầu
     const fetchData = async () => {
-
         const cartLocal = localStorage.getItem('cart');
         const accessTokenLocal = localStorage.getItem('accessToken');
         const typeTokenLocal = localStorage.getItem('typeToken');
@@ -315,8 +307,61 @@ const PayPage = () => {
             }
         }
     }
+    // logout
+    useEffect(() => {
+        if (logoutUser) {
+            logout();
+        }
+    }, [logoutUser])
+    const logout = async () => {
+        try {
+            const accessToken = localStorage.getItem("accessToken");
+            const typeToken = localStorage.getItem("typeToken");
 
-
+            if (accessToken && typeToken) {
+                const parseaccessToken = JSON.parse(accessToken);
+                const parsetypeToken = JSON.parse(typeToken);
+                console.log(parseaccessToken);
+                console.log(parsetypeToken);
+                const response = await fetch("https://huunghi.id.vn/api/user/logout", {
+                    method: "GET",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `${parsetypeToken} ${parseaccessToken}`,
+                    }
+                });
+                if (response.ok) {
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("typeToken");
+                    localStorage.removeItem("cart");
+                    window.dispatchEvent(new Event("userChanged"));
+                    window.dispatchEvent(new Event("quantityCartChange"));  
+                    alert('Đăng xuất thành công!')
+                    router.push("/login");
+                } else {
+                    alert('Không thể đăng xuất')
+                }
+            }
+        } catch (error) {
+            console.log('Lỗi: ', error);
+        }
+    }
+    // fetchUser
+    const userFetch = () =>{
+        try {
+            const getUser = localStorage.getItem("user");
+            if(getUser){
+                setgetUser(JSON.parse(getUser));
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+    useEffect(() => {
+        userFetch();
+    },[])
 
 
 
@@ -348,18 +393,23 @@ const PayPage = () => {
                     <div className="lg:col-span-2 space-y-6">
                         {/* Delivery Information */}
                         <div className="bg-white rounded-lg shadow p-6">
-                            <div className="flex items-center space-x-4 w-80 h-auto">
+                            {/* <div className="flex items-center space-x-4 w-80 h-auto">
                                 <img src="/assets/images/LogoAgain.png" alt="160Store" className="h-20" />
-                            </div>
-                            <h3 className="text-lg font-semibold mb-4">Thông tin giao hàng</h3>
+                            </div> */}
+                            <h3 className="text-2xl font-semibold mb-4">Thông tin giao hàng</h3>
 
                             <div className="flex items-center mb-4">
                                 <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
-                                    <i className="fas fa-user text-gray-500"></i>
+                                    
+                                    {/* user */}
+                                    <div>
+                                        <img src={`https://huunghi.id.vn/storage/avatars/${getUser?.anh_dai_dien_user}`} alt="" />
+                                    </div>
                                 </div>
                                 <div>
-                                    <p className="text-gray-600">()</p>
-                                    <p className="text-blue-500 cursor-pointer hover:underline">Đăng xuất</p>
+                                    <p className="text-gray-600">{getUser?.ten_user}</p>
+                                    <p onClick={() =>logout()}
+                                        className="text-blue-500 cursor-pointer hover:underline">Đăng xuất</p>
                                 </div>
                             </div>
                             <div className="space-y-4">

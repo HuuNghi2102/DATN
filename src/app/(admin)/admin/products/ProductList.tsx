@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import TableRow from '../components/TableRow';
 import { useRouter } from 'next/navigation';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface Product {
   id: string;
@@ -23,7 +25,12 @@ const ProductList = ({changeFlag} : { changeFlag : boolean}) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [perPage] = useState<number>(10); // Số sản phẩm mỗi trang
+  const [perPage] = useState<number>(10);
+
+  // Thêm state cho UI bộ lọc (không có chức năng)
+  const [nameFilter, setNameFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [inventoryFilter, setInventoryFilter] = useState<string>('all');
 
   const fetchProduct = async (page: number = 1) => {
     const accessTokenLocal = localStorage.getItem('accessToken');
@@ -96,6 +103,60 @@ const ProductList = ({changeFlag} : { changeFlag : boolean}) => {
       <div className="card-header px-6 py-5 border-b border-gray-200">
         <h2 className="text-lg font-semibold">Danh sách sản phẩm</h2>
       </div>
+
+      {/* Thêm UI bộ lọc - KHÔNG có chức năng */}
+      <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Ô tìm kiếm theo tên */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Tìm kiếm sản phẩm</label>
+            <div className="relative">
+              <input
+                type="text"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+                placeholder="Nhập tên sản phẩm..."
+                className="w-full pl-10 pr-4 py-2 border rounded-md"
+              />
+              <FontAwesomeIcon 
+                icon={faSearch} 
+                className="absolute left-3 top-3 text-gray-400"
+              />
+            </div>
+          </div>
+          
+          {/* Lọc theo trạng thái */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Trạng thái</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md"
+            >
+              <option value="all">Tất cả trạng thái</option>
+              <option value="in-stock">Đang bán</option>
+              <option value="out-of-stock">Ngừng bán</option>
+            </select>
+          </div>
+          
+          {/* Lọc theo tồn kho */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Tình trạng tồn kho</label>
+            <select
+              value={inventoryFilter}
+              onChange={(e) => setInventoryFilter(e.target.value)}
+              className="w-full px-4 py-2 border rounded-md"
+            >
+              <option value="all">Tất cả</option>
+              <option value="in-stock">Còn hàng</option>
+              <option value="low-stock">Sắp hết</option>
+              <option value="out-of-stock">Hết hàng</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Phần còn lại giữ nguyên */}
       <div className="card-body p-0">
         <div className="table-container overflow-x-auto rounded shadow-sm bg-white">
           <table className="table w-full text-sm">
@@ -104,8 +165,8 @@ const ProductList = ({changeFlag} : { changeFlag : boolean}) => {
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Mã SP</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Tên sản phẩm</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Giá</th>
-                <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Tồn kho</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Trạng thái</th>
+                <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Tồn kho</th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">Thao tác</th>
               </tr>
             </thead>
@@ -117,7 +178,7 @@ const ProductList = ({changeFlag} : { changeFlag : boolean}) => {
           </table>
         </div>
 
-        {/* Phần phân trang */}
+        {/* Phần phân trang giữ nguyên */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
           <div className="text-sm text-gray-600">
             Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '}

@@ -59,10 +59,12 @@ export default function CustomerManager() {
     password: '',
     role: 1
   })
-
-
-
   const [showForm, setShowForm] = useState(false);
+
+  const [selectedRole, setSeletedRole] = useState<number | ''>('');
+  const [selectedDate, setSeletedDate] = useState<string | ''>('');
+  const [search, setSearch] = useState<string | ''>('');
+  const [ totalOrder, setTotalOrder] = useState<string | ''>('');
 
   const fetchDefaultData = async () => {
 
@@ -78,7 +80,7 @@ export default function CustomerManager() {
       if (user.id_vai_tro == 1) {
 
 
-        const resUser = await fetch(`https://huunghi.id.vn/api/user/getListUser?page=${currentPage}`, {
+        const resUser = await fetch(`https://huunghi.id.vn/api/user/getListUser?page=${currentPage}&role=${selectedRole}&date=${selectedDate}&search=${search}&totalOrder=${totalOrder}`, {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
@@ -207,8 +209,8 @@ export default function CustomerManager() {
 
   useEffect(() => {
     fetchDefaultData();
-  }, [currentPage])
-
+  }, [currentPage,selectedDate,selectedRole,search,totalOrder])
+console.log(search);
   if (isLoading) {
     return (
       <div
@@ -346,8 +348,8 @@ export default function CustomerManager() {
       <div className="bg-white p-4 rounded shadow mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Nhóm thành viên</label>
-          <select className="w-full border border-gray-300 rounded px-3 py-2 text-sm">
-            <option>Tất cả nhóm</option>
+          <select value={selectedRole} onChange={(e:any) => {setSeletedRole(e.target.value ? Number(e.target.value) : '');setCurrentPage(1)}} className="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+            <option value="" >Tất cả nhóm</option>
             {listRole.map((r,i) =>(
               <option key={i} value={r.id_vai_tro}>{r.ten_vai_tro}</option>
             ))}
@@ -355,25 +357,27 @@ export default function CustomerManager() {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Ngày đăng ký</label>
-          <select className="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+          <select value={selectedDate} onChange={(e:any) => {setSeletedDate(e.target.value ? e.target.value : '');setCurrentPage(1)}} className="w-full border border-gray-300 rounded px-3 py-2 text-sm">
             <option>Tất cả thời gian</option>
-            <option>Hôm nay</option>
-            <option>Tuần này</option>
-            <option>Tháng này</option>
-            <option>Tùy chọn...</option>
+            <option value="day">Hôm nay</option>
+            <option value="week">Tuần này</option>
+            <option value="month">Tháng này</option>
+            <option value="year">Năm này</option>
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
-          <input type="text" className="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Tìm theo tên, SĐT, email..." />
+          {/* <form onSubmit={(e:any) => {e.preventDefault()}}> */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
+            <input type="text" value={search} onChange={(e:any) => {setCurrentPage(1);setSearch(e.target.value)}} className="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Tìm theo tên, SĐT, email..." />
+          {/* </form> */}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Số đơn hàng</label>
-          <select className="w-full border border-gray-300 rounded px-3 py-2 text-sm">
-            <option>Tất cả</option>
-            <option>Chưa mua hàng</option>
-            <option>1-5 đơn</option>
-            <option>Trên 5 đơn</option>
+          <select value={totalOrder} onChange={(e:any) => {setCurrentPage(1);setTotalOrder(e.target.value ? e.target.value : '')}} className="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+            <option value="">Tất cả</option>
+            <option value="chua_mua_hang">Chưa mua hàng</option>
+            <option value="1-5">1-5 đơn</option>
+            <option value="hon_5">Trên 5 đơn</option>
           </select>
         </div>
       </div>
@@ -414,7 +418,7 @@ export default function CustomerManager() {
                   <td className="px-4 py-3 text-gray-700">{cus.orders_count ? cus.orders_count : 0 }</td>
                   <td className="px-4 py-3 text-gray-700">{cus.orders_sum_gia_tong_don_hang ? Number(cus.orders_sum_gia_tong_don_hang).toLocaleString('vi-VN') : 0} VNĐ</td>
                   <td className="px-4 py-3">
-                    <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${cus.group === "VIP" ? "bg-indigo-100 text-indigo-600" : cus.group === "Thường xuyên" ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-800"}`}>
+                    <span className={`inline-block px-2 py-1 text-xs rounded-full font-medium ${cus.id_vai_tro === 1 ? "bg-indigo-100 text-indigo-600" : cus.id_vai_tro  === 2 ? "bg-green-100 text-green-600" : cus.id_vai_tro  === 3 ?  "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}`}>
                       {checkRole(cus.id_vai_tro)}
                     </span>
                   </td>

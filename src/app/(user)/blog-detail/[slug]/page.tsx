@@ -17,19 +17,19 @@ import { useParams } from 'next/navigation';
 const IntegratedPage = () => {
 
   const useParam = useParams();
-  const {slug} = useParam; 
+  const { slug } = useParam;
 
   const [shirtShopPage, setShirtShopPage] = useState(1);
   const [articlePage, setArticlePage] = useState(1);
   const [storePage, setStorePage] = useState(1);
   const titleRef = useRef<HTMLDivElement>(null);
-  const [currentPost,setCurrentPost] = useState<any>();
-  const [arrayPostNew,setArrayPostNew] = useState<any[]>([]);
+  const [currentPost, setCurrentPost] = useState<any>();
+  const [arrayPostNew, setArrayPostNew] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchBlog();
-  },[]);
+  }, []);
 
   const fetchBlog = async () => {
     if(!slug){
@@ -51,7 +51,7 @@ const IntegratedPage = () => {
     setArrayPostNew(resultPostNew.data.postsNew);
 
     setIsLoading(false);
-    
+
   }
 
   // Dữ liệu bài viết
@@ -298,77 +298,17 @@ const IntegratedPage = () => {
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1">
             <img
-              className="w-full mb-2"
+              className="w-10 mb-2"
               src={`https://huunghi.id.vn/storage/posts/${currentPost?.anh_bai_viet}`}
               alt="Shop áo sơ mi nam ở Gò Vấp"
-              width={600}
-              height={300}
             />
-            {currentPost?.noi_dung_bai_viet}
-            <p className="font-bold text-[11px] mb-1">Gò Vấp là một trong những trung tâm mua sắm thời trang nam trẻ, năng động hàng đầu tại TP.HCM...</p>
-            <p className="font-bold text-[13px] mb-1">Gò Vấp - Tâm điểm mua sắm thời trang nam trẻ trung</p>
-            <p className="mb-3">Gò Vấp từ lâu đã được xem là <span className="font-bold">tâm điểm mua sắm thời trang nam trẻ</span> tại TP.HCM...</p>
-            <p className="mb-3">Những con đường sầm uất như Quang Trung, Nguyễn Oanh luôn nhộn nhịp với các shop thời trang đình đám như ICONDENIM, 16OSTORE, 4MEN,...</p>
-            <img
-              className="w-full mb-2"
-              src="https://storage.googleapis.com/a1aa/image/bd3a53ee-5fce-49cf-d2b7-20240ccd5279.jpg"
-              alt="Khu vực thời trang nam Gò Vấp"
-              width={600}
-              height={300}
-            />
-            <p className="text-[11px] font-bold text-center mb-6">Gò Vấp là điểm đến mua sắm thời trang sầm uất hàng đầu</p>
-
-            {/* ICONDENIM */}
-            <h2 className="font-bold text-base leading-5 mb-2">ICONDENIM</h2>
-            <p className="text-xs mb-1">ICONDENIM tự hào là một trong những <span className="font-bold">shop quần áo nam đẹp ở Gò Vấp, chất lượng và uy tín đầu</span>.</p>
-            <p className="text-xs mb-1">Với phong cách thời trang đa dạng, ICONDENIM mang đến tinh thần “<span className="italic">Enjoy Life</span>”.</p>
-            <p className="text-xs mb-1">Cửa hàng cung cấp các mẫu áo sơ mi thiết kế tinh tế, chất liệu cao cấp như cotton, linen, oxford chống nhăn...</p>
-            <p className="text-xs mb-4">Điểm cộng là mức giá hợp lý, dịch vụ tư vấn tận tâm và chính sách đổi trả linh hoạt.</p>
-            <figure className="mb-4">
-              <img className="w-full object-cover" src="https://storage.googleapis.com/a1aa/image/083d2fc5-95bb-4731-a839-1d373806ef47.jpg" alt="ICONDENIM shop Gò Vấp" />
-              <figcaption className="text-[9px] text-center italic mt-1">ICONDENIM là thương hiệu áo sơ mi local brand nam Gò Vấp</figcaption>
-            </figure>
-            <p className="text-[9px] font-normal mb-6">
-              <strong>Website:</strong> <a href="https://icondenim.com/">https://icondenim.com/</a><br />
-              <strong>Hotline:</strong> 02873 066 060<br />
-              <strong>Địa chỉ:</strong> 261 Quang Trung, P.10, Gò Vấp, TP.HCM<br />
-              <strong>Facebook:</strong> <a href="https://www.facebook.com/icondenimvn">https://www.facebook.com/icondenimvn</a>
-            </p>
-
-            {/* 16OSTORE */}
-            <h2 className="font-bold text-base leading-5 mb-2">16OSTORE</h2>
-            <p className="text-xs mb-1">16OSTORE là cái tên không thể bỏ qua khi nhắc đến <span className="font-bold">shop bán áo sơ mi nam cao cấp Gò Vấp</span>.</p>
-            <p className="text-xs mb-4">Shop mang phong cách năng động, trẻ trung với áo sơ mi tối giản, chất liệu thoáng mát. Ngoài ra còn có quần bò, phụ kiện.</p>
-            <figure className="mb-4">
-              <iframe className="w-full aspect-video" src="https://www.youtube.com/embed/7q6q6q6q6q6" title="16OSTORE video" frameBorder="0" allowFullScreen></iframe>
-              <figcaption className="text-[9px] text-center italic mt-1">16OSTORE là điểm đến mua sắm thời trang lý tưởng</figcaption>
-            </figure>
-
-            {/* Highlight sản phẩm */}
-            <div className="mt-10 max-w-[520px] ml-0">
-  <img className="w-full object-cover" src="https://storage.googleapis.com/a1aa/image/6b931f0c-6fc4-4bfa-f7c9-b1af9e902f31.jpg" alt="Áo sơ mi nam dài tay thời trang" />
-  <p className="mt-2 text-[12px] text-[#4a90e2] italic text-left font-light">Áo Sơ Mi Blended Cotton Nam Tay Dài Patterned Heat Form Regular</p>
-</div>
-
+              <div dangerouslySetInnerHTML={{ __html: currentPost.noi_dung_bai_viet }} />
           </div>
-
-          {/* Sidebar */}
-          <aside className="w-full lg:w-[220px] h-fit bg-white border border-gray-300 rounded-md p-3 text-[11px] text-gray-600">
-            <p className="font-bold mb-1">Nội dung bài viết <a className="text-blue-500 ml-1">(Ẩn)</a></p>
-            <ul className="space-y-1">
-              <li><a className="text-blue-500 hover:underline" href="#">Gò Vấp - Tâm điểm mua sắm thời trang nam trẻ trung</a></li>
-              <li><a className="text-blue-500 hover:underline" href="#">ICONDENIM</a></li>
-              <li><a className="text-blue-500 hover:underline" href="#">16OSTORE</a></li>
-              <li><a className="text-blue-500 hover:underline" href="#">4MEN</a></li>
-              <li><a className="text-blue-500 hover:underline" href="#">Totoday</a></li>
-              <li><a className="text-blue-500 hover:underline" href="#">Kapo</a></li>
-            </ul>
-          </aside>
         </div>
 
         {/* Phần bài viết */}
         <div ref={titleRef} className="mt-10">
-         
+
           <h1 className="font-bold text-[18px] text-center mb-3">CÁC BÀI VIẾT MỚI NHẤT</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {arrayPostNew.map((article) => (
@@ -376,7 +316,7 @@ const IntegratedPage = () => {
                 <img src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`} alt={article.ten_bai_viet} className="w-full h-36 object-cover" loading="lazy" />
                 <div className="p-4 flex flex-col flex-grow">
                   <h2 className="text-sm font-bold mb-2">{article.ten_bai_viet}</h2>
-                  <p className="text-xs text-gray-600 mb-3 flex-grow">{article.noi_dung_bai_viet.slice(0,50)}</p>
+                  <div className="text-xs text-gray-600 mb-3 flex-grow"><div dangerouslySetInnerHTML={{ __html: article.noi_dung_bai_viet.slice(0,50) }} /></div>
                   <div className="flex justify-between items-center text-xs text-gray-500">
                     <time className="flex items-center gap-1">
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -390,12 +330,12 @@ const IntegratedPage = () => {
               </article>
             ))}
           </div>
-          
+
         </div>
 
         {/* Phần địa chỉ cửa hàng */}
         <div className="mt-10">
-        <h1 className="font-bold text-[18px] text-center mb-3">HỆ THỐNG CỬA HÀNG</h1>
+          <h1 className="font-bold text-[18px] text-center mb-3">HỆ THỐNG CỬA HÀNG</h1>
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className="flex items-center border border-gray-300 rounded-md p-3 space-x-3 bg-white">
               <FontAwesomeIcon icon={faBoxOpen} className="text-yellow-500 text-xl flex-shrink-0" />

@@ -84,7 +84,11 @@ const LoginPage = () => {
       //   dispatch({ type: 'SET_CART', payload: cartResult.cart });
       //   localStorage.setItem('cart', JSON.stringify(cartResult.cart));
       // }
-      router.push('/user/userprofile');
+      if(user.id_vai_tro == 2){
+        router.push('/user/userprofile');
+      }else{
+        router.push('/admin');
+      }
       toast.success("Đăng nhập thành công!");
     } catch (err) {
       console.error(err);

@@ -9,11 +9,12 @@ import Link from 'next/link';
 
 //array status order of shipper
 const statusOrderOfShipper = [
-  {status : 'Đơn hàng chờ nhận', codeStatus : 'cho_lay_hang' },
-  {status : 'Đang giao', codeStatus : 'dang_giao'},
-  {status : 'Đang hoàn hàng', codeStatus : 'hoan_hang'},
-  {status : 'Giao thành công', codeStatus : 'giao_thanh_cong'},
-  {status : 'Giao thất bại', codeStatus : 'da_huy'}
+  { status: 'Tất cả đơn hàng', codeStatus: '' },
+  { status: 'Đơn hàng chờ nhận', codeStatus: 'cho_lay_hang' },
+  { status: 'Đang giao', codeStatus: 'dang_giao' },
+  { status: 'Đang hoàn hàng', codeStatus: 'hoan_hang' },
+  { status: 'Giao thành công', codeStatus: 'giao_thanh_cong' },
+  { status: 'Giao thất bại', codeStatus: 'da_huy' }
 ]
 
 
@@ -31,17 +32,17 @@ const OrderManagement = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [perPage,setPerPage] = useState<number>(20);
+  const [perPage, setPerPage] = useState<number>(20);
 
   const [typeToken, setTypeToken] = useState('');
   const [accessToken, setAccessToken] = useState('');
 
   const [openOrder, setOpenOrder] = useState<string | null>(null);
   const toggleOrderDetails = (id: string) => setOpenOrder(openOrder === id ? null : id);
-  const [selectedStatus , setSelectedStatus] = useState<string>('cho_lay_hang');
+  const [selectedStatus, setSelectedStatus] = useState<string>('cho_lay_hang');
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [orders,setOrders] = useState<orderInterface[]>([])
+  const [orders, setOrders] = useState<orderInterface[]>([])
   const [searchQuery, setSearchQuery] = useState('');
 
 
@@ -70,7 +71,7 @@ const OrderManagement = () => {
 
         if (resOrders.ok) {
           const listOrder = resultOrder.data.orders.data;
-setOrders(listOrder);
+          setOrders(listOrder);
 
           setTotalPages(resultOrder.data.orders.last_page);
           setCurrentPage(resultOrder.data.orders.current_page);
@@ -90,17 +91,28 @@ setOrders(listOrder);
         } else {
           alert('Lấy danh sách đơn hàng thành công');
         }
-        
-      }else{
+
+      } else {
         router.push('/user/userprofile');
       }
-    }else{
+    } else {
       router.push('/login');
     }
   }
 
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
-  const returStatus = (status:string) => {
+  const positionMap = (position: string) => {
+    console.log(position);
+    router.push(`https://www.google.com/maps/dir/?api=1&destination=${position}`)
+  }
+
+
+  const returStatus = (status: string) => {
     switch (status) {
       case 'cho_xac_nhan': return `Chờ xác nhận`;
       case 'chu_y': return `Chú ý`;
@@ -114,57 +126,57 @@ setOrders(listOrder);
     }
   };
 
-  const nextSatatusOrder = (status:string) => {
+  const nextSatatusOrder = (status: string) => {
     switch (status) {
       case 'cho_lay_hang':
         return [
-          {className : 'green', nextStatus : 'dang_giao' , status : 'Nhận đơn'}
+          { className: 'green', nextStatus: 'dang_giao', status: 'Nhận đơn' }
         ];
-      case 'dang_giao': 
+      case 'dang_giao':
         return [
-          {className : 'yellow', nextStatus : 'hoan_hang' , status : 'Hoàn hàng'},
-          {className : 'green', nextStatus : 'giao_thanh_cong' , status : 'Giao hàng'}
+          { className: 'yellow', nextStatus: 'hoan_hang', status: 'Hoàn hàng' },
+          { className: 'green', nextStatus: 'giao_thanh_cong', status: 'Giao hàng' }
         ];
-      case 'hoan_hang': 
+      case 'hoan_hang':
         return [
-          {className : 'yellow', nextStatus : 'da_huy', status : 'Trả hàng'}
+          { className: 'yellow', nextStatus: 'da_huy', status: 'Trả hàng' }
         ];
-      case 'giao_thanh_cong': 
+      case 'giao_thanh_cong':
         return [];
       case 'da_huy':
         return [];
-      default: 
+      default:
         return [];
     }
   }
 
-  const updateStatus = async (orderId:number, newStatus:string) => {
+  const updateStatus = async (orderId: number, newStatus: string) => {
     const confirm = window.confirm('Bạn có chắc chắn muốn cập nhật đơn hàng này?')
-    if(confirm){
-      const resChangeStatusOrder = await fetch(`https://huunghi.id.vn/api/order/changeStatusOrderAdmin/${orderId}?status=${newStatus}` ,{
-        method : "PUT",
-        headers : {
-          "Content-Type" : "application/json",
-          "Authorization" : `${typeToken} ${accessToken}`
+    if (confirm) {
+      const resChangeStatusOrder = await fetch(`https://huunghi.id.vn/api/order/changeStatusOrderAdmin/${orderId}?status=${newStatus}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `${typeToken} ${accessToken}`
         }
       });
-      if(resChangeStatusOrder.ok){
-        if(selectedStatus == ''){
-          setOrders(orders.map((o) => o.id_don_hang == orderId ? {...o, trang_thai_don_hang : newStatus }  : o ))
-        }else{
-          setOrders(orders.filter((o,i) => o.id_don_hang != orderId ))
+      if (resChangeStatusOrder.ok) {
+        if (selectedStatus == '') {
+          setOrders(orders.map((o) => o.id_don_hang == orderId ? { ...o, trang_thai_don_hang: newStatus } : o))
+        } else {
+          setOrders(orders.filter((o, i) => o.id_don_hang != orderId))
         }
-// setTotalCateOrder(newStatus);
-      }else{
+        // setTotalCateOrder(newStatus);
+      } else {
         alert('Cập nhật không thành công');
       }
     }
-    
+
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchDefaultData();
-  },[selectedStatus]);
+  }, [selectedStatus]);
 
   if (isLoading) {
     return (
@@ -196,11 +208,11 @@ setOrders(listOrder);
         </div>
 
         <div className="flex gap-2 overflow-x-auto mb-6">
-          {statusOrderOfShipper.map((status,i) => (
+          {statusOrderOfShipper.map((status, i) => (
             <button
               key={i}
               className={`px-4 py-2 text-sm border rounded-full whitespace-nowrap ${selectedStatus === status.codeStatus ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}`}
-              onClick={()=>setSelectedStatus(status.codeStatus)}
+              onClick={() => setSelectedStatus(status.codeStatus)}
             >
               {status.status}
             </button>
@@ -223,7 +235,7 @@ setOrders(listOrder);
                   <th className="px-6 py-3 font-medium">Tổng tiền</th>
                   <th className="px-6 py-3 font-medium">Trạng thái</th>
                   <th className="px-6 py-3 font-medium">Thao tác</th>
-</tr>
+                </tr>
               </thead>
               <tbody className="text-gray-800">
                 {orders.map((order) => (
@@ -234,7 +246,7 @@ setOrders(listOrder);
                         <div className="font-semibold">{order.ten_nguoi_nhan}</div>
                         <div className="text-xs text-gray-500">{order.so_dien_thoai_nguoi_nhan}</div>
                       </td>
-                      <td className="px-6 py-4">{order.dia_chi_nguoi_nhan.slice(0,45 )+'...'}</td>
+                      <td className="px-6 py-4">{order.dia_chi_nguoi_nhan.slice(0, 45) + '...'}</td>
                       <td className="px-6 py-4">{order.gia_tong_don_hang.toLocaleString('vi-VN')}VNĐ</td>
                       <td className="px-6 py-4">
                         <span className={`inline-block text-white px-3 bg-green-500 py-1 rounded-full text-xs font-medium ${order.trang_thai_don_hang}`}>{returStatus(order.trang_thai_don_hang)}</span>
@@ -244,10 +256,12 @@ setOrders(listOrder);
                           <Link href={`/admin/shipper/detail-order/${order.id_don_hang}`}>
                             <button className="p-2 border rounded hover:bg-gray-100" ><FaEye /></button>
                           </Link>
-                          <button className="p-2 border rounded hover:bg-gray-100"><FaMapMarkerAlt /></button>
-                          <button className="p-2 border rounded hover:bg-gray-100"><FaPhone /></button>
-                          {nextSatatusOrder(order.trang_thai_don_hang).map((e,i)=>(
-                            <button onClick={()=>updateStatus(order.id_don_hang,e.nextStatus)} key={i} className={`px-3 py-2 text-xs bg-${e.className}-600 text-white rounded hover:bg-${e.className}-700 font-medium whitespace-nowrap`}>{e.status}</button>
+                          <button onClick={() => positionMap(order.dia_chi_nguoi_nhan)} className="p-2 border rounded hover:bg-gray-100"><FaMapMarkerAlt /></button>
+                          <Link href={`tel:${order.so_dien_thoai_nguoi_nhan}`}>
+                            <button className="p-2 border rounded hover:bg-gray-100"><FaPhone /></button>
+                          </Link>
+                          {nextSatatusOrder(order.trang_thai_don_hang).map((e, i) => (
+                            <button onClick={() => updateStatus(order.id_don_hang, e.nextStatus)} key={i} className={`px-3 py-2 text-xs bg-${e.className}-600 text-white rounded hover:bg-${e.className}-700 font-medium whitespace-nowrap`}>{e.status}</button>
                           ))}
                         </div>
                       </td>
@@ -298,67 +312,67 @@ setOrders(listOrder);
         </div>
       </div>
       {/* Phân Trang */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
-            {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
-          <div className="text-sm text-gray-600">
-            Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '}
-            <span className="font-medium">{Math.min(currentPage * perPage, orders.length + (currentPage - 1) * perPage)}</span>{' '}
-            trong tổng số <span className="font-medium">{totalOrder}</span> đơn hàng
-          </div>    
-          <div className="flex space-x-2">
-            <button
-              // onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
-            >
-              Trước
-            </button>
-            
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
-              
-              return (
-                <button
-                  key={pageNum}
-                  // onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-            
-            {totalPages > 5 && currentPage < totalPages - 2 && (
-              <span className="px-3 py-1">...</span>
-            )}
-            
-            {totalPages > 5 && currentPage < totalPages - 2 && (
-              <button
-                // onClick={() => handlePageChange(totalPages)}
-                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
-              >
-                {totalPages}
-              </button>
-            )}
-            
-            <button
-              // onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
-            >
-              Sau
-            </button>
-          </div>
+      <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
+        {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
+        <div className="text-sm text-gray-600">
+          Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '}
+          <span className="font-medium">{Math.min(currentPage * perPage, orders.length + (currentPage - 1) * perPage)}</span>{' '}
+          trong tổng số <span className="font-medium">{totalOrder}</span> đơn hàng
         </div>
+        <div className="flex space-x-2">
+          <button
+            // onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+          >
+            Trước
+          </button>
+
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+
+            return (
+              <button
+                key={pageNum}
+                onClick={() => handlePageChange(pageNum)}
+                className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+
+          {totalPages > 5 && currentPage < totalPages - 2 && (
+            <span className="px-3 py-1">...</span>
+          )}
+
+          {totalPages > 5 && currentPage < totalPages - 2 && (
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+            >
+              {totalPages}
+            </button>
+          )}
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+          >
+            Sau
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
