@@ -125,7 +125,7 @@ export default function ChangePassword() {
       {/* Content */}
       <div className="max-w-[1200px] mx-auto p-4 flex flex-col md:flex-row gap-6">
         {/* Sidebar */}
-        <div className="w-full md:w-80 bg-white rounded-lg shadow-sm max-h-[530px] sticky top-40">
+        <div className="w-full md:w-80 bg-white rounded-lg shadow-sm max-h-[530px] lg:sticky top-40">
           <div className="p-4 border-b bg-gray-50 rounded-t-lg">
             <div className="flex items-center gap-2">
               <i className="fas fa-user text-gray-600"></i>

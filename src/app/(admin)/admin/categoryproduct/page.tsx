@@ -1,14 +1,10 @@
 'use client';
-
-import React, { useState } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrash, faPencil, faPlus, faEdit } from "@fortawesome/free-solid-svg-icons";
+import categoryInterface from "../types/category";
+import { getAPICategories,addCategories,editCategories } from "../services/categoryService";
+import React, { useState,useEffect } from 'react';
 import '@/app/globals.css';
-
-interface Category {
-  name: string;
-  slug: string;
-  description: string;
-  parent: string;
-}
 type FormData = {
   name: string;
   slug: string;
@@ -25,94 +21,109 @@ const CategoryPage = () => {
     description: '',
     parent: '',
   });
-
-  const [categoryList, setCategoryList] = useState<Category[]>([
-    { name: 'Thời trang nam', slug: 'thoi-trang-nam', description: 'Các sản phẩm thời trang dành cho nam giới', parent: '' },
-    { name: 'Áo thun nam', slug: 'ao-thun-nam', description: 'Áo thun các loại dành cho nam giới', parent: 'Thời trang nam' },
-    { name: 'Quần jean nam', slug: 'quan-jean-nam', description: 'Quần jean các loại dành cho nam giới', parent: 'Thời trang nam' },
-    { name: 'Thời trang nữ', slug: 'thoi-trang-nu', description: 'Các sản phẩm thời trang dành cho nữ giới', parent: '' },
-    { name: 'Váy đầm', slug: 'vay-dam', description: 'Các loại váy đầm thời trang nữ', parent: 'Thời trang nữ' },
-    { name: 'Phụ kiện', slug: 'phu-kien', description: 'Các phụ kiện thời trang', parent: '' },
-  ]);
+  const [categoryList, setCategoryList] = useState<categoryInterface[]>([]);
+  useEffect(() => {
+    const FetchCate = async() => {
+      try {
+        const data = await getAPICategories();
+        setCategoryList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    FetchCate();
+  },[])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
-    if (id === 'name') {
-      const slug = value.toLowerCase().replace(/ /g, '-').replace(/[^À-ỹa-z0-9-]/gi, '');
-      setFormData((prev) => ({ ...prev, slug }));
-    }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const parentId = formData.parent ? parseInt(formData.parent) : null;
+
+  const payload = {
+    ten_loai: formData.name,
+    duong_dan: formData.slug,
+    mota_loai: formData.description,
+    id_danh_muc_cha: parentId,
+  };
+
+  try {
     if (editingSlug) {
-      // Update
-      setCategoryList((prev) =>
-        prev.map((cat) => (cat.slug === editingSlug ? formData : cat))
-      );
-      alert('Danh mục đã được cập nhật!');
+      // SỬA DANH MỤC
+      const result = await editCategories(editingSlug, payload);
+      console.log("✅ Đã cập nhật:", result);
     } else {
-      // Add new
-      setCategoryList((prev) => [...prev, formData]);
-      alert('Danh mục mới đã được thêm!');
+      // THÊM MỚI
+      const result = await addCategories(payload);
+      console.log("✅ Đã thêm:", result);
     }
 
-    setShowForm(false);
+    // Làm mới lại danh sách
+    const data = await getAPICategories();
+    setCategoryList(data);
+
+    // Reset form
     setFormData({ name: '', slug: '', description: '', parent: '' });
     setEditingSlug(null);
-  };
+    setShowForm(false);
+  } catch (error) {
+    console.error("❌ Lỗi khi lưu danh mục:", error);
+  }
+};
+
+
 
   const handleDelete = (slugToDelete: string) => {
-    if (confirm('Bạn có chắc muốn xóa danh mục này và các danh mục con không?')) {
-      const deleteWithChildren = (slug: string, name: string) => {
-        return categoryList.filter(
-          (cat) => cat.slug !== slug && cat.parent !== name
-        );
-      };
-      const toDelete = categoryList.find((c) => c.slug === slugToDelete);
-      if (toDelete) {
-        const updated = deleteWithChildren(toDelete.slug, toDelete.name);
-        setCategoryList(updated);
-      }
-    }
   };
 
-  const handleEdit = (slugToEdit: string) => {
-    const cat = categoryList.find((c) => c.slug === slugToEdit);
-    if (cat) {
-      setFormData(cat);
-      setEditingSlug(cat.slug);
-      setShowForm(true);
-    }
-  };
+const handleEdit = (slugToEdit: string) => {
+  const category = categoryList.find((cat) => cat.duong_dan === slugToEdit);
+  if (!category) return;
 
-  const buildCategoryTree = (categories: Category[], parent = ''): React.ReactElement[] => {
-    return categories
-      .filter((cat) => cat.parent === parent)
-      .map((cat) => (
-        <li key={cat.slug} className="mb-1">
-          <div className="flex items-center justify-between px-2 py-1 rounded hover:bg-gray-100">
-            <span>{cat.name}</span>
-            <div className="flex gap-2">
-              <button
-                className="p-1 text-gray-600 hover:text-indigo-600"
-                onClick={() => handleEdit(cat.slug)}
-              >
-                <i className="fas fa-pencil-alt"></i>
-              </button>
-              <button
-                className="p-1 text-gray-600 hover:text-red-600"
-                onClick={() => handleDelete(cat.slug)}
-              >
-                <i className="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-          <ul className="ml-4">{buildCategoryTree(categories, cat.name)}</ul>
-        </li>
-      ));
-  };
+  setFormData({
+    name: category.ten_loai,
+    slug: category.duong_dan,
+    description: category.mota_loai || '',
+    parent: category.id_danh_muc_cha?.toString() || '',
+  });
+
+  setEditingSlug(slugToEdit); // Đánh dấu đang sửa
+  setShowForm(true); // Mở form
+};
+
+
+const buildCategoryTree = (
+  categories: categoryInterface[],
+  parentId: number | null = null
+): React.ReactElement[] => {
+  // Lấy ra các danh mục con có id_danh_muc_cha bằng parentId
+  const children = categories.filter(cat => cat.id_danh_muc_cha === parentId);
+
+  return children.map(cat => {
+    // Kiểm tra xem danh mục này có danh mục con hay không
+    const hasChildren = categories.some(c => c.id_danh_muc_cha === cat.id_loai_san_pham);
+
+    return (
+      <li key={cat.duong_dan} className="mb-2">
+        <div className="flex items-center justify-between bg-gray-50 px-3 py-1 rounded hover:bg-gray-100">
+          <span className="font-medium">{cat.ten_loai}</span>
+        </div>
+
+        {/* Đệ quy nếu có danh mục con */}
+        {hasChildren && (
+          <ul className="ml-6 mt-1 border-l-2 border-gray-200 pl-4">
+            {buildCategoryTree(categories, cat.id_loai_san_pham)}
+          </ul>
+        )}
+      </li>
+    );
+  });
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -161,10 +172,10 @@ const CategoryPage = () => {
               <select id="parent" value={formData.parent} onChange={handleInputChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm">
                 <option value="">Không có (danh mục gốc)</option>
                 {categoryList
-                  .filter((cat) => cat.slug !== formData.slug)
+                  .filter((cat) => cat.duong_dan !== formData.slug)
                   .map((cat) => (
-                    <option key={cat.slug} value={cat.name}>
-                      {cat.name}
+                    <option key={cat.duong_dan} value={cat.id_loai_san_pham}>
+                      {cat.ten_loai}
                     </option>
                   ))}
               </select>
@@ -193,17 +204,17 @@ const CategoryPage = () => {
           </thead>
           <tbody>
             {categoryList.map((cat) => (
-              <tr key={cat.slug} className="border-t">
-                <td className="p-2">{cat.name}</td>
-                <td className="p-2">{cat.slug}</td>
-                <td className="p-2">{cat.description}</td>
-                <td className="p-2">{cat.parent || '-'}</td>
+              <tr key={cat.id_loai_san_pham} className="border-t">
+                <td className="p-2">{cat.ten_loai}</td>
+                <td className="p-2">{cat.duong_dan}</td>
+                <td className="p-2">{cat.mota_loai}</td>
+                <td className="p-2">{cat.id_danh_muc_cha || '-'}</td>
                 <td className="p-2 flex gap-2">
-                  <button onClick={() => handleEdit(cat.slug)} className="text-indigo-600 hover:underline text-sm">
-                    Sửa
+                  <button onClick={() => handleEdit(cat.duong_dan)} className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600">
+                    <FontAwesomeIcon icon={faPencil} />
                   </button>
-                  <button onClick={() => handleDelete(cat.slug)} className="text-red-600 hover:underline text-sm">
-                    Xóa
+                  <button onClick={() => handleDelete(cat.duong_dan)} className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 text-red-600">
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </td>
               </tr>

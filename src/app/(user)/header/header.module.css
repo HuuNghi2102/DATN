@@ -164,6 +164,7 @@
   border: 1px solid black;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.5s;
 }
 
 .cart-icon {

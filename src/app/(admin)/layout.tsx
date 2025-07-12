@@ -18,11 +18,9 @@ export const metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Sidebar />
-        <main className="flex-1 ml-0 md:ml-64 p-6">{children}</main>
-      </body>
-    </html>
+    <>
+      <Sidebar />
+      <main className="flex-1 ml-0 md:ml-64 p-6">{children}</main>
+    </>
   );
 }

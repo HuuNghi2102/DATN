@@ -254,10 +254,8 @@ const Home = () => {
                     </div>
                     <button
                       onClick={() => handleCopy(voucher.ma_giam_gia, index)}
-                      className="absolute right-[-8px] bottom-[-8px] active:bg-amber-300 active:text-black bg-black text-white rounded-tl-[15px] rounded-tr-[0px] rounded-br-[7px] rounded-bl-[0px] p-[7px] text-xs">
-
+                      className="absolute right-[-8px] bottom-[-8px] active:bg-amber-500 active:text-white bg-amber-400 text-white rounded-tl-[15px] rounded-tr-[0px] rounded-br-[7px] rounded-bl-[0px] p-[7px] text-xs">
                       {copied === index ? "Đã sao chép" : "Sao chép mã"}
-
                     </button>
                   </div>
                 </div>
@@ -306,7 +304,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg  bg-amber-400 text-black font-semibold h-10 px-5 hover:bg-amber-500 hover:text-black text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-white font-semibold h-10 px-5 hover:bg-amber-500 hover:text-white transition-all duration-500 text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -346,7 +344,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg  bg-amber-400 text-black h-10 px-5 hover:bg-amber-500 font-semibold text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 font-semibold transition-all duration-500 text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -386,7 +384,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <button className="rounded-lg  bg-amber-400 text-black h-10 px-5 hover:bg-amber-500 font-semibold text-sm sm:text-base">
+              <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 transition-all duration-500 font-semibold text-sm sm:text-base">
                 Xem tất cả
               </button>
             </div>
@@ -400,7 +398,7 @@ const Home = () => {
                 <div key={index} className="bg-white rounded-[10px] shadow-md p-4">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>
-                    <button className="text-black bg-amber-400 w-[100px] h-[30px] rounded-[8px] hover:bg-amber-500 hover:text-black border hover:border-black transition-all duration-500 text-sm">
+                    <button className="text-white bg-amber-400 w-[100px] h-[30px] rounded-[8px] hover:bg-amber-500 transition-all duration-500 text-sm">
                       <Link href={`/collection/${category.duong_dan}`}>
                       Xem tất cả
                       </Link>

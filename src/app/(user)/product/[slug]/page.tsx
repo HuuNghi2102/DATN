@@ -342,12 +342,12 @@ const ProductPageDetail = () => {
             {/* Header */}
             <div className="bg-white shadow-sm py-4 pl-28">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                        <span>Trang chủ</span>
+                    <div className="flex items-center gap-1 text-sm text-gray-600">
+                        <span>Trang chủ /</span>
                         <i className="fas fa-chevron-right text-xs"></i>
                         <span>{product ? product.category.ten_loai : 'Đang tải...'}</span>
                         <i className="fas fa-chevron-right text-xs"></i>
-                        <span className="text-gray-900">{product ? product.ten_san_pham : 'Đang tải...'} </span>
+                        <span className="text-gray-900">/ {product ? product.ten_san_pham : 'Đang tải...'} </span>
                     </div>
                 </div>
             </div>
@@ -494,7 +494,7 @@ const ProductPageDetail = () => {
                                 </div>
                                 <button
                                     onClick={() => { addToCart(true) }}
-                                    className="flex-1 bg-blue-600  text-white py-3 px-6 rounded font-medium hover:bg-blue-700 transition-colors"
+                                    className="flex-1 bg-amber-400  text-white py-3 px-6 rounded font-medium hover:bg-amber-500 transition-colors"
                                 >
                                     THÊM VÀO GIỎ
                                 </button>

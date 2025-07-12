@@ -87,23 +87,21 @@ const MainContent = () => {
             <div key={index} className="w-full md:w-1/4 px-2 mb-6">
               <div className="group">
                 <div className="h-[220px]">
-                  <a href="#">
+                  <Link href={`/blog-detail/${article.duong_dan}`}>
                     <img
                       className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900"
                       src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
                       alt={article.ten_bai_viet}
                     />
-                  </a>
+                  </Link>
                 </div>
                 <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
                   <h1 className="text-center font-semibold">
                     {article.ten_bai_viet.length > 50 ? article.ten_bai_viet.slice(0, 50) + '...' : article.ten_bai_viet}
                   </h1>
-                  <p className="text-sm text-gray-600">
-                    {article.noi_dung_bai_viet.length > 100
-                      ? article.noi_dung_bai_viet.slice(0, 65) + '...'
-                      : article.noi_dung_bai_viet}
-                  </p>
+                  <div className="text-sm text-gray-600">
+                    <div dangerouslySetInnerHTML={{ __html: article.noi_dung_bai_viet.slice(0,30)+'...' }} />
+                  </div>
                   <hr className="my-2" />
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-500">
