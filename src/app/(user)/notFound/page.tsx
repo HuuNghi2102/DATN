@@ -1,5 +1,5 @@
-'use client'
-import React from 'react';
+"use client";
+import React from "react";
 
 const NotFoundPage = () => {
   return (
@@ -42,7 +42,7 @@ const NotFoundPage = () => {
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-4 h-2 bg-pink-300 rounded-full"></div>
                 </div>
               </div>
-              
+
               {/* Body */}
               <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-20 h-24 bg-white rounded-lg border-2 border-gray-300">
                 {/* Chest Panel */}
@@ -75,14 +75,16 @@ const NotFoundPage = () => {
               Có lẽ bạn đã lạc vào không gian🚀
             </p>
             <p className="text-gray-400 text-sm max-w-md mx-auto">
-            Trang bạn đang tìm kiếm đã trôi vào khoảng trống vũ trụ. Đừng lo lắng, phi hành đoàn không gian của chúng tôi ở đây để giúp bạn điều hướng trở về an toàn.
+              Trang bạn đang tìm kiếm đã trôi vào khoảng trống vũ trụ. Đừng lo
+              lắng, phi hành đoàn không gian của chúng tôi ở đây để giúp bạn
+              điều hướng trở về an toàn.
             </p>
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button 
-              onClick={() => window.location.href = '/'}
+            <button
+              onClick={() => (window.location.href = "/")}
               className="group px-8 py-4 bg-amber-400 border-2 text-black font-semibold rounded-full hover:from-cyan-600 hover:to-amber-500 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <i className="fas fa-home mr-2"></i>
@@ -95,8 +97,13 @@ const NotFoundPage = () => {
       {/* Floating Animation CSS */}
       <style jsx>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
         }
         .animate-float {
           animation: float 3s ease-in-out infinite;

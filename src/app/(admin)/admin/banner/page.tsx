@@ -1,11 +1,11 @@
-'use client';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+"use client";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const GET_BANNER_URL = 'http://huunghi.id.vn/api/banner/getBannerIndex';
-const POST_BANNER_URL = 'http://huunghi.id.vn/api/banner/addBanner';
-const DELETE_BANNER_URL = 'http://huunghi.id.vn/api/banner/deleteBanner/';
+const GET_BANNER_URL = "http://huunghi.id.vn/api/banner/getBannerIndex";
+const POST_BANNER_URL = "http://huunghi.id.vn/api/banner/addBanner";
+const DELETE_BANNER_URL = "http://huunghi.id.vn/api/banner/deleteBanner/";
 
 interface Banner {
   id: number;
@@ -21,21 +21,21 @@ const BannerManagerPage = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
-    title: '',
-    position: '',
+    title: "",
+    position: "",
     status: 1 | 0,
     image: null as File | null,
   });
 
   const fetchBanners = () => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     setLoading(true);
     axios
       .get(GET_BANNER_URL, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setBanners(res.data?.data?.banners || []))
-      .catch((err) => console.error('Lỗi load API:', err))
+      .catch((err) => console.error("Lỗi load API:", err))
       .finally(() => setLoading(false));
   };
 
@@ -43,7 +43,9 @@ const BannerManagerPage = () => {
     fetchBanners();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -56,40 +58,38 @@ const BannerManagerPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem('accessToken');
-    if (!token) return alert('Vui lòng đăng nhập lại.');
+    const token = localStorage.getItem("accessToken");
+    if (!token) return alert("Vui lòng đăng nhập lại.");
 
     const data = new FormData();
-    data.append('title', form.title);
-    data.append('position', form.position);
-    data.append('status', (form.status).toString());
-    if (!form.image) return alert('Vui lòng chọn ảnh banner');
-    data.append('image', form.image);
+    data.append("title", form.title);
+    data.append("position", form.position);
+    data.append("status", form.status.toString());
+    if (!form.image) return alert("Vui lòng chọn ảnh banner");
+    data.append("image", form.image);
 
     try {
       const res = await axios.post(POST_BANNER_URL, data, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${JSON.parse(token)}`,
         },
       });
 
-       
-
       setShowForm(false);
-      setForm({ title: '', position: '', status: 1, image: null });
-      setBanners((prev) => [res.data.banner,...prev]);
+      setForm({ title: "", position: "", status: 1, image: null });
+      setBanners((prev) => [res.data.banner, ...prev]);
     } catch (err: any) {
       const message = err.response?.data
         ? JSON.stringify(err.response.data)
-        : 'Lỗi không xác định';
-      alert('❌ Gửi API thất bại: ' + message);
+        : "Lỗi không xác định";
+      alert("❌ Gửi API thất bại: " + message);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Bạn có chắc chắn muốn xoá banner này?')) return;
-    const token = localStorage.getItem('accessToken');
+    if (!confirm("Bạn có chắc chắn muốn xoá banner này?")) return;
+    const token = localStorage.getItem("accessToken");
 
     try {
       await axios.delete(`${DELETE_BANNER_URL}${id}`, {
@@ -97,72 +97,95 @@ const BannerManagerPage = () => {
       });
       setBanners(banners.filter((banner) => banner.id !== id));
     } catch (err) {
-      console.error('❌ Lỗi xoá banner:', err);
-      alert('Không thể xoá banner. Kiểm tra lại quyền hoặc trạng thái server.');
+      console.error("❌ Lỗi xoá banner:", err);
+      alert("Không thể xoá banner. Kiểm tra lại quyền hoặc trạng thái server.");
     }
   };
 
-
-
   //
   // Thêm các hàm xử lý mới vào component
-const handleMoveToTop = async (id: number) => {
-  const token = localStorage.getItem('accessToken');
-  try {
-    await axios.put(`http://huunghi.id.vn/api/banner/moveToTop/${id}`, {}, {
-      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
-    });
-    fetchBanners();
-  } catch (err) {
-    console.error('Lỗi khi đưa banner lên đầu:', err);
-    alert('Không thể thay đổi vị trí banner');
-  }
-};
+  const handleMoveToTop = async (id: number) => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      await axios.put(
+        `http://huunghi.id.vn/api/banner/moveToTop/${id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+        }
+      );
+      fetchBanners();
+    } catch (err) {
+      console.error("Lỗi khi đưa banner lên đầu:", err);
+      alert("Không thể thay đổi vị trí banner");
+    }
+  };
 
-const handleToggleStatus = async (id: number) => {
-  console.log(id);
-  const token = localStorage.getItem('accessToken');
-  try {
-    await axios.patch(`http://huunghi.id.vn/api/banner/changeStatus/${id}`, {}, {
-      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
-    });
-    setBanners(banners.map( (banner) => banner.id == id ? {...banner, trang_thai : banner.trang_thai == 1 ?  0 : 1} : banner))
-  } catch (err) {
-    console.error('Lỗi khi thay đổi trạng thái:', err);
-    alert('Không thể thay đổi trạng thái banner');
-  }
-};
+  const handleToggleStatus = async (id: number) => {
+    console.log(id);
+    const token = localStorage.getItem("accessToken");
+    try {
+      await axios.patch(
+        `http://huunghi.id.vn/api/banner/changeStatus/${id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+        }
+      );
+      setBanners(
+        banners.map((banner) =>
+          banner.id == id
+            ? { ...banner, trang_thai: banner.trang_thai == 1 ? 0 : 1 }
+            : banner
+        )
+      );
+    } catch (err) {
+      console.error("Lỗi khi thay đổi trạng thái:", err);
+      alert("Không thể thay đổi trạng thái banner");
+    }
+  };
 
-const handleChangePosition = async (id: number, newPosition: string) => {
-  const token = localStorage.getItem('accessToken');
-  try {
-    await axios.patch(`http://huunghi.id.vn/api/banner/changePosition/${id}`, {
-      position: newPosition
-    }, {
-      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
-    });
-    setBanners(banners.map( (banner) => banner.id == id ? {...banner, vi_tri : newPosition} : banner))
-  } catch (err) {
-    console.error('Lỗi khi thay đổi vị trí:', err);
-    alert('Không thể thay đổi vị trí banner');
-  }
+  const handleChangePosition = async (id: number, newPosition: string) => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      await axios.patch(
+        `http://huunghi.id.vn/api/banner/changePosition/${id}`,
+        {
+          position: newPosition,
+        },
+        {
+          headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+        }
+      );
+      setBanners(
+        banners.map((banner) =>
+          banner.id == id ? { ...banner, vi_tri: newPosition } : banner
+        )
+      );
+    } catch (err) {
+      console.error("Lỗi khi thay đổi vị trí:", err);
+      alert("Không thể thay đổi vị trí banner");
+    }
+  };
 
-};
-
-const handleChangePriority = async (id: number, priority: number) => {
-  const token = localStorage.getItem('accessToken');
-  try {
-    await axios.put(`http://huunghi.id.vn/api/banner/changePriority/${id}`, {
-      priority
-    }, {
-      headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
-    });
-    fetchBanners();
-  } catch (err) {
-    console.error('Lỗi khi thay đổi ưu tiên:', err);
-    alert('Không thể thay đổi độ ưu tiên');
-  }
-};
+  const handleChangePriority = async (id: number, priority: number) => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      await axios.put(
+        `http://huunghi.id.vn/api/banner/changePriority/${id}`,
+        {
+          priority,
+        },
+        {
+          headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
+        }
+      );
+      fetchBanners();
+    } catch (err) {
+      console.error("Lỗi khi thay đổi ưu tiên:", err);
+      alert("Không thể thay đổi độ ưu tiên");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -172,7 +195,7 @@ const handleChangePriority = async (id: number, priority: number) => {
           onClick={() => setShowForm(!showForm)}
           className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
         >
-          {showForm ? 'Đóng' : '+ Thêm banner'}
+          {showForm ? "Đóng" : "+ Thêm banner"}
         </button>
       </header>
 
@@ -227,7 +250,10 @@ const handleChangePriority = async (id: number, priority: number) => {
           </div>
 
           <div className="col-span-2 text-right">
-            <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
               Lưu banner
             </button>
           </div>
@@ -244,7 +270,7 @@ const handleChangePriority = async (id: number, priority: number) => {
                 <th className="p-3 font-medium">Hình ảnh</th>
                 <th className="p-3 font-medium">Vị trí</th>
                 <th className="p-3 font-medium">Trạng thái</th>
-  
+
                 <th className="p-3 font-medium">Ngày tạo</th>
                 <th className="p-3 font-medium">Thao tác</th>
               </tr>
@@ -262,7 +288,9 @@ const handleChangePriority = async (id: number, priority: number) => {
                   <td className="p-3">
                     <select
                       value={banner.vi_tri}
-                      onChange={(e) => handleChangePosition(banner.id, e.target.value)}
+                      onChange={(e) =>
+                        handleChangePosition(banner.id, e.target.value)
+                      }
                       className="border p-1 rounded text-xs"
                     >
                       <option value="trang_chu">Trang chủ</option>
@@ -272,18 +300,19 @@ const handleChangePriority = async (id: number, priority: number) => {
                   <td className="p-3">
                     <span
                       onClick={() => handleToggleStatus(banner.id)}
-                      className={`px-2 py-1 rounded-full text-xs cursor-pointer ${banner.trang_thai == 1
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                        }`}
+                      className={`px-2 py-1 rounded-full text-xs cursor-pointer ${
+                        banner.trang_thai == 1
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
                     >
-                      {banner.trang_thai == 1 ? 'Đang hoạt động' : 'Tạm ngưng'}
+                      {banner.trang_thai == 1 ? "Đang hoạt động" : "Tạm ngưng"}
                     </span>
                   </td>
                   <td className="p-3">
                     {banner.created_at
                       ? new Date(banner.created_at).toLocaleString()
-                      : 'N/A'}
+                      : "N/A"}
                   </td>
                   <td className="p-3 space-x-2">
                     <button

@@ -57,7 +57,7 @@ export default function ProductEditPage() {
   const [sizes, setSizes] = useState<SizeInterface[]>([]);
   const [typeToken, setTypeToken] = useState<string>("");
   const [accessToken, setAccessToken] = useState<string>("");
-  
+
   const { slug } = params;
   if (!slug) {
     router.push("/admin/products");
@@ -236,7 +236,6 @@ export default function ProductEditPage() {
         <div className="space-y-6">
           {product && categories && (
             <ProductForm
-              
               product={product}
               categories={categories}
               typeToken={typeToken}

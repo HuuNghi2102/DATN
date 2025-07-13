@@ -1,9 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
-import { getAPIVouchers, addVoucher, deleteVoucher, editVoucher } from "../services/voucherServices";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
+import {
+  getAPIVouchers,
+  addVoucher,
+  deleteVoucher,
+  editVoucher,
+} from "../services/voucherServices";
 import interfaceVoucher from "../types/voucher";
 import { CreateVoucher } from "../types/voucher";
 
@@ -11,7 +16,9 @@ export default function VoucherManager() {
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<null | number>(null);
-  const [errorMessages, setErrorMessages] = useState<Record<string, string[]>>({});
+  const [errorMessages, setErrorMessages] = useState<Record<string, string[]>>(
+    {}
+  );
   const [formData, setFormData] = useState<CreateVoucher>({
     ma_giam_gia: "",
     loai_giam_gia: "",
@@ -35,11 +42,14 @@ export default function VoucherManager() {
     fetchVouchers();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "trang_thai" || type === "number" ? Number(value) : value,
+      [name]:
+        name === "trang_thai" || type === "number" ? Number(value) : value,
     }));
   };
 
@@ -120,7 +130,9 @@ export default function VoucherManager() {
         <header className="flex flex-col md:flex-row justify-between md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-2xl font-semibold">Quản lý Voucher</h1>
-            <p className="text-sm text-gray-500">Tạo mới và quản lý mã giảm giá</p>
+            <p className="text-sm text-gray-500">
+              Tạo mới và quản lý mã giảm giá
+            </p>
           </div>
           <div className="flex gap-3 flex-wrap">
             <button
@@ -152,7 +164,10 @@ export default function VoucherManager() {
               </h2>
             </div>
             <div className="p-6">
-              <form onSubmit={editMode ? handleSubmitEdit : handleSubmit} className="space-y-5">
+              <form
+                onSubmit={editMode ? handleSubmitEdit : handleSubmit}
+                className="space-y-5"
+              >
                 <div>
                   <input
                     name="ma_giam_gia"
@@ -163,7 +178,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.codeVoucher && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.codeVoucher[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.codeVoucher[0]}
+                    </p>
                   )}
                 </div>
 
@@ -177,7 +194,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.typeVoucher && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.typeVoucher[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.typeVoucher[0]}
+                    </p>
                   )}
                 </div>
 
@@ -192,7 +211,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.valueRedution && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.valueRedution[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.valueRedution[0]}
+                    </p>
                   )}
                 </div>
 
@@ -207,7 +228,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.minOrderValue && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.minOrderValue[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.minOrderValue[0]}
+                    </p>
                   )}
                 </div>
 
@@ -221,7 +244,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.dateStart && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.dateStart[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.dateStart[0]}
+                    </p>
                   )}
                 </div>
 
@@ -235,7 +260,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.dateEnd && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.dateEnd[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.dateEnd[0]}
+                    </p>
                   )}
                 </div>
 
@@ -247,7 +274,9 @@ export default function VoucherManager() {
                     required
                     className="w-full border px-4 py-2 rounded"
                   >
-                    <option value={-1} disabled>-- Chọn trạng thái --</option>
+                    <option value={-1} disabled>
+                      -- Chọn trạng thái --
+                    </option>
                     <option value={1}>Đang hoạt động</option>
                     <option value={0}>Dừng hoạt động</option>
                   </select>
@@ -289,9 +318,12 @@ export default function VoucherManager() {
                     "Ngày bắt đầu",
                     "Ngày kết thúc",
                     "Trạng thái",
-                    "Thao tác"
+                    "Thao tác",
                   ].map((h) => (
-                    <th key={h} className="p-3 text-left font-medium text-gray-700 whitespace-nowrap">
+                    <th
+                      key={h}
+                      className="p-3 text-left font-medium text-gray-700 whitespace-nowrap"
+                    >
                       {h}
                     </th>
                   ))}
@@ -299,22 +331,47 @@ export default function VoucherManager() {
               </thead>
               <tbody>
                 {vouchers.map((voucher, i) => (
-                  <tr key={i} className="border-b last:border-none hover:bg-gray-50">
-                    <td className="p-4 font-semibold whitespace-nowrap">{voucher.ma_giam_gia}</td>
-                    <td className="p-4 whitespace-nowrap">{voucher.loai_giam_gia}</td>
-                    <td className="p-4 whitespace-nowrap">
-                      {voucher?.gia_tri_giam ? `${voucher?.gia_tri_giam.toLocaleString()} VNĐ` : "0 VNĐ"}
+                  <tr
+                    key={i}
+                    className="border-b last:border-none hover:bg-gray-50"
+                  >
+                    <td className="p-4 font-semibold whitespace-nowrap">
+                      {voucher.ma_giam_gia}
                     </td>
                     <td className="p-4 whitespace-nowrap">
-                      {voucher?.gia_tri_don_hang ? `${voucher?.gia_tri_don_hang.toLocaleString()} VNĐ` : "0 VNĐ"}
+                      {voucher.loai_giam_gia}
                     </td>
-                    <td className="p-4 whitespace-nowrap">{new Date(voucher.ngay_bat_dau).toLocaleDateString('vi-VN')}</td>
-                    <td className="p-4 whitespace-nowrap">{new Date(voucher.ngay_het_han).toLocaleDateString('vi-VN')}</td>
+                    <td className="p-4 whitespace-nowrap">
+                      {voucher?.gia_tri_giam
+                        ? `${voucher?.gia_tri_giam.toLocaleString()} VNĐ`
+                        : "0 VNĐ"}
+                    </td>
+                    <td className="p-4 whitespace-nowrap">
+                      {voucher?.gia_tri_don_hang
+                        ? `${voucher?.gia_tri_don_hang.toLocaleString()} VNĐ`
+                        : "0 VNĐ"}
+                    </td>
+                    <td className="p-4 whitespace-nowrap">
+                      {new Date(voucher.ngay_bat_dau).toLocaleDateString(
+                        "vi-VN"
+                      )}
+                    </td>
+                    <td className="p-4 whitespace-nowrap">
+                      {new Date(voucher.ngay_het_han).toLocaleDateString(
+                        "vi-VN"
+                      )}
+                    </td>
                     <td className="p-4">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${Number(voucher.trang_thai) === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          Number(voucher.trang_thai) === 1
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
+                        }`}
                       >
-                        {Number(voucher.trang_thai) === 1 ? "Đang hoạt động" : "Dừng hoạt động"}
+                        {Number(voucher.trang_thai) === 1
+                          ? "Đang hoạt động"
+                          : "Dừng hoạt động"}
                       </span>
                     </td>
                     <td className="p-4 flex gap-2">

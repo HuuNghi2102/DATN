@@ -10,7 +10,8 @@ const PaymentFailed = () => {
           Thanh toán thất bại!
         </h1>
         <p className="text-gray-700 mb-6 text-sm leading-relaxed">
-          Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại hoặc kiểm tra lại đơn hàng của bạn.
+          Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại hoặc
+          kiểm tra lại đơn hàng của bạn.
         </p>
 
         <div className="flex justify-center gap-3">

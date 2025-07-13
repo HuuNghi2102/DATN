@@ -1,8 +1,13 @@
-'use client';
-import React, { useState, useRef, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faCalendarDays, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
+"use client";
+import React, { useState, useRef, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSearch,
+  faCartShopping,
+  faCalendarDays,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const MainContent = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -13,7 +18,9 @@ const MainContent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchPost = async () => {
-    const responsePost = await fetch(`https://huunghi.id.vn/api/post/listPost?page=${currentPage}`);
+    const responsePost = await fetch(
+      `https://huunghi.id.vn/api/post/listPost?page=${currentPage}`
+    );
     const result = await responsePost.json();
     if (responsePost.ok) {
       setPosts(result.data.posts.data);
@@ -40,7 +47,7 @@ const MainContent = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    titleRef.current?.scrollIntoView({ behavior: 'smooth' });
+    titleRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   if (isLoading) {
@@ -51,13 +58,17 @@ const MainContent = () => {
       >
         <div className="flex flex-col items-center space-y-6">
           {/* Logo hoặc icon tùy chọn */}
-          <div className="text-3xl font-semibold tracking-widest text-black uppercase">VERVESTYLE</div>
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
 
           {/* Vòng quay */}
           <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
 
           {/* Nội dung loading */}
-          <p className="text-sm text-gray-700 tracking-wide">Đang khởi động trải nghiệm của bạn...</p>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
         </div>
       </div>
     );
@@ -79,7 +90,9 @@ const MainContent = () => {
 
       {/* Tiêu đề chính */}
       <section className="pb-8">
-        <h1 className="text-2xl font-semibold mb-5 text-center md:text-left">Tất cả bài viết</h1>
+        <h1 className="text-2xl font-semibold mb-5 text-center md:text-left">
+          Tất cả bài viết
+        </h1>
 
         {/* Grid hiển thị bài viết */}
         <div className="flex flex-wrap -mx-2">
@@ -97,19 +110,32 @@ const MainContent = () => {
                 </div>
                 <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
                   <h1 className="text-center font-semibold">
-                    {article.ten_bai_viet.length > 50 ? article.ten_bai_viet.slice(0, 50) + '...' : article.ten_bai_viet}
+                    {article.ten_bai_viet.length > 50
+                      ? article.ten_bai_viet.slice(0, 50) + "..."
+                      : article.ten_bai_viet}
                   </h1>
                   <div className="text-sm text-gray-600">
-                    <div dangerouslySetInnerHTML={{ __html: article.noi_dung_bai_viet.slice(0,30)+'...' }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: article.noi_dung_bai_viet.slice(0, 30) + "...",
+                      }}
+                    />
                   </div>
                   <hr className="my-2" />
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-500">
-                      <FontAwesomeIcon icon={faCalendarDays} />{' '}
-                      {new Date(article.created_at).toLocaleDateString('vi-VN')}
+                      <FontAwesomeIcon icon={faCalendarDays} />{" "}
+                      {new Date(article.created_at).toLocaleDateString("vi-VN")}
                     </span>
-                    <Link href={`/blog-detail/${article.duong_dan}`} className="text-sm text-gray-500 hover:text-amber-400">
-                      Xem thêm <FontAwesomeIcon className="text-sm" icon={faChevronRight} />
+                    <Link
+                      href={`/blog-detail/${article.duong_dan}`}
+                      className="text-sm text-gray-500 hover:text-amber-400"
+                    >
+                      Xem thêm{" "}
+                      <FontAwesomeIcon
+                        className="text-sm"
+                        icon={faChevronRight}
+                      />
                     </Link>
                   </div>
                 </div>
@@ -125,28 +151,28 @@ const MainContent = () => {
               onClick={() => handlePageChange(currentPage - 1)}
               className="px-4 py-2 border text-sm  bg-black text-white"
             >
-              {'<'}
+              {"<"}
             </button>
           )}
           {Array.from({ length: totalPage }, (_, i) => i + 1).map(
             (page) =>
               page >= pageStart &&
-              page <= pageEnd && 
+              page <= pageEnd &&
               totalPage > 1 && (
                 <button
                   key={page}
                   onClick={() => handlePageChange(page)}
                   className={`px-4 py-2 border text-sm  ${
                     currentPage === page
-                      ? 'bg-black text-white'
-                      : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+                      ? "bg-black text-white"
+                      : "bg-white text-black border-gray-300 hover:bg-gray-100"
                   }`}
                 >
                   {page}
                 </button>
-              ),
+              )
           )}
-          {currentPage < totalPage && ( 
+          {currentPage < totalPage && (
             <>
               <button className="px-4 py-2 border text-sm  bg-black text-white">{`...`}</button>
               <button
@@ -159,7 +185,7 @@ const MainContent = () => {
                 onClick={() => handlePageChange(currentPage + 1)}
                 className="px-4 py-2 border text-sm  bg-black text-white"
               >
-                {'>'}
+                {">"}
               </button>
             </>
           )}

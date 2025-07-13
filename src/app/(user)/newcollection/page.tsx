@@ -1,53 +1,53 @@
-'use client';
-import React, { useState, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+"use client";
+import React, { useState, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
   faShoppingCart,
   faSortAlphaDown,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 
 const products = [
   {
-    id: '1',
-    name: 'Áo Thun Nam Tiedye Loang Sundaze Rush Form Boxy',
-    price: '349,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/hangmoi1.webp',
-    hoverImage: '/assets/images/hoverhangmoi11.webp',
+    id: "1",
+    name: "Áo Thun Nam Tiedye Loang Sundaze Rush Form Boxy",
+    price: "349,000₫",
+    label: "Hàng Mới",
+    image: "/assets/images/hangmoi1.webp",
+    hoverImage: "/assets/images/hoverhangmoi11.webp",
   },
   {
-    id: '2',
-    name: 'Áo Thun Nam ICONDENIM The Coastal Frenzy ORGNLS',
-    price: '329,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/hangmoi2.webp',
-    hoverImage: '/assets/images/hoverhangmoi2.webp',
+    id: "2",
+    name: "Áo Thun Nam ICONDENIM The Coastal Frenzy ORGNLS",
+    price: "329,000₫",
+    label: "Hàng Mới",
+    image: "/assets/images/hangmoi2.webp",
+    hoverImage: "/assets/images/hoverhangmoi2.webp",
   },
   {
-    id: '3',
-    name: 'Túi Tote Nam Pattern Sundaze Rush',
-    price: '249,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/hangmoi3.webp',
-    hoverImage: '/assets/images/hoverhangmoi3.webp',
+    id: "3",
+    name: "Túi Tote Nam Pattern Sundaze Rush",
+    price: "249,000₫",
+    label: "Hàng Mới",
+    image: "/assets/images/hangmoi3.webp",
+    hoverImage: "/assets/images/hoverhangmoi3.webp",
   },
   {
-    id: '4',
-    name: 'Áo Thun Nam Sundaze Rush Form Regular',
-    price: '329,000₫',
-    label: 'Best Seller',
-    image: '/assets/images/hangmoi4.webp',
-    hoverImage: '/assets/images/hoverhangmoi4.jpg',
+    id: "4",
+    name: "Áo Thun Nam Sundaze Rush Form Regular",
+    price: "329,000₫",
+    label: "Best Seller",
+    image: "/assets/images/hangmoi4.webp",
+    hoverImage: "/assets/images/hoverhangmoi4.jpg",
   },
   // 👉 Thêm dữ liệu giả để test phân trang
   ...Array.from({ length: 28 }, (_, i) => ({
     id: (i + 5).toString(),
     name: `Sản phẩm ${i + 5}`,
     price: `${299000 + i * 1000}₫`,
-    label: i % 2 === 0 ? 'Hàng Mới' : 'Best Seller',
-    image: '/assets/images/hangmoi1.webp',
-    hoverImage: '/assets/images/hoverhangmoi11.webp',
+    label: i % 2 === 0 ? "Hàng Mới" : "Best Seller",
+    image: "/assets/images/hangmoi1.webp",
+    hoverImage: "/assets/images/hoverhangmoi11.webp",
   })),
 ];
 
@@ -55,7 +55,7 @@ export default function AllProductPage() {
   const productsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Sản phẩm nổi bật');
+  const [selectedOption, setSelectedOption] = useState("Sản phẩm nổi bật");
   const topRef = useRef<HTMLDivElement>(null);
 
   const totalPages = Math.ceil(products.length / productsPerPage);
@@ -65,20 +65,20 @@ export default function AllProductPage() {
   );
 
   const sortOptions = [
-    'Sản phẩm nổi bật',
-    'Giá: Tăng dần',
-    'Giá: Giảm dần',
-    'Tên: A-Z',
-    'Tên: Z-A',
-    'Cũ nhất',
-    'Mới nhất',
-    'Bán chạy nhất',
-    'Tồn kho: Giảm dần',
+    "Sản phẩm nổi bật",
+    "Giá: Tăng dần",
+    "Giá: Giảm dần",
+    "Tên: A-Z",
+    "Tên: Z-A",
+    "Cũ nhất",
+    "Mới nhất",
+    "Bán chạy nhất",
+    "Tồn kho: Giảm dần",
   ];
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    topRef.current?.scrollIntoView({ behavior: 'smooth' });
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -112,7 +112,10 @@ export default function AllProductPage() {
             className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[12px]"
           >
             {selectedOption}
-            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
+            <FontAwesomeIcon
+              icon={faSortAlphaDown}
+              className="ml-2 text-[17px]"
+            />
           </button>
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-lg z-50">
@@ -165,9 +168,9 @@ export default function AllProductPage() {
               {product.label && (
                 <div
                   className={`absolute top-2 right-2 px-2 py-[2px] text-[11px] font-semibold rounded z-30 ${
-                    ['Sieu Mat', 'Sieu Nhe'].includes(product.label)
-                      ? 'text-white bg-blue-600'
-                      : 'text-black bg-orange-500'
+                    ["Sieu Mat", "Sieu Nhe"].includes(product.label)
+                      ? "text-white bg-blue-600"
+                      : "text-black bg-orange-500"
                   }`}
                 >
                   {product.label}
@@ -196,23 +199,23 @@ export default function AllProductPage() {
 
       {/* Pagination */}
       <div className="flex justify-center my-6 gap-2">
-  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-    <button
-      key={page}
-      onClick={() => {
-        setCurrentPage(page);
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-      }}
-      className={`px-3 py-1 border text-sm rounded ${
-        currentPage === page
-          ? 'bg-black text-white'
-          : 'bg-white text-black border-gray-300 hover:bg-gray-100'
-      }`}
-    >
-      {page}
-    </button>
-  ))}
-</div>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className={`px-3 py-1 border text-sm rounded ${
+              currentPage === page
+                ? "bg-black text-white"
+                : "bg-white text-black border-gray-300 hover:bg-gray-100"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

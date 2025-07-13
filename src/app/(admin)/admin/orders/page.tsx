@@ -477,9 +477,7 @@ const OrderManager = () => {
             </div>
 
             <div className="flex gap-2">
-              <button
-                className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"
-              >
+              <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm">
                 <i className="fas fa-plus"></i>
                 <span className="hidden sm:inline">Đơn Hàng Hoàn Tiền</span>
               </button>
@@ -490,7 +488,6 @@ const OrderManager = () => {
                 <i className="fas fa-plus"></i>
                 <span className="hidden sm:inline">Tạo đơn</span>
               </button>
-              
             </div>
           </div>
         </div>

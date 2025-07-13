@@ -1,3 +1,3 @@
-export default function(){
-    return <div>Trang chủ admin</div>
+export default function () {
+  return <div>Trang chủ admin</div>;
 }

@@ -1,40 +1,39 @@
-'use client'
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import React, { useState } from 'react';
+"use client";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import React, { useState } from "react";
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
-  const [errorEmail,setErrEmail] = useState('');
-
+  const [email, setEmail] = useState("");
+  const [errorEmail, setErrEmail] = useState("");
 
   const handleSubmit = async () => {
-    const res = await fetch(`https://huunghi.id.vn/api/user/sendOTP`,{
-      method : "PUT",
-      headers : {
-        "Content-Type" : "application/json"
+    const res = await fetch(`https://huunghi.id.vn/api/user/sendOTP`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
       },
-      body : JSON.stringify({
-        'email' : email
-      })
-    })
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
 
     const results = await res.json();
-    
-    if(results.status == false){
-      if(results.errors.email.length > 0){
+
+    if (results.status == false) {
+      if (results.errors.email.length > 0) {
         const arrErr = results.errors;
         setErrEmail(arrErr.email[0]);
-      }else{
+      } else {
         setErrEmail(results.message);
       }
       return;
     }
 
-    localStorage.setItem('email',JSON.stringify(results.email));
+    localStorage.setItem("email", JSON.stringify(results.email));
     toast.success(results.message);
-    window.location.href = 'enterCode';
-  }
+    window.location.href = "enterCode";
+  };
 
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col pt-[11%]">
@@ -43,20 +42,20 @@ export default function ForgotPasswordPage() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex space-x-8">
-              <a 
-                href="#" 
+              <a
+                href="#"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 "
               >
                 Trang chủ
               </a>
-              <a 
-                href="#" 
+              <a
+                href="#"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700"
               >
                 Tài khoản
               </a>
-              <a 
-                href="#" 
+              <a
+                href="#"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-gray-900"
               >
                 Quên mật khẩu
@@ -76,9 +75,7 @@ export default function ForgotPasswordPage() {
               <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2">
                 QUÊN MẬT KHẨU
               </h1>
-              <p className="text-sm text-gray-600">
-                khôi phục bằng Email
-              </p>
+              <p className="text-sm text-gray-600">khôi phục bằng Email</p>
             </div>
 
             {/* Form */}
@@ -93,7 +90,9 @@ export default function ForgotPasswordPage() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent text-sm"
                 />
               </div>
-              {errorEmail && <p className="text-red-500 text-sm">{errorEmail}</p>}
+              {errorEmail && (
+                <p className="text-red-500 text-sm">{errorEmail}</p>
+              )}
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}

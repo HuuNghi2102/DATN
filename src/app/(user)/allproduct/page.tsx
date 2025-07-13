@@ -1,52 +1,54 @@
-'use client';
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart, faSortAlphaDown } from '@fortawesome/free-solid-svg-icons';
+"use client";
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSearch,
+  faShoppingCart,
+  faSortAlphaDown,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-
-
 
 const products = [
   {
-    id: '1',
-    name: 'Quần Short Nam Vải Dù Sundaze Rush Form Regular',
-    price: '249,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/sp1.webp',
-    hoverImage: '/assets/images/hoversp2.webp',
+    id: "1",
+    name: "Quần Short Nam Vải Dù Sundaze Rush Form Regular",
+    price: "249,000₫",
+    label: "Hàng Mới",
+    image: "/assets/images/sp1.webp",
+    hoverImage: "/assets/images/hoversp2.webp",
   },
   {
-    id: '2',
-    name: 'Áo Sơmi Nam Kaki Sundaze Rush Form Relax',
-    price: '349,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/sp3.webp',
-    hoverImage: '/assets/images/hoversp2.webp',
+    id: "2",
+    name: "Áo Sơmi Nam Kaki Sundaze Rush Form Relax",
+    price: "349,000₫",
+    label: "Hàng Mới",
+    image: "/assets/images/sp3.webp",
+    hoverImage: "/assets/images/hoversp2.webp",
   },
   {
-    id: '3',
-    name: 'Áo Tanktop Nam RUNPOW In NatureStride Form',
-    price: '329,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/sp3.webp',
-    hoverImage: '/assets/images/hoversp3.webp',
+    id: "3",
+    name: "Áo Tanktop Nam RUNPOW In NatureStride Form",
+    price: "329,000₫",
+    label: "Hàng Mới",
+    image: "/assets/images/sp3.webp",
+    hoverImage: "/assets/images/hoversp3.webp",
   },
   {
-    id: '4',
-    name: 'Áo Khoác Gió Nam Double Stripes ICDN Form Regular',
-    price: '399,000₫',
-    label: 'Hàng Mới',
-    image: '/assets/images/sp4.webp',
-    hoverImage: '/assets/images/hover sp4.webp',
+    id: "4",
+    name: "Áo Khoác Gió Nam Double Stripes ICDN Form Regular",
+    price: "399,000₫",
+    label: "Hàng Mới",
+    image: "/assets/images/sp4.webp",
+    hoverImage: "/assets/images/hover sp4.webp",
   },
   // Thêm 20 sản phẩm demo
   ...Array.from({ length: 20 }, (_, i) => ({
     id: `fake-${i}`,
     name: `Sản phẩm demo ${i + 1}`,
     price: `${199000 + i * 1000}₫`,
-    label: 'Hàng Mới',
-    image: '/assets/images/sp1.webp',
-    hoverImage: '/assets/images/hoversp2.webp',
+    label: "Hàng Mới",
+    image: "/assets/images/sp1.webp",
+    hoverImage: "/assets/images/hoversp2.webp",
   })),
 ];
 
@@ -60,23 +62,23 @@ export default function AllProductPage() {
   );
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Sản phẩm nổi bật');
+  const [selectedOption, setSelectedOption] = useState("Sản phẩm nổi bật");
 
   const sortOptions = [
-    'Sản phẩm nổi bật',
-    'Giá: Tăng dần',
-    'Giá: Giảm dần',
-    'Tên: A-Z',
-    'Tên: Z-A',
-    'Cũ nhất',
-    'Mới nhất',
-    'Bán chạy nhất',
-    'Tồn kho: Giảm dần',
+    "Sản phẩm nổi bật",
+    "Giá: Tăng dần",
+    "Giá: Giảm dần",
+    "Tên: A-Z",
+    "Tên: Z-A",
+    "Cũ nhất",
+    "Mới nhất",
+    "Bán chạy nhất",
+    "Tồn kho: Giảm dần",
   ];
 
   const handleAddToCart = (productName: string) => {
     toast.success(`Đã thêm "${productName}" vào giỏ hàng!`, {
-      position: 'top-right',
+      position: "top-right",
     });
   };
 
@@ -111,7 +113,10 @@ export default function AllProductPage() {
             className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[12px]"
           >
             {selectedOption}
-            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
+            <FontAwesomeIcon
+              icon={faSortAlphaDown}
+              className="ml-2 text-[17px]"
+            />
           </button>
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-lg z-50">
@@ -135,7 +140,10 @@ export default function AllProductPage() {
       {/* Product Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2 mb-4 z-0">
         {currentProducts.map((product) => (
-          <div key={product.id} className="bg-white p-2 rounded border border-gray-200 group relative">
+          <div
+            key={product.id}
+            className="bg-white p-2 rounded border border-gray-200 group relative"
+          >
             <div className="relative">
               <img
                 alt={product.name}
@@ -160,9 +168,9 @@ export default function AllProductPage() {
               {product.label && (
                 <div
                   className={`absolute top-2 right-2 px-2 py-[2px] text-[11px] font-semibold rounded z-30 ${
-                    ['Sieu Mat', 'Sieu Nhe'].includes(product.label)
-                      ? 'text-white bg-blue-600'
-                      : 'text-black bg-orange-500'
+                    ["Sieu Mat", "Sieu Nhe"].includes(product.label)
+                      ? "text-white bg-blue-600"
+                      : "text-black bg-orange-500"
                   }`}
                 >
                   {product.label}
@@ -187,27 +195,25 @@ export default function AllProductPage() {
         ))}
       </div>
 
-       {/* Pagination */}
+      {/* Pagination */}
       <div className="flex justify-center my-6 gap-2">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
             onClick={() => {
               setCurrentPage(page);
-              window.scrollTo({ top: 0, behavior: 'smooth' }); 
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             className={`px-3 py-1 border text-sm rounded ${
               currentPage === page
-                ? 'bg-black text-white'
-                : 'bg-white text-black border-gray-300 hover:bg-gray-100'
+                ? "bg-black text-white"
+                : "bg-white text-black border-gray-300 hover:bg-gray-100"
             }`}
           >
             {page}
           </button>
         ))}
       </div>
-
-
     </div>
   );
 }
