@@ -69,8 +69,6 @@ const addWhistList = async (
   const typeToken = localStorage.getItem("typeToken");
   const whistList = localStorage.getItem("whislist");
   if (user && accessToken && typeToken) {
-    console.log("accessToken:", JSON.parse(accessToken));
-    console.log("typeToken:", JSON.parse(typeToken));
     const resAddWhisList = await fetch(
       `https://huunghi.id.vn/api/whislist/addWhislist`,
       {
@@ -90,7 +88,6 @@ const addWhistList = async (
     );
     if (resAddWhisList.ok) {
       const result = await resAddWhisList.json();
-      console.log(result);
       toast.success("Thêm sản phẩm vào danh sách thành công");
     } else {
       toast.error("Thêm sản phẩm vào danh sách thất bại");
@@ -122,6 +119,9 @@ const addWhistList = async (
 const ProductPageDetail = () => {
   const [selectedSize, setSelectedSize] = useState<any>();
   const [selectedColor, setSelectedColor] = useState<any>();
+  const [sizesOfSelectedVariant, setSizesOfSelectedVariant] = useState<any[]>(
+    []
+  );
   const [activeTab, setActiveTab] = useState<"danhgia" | "mota">("danhgia");
   const [reviewStar, setReviewStar] = useState(5);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -232,7 +232,6 @@ const ProductPageDetail = () => {
       }
     );
     const result = await resDetailOrder.json();
-    console.log(result);
     if (resDetailOrder.ok) {
       const detailOrder = result.data;
       if (detailOrder.kiemtra_danhgia == 0) {
@@ -284,16 +283,34 @@ const ProductPageDetail = () => {
         const getProduct = result.data.product;
         const arrSizes = result.data.sizes;
         const arrColors = result.data.colors;
+
         setImages(arrImages);
         setProduct(getProduct);
         setColors(arrColors);
         setSizes(arrSizes);
+
         // set color, size , image default
         setSelectedColor(arrColors[0]);
         setSelectedSize(arrSizes[0]);
         setCurrentImageIndex(arrImages[0].link_anh);
+
         // get product
         const pro = result.data.product;
+
+        //fetch All size of product variant
+        const resAllSize = await fetch(
+          `https://huunghi.id.vn/api/productVariant/getListProductVariantOfColor/${
+            pro.id_san_pham
+          }/byColor/${encodeURIComponent(arrColors[0].ma_mau)}`
+        );
+
+        if (resAllSize.ok) {
+          const resultAllSize = await resAllSize.json();
+          setSizesOfSelectedVariant(resultAllSize.data);
+        } else {
+          alert("Lấy không thành công");
+        }
+
         // fetch relatedProduct
         const res2 = await fetch(
           `https://huunghi.id.vn/api/product/getTenRelatedProduct/${pro?.id_loai_san_pham}`
@@ -306,6 +323,7 @@ const ProductPageDetail = () => {
           result.data.sizes[0],
           quantity
         );
+
         //set default cartItem
         setCartItem({
           ten_san_pham: getProduct.ten_san_pham,
@@ -381,7 +399,6 @@ const ProductPageDetail = () => {
       console.log(error);
     }
   };
-  // console.log(cartItem);
   const addToCart = async (isCart: boolean) => {
     const localCart = localStorage.getItem("cart");
     let carts = [];
@@ -438,7 +455,6 @@ const ProductPageDetail = () => {
         flag = false;
       }
     });
-    console.log(flag);
 
     if (flag === true) {
       carts.unshift(cartItem);
@@ -469,6 +485,38 @@ const ProductPageDetail = () => {
       { breakpoint: 480, settings: { slidesToShow: 2 } },
     ],
   };
+
+  const fetchSizeOfVariantSlected = async (
+    idProduct: number,
+    codeColor: string
+  ) => {
+    // all Size of Color
+    const resAllSize = await fetch(
+      `https://huunghi.id.vn/api/productVariant/getListProductVariantOfColor/${idProduct}/byColor/${encodeURIComponent(
+        codeColor
+      )}`
+    );
+
+    if (resAllSize.ok) {
+      const resultAllSize = await resAllSize.json();
+      setSizesOfSelectedVariant(resultAllSize.data);
+
+      const selectedSizeChange = sizes.find(
+        (e, i) => e.id_kich_thuoc == resultAllSize.data[0].id_kich_thuoc
+      );
+
+      setSelectedSize(selectedSizeChange);
+      handleChangeQuantity(
+        idProduct,
+        resultAllSize.data[0].ten_mau,
+        selectedSizeChange,
+        quantity
+      );
+    } else {
+      alert("Lấy không thành công");
+    }
+  };
+
   if (isLoading) {
     return (
       <div
@@ -640,14 +688,18 @@ const ProductPageDetail = () => {
                     <button
                       key={colorOption ? colorOption.ten_mau : "Đang tải..."}
                       onClick={() => {
+                        fetchSizeOfVariantSlected(
+                          product.id_san_pham,
+                          colorOption.ma_mau
+                        );
                         setSelectedColor(colorOption);
                         setQuantity(1);
-                        handleChangeQuantity(
-                          product?.id_san_pham,
-                          colorOption.ten_mau,
-                          selectedSize,
-                          quantity
-                        );
+                        // handleChangeQuantity(
+                        //   product?.id_san_pham,
+                        //   colorOption.ten_mau,
+                        //   selectedSize,
+                        //   quantity
+                        // );
                       }}
                       style={{ backgroundColor: colorOption.ma_mau }}
                       className={`w-8 h-8 rounded-full border-2  ${
@@ -674,28 +726,38 @@ const ProductPageDetail = () => {
                   </button>
                 </div>
                 <div className="flex space-x-2">
-                  {sizes.map((size) => (
-                    <button
-                      key={size.ten_kich_thuoc}
-                      onClick={() => {
-                        setSelectedSize(size);
-                        setQuantity(1);
-                        handleChangeQuantity(
-                          product?.id_san_pham,
-                          selectedColor.ten_mau,
-                          size,
-                          quantity
-                        );
-                      }}
-                      className={`w-20 h-10 border rounded text-sm font-medium ${
-                        selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
-                          ? "border-red-500 bg-red-50 text-red-600"
-                          : "border-gray-300 hover:border-gray-400"
-                      }`}
-                    >
-                      <p className="text-sm">{size.ten_kich_thuoc}</p>
-                    </button>
-                  ))}
+                  {sizes.map((size) => {
+                    const findSize = sizesOfSelectedVariant.find(
+                      (e) => e.id_kich_thuoc === size.id_kich_thuoc
+                    );
+
+                    return (
+                      <button
+                        key={size.ten_kich_thuoc}
+                        onClick={() => {
+                          if (!findSize) return;
+                          setSelectedSize(size);
+                          setQuantity(1);
+                          handleChangeQuantity(
+                            product?.id_san_pham,
+                            selectedColor.ten_mau,
+                            size,
+                            quantity
+                          );
+                        }}
+                        disabled={!findSize}
+                        className={`w-20 h-10 border rounded text-sm font-medium ${
+                          selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
+                            ? "border-red-500 bg-red-50 text-red-600"
+                            : findSize
+                            ? "border-gray-300 hover:border-gray-400"
+                            : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                        }`}
+                      >
+                        <p className="text-sm">{size.ten_kich_thuoc}</p>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -1145,7 +1207,7 @@ const ProductPageDetail = () => {
                           className="w-full"
                         />
                         <img
-                          src={`https://huunghi.id.vn/storage/products/${product.images[1].link_anh}`}
+                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
                           alt="product"
                           className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         />

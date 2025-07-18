@@ -23,6 +23,7 @@ type FormData = {
 };
 
 const CategoryPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showForm, setShowForm] = useState(false);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
@@ -37,6 +38,7 @@ const CategoryPage = () => {
       try {
         const data = await getAPICategories();
         setCategoryList(data);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -138,6 +140,25 @@ const CategoryPage = () => {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <header className="mb-6 flex justify-between items-center">
@@ -148,9 +169,6 @@ const CategoryPage = () => {
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-100">
-            <i className="fas fa-file-export mr-2"></i> Xuất file
-          </button>
           <button
             onClick={() => {
               setFormData({ name: "", slug: "", description: "", parent: "" });

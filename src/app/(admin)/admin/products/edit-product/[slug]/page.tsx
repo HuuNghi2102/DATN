@@ -92,8 +92,6 @@ export default function ProductEditPage() {
 
           if (resultProduct.status == true) {
             // nếu lấy thành công
-
-            console.log(resProduct);
             const pro = resultProduct.data.san_pham;
             setProduct(pro ? pro : []);
 

@@ -12,7 +12,7 @@ const ProductForm = ({
   onProductAdded,
   isOpenForm,
 }: {
-  onChangeStatusForm() : () => void;
+  onChangeStatusForm: () => void;
   onProductAdded: () => void;
   isOpenForm: boolean;
 }) => {

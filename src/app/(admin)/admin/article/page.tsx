@@ -29,15 +29,46 @@ export default function AdminPostManagement() {
   const [imageFile, setImageFile] = useState<File | string | null>(null);
   const [status, setStatus] = useState(false);
 
-  const editorRef = useRef<any>(null);
+  // State cho bộ lọc (đã cập nhật)
+  const [titleFilter, setTitleFilter] = useState("");
+  const [contentFilter, setContentFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<number | "">("");
+  const [dateFilter, setDateFilter] = useState("");
 
-  // Hàm gọi API lấy bài viết
+  const editorRef = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Hàm gọi API lấy bài viết (giữ nguyên)
   const refreshPosts = async () => {
     const data = await getAPIArticle();
     setPosts(data);
+    setIsLoading(false);
   };
 
-  // Reset form sau khi submit
+  // Logic lọc mới
+  const filteredPosts = posts.filter((post) => {
+    const titleMatch =
+      titleFilter === "" ||
+      post.ten_bai_viet.toLowerCase().includes(titleFilter.toLowerCase());
+
+    const contentMatch =
+      contentFilter === "" ||
+      post.noi_dung_bai_viet
+        .toLowerCase()
+        .includes(contentFilter.toLowerCase());
+
+    const statusMatch = statusFilter === "" || post.trang_thai === statusFilter;
+
+    const dateMatch =
+      dateFilter === "" ||
+      new Date(post.created_at)
+        .toLocaleDateString("vi-VN")
+        .includes(dateFilter);
+
+    return titleMatch && contentMatch && statusMatch && dateMatch;
+  });
+
+  // Các hàm khác giữ nguyên
   const resetForm = () => {
     setShowForm(false);
     setSelectedPost(null);
@@ -48,7 +79,6 @@ export default function AdminPostManagement() {
     editorRef.current?.setContent("");
   };
 
-  // Thêm bài viết mới
   const handleCreateArticle = async () => {
     const content = editorRef.current?.getContent();
     if (!title || !slug || !content || !imageFile) {
@@ -74,7 +104,6 @@ export default function AdminPostManagement() {
     }
   };
 
-  // Sửa bài viết
   const handleEditArticle = async () => {
     const content = editorRef.current?.getContent();
     if (!selectedPost || !title || !slug || !content || !imageFile) {
@@ -103,7 +132,6 @@ export default function AdminPostManagement() {
     }
   };
 
-  // Gọi đúng hàm khi submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedPost) {
@@ -126,6 +154,25 @@ export default function AdminPostManagement() {
       alert("Xóa thất bại");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -302,6 +349,53 @@ export default function AdminPostManagement() {
         </div>
       )}
 
+      {/* Phần bộ lọc đã được cập nhật */}
+      <div className="bg-white rounded shadow p-6 mb-6">
+        <h2 className="text-lg font-semibold mb-4">Lọc bài viết</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Từ khóa tìm kiếm */}
+          <div className="col-span-1 md:col-span-1">
+            <label className="block text-sm font-medium mb-1">Từ khóa</label>
+            <input
+              type="text"
+              // value={keywordFilter}
+              // onChange={(e) => setKeywordFilter(e.target.value)}
+              placeholder="Nhập tiêu đề hoặc nội dung..."
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          {/* Ngày đăng */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Ngày đăng</label>
+            <input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+
+          {/* Trạng thái */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Trạng thái</label>
+            <select
+              value={statusFilter}
+              // onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full border px-3 py-2 rounded"
+            >
+              <option value="">Tất cả trạng thái</option>
+              <option value="1">Hoạt động</option>
+              <option value="0">Không hoạt động</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Nút xóa bộ lọc */}
+        <div className="flex justify-end mt-4"></div>
+      </div>
+
+      {/* Phần table giữ nguyên */}
       <div className="bg-white rounded shadow overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-100 text-gray-600">
@@ -316,7 +410,7 @@ export default function AdminPostManagement() {
             </tr>
           </thead>
           <tbody>
-            {posts.map((post, index) => (
+            {filteredPosts.map((post, index) => (
               <tr key={index} className="border-t">
                 <td className="px-4 py-3 font-medium text-gray-800">
                   {post.id_bai_viet}

@@ -16,6 +16,7 @@ const OrderManager = () => {
   const [countReturn, setCountReturn] = useState<number>(0);
   const [countSuccess, setCountSuccess] = useState<number>(0);
   const [countDestroy, setCountDestroy] = useState<number>(0);
+  const [countAwaitRefund, setCountAwaitRefund] = useState<number>(0);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -69,6 +70,29 @@ const OrderManager = () => {
     }
   };
 
+  const changeStatusPayment = async (idOrder: number) => {
+    const confirm = window.confirm("Đã hoàn tiền?");
+    if (!confirm) {
+      return;
+    }
+    const resChangeStatus = await fetch(
+      `https://huunghi.id.vn/api/order/changeStatusPayment/${idOrder}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `${typeToken} ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (resChangeStatus.ok) {
+      setOrders(orders.filter((e, i) => e.id_don_hang != idOrder));
+      setCountAwaitRefund(countAwaitRefund - 1);
+    } else {
+      alert("Thay đổi không thành công");
+    }
+  };
+
   const fetchDefaultData = async () => {
     const accessTokenLocal = localStorage.getItem("accessToken");
     const typeTokenLocal = localStorage.getItem("typeToken");
@@ -111,6 +135,7 @@ const OrderManager = () => {
           setCountReturn(resultOrder.data.countReturn);
           setCountSuccess(resultOrder.data.countSuccess);
           setCountDestroy(resultOrder.data.countDestroy);
+          setCountAwaitRefund(resultOrder.data.countAwaitRefund);
           setIsLoading(false);
         } else {
           alert("Lấy danh sách đơn hàng thành công");
@@ -227,8 +252,6 @@ const OrderManager = () => {
 
   const returStatus = (status: string) => {
     switch (status) {
-      case "":
-        return `Tất cả đơn hàng`;
       case "cho_xac_nhan":
         return `Chờ xác nhận`;
       case "chu_y":
@@ -246,7 +269,7 @@ const OrderManager = () => {
       case "da_huy":
         return `Đã hủy`;
       default:
-        return `Chờ xác nhận`;
+        return `Tất cả đơn hàng`;
     }
   };
 
@@ -434,12 +457,20 @@ const OrderManager = () => {
 
   if (isLoading) {
     return (
-      <main className="p-4 bg-gray-50 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <i className="fas fa-spinner fa-spin text-3xl text-indigo-600 mb-3"></i>
-          <p className="text-gray-600">Đang tải dữ liệu đơn hàng...</p>
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
         </div>
-      </main>
+      </div>
     );
   }
 
@@ -477,17 +508,25 @@ const OrderManager = () => {
             </div>
 
             <div className="flex gap-2">
-              <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm">
-                <i className="fas fa-plus"></i>
-                <span className="hidden sm:inline">Đơn Hàng Hoàn Tiền</span>
-              </button>
               <button
+                onClick={() => setActiveTab("hoan_tien")}
+                className="relative flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"
+              >
+                <i className="fas fa-money-bill-wave"></i>
+                <span className="hidden sm:inline">Hoàn Tiền</span>
+
+                {/* Badge số lượng */}
+                <span className="absolute -top-1 -right-1 rounded-full bg-red-500 text-white text-[10px] px-1.5 py-0.5 font-bold">
+                  {countAwaitRefund}
+                </span>
+              </button>
+              {/* <button
                 onClick={() => setShowForm(true)}
                 className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 text-sm"
               >
                 <i className="fas fa-plus"></i>
                 <span className="hidden sm:inline">Tạo đơn</span>
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -831,6 +870,19 @@ const OrderManager = () => {
                               <i className="fas fa-eye"></i>
                             </button>
                           </Link>
+                          {order.trang_thai_don_hang == "da_huy" &&
+                            order.trang_thai_thanh_toan == "da_thanh_toan" &&
+                            order.kiem_tra_hoan_hang == 1 && (
+                              <button
+                                onClick={() =>
+                                  changeStatusPayment(order.id_don_hang)
+                                }
+                                className="p-2 rounded-full text-green-600 hover:bg-indigo-50 transition-colors"
+                                title="Xem chi tiết"
+                              >
+                                <i className="fas fa-money-bill-wave"></i>
+                              </button>
+                            )}
                         </div>
                       </td>
                     </tr>

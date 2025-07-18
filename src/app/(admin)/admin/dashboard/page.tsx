@@ -3,7 +3,7 @@ import { map } from "jquery";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "../components/interface/imageInterface";
-import voucherInterface from "../components/interface/voucherInterface";
+// import voucherInterface from "../components/interface/voucherInterface";
 import {
   LineChart,
   Line,
@@ -395,12 +395,20 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <main className="p-4 bg-gray-50 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <i className="fas fa-spinner fa-spin text-3xl text-indigo-600 mb-3"></i>
-          <p className="text-gray-600">Đang tải dữ liệu đơn hàng...</p>
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
         </div>
-      </main>
+      </div>
     );
   }
 
@@ -678,16 +686,10 @@ const Dashboard = () => {
               </Link>
             </div>
           </div>
-
           {/* Đánh giá và phản hồi của khách hàng */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Đánh giá của khách hàng</h2>
-              <select className="border text-sm rounded px-2 py-1">
-                <option>7 ngày qua</option>
-                <option>30 ngày qua</option>
-                <option>Tất cả</option>
-              </select>
             </div>
 
             {/* Thống kê đánh giá */}
@@ -765,7 +767,7 @@ const Dashboard = () => {
               </Link>
             </div>
           </div>
-          {/* Đơn hàng mới */}
+          {/* Đơn hàng mới
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Đơn hàng gần đây</h2>
@@ -804,7 +806,7 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -240,9 +240,6 @@ export default function CustomerManager() {
           </p>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 border rounded text-sm font-medium text-gray-700 bg-white shadow">
-            <i className="fas fa-file-export mr-2"></i>Xuất file
-          </button>
           <button
             onClick={() => setShowForm(true)}
             className="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium"

@@ -53,7 +53,7 @@ const CartPage = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              carts: result.data.carts,
+              carts: result.data.carts ? result.data.carts : [],
             }),
           }
         );
@@ -63,7 +63,7 @@ const CartPage = () => {
         if (resultCheckCart.status == false) {
           toast.error(resultCheckCart.message);
         }
-
+        console.log(resultCheckCart);
         setCarts(resultCheckCart.data.carts);
         localStorage.setItem(
           "cart",

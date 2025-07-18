@@ -57,7 +57,6 @@ const ReviewManagerPage = () => {
   );
 
   const fetchReviews = async (page = 1) => {
-    setLoading(true);
     try {
       const rawAccessToken = localStorage.getItem("accessToken");
       const rawTypeToken = localStorage.getItem("typeToken");
@@ -116,13 +115,6 @@ const ReviewManagerPage = () => {
       setCurrentPage(page);
       fetchReviews(page);
     }
-  };
-
-  const handleClearFilters = () => {
-    setRatingFilter("");
-    setProductNameFilter("");
-    setDateFilterType("");
-    fetchReviews(1);
   };
 
   useEffect(() => {

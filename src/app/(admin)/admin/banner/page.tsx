@@ -18,8 +18,8 @@ interface Banner {
 
 const BannerManagerPage = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
-  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [form, setForm] = useState({
     title: "",
     position: "",
@@ -29,14 +29,13 @@ const BannerManagerPage = () => {
 
   const fetchBanners = () => {
     const token = localStorage.getItem("accessToken");
-    setLoading(true);
     axios
       .get(GET_BANNER_URL, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setBanners(res.data?.data?.banners || []))
       .catch((err) => console.error("Lỗi load API:", err))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -187,6 +186,25 @@ const BannerManagerPage = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <header className="flex justify-between items-center mb-6">
@@ -260,82 +278,78 @@ const BannerManagerPage = () => {
         </form>
       )}
 
-      {loading ? (
-        <p>Đang tải dữ liệu...</p>
-      ) : (
-        <div className="bg-white shadow rounded overflow-x-auto">
-          <table className="min-w-full text-sm text-left">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-3 font-medium">Hình ảnh</th>
-                <th className="p-3 font-medium">Vị trí</th>
-                <th className="p-3 font-medium">Trạng thái</th>
+      <div className="bg-white shadow rounded overflow-x-auto">
+        <table className="min-w-full text-sm text-left">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-3 font-medium">Hình ảnh</th>
+              <th className="p-3 font-medium">Vị trí</th>
+              <th className="p-3 font-medium">Trạng thái</th>
 
-                <th className="p-3 font-medium">Ngày tạo</th>
-                <th className="p-3 font-medium">Thao tác</th>
+              <th className="p-3 font-medium">Ngày tạo</th>
+              <th className="p-3 font-medium">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            {banners.map((banner) => (
+              <tr key={banner.id} className="border-t hover:bg-gray-50">
+                <td className="p-3">
+                  <img
+                    src={`https://huunghi.id.vn/storage/banners/${banner.link_banner}`}
+                    alt="Banner"
+                    className="w-32 h-16 object-cover rounded"
+                  />
+                </td>
+                <td className="p-3">
+                  <select
+                    value={banner.vi_tri}
+                    onChange={(e) =>
+                      handleChangePosition(banner.id, e.target.value)
+                    }
+                    className="border p-1 rounded text-xs"
+                  >
+                    <option value="trang_chu">Trang chủ</option>
+                    <option value="trang_san_pham">Trang sản phẩm</option>
+                  </select>
+                </td>
+                <td className="p-3">
+                  <span
+                    onClick={() => handleToggleStatus(banner.id)}
+                    className={`px-2 py-1 rounded-full text-xs cursor-pointer ${
+                      banner.trang_thai == 1
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}
+                  >
+                    {banner.trang_thai == 1 ? "Đang hoạt động" : "Tạm ngưng"}
+                  </span>
+                </td>
+                <td className="p-3">
+                  {banner.created_at
+                    ? new Date(banner.created_at).toLocaleString()
+                    : "N/A"}
+                </td>
+                <td className="p-3 space-x-2">
+                  <button
+                    onClick={() => handleDelete(banner.id)}
+                    className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                    title="Xóa"
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {banners.map((banner) => (
-                <tr key={banner.id} className="border-t hover:bg-gray-50">
-                  <td className="p-3">
-                    <img
-                      src={`https://huunghi.id.vn/storage/banners/${banner.link_banner}`}
-                      alt="Banner"
-                      className="w-32 h-16 object-cover rounded"
-                    />
-                  </td>
-                  <td className="p-3">
-                    <select
-                      value={banner.vi_tri}
-                      onChange={(e) =>
-                        handleChangePosition(banner.id, e.target.value)
-                      }
-                      className="border p-1 rounded text-xs"
-                    >
-                      <option value="trang_chu">Trang chủ</option>
-                      <option value="trang_san_pham">Trang sản phẩm</option>
-                    </select>
-                  </td>
-                  <td className="p-3">
-                    <span
-                      onClick={() => handleToggleStatus(banner.id)}
-                      className={`px-2 py-1 rounded-full text-xs cursor-pointer ${
-                        banner.trang_thai == 1
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {banner.trang_thai == 1 ? "Đang hoạt động" : "Tạm ngưng"}
-                    </span>
-                  </td>
-                  <td className="p-3">
-                    {banner.created_at
-                      ? new Date(banner.created_at).toLocaleString()
-                      : "N/A"}
-                  </td>
-                  <td className="p-3 space-x-2">
-                    <button
-                      onClick={() => handleDelete(banner.id)}
-                      className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
-                      title="Xóa"
-                    >
-                      <i className="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {banners.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="p-4 text-center text-gray-500">
-                    Chưa có banner nào
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+            {banners.length === 0 && (
+              <tr>
+                <td colSpan={6} className="p-4 text-center text-gray-500">
+                  Chưa có banner nào
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
