@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faPencil } from '@fortawesome/free-solid-svg-icons';
-import { getAPIVouchers, addVoucher, deleteVoucher, editVoucher } from "../services/voucherServices";
+import { faPlus, faTrash, faPencil, faRepeat } from '@fortawesome/free-solid-svg-icons';
+import { addVoucher, deleteVoucher, editVoucher } from "../services/voucherServices";
 import interfaceVoucher from "../types/voucher";
 import { CreateVoucher } from "../types/voucher";
-
+import { changeStatusVoucher } from "../services/voucherServices";
 export default function VoucherManager() {
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -22,6 +22,49 @@ export default function VoucherManager() {
     trang_thai: -1,
   });
   const [vouchers, setVouchers] = useState<interfaceVoucher[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(20);
+  const getAPIVouchers = async (): Promise<interfaceVoucher[]> => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const typeToken = localStorage.getItem("typeToken");
+      if (accessToken && typeToken) {
+        const parseaccessToken = JSON.parse(accessToken);
+        const parsetypeToken = JSON.parse(typeToken);
+
+        const res = await fetch(`https://huunghi.id.vn/api/voucher/listVoucher?page=${currentPage}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `${parsetypeToken} ${parseaccessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          console.error("❌ Fetch failed:", res.status, res.statusText);
+          return [];
+        }
+
+        const data = await res.json();
+        const vouchers = data?.data?.vouchers?.data;
+        setTotalPages(data?.data?.vouchers?.last_page || 1);
+        // Kiểm tra xem data có phải array không
+        if (!Array.isArray(vouchers)) {
+          console.warn("❗ API không trả về mảng:", vouchers);
+          return [];
+        }
+
+        return vouchers;
+      } else {
+        console.warn("⚠️ Không có accessToken hoặc typeToken");
+        return [];
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi getAPIVouchers:", error);
+      return [];
+    }
+  };
   useEffect(() => {
     const fetchVouchers = async () => {
       try {
@@ -33,7 +76,7 @@ export default function VoucherManager() {
     };
 
     fetchVouchers();
-  }, []);
+  }, [currentPage]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -77,7 +120,11 @@ export default function VoucherManager() {
       alert("❌ Xoá voucher thất bại!");
     }
   };
-
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
   const handleSubmitEdit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -301,9 +348,13 @@ export default function VoucherManager() {
                 {vouchers.map((voucher, i) => (
                   <tr key={i} className="border-b last:border-none hover:bg-gray-50">
                     <td className="p-4 font-semibold whitespace-nowrap">{voucher.ma_giam_gia}</td>
-                    <td className="p-4 whitespace-nowrap">{voucher.loai_giam_gia}</td>
                     <td className="p-4 whitespace-nowrap">
-                      {voucher?.gia_tri_giam ? `${voucher?.gia_tri_giam.toLocaleString()} VNĐ` : "0 VNĐ"}
+                      {voucher.loai_giam_gia === "phan_tram" ? "Phần trăm" : "Số tiền"}
+                    </td>
+                    <td className="p-4 whitespace-nowrap">
+                      {voucher.loai_giam_gia === "phan_tram"
+                        ? `${voucher.gia_tri_giam}%`
+                        : `${voucher.gia_tri_giam.toLocaleString()} VNĐ`}
                     </td>
                     <td className="p-4 whitespace-nowrap">
                       {voucher?.gia_tri_don_hang ? `${voucher?.gia_tri_don_hang.toLocaleString()} VNĐ` : "0 VNĐ"}
@@ -311,11 +362,27 @@ export default function VoucherManager() {
                     <td className="p-4 whitespace-nowrap">{new Date(voucher.ngay_bat_dau).toLocaleDateString('vi-VN')}</td>
                     <td className="p-4 whitespace-nowrap">{new Date(voucher.ngay_het_han).toLocaleDateString('vi-VN')}</td>
                     <td className="p-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium ${Number(voucher.trang_thai) === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
+                      <button
+                        onClick={async () => {
+                          const confirmChange = confirm("Bạn có chắc chắn muốn đổi trạng thái voucher này?");
+                          if (!confirmChange) return;
+                          const success = await changeStatusVoucher(voucher.id_ma_giam_gia);
+                          if (!success) {
+                            alert("❌ Đổi trạng thái thất bại");
+                          } else {
+                            alert("✅ Đổi trạng thái thành công");
+                            const updated = await getAPIVouchers();
+                            setVouchers(updated);
+                          }
+                        }}
+                        className=" rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
+                        title="Đổi trạng thái"
                       >
-                        {Number(voucher.trang_thai) === 1 ? "Đang hoạt động" : "Dừng hoạt động"}
-                      </span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${Number(voucher.trang_thai) === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}>
+                          {Number(voucher.trang_thai) === 1 ? "Đang hoạt động" : "Dừng hoạt động"}
+                        </span>
+                      </button>
+
                     </td>
                     <td className="p-4 flex gap-2">
                       <button
@@ -337,17 +404,100 @@ export default function VoucherManager() {
                       >
                         <FontAwesomeIcon icon={faPencil} />
                       </button>
+
                       <button
                         onClick={() => handleDelete(voucher.id_ma_giam_gia)}
                         className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 text-red-600"
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
+
+                      {/* <button
+                        onClick={async () => {
+                          const confirmChange = confirm("Bạn có chắc chắn muốn đổi trạng thái voucher này?");
+                          if (!confirmChange) return;
+                          const success = await changeStatusVoucher(voucher.id_ma_giam_gia);
+                          if (!success) {
+                            alert("❌ Đổi trạng thái thất bại");
+                          } else {
+                            alert("✅ Đổi trạng thái thành công");
+                            const updated = await getAPIVouchers();
+                            setVouchers(updated);
+                          }
+                        }}
+                        className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
+                        title="Đổi trạng thái"
+                      >
+                        <FontAwesomeIcon icon={faRepeat} />
+                      </button> */}
                     </td>
+
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+        {/* phân trang */}
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
+          {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
+          <div className="text-sm text-gray-600">
+            Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '}
+            <span className="font-medium">{Math.min(currentPage * perPage, vouchers.length + (currentPage - 1) * perPage)}</span>{' '}
+            trong tổng số <span className="font-medium">{vouchers.length}</span> voucher
+          </div>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+            >
+              Trước
+            </button>
+
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {totalPages > 5 && currentPage < totalPages - 2 && (
+              <span className="px-3 py-1">...</span>
+            )}
+
+            {totalPages > 5 && currentPage < totalPages - 2 && (
+              <button
+                onClick={() => handlePageChange(totalPages)}
+                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              >
+                {totalPages}
+              </button>
+            )}
+
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+            >
+              Sau
+            </button>
           </div>
         </div>
       </main>

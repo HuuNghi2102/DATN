@@ -17,7 +17,7 @@ import Slider from 'react-slick';
 import '../globals.css';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
-    className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    className="absolute top-1/2 text-black hover:text-amber-500  text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer transition-colors duration-300  p-2 rounded-full "
     onClick={onClick}
   >
     <FontAwesomeIcon icon={faChevronLeft} />
@@ -26,7 +26,7 @@ const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
 
 const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
-    className="absolute top-1/2 text-white text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    className="absolute top-1/2 text-black hover:text-amber-500 text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer transition-colors duration-300  p-2 rounded-full "
     onClick={onClick}
   >
     <FontAwesomeIcon icon={faChevronRight} />
@@ -129,6 +129,8 @@ const Home = () => {
   const [copied, setCopied] = useState<number | null>(null);
   const [voucher, setVoucher] = useState<voucherInterface[]>([]);
   const [banners, setBanners] = useState<Bannerinterface[]>([]);
+  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
+
   // sao chép mã
   const handleCopy = (code: string, index: number) => {
     navigator.clipboard.writeText(code)
@@ -256,7 +258,7 @@ const Home = () => {
                 alt={`Banner `}
                 className="w-full object-cover max-h-[400px] sm:max-h-[465px] rounded-lg"
               />
-          </div>)}
+            </div>)}
         </div>
         {/* Voucher Section */}
         <div className="my-4">
@@ -319,12 +321,16 @@ const Home = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative">
-                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
+                      <Link href={`/product/${product.duong_dan}`} className="relative block">
                         <img
-                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                          src={hoveredProduct === i
+                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                          }
                           alt="product"
-                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          className="w-full transition-all duration-300"
+                          onMouseEnter={() => setHoveredProduct(i)}
+                          onMouseLeave={() => setHoveredProduct(null)}
                         />
                       </Link>
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -363,12 +369,16 @@ const Home = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative">
-                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
+                      <Link href={`/product/${product.duong_dan}`} className="relative block">
                         <img
-                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                          src={hoveredProduct === i
+                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                          }
                           alt="product"
-                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          className="w-full transition-all duration-300"
+                          onMouseEnter={() => setHoveredProduct(i)}
+                          onMouseLeave={() => setHoveredProduct(null)}
                         />
                       </Link>
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -403,12 +413,16 @@ const Home = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative">
-                        <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="aa" className="w-full" />
+                      <Link href={`/product/${product.duong_dan}`} className="relative block">
                         <img
-                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                          src={hoveredProduct === i
+                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                          }
                           alt="product"
-                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          className="w-full transition-all duration-300"
+                          onMouseEnter={() => setHoveredProduct(i)}
+                          onMouseLeave={() => setHoveredProduct(null)}
                         />
                       </Link>
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -455,12 +469,16 @@ const Home = () => {
                       i < 3 && (
                         <div key={i} className="w-full">
                           <div className="relative group overflow-hidden">
-                            <Link href={`/product/${product.duong_dan}`} className='relative'>
-                              <img src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`} alt="product" className="w-full" />
+                            <Link href={`/product/${product.duong_dan}`} className="relative block">
                               <img
-                                src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
+                                src={hoveredProduct === product.id_san_pham
+                                  ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                                  : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                                }
                                 alt="product"
-                                className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                className="w-full transition-all duration-300"
+                                onMouseEnter={() => setHoveredProduct(product.id_san_pham)}
+                                onMouseLeave={() => setHoveredProduct(null)}
                               />
                             </Link>
                             <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -468,7 +486,7 @@ const Home = () => {
                             </div>
                             <a
                               onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
-                              className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                              className="absolute right-2 bottom-2 bg-black cursor-pointer w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
                             >
                               <FontAwesomeIcon icon={faHeart} />
                             </a>

@@ -10,4 +10,5 @@ export default interface voucherInterface{
     created_at: string | number,
     updated_at: string | number,
     deleted_at: string | number
+    order_count : number
 }

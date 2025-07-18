@@ -21,20 +21,6 @@ import {
 } from 'recharts';
 import Link from 'next/link';
 
-interface voucherInterface{
-    id_ma_giam_gia: number,
-    ma_giam_gia: string,
-    loai_giam_gia: string
-    gia_tri_giam: number,
-    gia_tri_don_hang: number,
-    ngay_bat_dau: string,
-    ngay_het_han: string,
-    trang_thai: number,
-    created_at: string | number,
-    updated_at: string | number,
-    deleted_at: string | number,
-    order_count : number
-}
 
 interface Product{
     id_san_pham: number;
@@ -545,7 +531,7 @@ const Dashboard = () => {
                         style={{ width: `${(star === 5 ? (pointStart.five / pointStart.all  * 100)  : star === 4 ? (pointStart.four / pointStart.all  * 100) : star === 3 ? (pointStart.three / pointStart.all  * 100) : star === 2 ? (pointStart.two / pointStart.all  * 100) : (pointStart.one / pointStart.all  * 100))}%` }}
                       ></div>
                     </div>
-                    <span className="text-xs w-8 text-gray-500">
+                    <span className="text-xs w-8 text-gray-500 overflow-hidden">
                       {star === 5 ? (pointStart.five / pointStart.all  * 100)+'%' : star === 4 ? (pointStart.four / pointStart.all  * 100)+'%' : star === 3 ? (pointStart.three / pointStart.all  * 100)+'%' : star === 2 ? (pointStart.two / pointStart.all  * 100)+'%' : (pointStart.one / pointStart.all  * 100)+'%'}
                     </span>
                   </div>

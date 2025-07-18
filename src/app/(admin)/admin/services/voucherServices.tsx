@@ -1,45 +1,6 @@
-import { log } from "console";
+
 import interfaceVoucher from "../types/voucher";
 import { CreateVoucher } from "../types/voucher";
-export const getAPIVouchers = async ():Promise<interfaceVoucher[]> => {
-    try {
-        const accessToken = localStorage.getItem("accessToken");
-        const typeToken = localStorage.getItem("typeToken");
-    if (accessToken && typeToken) {
-        const parseaccessToken = JSON.parse(accessToken);
-        const parsetypeToken = JSON.parse(typeToken);
-
-        const res = await fetch("https://huunghi.id.vn/api/voucher/listVoucher", {
-            method: "GET",
-            headers: {
-            "Authorization": `${parsetypeToken} ${parseaccessToken}`,
-            "Content-Type": "application/json",
-        },
-        });
-
-        if (!res.ok) {
-            console.error("❌ Fetch failed:", res.status, res.statusText);
-            return [];
-        }
-
-        const data = await res.json();
-        const vouchers = data?.data?.vouchers?.data;
-        // Kiểm tra xem data có phải array không
-        if (!Array.isArray(vouchers)) {
-            console.warn("❗ API không trả về mảng:", vouchers);
-            return [];
-        }
-
-        return vouchers;
-        } else {
-        console.warn("⚠️ Không có accessToken hoặc typeToken");
-        return [];
-        }
-    } catch (error) {
-        console.error("Lỗi khi gọi getAPIVouchers:", error);
-    return [];
-    }
-};
 
 export const addVoucher = async (newVoucher: CreateVoucher): Promise<{ success: boolean, errors?: any }> => {
   try {
@@ -158,6 +119,33 @@ export const editVoucher = async (idVoucher: string | number, updatedVoucher: an
     console.error("❌ Lỗi khi gọi editVoucher:", error);
     // Trả lỗi ra ngoài để component xử lý tiếp
     throw error;
+  }
+};
+export const changeStatusVoucher = async (idVoucher: number | string) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const typeToken = localStorage.getItem("typeToken");
+    if(accessToken && typeToken) {
+      const parseAccessToken = JSON.parse(accessToken);
+    const parseTypeToken = JSON.parse(typeToken);
+
+    const res = await fetch(`https://huunghi.id.vn/api/voucher/changeStatusVoucher/${idVoucher}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `${parseTypeToken} ${parseAccessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      console.error("❌ Lỗi khi đổi trạng thái voucher:", res.status, res.statusText);
+    }
+
+    const result = await res.json();
+    return result;
+    }
+      } catch (error) {
+    console.error("❌ Lỗi khi gọi API changeStatusVoucher:", error);
   }
 };
 

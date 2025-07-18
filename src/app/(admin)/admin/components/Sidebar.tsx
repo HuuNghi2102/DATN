@@ -1,10 +1,11 @@
 'use client'
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import userInterface from './interface/userInterface';
 import React, { useEffect, useState } from 'react';
 import {
   FaTachometerAlt, FaBoxOpen, FaTags, FaUsers,
-  FaShoppingBag, FaChartPie, FaCog, FaBars, FaStar, FaComment, FaImage, FaTicketAlt, FaUsersCog, FaCircle, FaBlog
+  FaShoppingBag, FaChartPie, FaCog, FaBars, FaStar, FaComment, FaImage, FaTicketAlt, FaUsersCog, FaCircle, FaBlog,FaPodcast
 } from 'react-icons/fa';
 import { FaSignOutAlt } from 'react-icons/fa';
 import { toast } from "react-toastify";
@@ -29,36 +30,33 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/users' },
     { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders' },
     { icon: <FaStar />, label: 'Đánh giá', slug: '/admin/evalue' },
-    { icon: <FaComment />, label: 'Tin nhắn', slug: '/admin/message' },
     { icon: <FaImage />, label: 'Banner', slug: '/admin/banner' },
     { icon: <FaTicketAlt />, label: 'Voucher', slug: '/admin/voucher' },
     { icon: <FaBlog />, label: 'Bài viết', slug: '/admin/article' },
-    { icon: <FaChartPie />, label: 'Báo cáo', slug: '/admin/reports' },
+    { icon: <FaPodcast />, label: 'Chấp nhận bài viết', slug: '/admin/acceptPost' },
     { icon: <FaUsersCog />, label: 'Tài khoản', slug: '/admin/userinfo' },
-    { icon: <FaCog />, label: 'Cài đặt', slug: '/admin/caidat' },
   ]
 
   const sideBarShipper = [
     { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin' },
     { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/shipper/' },
-    { icon: <FaChartPie />, label: 'Báo cáo', slug: '/admin' },
   ]
 
   const sideBarBlogger = [
-    { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin' },
-    { icon: <FaBoxOpen />, label: 'Sản phẩm', slug: '/admin/products' },
-    { icon: <FaTags />, label: 'Danh mục', slug: '/admin' },
-    { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/users' },
-    { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders/' },
-    { icon: <FaChartPie />, label: 'Báo cáo', slug: '/admin' },
-    { icon: <FaCog />, label: 'Cài đặt', slug: '/admin' },
+    // { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin' },
+    // { icon: <FaBoxOpen />, label: 'Sản phẩm', slug: '/admin/products' },
+    // { icon: <FaTags />, label: 'Danh mục', slug: '/admin/categoryproduct' },
+    { icon: <FaBlog />, label: 'Bài viết', slug: '/admin/blogger' },
+    { icon: <FaUsersCog />, label: 'Tài khoản', slug: '/admin/userinfo' },
+    // { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/users' },
+    // { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders/' },
   ]
 
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
   const [selectedSideBar, setSelectedSideBar] = useState<sideBar[]>([])
-
+  const [getUser, setgetUser] = useState<userInterface>()
   const defaultData = async () => {
 
     const accessTokenLocal = localStorage.getItem('accessToken');
@@ -86,7 +84,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     }
   }
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const typeToken = localStorage.getItem("typeToken");
@@ -123,7 +121,20 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   }, [])
 
   console.log(selectedSideBar);
+  const userFetch = () => {
+    try {
+      const getUser = localStorage.getItem("user");
+      if (getUser) {
+        setgetUser(JSON.parse(getUser));
+      }
+    } catch (error) {
+      console.log(error);
 
+    }
+  }
+  useEffect(() => {
+    userFetch();
+  }, [])
   return (
     <>
       {/* Toggle Button (Mobile only) */}
@@ -173,16 +184,12 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         <div className="user-profile mt-auto pt-4 border-t border-black flex items-center">
 
           <div className="user-avatar w-9 h-9 rounded-full bg-black mr-3 overflow-hidden">
-            <img
-              src="https://randomuser.me/api/portraits/women/45.jpg"
-              alt="User"
-              className="w-full h-full object-cover"
-            />
+            <img src={`https://huunghi.id.vn/storage/avatars/${getUser?.anh_dai_dien_user}`} alt="" />
           </div>
           <Link href={`/admin/userinfo`}>
             <div className="user-info">
-              <h4 className="text-sm font-medium mb-0.5">Nguyễn Thị An</h4>
-              <p className="text-xs text-gray-500">Quản trị viên</p>
+              <h4 className="text-sm font-medium mb-0.5">{getUser?.ten_user}</h4>
+              <p className="text-xs text-gray-500">Xin chào,{getUser?.id_vai_tro === 1 ? "Admin" : getUser?.id_vai_tro===3?"Shipper": getUser?.id_vai_tro===4?"Blogger":"Quản trị viên"}</p>
             </div>
           </Link>
         </div>

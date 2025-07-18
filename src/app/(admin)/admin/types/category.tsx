@@ -3,6 +3,7 @@ export default interface categoryInterface{
     ten_loai: string;
     duong_dan: string;
     mota_loai: string;
+    trang_thai?: number;
     id_danh_muc_cha?: number;
     created_at: string;
     update_at: string;

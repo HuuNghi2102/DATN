@@ -2,33 +2,7 @@ import { log } from "console";
 import articleInterface from "../types/article";
 import { CreateArticle } from "../types/article";
 import { json } from "stream/consumers";
-export const getAPIArticle = async():Promise<articleInterface[]> =>{
-    try {
-        const accessToken = localStorage.getItem("accessToken");
-        const typeToken = localStorage.getItem("typeToken");
-        if (accessToken && typeToken) {
-        const parseaccessToken = JSON.parse(accessToken);
-        const parsetypeToken = JSON.parse(typeToken);
-        const res = await fetch('https://huunghi.id.vn/api/post/listPost',{
-                method: "GET",
-                headers: {
-                "Authorization": `${parsetypeToken} ${parseaccessToken}`,
-                "Content-Type": "application/json",
-            }});
-            if(!res.ok) {
-                console.error("❌ Fetch failed:", res.status, res.statusText);
-                return [];
-            }
-            const data = await res.json();
-            const article =  data?.data?.posts?.data;
-            return article;
-        }
-        return[];
-    } catch (error) {
-        console.log(error); 
-        return[];
-    }
-}
+
 
 export const createdArticle = async (newArticle: CreateArticle, imageFile: File) => {
     try {
@@ -159,7 +133,33 @@ export const editArticle = async (
     return null;
   }
 };
+export const changeStatusArticle = async (slug: number | string) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const typeToken = localStorage.getItem("typeToken");
+    if(accessToken && typeToken) {
+      const parseAccessToken = JSON.parse(accessToken);
+    const parseTypeToken = JSON.parse(typeToken);
 
+    const res = await fetch(`https://huunghi.id.vn/api/post/changeStatusPost/${slug}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `${parseTypeToken} ${parseAccessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      console.error("❌ Lỗi khi đổi trạng thái Article:", res.status, res.statusText);
+    }
+
+    const result = await res.json();
+    return result;
+    }
+      } catch (error) {
+    console.error("❌ Lỗi khi gọi API changeStatusArticle:", error);
+  }
+};
 
 
 

@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faClock as faClockRegular } from '@fortawesome/free-regular-svg-icons';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 const IntegratedPage = () => {
 
@@ -313,10 +314,14 @@ const IntegratedPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {arrayPostNew.map((article) => (
               <article key={article.id_bai_viet} className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col">
-                <img src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`} alt={article.ten_bai_viet} className="w-full h-36 object-cover" loading="lazy" />
+                <Link href={`/blog-detail/${article.duong_dan}`} className="hover:text-yellow-400 transition">
+                  <img src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`} alt={article.ten_bai_viet} className="w-full h-36 object-cover" loading="lazy" />
+                </Link>
                 <div className="p-4 flex flex-col flex-grow">
                   <h2 className="text-sm font-bold mb-2">{article.ten_bai_viet}</h2>
-                  <div className="text-xs text-gray-600 mb-3 flex-grow"><div dangerouslySetInnerHTML={{ __html: article.noi_dung_bai_viet.slice(0,50) }} /></div>
+                  <div className="text-xs text-gray-600 mb-3 flex-grow">
+                    <div dangerouslySetInnerHTML={{ __html: article.noi_dung_bai_viet.slice(0,50) }} />
+                  </div>
                   <div className="flex justify-between items-center text-xs text-gray-500">
                     <time className="flex items-center gap-1">
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -324,7 +329,7 @@ const IntegratedPage = () => {
                       </svg>
                       {new Date(article.created_at).toLocaleDateString('vi-VN')}
                     </time>
-                    <a href={article.duong_dan} className="hover:text-yellow-400 transition">Xem thêm ›</a>
+                    <Link href={`/blog-detail/${article.duong_dan}`} className="hover:text-yellow-400 transition">Xem thêm ›</Link>
                   </div>
                 </div>
               </article>

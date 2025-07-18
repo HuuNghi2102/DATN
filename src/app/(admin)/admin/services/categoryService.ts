@@ -47,7 +47,7 @@ export const addCategories = async(NewCate: CreatedCategory) =>{
             nameCate: NewCate.ten_loai,
             slug: NewCate.duong_dan,
             descriptionCate: NewCate.mota_loai,
-            parentCate_id: NewCate.id_danh_muc_cha || null,
+            idParent : NewCate.id_danh_muc_cha || null,
         }
         const res = await fetch('https://huunghi.id.vn/api/categoryProduct/addCategoryProduct',{
             method: "POST",
@@ -104,44 +104,80 @@ export const deleteCategories = async(slugCate:number|string) =>{
     return false;
   }
 }
-export const editCategories = async(slugCate: string|number,updatedCate: any) =>{
+export const editCategories = async (slugCate: string | number, updatedCate: any) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
     const typeToken = localStorage.getItem("typeToken");
 
     if (!accessToken || !typeToken) {
-      throw { message: "Thiếu token xác thực", status: false };
+      throw new Error("❌ Thiếu token xác thực");
     }
 
     const parseAccessToken = JSON.parse(accessToken);
     const parseTypeToken = JSON.parse(typeToken);
-      const mappedCate = {
-            nameCate: updatedCate.ten_loai,
-            slug: updatedCate.duong_dan,
-            descriptionCate: updatedCate.mota_loai,
-            parentCate_id: updatedCate.id_danh_muc_cha || null,
-      };
+
+    const mappedCate = {
+      nameCate: updatedCate.ten_loai,
+      slug: updatedCate.duong_dan,
+      descriptionCate: updatedCate.mota_loai,
+      idParent : updatedCate.id_danh_muc_cha || null,
+    };
+
     const res = await fetch(`https://huunghi.id.vn/api/categoryProduct/updateCategoryProduct/${slugCate}`, {
       method: "PUT",
       headers: {
-        "Authorization": `${parseTypeToken} ${parseAccessToken}`,
+        Authorization: `${parseTypeToken} ${parseAccessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(mappedCate),
     });
 
-    const data = await res.json();
+    const text = await res.text();
 
-    if (res.ok) {
-      return data;
-    } else {
-        console.log("lỗi", res.status, res.statusText);
-        
-      throw data;
-      
+    // ⚠ Nếu response là HTML (lỗi), thì không parse JSON
+    if (!res.ok) {
+      console.error("❌ Server trả lỗi HTML:", text);
+      throw new Error(`Server error ${res.status}`);
     }
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (err) {
+      console.error("❌ Lỗi parse JSON (có thể là HTML):", text);
+      throw new Error("Server trả về không phải JSON");
+    }
+
+    return data;
   } catch (error: any) {
-    console.error("❌ Lỗi khi gọi editCate:", error);
-    throw error;
+    console.error("❌ Lỗi khi gọi editCategories:", error);
+    return null;
   }
-}
+};
+export const hiddenCate = async (slug: number | string) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const typeToken = localStorage.getItem("typeToken");
+    if(accessToken && typeToken) {
+      const parseAccessToken = JSON.parse(accessToken);
+    const parseTypeToken = JSON.parse(typeToken);
+
+    const res = await fetch(`https://huunghi.id.vn/api/categoryProduct/changeStatus/${slug}`, {
+      method: "PATCH",
+      headers: {
+        "Authorization": `${parseTypeToken} ${parseAccessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      console.error("❌ Lỗi khi ẩn danh mục:", res.status, res.statusText);
+    }
+
+    const result = await res.json();
+    return result;
+    }
+      } catch (error) {
+    console.error("❌ Lỗi khi gọi API hiddenCate:", error);
+  }
+};

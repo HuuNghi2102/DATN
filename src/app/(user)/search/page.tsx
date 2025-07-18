@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faCalendarDays, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping, faCalendarDays, faChevronRight,faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -154,17 +154,17 @@ const EcommerceSearchPage: React.FC = () => {
                     </div>
                     <a
                       href="#"
-                      className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-black"
+                      className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:text-red-500 hover:bg-white "
                     >
-                      <FontAwesomeIcon icon={faCartShopping} />
+                      <FontAwesomeIcon icon={faHeart} />
                     </a>
                     <div className="absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
                       <p>{product.badge}</p>
                     </div>
                   </div>
                   <div className="px-1 mt-2">
-                    <p className="text-sm">{product.ten_san_pham}</p>
-                    <strong className="text-sm">{product.gia_da_giam?.toLocaleString('vi-VN')} VNĐ</strong>
+                    <p className="text-sm ">{product.ten_san_pham}</p>
+                    <strong className="text-sm text-red-500">{product.gia_da_giam?.toLocaleString('vi-VN')} VNĐ</strong>
                   </div>
                 </div>
               </div>
