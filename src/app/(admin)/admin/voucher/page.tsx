@@ -2,16 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faPencil, faRepeat } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faPencil, faRepeat,faSearch } from '@fortawesome/free-solid-svg-icons';
 import { addVoucher, deleteVoucher, editVoucher } from "../services/voucherServices";
 import interfaceVoucher from "../types/voucher";
 import { CreateVoucher } from "../types/voucher";
 import { changeStatusVoucher } from "../services/voucherServices";
 export default function VoucherManager() {
+  // State quản lý form
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<null | number>(null);
-  const [errorMessages, setErrorMessages] = useState<Record<string, string[]>>({});
+  const [errorMessages, setErrorMessages] = useState<Record<string, string[]>>(
+    {}
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const [formData, setFormData] = useState<CreateVoucher>({
     ma_giam_gia: "",
     loai_giam_gia: "",
@@ -21,6 +26,8 @@ export default function VoucherManager() {
     ngay_het_han: "",
     trang_thai: -1,
   });
+
+  // State dữ liệu voucher
   const [vouchers, setVouchers] = useState<interfaceVoucher[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -65,59 +72,117 @@ export default function VoucherManager() {
       return [];
     }
   };
+
+  // State bộ lọc
+  const [searchCode, setSearchCode] = useState("");
+  const [discountValueFilter, setDiscountValueFilter] = useState<number | "">(
+    ""
+  );
+  const [startDateFilter, setStartDateFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  // Options cho giá trị giảm
+  const discountValueOptions = [
+    { value: "phan_tram", label: "Phần trăm" },
+    { value: "so_tien", label: "Số tiền" },
+  ];
+
+  // Lấy dữ liệu voucher từ API
   useEffect(() => {
     const fetchVouchers = async () => {
       try {
         const data = await getAPIVouchers();
         setVouchers(data);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Lỗi khi fetch vouchers:", error);
+        console.error("Lỗi khi lấy dữ liệu voucher:", error);
       }
     };
 
     fetchVouchers();
   }, [currentPage]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  // Hàm lọc voucher
+  const filteredVouchers = vouchers.filter((voucher) => {
+    // Lọc theo mã
+    if (
+      searchCode &&
+      !voucher.ma_giam_gia.toLowerCase().includes(searchCode.toLowerCase())
+    ) {
+      return false;
+    }
+
+    // Lọc theo giá trị giảm
+    if (
+      discountValueFilter !== "" &&
+      voucher.gia_tri_giam !== discountValueFilter
+    ) {
+      return false;
+    }
+
+    // Lọc theo ngày bắt đầu
+    if (
+      startDateFilter &&
+      new Date(voucher.ngay_bat_dau) < new Date(startDateFilter)
+    ) {
+      return false;
+    }
+
+    // Lọc theo trạng thái
+    if (statusFilter !== "all") {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const startDate = new Date(voucher.ngay_bat_dau);
+      const endDate = new Date(voucher.ngay_het_han);
+
+      switch (statusFilter) {
+        case "active":
+          return (
+            startDate <= today && endDate >= today && voucher.trang_thai === 1
+          );
+        case "inactive":
+          return voucher.trang_thai === 0;
+        case "expired":
+          return endDate < today;
+        case "upcoming":
+          return startDate > today;
+        default:
+          return true;
+      }
+    }
+
+    return true;
+  });
+
+  // Xử lý thay đổi form
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "trang_thai" || type === "number" ? Number(value) : value,
+      [name]:
+        name === "trang_thai" || type === "number" ? Number(value) : value,
     }));
   };
 
+  // Thêm voucher mới
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const result = await addVoucher(formData);
+    try {
+      const result = await addVoucher(formData);
 
-    if (result.success) {
-      const newData = await getAPIVouchers();
-      setVouchers(newData);
-      setFormData({
-        ma_giam_gia: "",
-        loai_giam_gia: "",
-        gia_tri_giam: 1,
-        gia_tri_don_hang: 1,
-        ngay_bat_dau: "",
-        ngay_het_han: "",
-        trang_thai: -1,
-      });
-      setErrorMessages({});
-      setShowForm(false);
-      alert("Thêm voucher thành công!");
-    } else {
-      setErrorMessages(result.errors || {});
-    }
-  };
-
-  const handleDelete = async (idVoucher: string | number) => {
-    const success = await deleteVoucher(idVoucher);
-    if (success) {
-      alert("✔️ Xoá thành công!");
-      const updated = await getAPIVouchers();
-      setVouchers(updated);
-    } else {
-      alert("❌ Xoá voucher thất bại!");
+      if (result.success) {
+        const newData = await getAPIVouchers();
+        setVouchers(newData);
+        resetForm();
+        alert("Thêm voucher thành công!");
+      } else {
+        setErrorMessages(result.errors || {});
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm voucher:", error);
+      alert("Thêm voucher thất bại!");
     }
   };
   const handlePageChange = (page: number) => {
@@ -127,104 +192,227 @@ export default function VoucherManager() {
   };
   const handleSubmitEdit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!editingVoucher) return;
 
     try {
-      if (editMode && editingVoucher !== null) {
-        const result = await editVoucher(editingVoucher, formData);
-        if (result.success === false) {
-          setErrorMessages(result.errors || {});
-          return;
-        }
-      } else {
-        await addVoucher(formData);
-      }
+      const result = await editVoucher(editingVoucher, formData);
 
-      const newData = await getAPIVouchers();
-      setVouchers(newData);
-      setShowForm(false);
-      setFormData({
-        ma_giam_gia: "",
-        loai_giam_gia: "",
-        gia_tri_giam: 1,
-        gia_tri_don_hang: 1,
-        ngay_bat_dau: "",
-        ngay_het_han: "",
-        trang_thai: -1,
-      });
-      setEditMode(false);
-      setEditingVoucher(null);
-      setErrorMessages({});
-      alert("Thành công");
-    } catch (err: any) {
-      console.error("Lỗi khi gọi editVoucher:", err);
-      alert("❌ Cập nhật thất bại. Xem log console để biết thêm.");
+      if (result.success) {
+        const newData = await getAPIVouchers();
+        setVouchers(newData);
+        resetForm();
+        alert("Cập nhật voucher thành công!");
+      } else {
+        setErrorMessages(result.errors || {});
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật voucher:", error);
+      alert("Cập nhật voucher thất bại!");
     }
   };
+
+  // Xóa voucher
+  const handleDelete = async (id: string | number) => {
+    if (!confirm("Bạn có chắc chắn muốn xóa voucher này?")) return;
+
+    try {
+      const success = await deleteVoucher(id);
+      if (success) {
+        const updated = await getAPIVouchers();
+        setVouchers(updated);
+        alert("Xóa voucher thành công!");
+      } else {
+        alert("Xóa voucher thất bại!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa voucher:", error);
+      alert("Đã xảy ra lỗi khi xóa voucher!");
+    }
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setShowForm(false);
+    setEditMode(false);
+    setEditingVoucher(null);
+    setFormData({
+      ma_giam_gia: "",
+      loai_giam_gia: "",
+      gia_tri_giam: 0,
+      gia_tri_don_hang: 0,
+      ngay_bat_dau: "",
+      ngay_het_han: "",
+      trang_thai: -1,
+    });
+    setErrorMessages({});
+  };
+
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900">
       <main className="max-w-7xl mx-auto p-8">
+        {/* Header */}
         <header className="flex flex-col md:flex-row justify-between md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-2xl font-semibold">Quản lý Voucher</h1>
-            <p className="text-sm text-gray-500">Tạo mới và quản lý mã giảm giá</p>
+            <p className="text-sm text-gray-500">
+              Tạo mới và quản lý mã giảm giá
+            </p>
           </div>
-          <div className="flex gap-3 flex-wrap">
-            <button
-              onClick={() => {
-                setShowForm(true);
-                setEditMode(false);
-                setFormData({
-                  ma_giam_gia: "",
-                  loai_giam_gia: "",
-                  gia_tri_giam: 1,
-                  gia_tri_don_hang: 1,
-                  ngay_bat_dau: "",
-                  ngay_het_han: "",
-                  trang_thai: -1,
-                });
-              }}
-              className="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center"
-            >
-              <FontAwesomeIcon icon={faPlus} className="mr-2" /> Thêm mới
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              setShowForm(true);
+              setEditMode(false);
+              setFormData({
+                ma_giam_gia: "",
+                loai_giam_gia: "",
+                gia_tri_giam: 0,
+                gia_tri_don_hang: 0,
+                ngay_bat_dau: "",
+                ngay_het_han: "",
+                trang_thai: -1,
+              });
+            }}
+            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center"
+          >
+            <FontAwesomeIcon icon={faPlus} className="mr-2" /> Thêm mới
+          </button>
         </header>
 
+        {/* Bộ lọc */}
+        <div className="bg-white rounded-lg shadow mb-6 p-6">
+          <h3 className="font-medium mb-4">Bộ lọc voucher</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Lọc theo mã */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                {" "}
+                Mã giảm giá
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchCode}
+                  onChange={(e) => setSearchCode(e.target.value)}
+                  placeholder="Nhập mã cần tìm..."
+                  className="w-full pl-8 pr-4 py-2 border rounded"
+                />
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="absolute left-3 top-3 text-gray-400"
+                />
+              </div>
+            </div>
+
+            {/* Lọc theo giá trị giảm */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                {" "}
+                Giá trị giảm
+              </label>
+              <select
+                value={discountValueFilter}
+                onChange={(e) =>
+                  setDiscountValueFilter(
+                    e.target.value ? Number(e.target.value) : ""
+                  )
+                }
+                className="w-full px-4 py-2 border rounded"
+              >
+                <option value="">Tất cả giá trị</option>
+                {discountValueOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Lọc theo trạng thái */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                {" "}
+                Trạng thái
+              </label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full px-4 py-2 border rounded"
+              >
+                <option value="">Tất cả</option>
+                <option value="dang_hoat_dong">Đang hoạt động</option>
+                <option value="dung_hoat_dong">Dừng hoạt động</option>
+                <option value="het_han">Hết hạn</option>
+                <option value="chua_bat_dau">Chưa bắt đầu</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Form thêm/sửa voucher */}
         {showForm && (
           <div className="bg-white rounded-lg shadow mb-6">
             <div className="px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold">
-                {editMode ? "Chỉnh sửa Voucher" : "Thêm mới Voucher"}
+                {editMode ? "Chỉnh sửa Voucher" : "Thêm Voucher mới"}
               </h2>
             </div>
             <div className="p-6">
-              <form onSubmit={editMode ? handleSubmitEdit : handleSubmit} className="space-y-5">
+              <form
+                onSubmit={editMode ? handleSubmitEdit : handleSubmit}
+                className="space-y-5"
+              >
                 <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Mã giảm giá *
+                  </label>
                   <input
                     name="ma_giam_gia"
                     value={formData.ma_giam_gia}
                     onChange={handleChange}
                     required
-                    placeholder="Mã giảm giá"
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.codeVoucher && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.codeVoucher[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.codeVoucher[0]}
+                    </p>
                   )}
                 </div>
-
                 <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Loại giảm giá *
+                  </label>
                   <input
                     name="loai_giam_gia"
                     value={formData.loai_giam_gia}
                     onChange={handleChange}
                     required
-                    placeholder="Loại giảm giá"
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.typeVoucher && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.typeVoucher[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.typeVoucher[0]}
+                    </p>
                   )}
                 </div>
 
@@ -239,7 +427,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.valueRedution && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.valueRedution[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.valueRedution[0]}
+                    </p>
                   )}
                 </div>
 
@@ -254,7 +444,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.minOrderValue && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.minOrderValue[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.minOrderValue[0]}
+                    </p>
                   )}
                 </div>
 
@@ -268,7 +460,9 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.dateStart && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.dateStart[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.dateStart[0]}
+                    </p>
                   )}
                 </div>
 
@@ -282,11 +476,16 @@ export default function VoucherManager() {
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.dateEnd && (
-                    <p className="text-red-500 text-sm mt-1">{errorMessages.dateEnd[0]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorMessages.dateEnd[0]}
+                    </p>
                   )}
                 </div>
 
                 <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Trạng thái *
+                  </label>
                   <select
                     name="trang_thai"
                     value={formData.trang_thai}
@@ -294,25 +493,28 @@ export default function VoucherManager() {
                     required
                     className="w-full border px-4 py-2 rounded"
                   >
-                    <option value={-1} disabled>-- Chọn trạng thái --</option>
+                    <option value={-1} disabled>
+                      -- Chọn trạng thái --
+                    </option>
                     <option value={1}>Đang hoạt động</option>
+
                     <option value={0}>Dừng hoạt động</option>
                   </select>
                 </div>
 
-                <div className="flex justify-end gap-3">
+                <div className="flex justify-end gap-3 pt-4">
                   <button
                     type="button"
-                    onClick={() => setShowForm(false)}
-                    className="px-4 py-2 border rounded"
+                    onClick={resetForm}
+                    className="px-4 py-2 border rounded hover:bg-gray-100"
                   >
-                    Hủy
+                    Hủy bỏ
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-indigo-600 text-white rounded"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                   >
-                    Lưu
+                    {editMode ? "Cập nhật" : "Thêm mới"}
                   </button>
                 </div>
               </form>
@@ -320,9 +522,13 @@ export default function VoucherManager() {
           </div>
         )}
 
+        {/* Danh sách voucher */}
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold">Danh sách Voucher</h2>
+            <h2 className="text-lg font-semibold">
+              Danh sách Voucher{" "}
+              <span className="text-gray-500">({filteredVouchers.length})</span>
+            </h2>
           </div>
           <div className="overflow-x-auto p-6">
             <table className="min-w-full text-sm">
@@ -336,9 +542,12 @@ export default function VoucherManager() {
                     "Ngày bắt đầu",
                     "Ngày kết thúc",
                     "Trạng thái",
-                    "Thao tác"
+                    "Thao tác",
                   ].map((h) => (
-                    <th key={h} className="p-3 text-left font-medium text-gray-700 whitespace-nowrap">
+                    <th
+                      key={h}
+                      className="p-3 text-left font-medium text-gray-700 whitespace-nowrap"
+                    >
                       {h}
                     </th>
                   ))}
@@ -357,10 +566,20 @@ export default function VoucherManager() {
                         : `${voucher.gia_tri_giam.toLocaleString()} VNĐ`}
                     </td>
                     <td className="p-4 whitespace-nowrap">
-                      {voucher?.gia_tri_don_hang ? `${voucher?.gia_tri_don_hang.toLocaleString()} VNĐ` : "0 VNĐ"}
+                      {voucher?.gia_tri_don_hang
+                        ? `${voucher?.gia_tri_don_hang.toLocaleString()} VNĐ`
+                        : "0 VNĐ"}
                     </td>
-                    <td className="p-4 whitespace-nowrap">{new Date(voucher.ngay_bat_dau).toLocaleDateString('vi-VN')}</td>
-                    <td className="p-4 whitespace-nowrap">{new Date(voucher.ngay_het_han).toLocaleDateString('vi-VN')}</td>
+                    <td className="p-4 whitespace-nowrap">
+                      {new Date(voucher.ngay_bat_dau).toLocaleDateString(
+                        "vi-VN"
+                      )}
+                    </td>
+                    <td className="p-4 whitespace-nowrap">
+                      {new Date(voucher.ngay_het_han).toLocaleDateString(
+                        "vi-VN"
+                      )}
+                    </td>
                     <td className="p-4">
                       <button
                         onClick={async () => {
@@ -411,25 +630,6 @@ export default function VoucherManager() {
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
-
-                      {/* <button
-                        onClick={async () => {
-                          const confirmChange = confirm("Bạn có chắc chắn muốn đổi trạng thái voucher này?");
-                          if (!confirmChange) return;
-                          const success = await changeStatusVoucher(voucher.id_ma_giam_gia);
-                          if (!success) {
-                            alert("❌ Đổi trạng thái thất bại");
-                          } else {
-                            alert("✅ Đổi trạng thái thành công");
-                            const updated = await getAPIVouchers();
-                            setVouchers(updated);
-                          }
-                        }}
-                        className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
-                        title="Đổi trạng thái"
-                      >
-                        <FontAwesomeIcon icon={faRepeat} />
-                      </button> */}
                     </td>
 
                   </tr>

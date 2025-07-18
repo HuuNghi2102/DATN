@@ -1,11 +1,11 @@
-'use client'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+"use client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import React, { useEffect, useState, useRef } from 'react';
-import userInterface from '../../compoments/userInterface';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, { useEffect, useState, useRef } from "react";
+import userInterface from "../../compoments/userInterface";
+import Link from "next/link";
+import Image from "next/image";
 
 interface FormData {
   name: string;
@@ -18,21 +18,21 @@ interface FormData {
 export default function UserProfile() {
   const [user, setUser] = useState<userInterface>();
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    avatar: null
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    avatar: null,
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [avatarPreview, setAvatarPreview] = useState('');
+  const [avatarPreview, setAvatarPreview] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const u = localStorage.getItem('user');
-    const accessTokenLocal = localStorage.getItem('accessToken');
-    const typeTokenLocal = localStorage.getItem('typeToken');
+    const u = localStorage.getItem("user");
+    const accessTokenLocal = localStorage.getItem("accessToken");
+    const typeTokenLocal = localStorage.getItem("typeToken");
     if (u && accessTokenLocal && typeTokenLocal) {
       const uu = JSON.parse(u);
       setUser(uu);
@@ -40,18 +40,18 @@ export default function UserProfile() {
         setAvatarPreview(uu.avatar_user);
       }
     } else {
-      toast.info('Vui lòng đăng nhập');
+      toast.info("Vui lòng đăng nhập");
     }
   }, []);
 
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.ten_user || '',
-        email: user.email_user || '',
-        phone: user.sdt_user || '',
-        address: user.dia_chi_user || '',
-        avatar: null
+        name: user.ten_user || "",
+        email: user.email_user || "",
+        phone: user.sdt_user || "",
+        address: user.dia_chi_user || "",
+        avatar: null,
       });
     }
   }, [user]);
@@ -59,9 +59,9 @@ export default function UserProfile() {
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      console.log(e.target.files)
-      setFormData(prev => ({ ...prev, avatar: file }));
-      
+      console.log(e.target.files);
+      setFormData((prev) => ({ ...prev, avatar: file }));
+
       // Tạo preview cho avatar
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -76,47 +76,55 @@ export default function UserProfile() {
   };
 
   const updateUserProfile = async () => {
-    if (formData.name === '' || formData.email === '' || formData.phone === '' || formData.address === '') {
-      toast.warn('Bạn vui lòng điền đầy đủ thông tin');
+    if (
+      formData.name === "" ||
+      formData.email === "" ||
+      formData.phone === "" ||
+      formData.address === ""
+    ) {
+      toast.warn("Bạn vui lòng điền đầy đủ thông tin");
       return;
     }
-    
+
     setIsLoading(true);
     try {
-      const tokenLocal = localStorage.getItem('accessToken');
+      const tokenLocal = localStorage.getItem("accessToken");
       if (tokenLocal) {
         const token = JSON.parse(tokenLocal);
         const formDataToSend = new FormData();
-        formDataToSend.append('name', formData.name);
-        formDataToSend.append('phone', formData.phone);
-        formDataToSend.append('address', formData.address);
+        formDataToSend.append("name", formData.name);
+        formDataToSend.append("phone", formData.phone);
+        formDataToSend.append("address", formData.address);
         if (formData.avatar) {
-          formDataToSend.append('image', formData.avatar);
+          formDataToSend.append("image", formData.avatar);
         }
 
-        const res = await fetch('https://huunghi.id.vn/api/user/changeImformationUser', {
-          method: "POST",
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          body: formDataToSend
-        });
+        const res = await fetch(
+          "https://huunghi.id.vn/api/user/changeImformationUser",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formDataToSend,
+          }
+        );
         const result = await res.json();
 
         if (res.ok) {
-          localStorage.setItem('user', JSON.stringify(result.data.user));
+          localStorage.setItem("user", JSON.stringify(result.data.user));
           setUser(result.data.user);
           setIsEditing(false);
-          toast.success('Cập nhật thông tin thành công!');
+          toast.success("Cập nhật thông tin thành công!");
         } else {
-          toast.error(result.message || 'Có lỗi xảy ra khi cập nhật thông tin');
+          toast.error(result.message || "Có lỗi xảy ra khi cập nhật thông tin");
         }
       } else {
-        toast.error('Bạn chưa đăng nhập');
+        toast.error("Bạn chưa đăng nhập");
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
-      toast.error('Có lỗi xảy ra khi cập nhật thông tin');
+      console.error("Error updating profile:", error);
+      toast.error("Có lỗi xảy ra khi cập nhật thông tin");
     } finally {
       setIsLoading(false);
     }
@@ -124,20 +132,37 @@ export default function UserProfile() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const menuItems = [
-    { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/user/userprofile', active: true },
-    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order' },
-    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro' },
-    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi' },
-    { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
-    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/' },
-    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' }
+    {
+      icon: "fas fa-user",
+      text: "Hồ sơ của tôi",
+      href: "/user/userprofile",
+      active: true,
+    },
+    {
+      icon: "fas fa-clipboard-list",
+      text: "Đơn hàng của tôi",
+      href: "/user/history-order",
+    },
+    {
+      icon: "fas fa-question-circle",
+      text: "Yêu cầu hỗ trợ",
+      href: "/user/yeucauhotro",
+    },
+    {
+      icon: "fas fa-map-marker-alt",
+      text: "Sổ địa chỉ",
+      href: "/user/sodiachi",
+    },
+    { icon: "fas fa-ticket-alt", text: "Vouchers", href: "/" },
+    { icon: "fas fa-heart", text: "Sản phẩm đã xem", href: "/" },
+    { icon: "fas fa-lock", text: "Đổi mật khẩu", href: "/user/changePassword" },
   ];
 
   return (
@@ -152,7 +177,12 @@ export default function UserProfile() {
       <div className="bg-white border-b px-4 md:px-40 py-3 shadow-sm">
         <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
-            <span><Link href="/" className="hover:text-blue-600">Trang chủ</Link></span> / <span className="font-medium text-gray-800">Tài khoản</span>
+            <span>
+              <Link href="/" className="hover:text-blue-600">
+                Trang chủ
+              </Link>
+            </span>{" "}
+            / <span className="font-medium text-gray-800">Tài khoản</span>
           </nav>
         </div>
       </div>
@@ -171,9 +201,12 @@ export default function UserProfile() {
 
             <div className="p-2">
               <div className="text-sm text-gray-600 px-3 py-2">
-                Xin chào, <span className="font-medium text-gray-800">{user?.ten_user || 'Người dùng'}</span>
+                Xin chào,{" "}
+                <span className="font-medium text-gray-800">
+                  {user?.ten_user || "Người dùng"}
+                </span>
               </div>
-              
+
               <ul className="space-y-1">
                 {menuItems.map((item, index) => (
                   <li key={index}>
@@ -181,8 +214,8 @@ export default function UserProfile() {
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
                           item.active
-                            ? 'bg-black text-white'
-                            : 'text-gray-700 hover:bg-gray-100'
+                            ? "bg-black text-white"
+                            : "text-gray-700 hover:bg-gray-100"
                         }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
@@ -199,7 +232,9 @@ export default function UserProfile() {
           <div className="flex-1 bg-white rounded-lg shadow-sm">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold text-gray-800">HỒ SƠ CỦA TÔI</h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  HỒ SƠ CỦA TÔI
+                </h2>
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
@@ -222,20 +257,25 @@ export default function UserProfile() {
                       height={120}
                       className="rounded-full w-32 h-32 object-cover border-4 border-white shadow-md"
                     />
-                  ) : user?.anh_dai_dien_user ? <img
+                  ) : user?.anh_dai_dien_user ? (
+                    <img
                       src={`https://huunghi.id.vn/storage/avatars/${user?.anh_dai_dien_user}`}
                       alt="User Avatar"
                       width={120}
                       height={120}
                       className="rounded-full w-32 h-32 object-cover border-4 border-white shadow-md"
-                    /> : ( 
+                    />
+                  ) : (
                     <div className="rounded-full w-32 h-32 bg-gray-200 flex items-center justify-center border-4 border-white shadow-md">
                       <i className="fas fa-user text-4xl text-gray-400"></i>
                     </div>
-                  ) }
-                  
+                  )}
+
                   {isEditing && (
-                    <div className="absolute inset-0 rounded-full bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={triggerFileInput}>
+                    <div
+                      className="absolute inset-0 rounded-full bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      onClick={triggerFileInput}
+                    >
                       <i className="fas fa-camera text-white text-2xl"></i>
                       <input
                         type="file"
@@ -345,23 +385,39 @@ export default function UserProfile() {
                 <div className="space-y-6">
                   <div className=" gap-6">
                     <div className="bg-gray-50 p-4 rounded-lg mb-2">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Tên:</h3>
-                      <p className=" font-medium text-gray-800">{user?.ten_user || 'Chưa cập nhật'}</p>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">
+                        Tên:
+                      </h3>
+                      <p className=" font-medium text-gray-800">
+                        {user?.ten_user || "Chưa cập nhật"}
+                      </p>
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded-lg mb-2">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Email:</h3>
-                      <p className=" font-medium text-gray-800">{user?.email_user || 'Chưa cập nhật'}</p>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">
+                        Email:
+                      </h3>
+                      <p className=" font-medium text-gray-800">
+                        {user?.email_user || "Chưa cập nhật"}
+                      </p>
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded-lg mb-2">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Số điện thoại:</h3>
-                      <p className=" font-medium text-gray-800">{user?.sdt_user || 'Chưa cập nhật'}</p>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">
+                        Số điện thoại:
+                      </h3>
+                      <p className=" font-medium text-gray-800">
+                        {user?.sdt_user || "Chưa cập nhật"}
+                      </p>
                     </div>
 
                     <div className="bg-gray-50 p-4 rounded-lg mb-2">
-                      <h3 className="text-sm font-medium text-gray-500 mb-1">Địa chỉ:</h3>
-                      <p className=" font-medium text-gray-800">{user?.dia_chi_user || 'Chưa cập nhật'}</p>
+                      <h3 className="text-sm font-medium text-gray-500 mb-1">
+                        Địa chỉ:
+                      </h3>
+                      <p className=" font-medium text-gray-800">
+                        {user?.dia_chi_user || "Chưa cập nhật"}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -394,7 +450,9 @@ export default function UserProfile() {
 
             {/* Mobile Content */}
             <div className="p-4">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">HỒ SƠ CỦA TÔI</h2>
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                HỒ SƠ CỦA TÔI
+              </h2>
 
               {/* Avatar Mobile */}
               <div className="flex flex-col items-center mb-6">
@@ -412,9 +470,12 @@ export default function UserProfile() {
                       <i className="fas fa-user text-3xl text-gray-400"></i>
                     </div>
                   )}
-                  
+
                   {isEditing && (
-                    <div className="absolute inset-0 rounded-full bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" onClick={triggerFileInput}>
+                    <div
+                      className="absolute inset-0 rounded-full bg-black bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      onClick={triggerFileInput}
+                    >
                       <i className="fas fa-camera text-white text-xl"></i>
                       <input
                         type="file"
@@ -520,23 +581,39 @@ export default function UserProfile() {
               ) : (
                 <div className="space-y-4">
                   <div className="border-b pb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Tên:</h3>
-                    <p className="text-base font-medium text-gray-800">{user?.ten_user || 'Chưa cập nhật'}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      Tên:
+                    </h3>
+                    <p className="text-base font-medium text-gray-800">
+                      {user?.ten_user || "Chưa cập nhật"}
+                    </p>
                   </div>
 
                   <div className="border-b pb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Email:</h3>
-                    <p className="text-base font-medium text-gray-800">{user?.email_user || 'Chưa cập nhật'}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      Email:
+                    </h3>
+                    <p className="text-base font-medium text-gray-800">
+                      {user?.email_user || "Chưa cập nhật"}
+                    </p>
                   </div>
 
                   <div className="border-b pb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Số điện thoại:</h3>
-                    <p className="text-base font-medium text-gray-800">{user?.sdt_user || 'Chưa cập nhật'}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      Số điện thoại:
+                    </h3>
+                    <p className="text-base font-medium text-gray-800">
+                      {user?.sdt_user || "Chưa cập nhật"}
+                    </p>
                   </div>
 
                   <div className="pb-2">
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Địa chỉ:</h3>
-                    <p className="text-base font-medium text-gray-800">{user?.dia_chi_user || 'Chưa cập nhật'}</p>
+                    <h3 className="text-sm font-medium text-gray-500 mb-1">
+                      Địa chỉ:
+                    </h3>
+                    <p className="text-base font-medium text-gray-800">
+                      {user?.dia_chi_user || "Chưa cập nhật"}
+                    </p>
                   </div>
                 </div>
               )}
@@ -547,7 +624,10 @@ export default function UserProfile() {
           <div className="bg-white rounded-lg shadow-sm">
             <div className="p-4 border-b bg-gray-50 rounded-t-lg">
               <div className="text-sm text-gray-600">
-                Xin chào, <span className="font-medium text-gray-800">{user?.ten_user || 'Người dùng'}</span>
+                Xin chào,{" "}
+                <span className="font-medium text-gray-800">
+                  {user?.ten_user || "Người dùng"}
+                </span>
               </div>
             </div>
 
@@ -559,8 +639,8 @@ export default function UserProfile() {
                       <button
                         className={`w-full flex items-center gap-2 px-3 py-3 rounded-lg text-left transition-colors text-sm ${
                           item.active
-                            ? 'bg-black text-white'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? "bg-black text-white"
+                            : "text-gray-700 hover:bg-gray-50"
                         }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
@@ -575,18 +655,17 @@ export default function UserProfile() {
         </div>
       </div>
       <ToastContainer
-  position="top-center"
-  autoClose={3000}
-  hideProgressBar={false}
-  newestOnTop={false}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-  theme="light"
-/>
-
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

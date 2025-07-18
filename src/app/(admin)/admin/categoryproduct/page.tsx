@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faPencil, faPlus, faEdit, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import categoryInterface from "../types/category";
@@ -13,13 +13,14 @@ type FormData = {
 };
 
 const CategoryPage = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showForm, setShowForm] = useState(false);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    slug: '',
-    description: '',
-    parent: '',
+    name: "",
+    slug: "",
+    description: "",
+    parent: "",
   });
   const [categoryList, setCategoryList] = useState<categoryInterface[]>([]);
   useEffect(() => {
@@ -27,14 +28,19 @@ const CategoryPage = () => {
       try {
         const data = await getAPICategories();
         setCategoryList(data);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
-    }
+    };
     FetchCate();
   }, [])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
@@ -51,6 +57,7 @@ const CategoryPage = () => {
       id_danh_muc_cha: parentId,
     };
 
+
     try {
       if (editingSlug) {
         // SỬA DANH MỤC
@@ -61,7 +68,6 @@ const CategoryPage = () => {
         const result = await addCategories(payload);
         console.log("✅ Đã thêm:", result);
       }
-
       // Làm mới lại danh sách
       const data = await getAPICategories();
       setCategoryList(data);
@@ -120,18 +126,38 @@ const CategoryPage = () => {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <header className="mb-6 flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Quản lý Danh Mục</h1>
-          <p className="text-sm text-gray-500">Thêm mới và quản lý danh mục sản phẩm</p>
+          <p className="text-sm text-gray-500">
+            Thêm mới và quản lý danh mục sản phẩm
+          </p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => {
-              setFormData({ name: '', slug: '', description: '', parent: '' });
+              setFormData({ name: "", slug: "", description: "", parent: "" });
               setEditingSlug(null);
               setShowForm(true);
             }}
@@ -145,24 +171,57 @@ const CategoryPage = () => {
       {showForm && (
         <div className="bg-white rounded shadow p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            {editingSlug ? 'Chỉnh sửa danh mục' : 'Thông tin danh mục'}
+            {editingSlug ? "Chỉnh sửa danh mục" : "Thông tin danh mục"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Tên danh mục</label>
-              <input type="text" id="name" value={formData.name} onChange={handleInputChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Ví dụ: Áo thun nam" />
+              <label className="block text-sm font-medium text-gray-700">
+                Tên danh mục
+              </label>
+              <input
+                type="text"
+                id="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                placeholder="Ví dụ: Áo thun nam"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Đường dẫn</label>
-              <input type="text" id="slug" value={formData.slug} onChange={handleInputChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Ví dụ: ao-thun-nam" />
+              <label className="block text-sm font-medium text-gray-700">
+                Đường dẫn
+              </label>
+              <input
+                type="text"
+                id="slug"
+                value={formData.slug}
+                onChange={handleInputChange}
+                className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                placeholder="Ví dụ: ao-thun-nam"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Mô tả danh mục</label>
-              <textarea id="description" value={formData.description} onChange={handleInputChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm" rows={3} />
+              <label className="block text-sm font-medium text-gray-700">
+                Mô tả danh mục
+              </label>
+              <textarea
+                id="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
+                rows={3}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Danh mục cha</label>
-              <select id="parent" value={formData.parent} onChange={handleInputChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm">
+              <label className="block text-sm font-medium text-gray-700">
+                Danh mục cha
+              </label>
+              <select
+                id="parent"
+                value={formData.parent}
+                onChange={handleInputChange}
+                className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
+              >
                 <option value="">Không có (danh mục gốc)</option>
                 {categoryList
                   .filter((cat) => cat.duong_dan !== formData.slug)
@@ -174,9 +233,19 @@ const CategoryPage = () => {
               </select>
             </div>
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 border border-gray-300 text-sm rounded hover:bg-gray-100">Hủy bỏ</button>
-              <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700">
-                <i className="fas fa-save mr-1"></i> {editingSlug ? 'Cập nhật' : 'Lưu danh mục'}
+              <button
+                type="button"
+                onClick={() => setShowForm(false)}
+                className="px-4 py-2 border border-gray-300 text-sm rounded hover:bg-gray-100"
+              >
+                Hủy bỏ
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700"
+              >
+                <i className="fas fa-save mr-1"></i>{" "}
+                {editingSlug ? "Cập nhật" : "Lưu danh mục"}
               </button>
             </div>
           </form>
@@ -184,7 +253,9 @@ const CategoryPage = () => {
       )}
 
       <div className="bg-white rounded shadow p-6 mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Danh sách danh mục</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Danh sách danh mục
+        </h2>
         <table className="w-full text-sm border-t">
           <thead className="bg-gray-100">
             <tr>
@@ -235,7 +306,9 @@ const CategoryPage = () => {
       </div>
 
       <div className="bg-white rounded shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Xem dạng cây</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Xem dạng cây
+        </h2>
         <ul className="ml-4">{buildCategoryTree(categoryList)}</ul>
       </div>
     </div>

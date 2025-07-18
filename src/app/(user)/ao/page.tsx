@@ -1,205 +1,211 @@
-'use client';
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart, faSortAlphaDown } from '@fortawesome/free-solid-svg-icons';
+"use client";
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faSearch,
+  faShoppingCart,
+  faSortAlphaDown,
+} from "@fortawesome/free-solid-svg-icons";
 
 const products = [
   {
-    id: '1',
-    name: 'Áo Thun Nam Trơn Cotton Mềm Mại',
-    price: '199,000₫',
-    label: 'Hàng Mới',
-    discount: '179,000₫',
+    id: "1",
+    name: "Áo Thun Nam Trơn Cotton Mềm Mại",
+    price: "199,000₫",
+    label: "Hàng Mới",
+    discount: "179,000₫",
     discountPercent: "40%",
-    image: 'https://picsum.photos/300/300?random=101',
-    hoverImage: 'https://picsum.photos/300/300?random=102',
+    image: "https://picsum.photos/300/300?random=101",
+    hoverImage: "https://picsum.photos/300/300?random=102",
   },
   {
-    id: '2',
-    name: 'Áo Sơ Mi Nam Dài Tay Thanh Lịch',
-    price: '259,000₫',
-    label: 'Hàng Mới',
-    image: 'https://picsum.photos/300/300?random=103',
-    hoverImage: 'https://picsum.photos/300/300?random=104',
+    id: "2",
+    name: "Áo Sơ Mi Nam Dài Tay Thanh Lịch",
+    price: "259,000₫",
+    label: "Hàng Mới",
+    image: "https://picsum.photos/300/300?random=103",
+    hoverImage: "https://picsum.photos/300/300?random=104",
   },
   {
-    id: '3',
-    name: 'Áo Polo Nam Cá Tính',
-    price: '299,000₫',
-    discount: '269,000₫',
-    image: 'https://picsum.photos/300/300?random=105',
-    hoverImage: 'https://picsum.photos/300/300?random=106',
+    id: "3",
+    name: "Áo Polo Nam Cá Tính",
+    price: "299,000₫",
+    discount: "269,000₫",
+    image: "https://picsum.photos/300/300?random=105",
+    hoverImage: "https://picsum.photos/300/300?random=106",
   },
   {
-    id: '4',
-    name: 'Áo Khoác Nam Thể Thao Năng Động',
-    price: '399,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=107',
-    hoverImage: 'https://picsum.photos/300/300?random=108',
+    id: "4",
+    name: "Áo Khoác Nam Thể Thao Năng Động",
+    price: "399,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=107",
+    hoverImage: "https://picsum.photos/300/300?random=108",
   },
   {
-    id: '5',
-    name: 'Áo Hoodie Nam Năng Động',
-    price: '349,000₫',
-    label: 'Hàng Mới',
-    image: 'https://picsum.photos/300/300?random=109',
-    hoverImage: 'https://picsum.photos/300/300?random=110',
+    id: "5",
+    name: "Áo Hoodie Nam Năng Động",
+    price: "349,000₫",
+    label: "Hàng Mới",
+    image: "https://picsum.photos/300/300?random=109",
+    hoverImage: "https://picsum.photos/300/300?random=110",
   },
   {
-    id: '6',
-    name: 'Áo Sơ Mi Trơn Trẻ Trung',
-    price: '279,000₫',
-    image: 'https://picsum.photos/300/300?random=111',
-    hoverImage: 'https://picsum.photos/300/300?random=112',
+    id: "6",
+    name: "Áo Sơ Mi Trơn Trẻ Trung",
+    price: "279,000₫",
+    image: "https://picsum.photos/300/300?random=111",
+    hoverImage: "https://picsum.photos/300/300?random=112",
   },
   {
-    id: '7',
-    name: 'Áo Bomber Phối Màu Cá Tính',
-    price: '399,000₫',
-    discount: '369,000₫',
-    discountPercent: '10%',
-    image: 'https://picsum.photos/300/300?random=113',
-    hoverImage: 'https://picsum.photos/300/300?random=114',
+    id: "7",
+    name: "Áo Bomber Phối Màu Cá Tính",
+    price: "399,000₫",
+    discount: "369,000₫",
+    discountPercent: "10%",
+    image: "https://picsum.photos/300/300?random=113",
+    hoverImage: "https://picsum.photos/300/300?random=114",
   },
   {
-    id: '8',
-    name: 'Áo Len Dệt Kim Nam',
-    price: '319,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=115',
-    hoverImage: 'https://picsum.photos/300/300?random=116',
+    id: "8",
+    name: "Áo Len Dệt Kim Nam",
+    price: "319,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=115",
+    hoverImage: "https://picsum.photos/300/300?random=116",
   },
   {
-    id: '9',
-    name: 'Áo Thun Nam Trơn Cotton Mềm Mại',
-    price: '199,000₫',
-    label: 'Hàng Mới',
-    discount: '179,000₫',
+    id: "9",
+    name: "Áo Thun Nam Trơn Cotton Mềm Mại",
+    price: "199,000₫",
+    label: "Hàng Mới",
+    discount: "179,000₫",
     discountPercent: "40%",
-    image: 'https://picsum.photos/300/300?random=101',
-    hoverImage: 'https://picsum.photos/300/300?random=102',
+    image: "https://picsum.photos/300/300?random=101",
+    hoverImage: "https://picsum.photos/300/300?random=102",
   },
   {
-    id: '10',
-    name: 'Áo Sơ Mi Nam Dài Tay Thanh Lịch',
-    price: '259,000₫',
-    label: 'Hàng Mới',
-    image: 'https://picsum.photos/300/300?random=103',
-    hoverImage: 'https://picsum.photos/300/300?random=104',
+    id: "10",
+    name: "Áo Sơ Mi Nam Dài Tay Thanh Lịch",
+    price: "259,000₫",
+    label: "Hàng Mới",
+    image: "https://picsum.photos/300/300?random=103",
+    hoverImage: "https://picsum.photos/300/300?random=104",
   },
   {
-    id: '11',
-    name: 'Áo Polo Nam Cá Tính',
-    price: '299,000₫',
-    discount: '269,000₫',
-    image: 'https://picsum.photos/300/300?random=105',
-    hoverImage: 'https://picsum.photos/300/300?random=106',
+    id: "11",
+    name: "Áo Polo Nam Cá Tính",
+    price: "299,000₫",
+    discount: "269,000₫",
+    image: "https://picsum.photos/300/300?random=105",
+    hoverImage: "https://picsum.photos/300/300?random=106",
   },
   {
-    id: '12',
-    name: 'Áo Khoác Nam Thể Thao Năng Động',
-    price: '399,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=107',
-    hoverImage: 'https://picsum.photos/300/300?random=108',
+    id: "12",
+    name: "Áo Khoác Nam Thể Thao Năng Động",
+    price: "399,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=107",
+    hoverImage: "https://picsum.photos/300/300?random=108",
   },
   {
-    id: '13',
-    name: 'Áo Hoodie Nam Năng Động',
-    price: '349,000₫',
-    label: 'Hàng Mới',
-    image: 'https://picsum.photos/300/300?random=109',
-    hoverImage: 'https://picsum.photos/300/300?random=110',
+    id: "13",
+    name: "Áo Hoodie Nam Năng Động",
+    price: "349,000₫",
+    label: "Hàng Mới",
+    image: "https://picsum.photos/300/300?random=109",
+    hoverImage: "https://picsum.photos/300/300?random=110",
   },
   {
-    id: '14',
-    name: 'Áo Sơ Mi Trơn Trẻ Trung',
-    price: '279,000₫',
-    image: 'https://picsum.photos/300/300?random=111',
-    hoverImage: 'https://picsum.photos/300/300?random=112',
+    id: "14",
+    name: "Áo Sơ Mi Trơn Trẻ Trung",
+    price: "279,000₫",
+    image: "https://picsum.photos/300/300?random=111",
+    hoverImage: "https://picsum.photos/300/300?random=112",
   },
   {
-    id: '15',
-    name: 'Áo Bomber Phối Màu Cá Tính',
-    price: '399,000₫',
-    discount: '369,000₫',
-    discountPercent: '10%',
-    image: 'https://picsum.photos/300/300?random=113',
-    hoverImage: 'https://picsum.photos/300/300?random=114',
+    id: "15",
+    name: "Áo Bomber Phối Màu Cá Tính",
+    price: "399,000₫",
+    discount: "369,000₫",
+    discountPercent: "10%",
+    image: "https://picsum.photos/300/300?random=113",
+    hoverImage: "https://picsum.photos/300/300?random=114",
   },
   {
-    id: '16',
-    name: 'Áo Len Dệt Kim Nam',
-    price: '319,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=115',
-    hoverImage: 'https://picsum.photos/300/300?random=116',
+    id: "16",
+    name: "Áo Len Dệt Kim Nam",
+    price: "319,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=115",
+    hoverImage: "https://picsum.photos/300/300?random=116",
   },
   {
-    id: '17',
-    name: 'Áo Len Dệt Kim Nam',
-    price: '319,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=115',
-    hoverImage: 'https://picsum.photos/300/300?random=116',
+    id: "17",
+    name: "Áo Len Dệt Kim Nam",
+    price: "319,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=115",
+    hoverImage: "https://picsum.photos/300/300?random=116",
   },
   {
-    id: '18',
-    name: 'Áo Len Dệt Kim Nam',
-    price: '319,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=115',
-    hoverImage: 'https://picsum.photos/300/300?random=116',
+    id: "18",
+    name: "Áo Len Dệt Kim Nam",
+    price: "319,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=115",
+    hoverImage: "https://picsum.photos/300/300?random=116",
   },
   {
-    id: '19',
-    name: 'Áo Len Dệt Kim Nam',
-    price: '319,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=115',
-    hoverImage: 'https://picsum.photos/300/300?random=116',
+    id: "19",
+    name: "Áo Len Dệt Kim Nam",
+    price: "319,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=115",
+    hoverImage: "https://picsum.photos/300/300?random=116",
   },
   {
-    id: '20',
-    name: 'Áo Len Dệt Kim Nam',
-    price: '319,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=115',
-    hoverImage: 'https://picsum.photos/300/300?random=116',
+    id: "20",
+    name: "Áo Len Dệt Kim Nam",
+    price: "319,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=115",
+    hoverImage: "https://picsum.photos/300/300?random=116",
   },
- 
+
   {
-    id: '21',
-    name: 'Áo Bomber Phối Màu Cá Tính',
-    price: '399,000₫',
-    discount: '369,000₫',
-    discountPercent: '10%',
-    image: 'https://picsum.photos/300/300?random=113',
-    hoverImage: 'https://picsum.photos/300/300?random=114',
-  },
-  {
-    id: '22',
-    name: 'Áo Khoác Nam Thể Thao Năng Động',
-    price: '399,000₫',
-    label: 'Best Seller',
-    image: 'https://picsum.photos/300/300?random=107',
-    hoverImage: 'https://picsum.photos/300/300?random=108',
+    id: "21",
+    name: "Áo Bomber Phối Màu Cá Tính",
+    price: "399,000₫",
+    discount: "369,000₫",
+    discountPercent: "10%",
+    image: "https://picsum.photos/300/300?random=113",
+    hoverImage: "https://picsum.photos/300/300?random=114",
   },
   {
-    id: '23',
-    name: 'Áo Hoodie Nam Năng Động',
-    price: '349,000₫',
-    label: 'Hàng Mới',
-    image: 'https://picsum.photos/300/300?random=109',
-    hoverImage: 'https://picsum.photos/300/300?random=110',
+    id: "22",
+    name: "Áo Khoác Nam Thể Thao Năng Động",
+    price: "399,000₫",
+    label: "Best Seller",
+    image: "https://picsum.photos/300/300?random=107",
+    hoverImage: "https://picsum.photos/300/300?random=108",
+  },
+  {
+    id: "23",
+    name: "Áo Hoodie Nam Năng Động",
+    price: "349,000₫",
+    label: "Hàng Mới",
+    image: "https://picsum.photos/300/300?random=109",
+    hoverImage: "https://picsum.photos/300/300?random=110",
   },
 ];
 
 export default function ShirtProductPage() {
-  const newProducts = products.filter((product) => product.label || product.discount);
+  const newProducts = products.filter(
+    (product) => product.label || product.discount
+  );
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Sản phẩm nổi bật');
+  const [selectedOption, setSelectedOption] = useState("Sản phẩm nổi bật");
   const [isContentExpanded, setIsContentExpanded] = useState(false);
 
   // Pagination logic
@@ -212,15 +218,15 @@ export default function ShirtProductPage() {
   );
 
   const sortOptions = [
-    'Sản phẩm nổi bật',
-    'Giá: Tăng dần',
-    'Giá: Giảm dần',
-    'Tên: A-Z',
-    'Tên: Z-A',
-    'Cũ nhất',
-    'Mới nhất',
-    'Bán chạy nhất',
-    'Tồn kho: Giảm dần',
+    "Sản phẩm nổi bật",
+    "Giá: Tăng dần",
+    "Giá: Giảm dần",
+    "Tên: A-Z",
+    "Tên: Z-A",
+    "Cũ nhất",
+    "Mới nhất",
+    "Bán chạy nhất",
+    "Tồn kho: Giảm dần",
   ];
 
   const articleContent = `
@@ -238,7 +244,7 @@ Sản phẩm tại 160STORE luôn được chọn lọc kỹ lưỡng, mang đ�
 
 Khám phá ngay bộ sưu tập Áo Nam tại 160STORE để nâng tầm phong cách mỗi ngày!`;
 
-  const truncatedContent = articleContent.substring(0, 200) + '...';
+  const truncatedContent = articleContent.substring(0, 200) + "...";
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
@@ -268,7 +274,10 @@ Khám phá ngay bộ sưu tập Áo Nam tại 160STORE để nâng tầm phong c
             className="flex items-center border border-black px-3 py-[6px] rounded-sm font-normal hover:bg-gray-100 transition text-[13px]"
           >
             {selectedOption}
-            <FontAwesomeIcon icon={faSortAlphaDown} className="ml-2 text-[17px]" />
+            <FontAwesomeIcon
+              icon={faSortAlphaDown}
+              className="ml-2 text-[17px]"
+            />
           </button>
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-black rounded-sm shadow-lg z-10">
@@ -331,9 +340,9 @@ Khám phá ngay bộ sưu tập Áo Nam tại 160STORE để nâng tầm phong c
               {product.label && (
                 <div
                   className={`absolute top-2 right-2 text-[11px] font-medium px-2 py-[2px] rounded z-30 ${
-                    ['Sieu Mat', 'Sieu Nhe'].includes(product.label)
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-orange-500 text-black'
+                    ["Sieu Mat", "Sieu Nhe"].includes(product.label)
+                      ? "bg-blue-600 text-white"
+                      : "bg-orange-500 text-black"
                   }`}
                 >
                   {product.label}
@@ -366,28 +375,29 @@ Khám phá ngay bộ sưu tập Áo Nam tại 160STORE để nâng tầm phong c
 
       {/* Pagination */}
       {/* Pagination */}
-<div className="flex justify-center my-6 gap-2">
-  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-    <button
-      key={page}
-      onClick={() => {
-        setCurrentPage(page);
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-      }}
-      className={`px-3 py-1 border text-sm rounded ${
-        currentPage === page
-          ? 'bg-black text-white'
-          : 'bg-white text-black border-gray-300 hover:bg-gray-100'
-      }`}
-    >
-      {page}
-    </button>
-  ))}
-</div>
-
+      <div className="flex justify-center my-6 gap-2">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            className={`px-3 py-1 border text-sm rounded ${
+              currentPage === page
+                ? "bg-black text-white"
+                : "bg-white text-black border-gray-300 hover:bg-gray-100"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
+      </div>
 
       <div className="mt-6 mb-10 text-center">
-        <h2 className="text-[18px] font-bold mb-4">Khám phá Áo Nam Thời Trang tại 160STORE</h2>
+        <h2 className="text-[18px] font-bold mb-4">
+          Khám phá Áo Nam Thời Trang tại 160STORE
+        </h2>
         <div className="text-[14px] text-black leading-relaxed">
           {isContentExpanded ? articleContent : truncatedContent}
         </div>
@@ -396,7 +406,7 @@ Khám phá ngay bộ sưu tập Áo Nam tại 160STORE để nâng tầm phong c
             onClick={() => setIsContentExpanded(!isContentExpanded)}
             className="bg-black text-white text-[13px] font-medium px-6 py-2 rounded hover:opacity-50 transition"
           >
-            {isContentExpanded ? 'Thu gọn' : 'Xem thêm'}
+            {isContentExpanded ? "Thu gọn" : "Xem thêm"}
           </button>
         </div>
       </div>

@@ -1,34 +1,34 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+"use client";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SupportRequestWithSidebar() {
   const [user, setUser] = useState<any>(null);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
 
   useEffect(() => {
-    const u = localStorage.getItem('user');
-    const accessTokenLocal = localStorage.getItem('accessToken');
-    const typeTokenLocal = localStorage.getItem('typeToken');
+    const u = localStorage.getItem("user");
+    const accessTokenLocal = localStorage.getItem("accessToken");
+    const typeTokenLocal = localStorage.getItem("typeToken");
     if (u && accessTokenLocal && typeTokenLocal) {
       const users = JSON.parse(u);
       setUser(users);
     } else {
-      toast.info('Bạn vui lòng đăng nhập trước');
-      window.location.href = '/login';
+      toast.info("Bạn vui lòng đăng nhập trước");
+      window.location.href = "/login";
     }
   }, []);
 
   const send = async () => {
-    if (content === '') {
-      toast.warn('Vui lòng điền nội dung cần hỗ trợ');
+    if (content === "") {
+      toast.warn("Vui lòng điền nội dung cần hỗ trợ");
     } else {
       const res = await fetch(`https://huunghi.id.vn/api/function/Support`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: user.email_user,
@@ -37,19 +37,36 @@ export default function SupportRequestWithSidebar() {
         }),
       });
       const result = await res.json();
-      setContent('')
+      setContent("");
       toast.success(result.message);
     }
   };
 
   const menuItems = [
-    { icon: 'fas fa-user', text: 'Hồ sơ của tôi', href: '/user/userprofile' },
-    { icon: 'fas fa-clipboard-list', text: 'Đơn hàng của tôi', href: '/user/history-order' },
-    { icon: 'fas fa-question-circle', text: 'Yêu cầu hỗ trợ', href: '/user/yeucauhotro', active: true },
-    { icon: 'fas fa-map-marker-alt', text: 'Sổ địa chỉ', href: '/user/sodiachi' },
-    { icon: 'fas fa-ticket-alt', text: 'Vouchers', href: '/' },
-    { icon: 'fas fa-heart', text: 'Sản phẩm đã xem', href: '/user/sanphamdaxem' },
-    { icon: 'fas fa-lock', text: 'Đổi mật khẩu', href: '/user/changePassword' },
+    { icon: "fas fa-user", text: "Hồ sơ của tôi", href: "/user/userprofile" },
+    {
+      icon: "fas fa-clipboard-list",
+      text: "Đơn hàng của tôi",
+      href: "/user/history-order",
+    },
+    {
+      icon: "fas fa-question-circle",
+      text: "Yêu cầu hỗ trợ",
+      href: "/user/yeucauhotro",
+      active: true,
+    },
+    {
+      icon: "fas fa-map-marker-alt",
+      text: "Sổ địa chỉ",
+      href: "/user/sodiachi",
+    },
+    { icon: "fas fa-ticket-alt", text: "Vouchers", href: "/" },
+    {
+      icon: "fas fa-heart",
+      text: "Sản phẩm đã xem",
+      href: "/user/sanphamdaxem",
+    },
+    { icon: "fas fa-lock", text: "Đổi mật khẩu", href: "/user/changePassword" },
   ];
 
   return (
@@ -64,7 +81,10 @@ export default function SupportRequestWithSidebar() {
       <div className="bg-white border-b px-40 py-3">
         <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
-            <span><a href="/">Trang chủ</a></span> / <span className="font-medium">Yêu cầu hỗ trợ</span>
+            <span>
+              <a href="/">Trang chủ</a>
+            </span>{" "}
+            / <span className="font-medium">Yêu cầu hỗ trợ</span>
           </nav>
         </div>
       </div>
@@ -81,7 +101,7 @@ export default function SupportRequestWithSidebar() {
           </div>
           <div className="p-2">
             <div className="text-sm text-gray-600 px-3 py-2">
-              Hi, {user?.ten_user || 'Khách'}
+              Hi, {user?.ten_user || "Khách"}
             </div>
             <ul className="space-y-1">
               {menuItems.map((item, index) => (
@@ -90,8 +110,8 @@ export default function SupportRequestWithSidebar() {
                     <button
                       className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
                         item.active
-                          ? 'bg-black text-white'
-                          : 'text-gray-700 hover:bg-gray-50'
+                          ? "bg-black text-white"
+                          : "text-gray-700 hover:bg-gray-50"
                       }`}
                     >
                       <i className={`${item.icon} w-4`}></i>
@@ -106,7 +126,9 @@ export default function SupportRequestWithSidebar() {
 
         {/* Main Content */}
         <div className="flex-1 bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-semibold mb-6 text-gray-800">Thông tin phiếu yêu cầu</h2>
+          <h2 className="text-xl font-semibold mb-6 text-gray-800">
+            Thông tin phiếu yêu cầu
+          </h2>
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">

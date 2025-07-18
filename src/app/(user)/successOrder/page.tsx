@@ -1,14 +1,14 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 // import { Link } from "react-router-dom";
 
 const OrderSuccess = () => {
   const [orderId, setOrderId] = useState(null);
 
-//   useEffect(() => {
-//     const params = new URLSearchParams(window.location.search);
-//     setOrderId(params.get("order_id")); // ví dụ: ?order_id=123
-//   }, []);
+  //   useEffect(() => {
+  //     const params = new URLSearchParams(window.location.search);
+  //     setOrderId(params.get("order_id")); // ví dụ: ?order_id=123
+  //   }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
@@ -20,17 +20,22 @@ const OrderSuccess = () => {
           strokeWidth="2"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M5 13l4 4L19 7"
+          />
         </svg>
-        <h1 className="text-2xl font-bold text-green-600 mb-2">Đặt hàng thành công!</h1>
+        <h1 className="text-2xl font-bold text-green-600 mb-2">
+          Đặt hàng thành công!
+        </h1>
         <p className="text-gray-600 mb-4">Cảm ơn bạn đã đặt hàng.</p>
-         <a
+        <a
           href="/lich-su-mua-hang"
           className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
         >
           Xem đơn hàng
         </a>
-        
 
         {orderId && (
           <p className="text-gray-700 mb-6">

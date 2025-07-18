@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from 'react';
 import '@/app/globals.css';
@@ -63,40 +63,21 @@ const PendingPostsPage = () => {
       setCurrentPage(page);
     }
   };
-  const filters = {
-    'Ngày đăng': ['Tất cả thời gian', 'Hôm nay', 'Tuần này', 'Tháng này'],
-    'Người đăng': ['Tất cả người đăng', 'Nguyễn Văn A', 'Trần Thị B', 'Lê Văn C'],
-    'Sắp xếp': ['Mới nhất', 'Cũ nhất']
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 font-sans p-8">
       <header className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-semibold">Bài viết chờ xác nhận</h1>
-          <p className="text-sm text-gray-500">Danh sách bài viết đang chờ phê duyệt</p>
+          <p className="text-sm text-gray-500">
+            Danh sách bài viết đang chờ phê duyệt
+          </p>
         </div>
         <button className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-100">
           <FontAwesomeIcon icon={faClock} /> Bài viết chờ xác nhận
         </button>
       </header>
 
-      {/* <div className="bg-white rounded-lg shadow mb-6">
-        <div className="p-6">
-          <div className="flex flex-wrap gap-4">
-            {Object.entries(filters).map(([label, options], idx) => (
-              <div key={idx} className="flex flex-col min-w-[200px] flex-1">
-                <label className="mb-2 text-sm font-medium text-gray-700">{label}</label>
-                <select className="border border-gray-300 rounded px-3 py-2 text-sm bg-white">
-                  {options.map((opt, i) => (
-                    <option key={i}>{opt}</option>
-                  ))}
-                </select>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div> */}
 
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
