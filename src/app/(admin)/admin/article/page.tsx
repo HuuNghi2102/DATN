@@ -9,8 +9,13 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import articleInterface from "../types/article";
-import { createdArticle, deleteArticle, editArticle, changeStatusArticle } from "../services/articleService";
-import { Editor } from '@tinymce/tinymce-react';
+import {
+  createdArticle,
+  deleteArticle,
+  editArticle,
+  changeStatusArticle,
+} from "../services/articleService";
+import { Editor } from "@tinymce/tinymce-react";
 
 export default function AdminPostManagement() {
   const [posts, setPosts] = useState<articleInterface[]>([]);
@@ -41,13 +46,16 @@ export default function AdminPostManagement() {
       if (accessToken && typeToken) {
         const parseaccessToken = JSON.parse(accessToken);
         const parsetypeToken = JSON.parse(typeToken);
-        const res = await fetch(`https://huunghi.id.vn/api/post/indexAdmin?page=${currentPage}`, {
-          method: "GET",
-          headers: {
-            "Authorization": `${parsetypeToken} ${parseaccessToken}`,
-            "Content-Type": "application/json",
+        const res = await fetch(
+          `https://huunghi.id.vn/api/post/indexAdmin?page=${currentPage}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `${parsetypeToken} ${parseaccessToken}`,
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
         if (!res.ok) {
           console.error("❌ Fetch failed:", res.status, res.statusText);
           return [];
@@ -61,7 +69,7 @@ export default function AdminPostManagement() {
       console.log(error);
       return [];
     }
-  }
+  };
   // Hàm gọi API lấy bài viết
   const refreshPosts = async () => {
     const data = await getAPIArticle();
@@ -151,7 +159,7 @@ export default function AdminPostManagement() {
         imageFile as File
       );
       await refreshPosts();
-      alert('Sửa bài viết thành công')
+      alert("Sửa bài viết thành công");
       resetForm();
     } catch (error) {
       console.error("❌ Lỗi khi cập nhật bài viết:", error);
@@ -399,7 +407,6 @@ export default function AdminPostManagement() {
               <option value="1">Hoạt động</option>
               <option value="0">Không hoạt động</option>
             </select>
-
           </div>
         </div>
 
@@ -449,7 +456,9 @@ export default function AdminPostManagement() {
                 <td>
                   <button
                     onClick={async () => {
-                      const confirmChange = confirm("Bạn có chắc chắn muốn đổi trạng thái bài viết này?");
+                      const confirmChange = confirm(
+                        "Bạn có chắc chắn muốn đổi trạng thái bài viết này?"
+                      );
                       if (!confirmChange) return;
                       const success = await changeStatusArticle(post.duong_dan);
                       if (!success) {
@@ -463,8 +472,16 @@ export default function AdminPostManagement() {
                     className=" rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
                     title="Đổi trạng thái"
                   >
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${Number(post.trang_thai) === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}>
-                      {Number(post.trang_thai) === 1 ? "Đang hoạt động" : "Dừng hoạt động"}
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        Number(post.trang_thai) === 1
+                          ? "bg-green-500 text-white"
+                          : "bg-red-500 text-white"
+                      }`}
+                    >
+                      {Number(post.trang_thai) === 1
+                        ? "Đang hoạt động"
+                        : "Dừng hoạt động"}
                     </span>
                   </button>
                 </td>
@@ -507,15 +524,27 @@ export default function AdminPostManagement() {
       <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
         {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
         <div className="text-sm text-gray-600">
-          Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '}
-          <span className="font-medium">{Math.min(currentPage * perPage, posts.length + (currentPage - 1) * perPage)}</span>{' '}
-          trong tổng số <span className="font-medium">{posts.length}</span> bài viết
+          Hiển thị{" "}
+          <span className="font-medium">{(currentPage - 1) * perPage + 1}</span>{" "}
+          đến{" "}
+          <span className="font-medium">
+            {Math.min(
+              currentPage * perPage,
+              posts.length + (currentPage - 1) * perPage
+            )}
+          </span>{" "}
+          trong tổng số <span className="font-medium">{posts.length}</span> bài
+          viết
         </div>
         <div className="flex space-x-2">
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === 1
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-700 hover:bg-gray-50"
+            }`}
           >
             Trước
           </button>
@@ -536,7 +565,11 @@ export default function AdminPostManagement() {
               <button
                 key={pageNum}
                 onClick={() => handlePageChange(pageNum)}
-                className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                className={`px-3 py-1 rounded-md border ${
+                  currentPage === pageNum
+                    ? "bg-blue-500 text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                }`}
               >
                 {pageNum}
               </button>
@@ -550,7 +583,11 @@ export default function AdminPostManagement() {
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <button
               onClick={() => handlePageChange(totalPages)}
-              className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`px-3 py-1 rounded-md border ${
+                currentPage === totalPages
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
             >
               {totalPages}
             </button>
@@ -559,7 +596,11 @@ export default function AdminPostManagement() {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === totalPages
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-white text-gray-700 hover:bg-gray-50"
+            }`}
           >
             Sau
           </button>

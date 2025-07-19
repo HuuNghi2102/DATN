@@ -257,14 +257,14 @@ const OrderDetailShipper = () => {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center mb-6">
           <button
-            onClick={() => router.push("/shipper/order-management")}
+            onClick={() => window.history.back()}
             className="mr-4 p-2 rounded-full hover:bg-gray-200"
           >
             <FaArrowLeft className="text-gray-600" />
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Chi tiết đơn hàng #{order.id_don_hang}
+              Chi tiết đơn hàng #DH{order.id_don_hang}
             </h1>
             <p className="text-sm text-gray-500">
               Thông tin chi tiết đơn hàng cần giao
@@ -453,49 +453,47 @@ const OrderDetailShipper = () => {
           </div>
         </div>
 
-        <div className="bg-white shadow rounded-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">Thao tác</h2>
-          </div>
-          <div className="p-6 flex flex-wrap gap-4">
-            <button
-              onClick={() => positionMap(order.dia_chi_nguoi_nhan)}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex items-center"
-            >
-              <FaMapMarkerAlt className="mr-2" /> Xem bản đồ
-            </button>
-            <button
-              onClick={() =>
-                alert(`Gọi đến số ${order.so_dien_thoai_nguoi_nhan}`)
-              }
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex items-center"
-            >
-              <FaPhone className="mr-2" /> Gọi khách hàng
-            </button>
-            <button
-              onClick={() => alert("In hóa đơn đơn hàng #" + order.id_don_hang)}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex items-center"
-            >
-              <FaPrint className="mr-2" /> In hóa đơn
-            </button>
-
-            {nextSatatusOrder(order.trang_thai_don_hang).map((e, i) => (
+        {!["giao_thanh_cong", "da_huy", "cho_lay_hang"].includes(
+          order.trang_thai_don_hang
+        ) && (
+          <div className="bg-white shadow rounded-xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-800">Thao tác</h2>
+            </div>
+            <div className="p-6 flex flex-wrap gap-4">
               <button
-                key={i}
-                onClick={() => updateStatus(order.id_don_hang, e.nextStatus)}
-                className={`px-4 py-2 text-white rounded hover:bg-opacity-90 flex items-center ${
-                  e.className === "green"
-                    ? "bg-green-600"
-                    : e.className === "yellow"
-                    ? "bg-yellow-600"
-                    : "bg-gray-600"
-                }`}
+                onClick={() => positionMap(order.dia_chi_nguoi_nhan)}
+                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex items-center"
               >
-                <FaCheck className="mr-2" /> {e.status}
+                <FaMapMarkerAlt className="mr-2" /> Xem bản đồ
               </button>
-            ))}
+              <button
+                onClick={() =>
+                  (window.location.href = `tel:${order.so_dien_thoai_nguoi_nhan}`)
+                }
+                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 flex items-center"
+              >
+                <FaPhone className="mr-2" /> Gọi khách hàng
+              </button>
+
+              {nextSatatusOrder(order.trang_thai_don_hang).map((e, i) => (
+                <button
+                  key={i}
+                  onClick={() => updateStatus(order.id_don_hang, e.nextStatus)}
+                  className={`px-4 py-2 text-white rounded hover:bg-opacity-90 flex items-center ${
+                    e.className === "green"
+                      ? "bg-green-600"
+                      : e.className === "yellow"
+                      ? "bg-yellow-600"
+                      : "bg-gray-600"
+                  }`}
+                >
+                  <FaCheck className="mr-2" /> {e.status}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

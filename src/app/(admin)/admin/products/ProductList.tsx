@@ -196,6 +196,8 @@ const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
               <option value="">Tất cả trạng thái</option>
               <option value="dang_ban">Đang bán</option>
               <option value="ngung_ban">Ngừng bán</option>
+              <option value="ban_chay">Bán Chạy</option>
+              <option value="ban_cham">Bán Chậm</option>
             </select>
           </div>
 
@@ -235,6 +237,9 @@ const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
                 </th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">
                   Trạng thái
+                </th>
+                <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">
+                  Đã bán
                 </th>
                 <th className="px-4 py-3 bg-gray-100 text-left font-medium text-gray-700 border-b border-gray-200">
                   Tồn kho

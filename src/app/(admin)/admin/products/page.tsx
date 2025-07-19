@@ -36,7 +36,7 @@ export default function ProductsPage() {
         </div>
       </header>
       <ProductForm
-        onChangeStatusForm={() => handleOpenForm()}
+        onChangeStatusForm={() => setIsOpenForm(false)}
         isOpenForm={isOpenForm}
         onProductAdded={changeFlagAddProduct}
       />

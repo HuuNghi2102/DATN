@@ -93,7 +93,13 @@ const LoginPage = () => {
       if (user.id_vai_tro == 2) {
         router.push("/user/userprofile");
       } else {
-        router.push("/admin");
+        if (user.id_vai_tro == 1) {
+          router.push("/admin");
+        } else if (user.id_vai_tro == 3) {
+          router.push("/admin/shipper");
+        } else {
+          router.push("/admin/blogger");
+        }
       }
       toast.success("Đăng nhập thành công!");
     } catch (err) {
