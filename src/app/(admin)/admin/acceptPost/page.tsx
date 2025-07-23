@@ -1,19 +1,36 @@
 "use client";
 
-import React from 'react';
-import '@/app/globals.css';
+import React from "react";
+import "@/app/globals.css";
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faTrash,
+  faPencil,
+  faPlus,
+  faCheck,
+  faClock,
+  faEyeSlash,
+  faChevronRight,
+  faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import articleInterface from "../types/article";
-import { createdArticle, deleteArticle, editArticle, changeStatusArticle } from "../services/articleService";
-import { Editor } from '@tinymce/tinymce-react';
-import Link from 'next/link';
+import {
+  createdArticle,
+  deleteArticle,
+  editArticle,
+  changeStatusArticle,
+} from "../services/articleService";
+import { Editor } from "@tinymce/tinymce-react";
+import Link from "next/link";
 const PendingPostsPage = () => {
   const [posts, setPosts] = useState<articleInterface[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editorData, setEditorData] = useState<string>("");
-  const [selectedPost, setSelectedPost] = useState<articleInterface | null>(null);
+  const [selectedPost, setSelectedPost] = useState<articleInterface | null>(
+    null
+  );
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [imageFile, setImageFile] = useState<File | string | null>(null);
@@ -22,6 +39,7 @@ const PendingPostsPage = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(20);
   const editorRef = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const getAPIArticle = async (): Promise<articleInterface[]> => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -29,13 +47,16 @@ const PendingPostsPage = () => {
       if (accessToken && typeToken) {
         const parseaccessToken = JSON.parse(accessToken);
         const parsetypeToken = JSON.parse(typeToken);
-        const res = await fetch(`https://huunghi.id.vn/api/post/indexAdmin?page=${currentPage}`, {
-          method: "GET",
-          headers: {
-            "Authorization": `${parsetypeToken} ${parseaccessToken}`,
-            "Content-Type": "application/json",
+        const res = await fetch(
+          `https://huunghi.id.vn/api/post/indexAdmin?page=${currentPage}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `${parsetypeToken} ${parseaccessToken}`,
+              "Content-Type": "application/json",
+            },
           }
-        });
+        );
         if (!res.ok) {
           console.error("❌ Fetch failed:", res.status, res.statusText);
           return [];
@@ -49,11 +70,12 @@ const PendingPostsPage = () => {
       console.log(error);
       return [];
     }
-  }
+  };
   // Hàm gọi API lấy bài viết
   const refreshPosts = async () => {
     const data = await getAPIArticle();
     setPosts(data);
+    setIsLoading(false);
   };
   useEffect(() => {
     refreshPosts();
@@ -63,6 +85,25 @@ const PendingPostsPage = () => {
       setCurrentPage(page);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 font-sans p-8">
@@ -78,44 +119,80 @@ const PendingPostsPage = () => {
         </button>
       </header>
 
-
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold">Danh sách bài viết chờ duyệt</h2>
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{posts.length} bài viết hiển thị</span>
+          <h2 className="text-lg font-semibold">
+            Danh sách bài viết chờ duyệt
+          </h2>
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+            {posts.length} bài viết hiển thị
+          </span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-100 text-left">
-                {["ID", "Tiêu đề", "Nội dung", "Người đăng", "Ngày đăng", "Trạng thái", "Thao tác"].map((th, i) => (
-                  <th key={i} className="px-4 py-3 font-medium text-gray-700 border-b border-gray-200">{th}</th>
+                {[
+                  "ID",
+                  "Tiêu đề",
+                  "Nội dung",
+                  "Người đăng",
+                  "Ngày đăng",
+                  "Trạng thái",
+                  "Thao tác",
+                ].map((th, i) => (
+                  <th
+                    key={i}
+                    className="px-4 py-3 font-medium text-gray-700 border-b border-gray-200"
+                  >
+                    {th}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {posts.map((post, idx) => (
                 <tr key={idx} className="hover:bg-gray-50">
-                  <td className="px-4 py-4 border-b border-gray-200">{post.id_bai_viet}</td>
+                  <td className="px-4 py-4 border-b border-gray-200">
+                    {post.id_bai_viet}
+                  </td>
                   <td className="px-4 py-4 border-b border-gray-200">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded overflow-hidden mr-3">
-                        <img src={`https://huunghi.id.vn/storage/posts/${post.anh_bai_viet}`} alt="Bài viết" className="w-10 h-10 rounded object-cover" />
+                        <img
+                          src={`https://huunghi.id.vn/storage/posts/${post.anh_bai_viet}`}
+                          alt="Bài viết"
+                          className="w-10 h-10 rounded object-cover"
+                        />
                       </div>
-                      <span className='line-clamp-2 w-[250px]'>{post.ten_bai_viet}</span>
+                      <span className="line-clamp-2 w-[250px]">
+                        {post.ten_bai_viet}
+                      </span>
                     </div>
                   </td>
                   <td className="px-4 py-4 border-b border-gray-200">
-                    <div dangerouslySetInnerHTML={{ __html: post.noi_dung_bai_viet.slice(0, 30) + '...' }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: post.noi_dung_bai_viet.slice(0, 30) + "...",
+                      }}
+                    />
                   </td>
-                  <td className="px-4 py-4 border-b border-gray-200">{post.id_nguoi_tao}</td>
-                  <td className="px-4 py-4 border-b border-gray-200">{new Date(post.created_at).toLocaleDateString("vi-VN")}</td>
+                  <td className="px-4 py-4 border-b border-gray-200">
+                    {post.id_nguoi_tao}
+                  </td>
+                  <td className="px-4 py-4 border-b border-gray-200">
+                    {new Date(post.created_at).toLocaleDateString("vi-VN")}
+                  </td>
                   <td className="px-4 py-4 border-b border-gray-200">
                     <button
                       onClick={async () => {
-                        const confirmChange = confirm("Bạn có chắc chắn muốn đổi trạng thái bài viết này?");
+                        const confirmChange = confirm(
+                          "Bạn có chắc chắn muốn đổi trạng thái bài viết này?"
+                        );
                         if (!confirmChange) return;
-                        const success = await changeStatusArticle(post.duong_dan);
+                        const success = await changeStatusArticle(
+                          post.duong_dan
+                        );
                         if (!success) {
                           alert("❌ Đổi trạng thái thất bại");
                         } else {
@@ -127,15 +204,34 @@ const PendingPostsPage = () => {
                       className=" rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
                       title="Đổi trạng thái"
                     >
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${Number(post.trang_thai) === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}>
-                        {Number(post.trang_thai) === 1 ? "Đang hoạt động" : "Dừng hoạt động"}
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          Number(post.trang_thai) === 1
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
+                        }`}
+                      >
+                        {Number(post.trang_thai) === 1
+                          ? "Đang hoạt động"
+                          : "Dừng hoạt động"}
                       </span>
                     </button>
                   </td>
                   <td className="px-4 py-4 border-b border-gray-200">
                     <div className="flex gap-2">
                       <button className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-green-600 text-green-700">
-                        {post.trang_thai === 0 ? <FontAwesomeIcon icon={faEyeSlash} onClick={()=>{alert('Trạng thái phải hoạt động!')}} /> : <Link href={`/blog-detail/${post.duong_dan}`}><FontAwesomeIcon icon={faEye} /></Link>}
+                        {post.trang_thai === 0 ? (
+                          <FontAwesomeIcon
+                            icon={faEyeSlash}
+                            onClick={() => {
+                              alert("Trạng thái phải hoạt động!");
+                            }}
+                          />
+                        ) : (
+                          <Link href={`/blog-detail/${post.duong_dan}`}>
+                            <FontAwesomeIcon icon={faEye} />
+                          </Link>
+                        )}
                       </button>
                     </div>
                   </td>
@@ -147,15 +243,29 @@ const PendingPostsPage = () => {
         <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
           {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
           <div className="text-sm text-gray-600">
-            Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '}
-            <span className="font-medium">{Math.min(currentPage * perPage, posts.length + (currentPage - 1) * perPage)}</span>{' '}
-            trong tổng số <span className="font-medium">{posts.length}</span> bài viết
+            Hiển thị{" "}
+            <span className="font-medium">
+              {(currentPage - 1) * perPage + 1}
+            </span>{" "}
+            đến{" "}
+            <span className="font-medium">
+              {Math.min(
+                currentPage * perPage,
+                posts.length + (currentPage - 1) * perPage
+              )}
+            </span>{" "}
+            trong tổng số <span className="font-medium">{posts.length}</span>{" "}
+            bài viết
           </div>
           <div className="flex space-x-2">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`px-3 py-1 rounded-md border ${
+                currentPage === 1
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
             >
               <FontAwesomeIcon icon={faChevronLeft} />
             </button>
@@ -175,7 +285,11 @@ const PendingPostsPage = () => {
                 <button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  className={`px-3 py-1 rounded-md border ${
+                    currentPage === pageNum
+                      ? "bg-indigo-500 text-white"
+                      : "bg-white text-gray-700 hover:bg-gray-50"
+                  }`}
                 >
                   {pageNum}
                 </button>
@@ -189,7 +303,11 @@ const PendingPostsPage = () => {
             {totalPages > 5 && currentPage < totalPages - 2 && (
               <button
                 onClick={() => handlePageChange(totalPages)}
-                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                className={`px-3 py-1 rounded-md border ${
+                  currentPage === totalPages
+                    ? "bg-indigo-500 text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                }`}
               >
                 {totalPages}
               </button>
@@ -198,7 +316,11 @@ const PendingPostsPage = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`px-3 py-1 rounded-md border ${
+                currentPage === totalPages
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
             >
               <FontAwesomeIcon icon={faChevronRight} />
             </button>

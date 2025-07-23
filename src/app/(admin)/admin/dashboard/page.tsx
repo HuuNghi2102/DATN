@@ -435,10 +435,6 @@ const Dashboard = () => {
               <option value="week">Tuần này</option>
               <option value="month">Tháng này</option>
             </select>
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 flex items-center">
-              <span className="mr-2">Xuất báo cáo</span>
-              <i className="fas fa-download"></i>
-            </button>
           </div>
         </div>
 

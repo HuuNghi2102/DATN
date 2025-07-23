@@ -201,6 +201,27 @@ export default function AdminPostManagement() {
       setCurrentPage(page);
     }
   };
+
+
+    if (isLoading) {
+    return (
+      <div
+        id="loading-screen"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+      >
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+            VERVESTYLE
+          </div>
+          <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-700 tracking-wide">
+            Đang khởi động trải nghiệm của bạn...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 min-h-screen">
       <div className="flex justify-between items-center mb-6">
