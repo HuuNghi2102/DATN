@@ -1,88 +1,87 @@
-'use client';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+"use client";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [errors,setErrors] = useState({
-    errName : '',
-    errEmail : '',
-    errPassword : '',
-    errPasswordConfirm : ''
+  const [errors, setErrors] = useState({
+    errName: "",
+    errEmail: "",
+    errPassword: "",
+    errPasswordConfirm: "",
   });
 
-  const [formRegister,setFromRegister] = useState({
-    name : '',
-    email : '',
-    password : '',
-    passwordConfirm : ''
+  const [formRegister, setFromRegister] = useState({
+    name: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
   });
 
-  const handleChangeInput = (e:any) => {
+  const handleChangeInput = (e: any) => {
     const { name, value } = e.target;
-    setFromRegister(prev => ({
+    setFromRegister((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
   const router = useRouter();
 
-const handleRegister = async () => {
-  try {
-    const res = await fetch('https://huunghi.id.vn/api/user/register', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: formRegister.name,
-        email: formRegister.email,
-        password: formRegister.password,
-        confirm_password: formRegister.passwordConfirm
-      }),
-    });
-
-    // Check xem server có trả JSON hợp lệ không
-    const contentType = res.headers.get("content-type");
-    if (!res.ok || !contentType?.includes("application/json")) {
-      const text = await res.text(); // lấy raw HTML trả về
-      console.error("Server returned non-JSON response:", text);
-      throw new Error("Đăng ký thất bại. Server không trả về JSON hợp lệ.");
-    }
-
-    const result = await res.json();
-
-    if (result.status === false) {
-      setErrors({
-        errName: result.errors?.name || '',
-        errEmail: result.errors?.email || '',
-        errPassword: result.errors?.password || '',
-        errPasswordConfirm: result.errors?.confirm_password || '',
+  const handleRegister = async () => {
+    try {
+      const res = await fetch("https://huunghi.id.vn/api/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formRegister.name,
+          email: formRegister.email,
+          password: formRegister.password,
+          confirm_password: formRegister.passwordConfirm,
+        }),
       });
-      return;
+
+      // Check xem server có trả JSON hợp lệ không
+      const contentType = res.headers.get("content-type");
+      if (!res.ok || !contentType?.includes("application/json")) {
+        const text = await res.text(); // lấy raw HTML trả về
+        console.error("Server returned non-JSON response:", text);
+        throw new Error("Đăng ký thất bại. Server không trả về JSON hợp lệ.");
+      }
+
+      const result = await res.json();
+
+      if (result.status === false) {
+        setErrors({
+          errName: result.errors?.name || "",
+          errEmail: result.errors?.email || "",
+          errPassword: result.errors?.password || "",
+          errPasswordConfirm: result.errors?.confirm_password || "",
+        });
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(result.data.user));
+      localStorage.setItem("accessToken", JSON.stringify(result.data.token));
+      localStorage.setItem("typeToken", JSON.stringify(result.data.typeToken));
+
+      toast.success(`${result.message}`);
+      router.push("/user/userprofile");
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+      toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
     }
-
-    localStorage.setItem('user', JSON.stringify(result.data.user));
-    localStorage.setItem('accessToken', JSON.stringify(result.data.token));
-    localStorage.setItem('typeToken', JSON.stringify(result.data.typeToken));
-
-    toast.success(`${result.message}`);
-    router.push('/user/userprofile');
-
-  } catch (error) {
-    console.error("Lỗi khi gọi API:", error);
-    toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
-  }
-}
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 pt-[12%]">
       {/* Navigation */}
-        <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
-        />
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      />
       <nav className=" border-b border-gray-200 px-4 py-3">
         <div className="max-w-7xl mx-auto">
           <div className="flex space-x-8 text-sm font-medium text-gray-700">
@@ -110,7 +109,7 @@ const handleRegister = async () => {
             </h1>
 
             {/* Form */}
-            <form onSubmit={e => e.preventDefault()} className="space-y-6">
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
               {/* Name Input */}
               <div>
                 <input
@@ -121,8 +120,10 @@ const handleRegister = async () => {
                   value={formRegister.name}
                   onChange={handleChangeInput}
                 />
-                {errors.errName && <p className='text-red-500 text-sm'>{errors.errName}*</p>}
-              </div>              
+                {errors.errName && (
+                  <p className="text-red-500 text-sm">{errors.errName}*</p>
+                )}
+              </div>
               {/* Email Input */}
               <div>
                 <input
@@ -133,10 +134,12 @@ const handleRegister = async () => {
                   value={formRegister.email}
                   onChange={handleChangeInput}
                 />
-                {errors.errEmail && <p className='text-red-500 text-sm'>{errors.errEmail}*</p>}
+                {errors.errEmail && (
+                  <p className="text-red-500 text-sm">{errors.errEmail}*</p>
+                )}
               </div>
               {/* Password Input */}
-            <div className="relative">
+              <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
@@ -145,17 +148,25 @@ const handleRegister = async () => {
                   value={formRegister.password}
                   onChange={handleChangeInput}
                 />
-                {errors.errPasswordConfirm && <p className='text-red-500 text-sm'>{errors.errPasswordConfirm}*</p>}
+                {errors.errPasswordConfirm && (
+                  <p className="text-red-500 text-sm">
+                    {errors.errPasswordConfirm}*
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                  <i
+                    className={`fas ${
+                      showPassword ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
                 </button>
               </div>
               {/* Password Input Again */}
-            <div className="relative">
+              <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   name="passwordConfirm"
@@ -164,15 +175,23 @@ const handleRegister = async () => {
                   value={formRegister.passwordConfirm}
                   onChange={handleChangeInput}
                 />
-                {errors.errPasswordConfirm && <p className='text-red-500 text-sm'>{errors.errPasswordConfirm}*</p>}
+                {errors.errPasswordConfirm && (
+                  <p className="text-red-500 text-sm">
+                    {errors.errPasswordConfirm}*
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-[25px] transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                  <i
+                    className={`fas ${
+                      showPassword ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
                 </button>
-            </div>              
+              </div>
 
               {/* Submit Button */}
               <button
@@ -180,7 +199,7 @@ const handleRegister = async () => {
                 type="submit"
                 className="w-full bg-amber-400 text-black font-semibold py-3 px-4 rounded-md  hover:bg-amber-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
               >
-               Đăng ký
+                Đăng ký
               </button>
 
               {/* Back Link */}

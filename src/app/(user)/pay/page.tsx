@@ -1,7 +1,7 @@
 "use client";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React, { useEffect, useState } from "react";
+import React, { HTMLAttributes, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaDotCircle } from "react-icons/fa";
@@ -12,6 +12,7 @@ import {
   faCalendarDays,
   faChevronRight,
   faBox,
+  faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
@@ -23,6 +24,12 @@ const PayPage = () => {
     province: "",
     district: "",
     ward: "",
+  });
+
+  const [errorsFormAddress, setErrorsFormAddress] = useState({
+    name: "",
+    phone: "",
+    address: "",
   });
 
   const [selectedProvince, setSelectedProvince] = useState<number>();
@@ -54,6 +61,86 @@ const PayPage = () => {
   const router = useRouter();
   const [isHiddenShip, setHiddenShip] = useState<boolean>(false);
   const [getUser, setgetUser] = useState<userInterface>();
+
+  // Thêm state cho modal thêm địa chỉ mới
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    isDefault: 0,
+  });
+
+  const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { type, name } = e.target;
+  };
+
+  // Thêm hàm thêm địa chỉ mới
+  const addNewAddress = async () => {
+    console.log("ok");
+    try {
+      const accessTokenLocal = localStorage.getItem("accessToken");
+      const typeTokenLocal = localStorage.getItem("typeToken");
+
+      if (!accessTokenLocal || !typeTokenLocal) {
+        toast.error("Vui lòng đăng nhập để thêm địa chỉ");
+        return;
+      }
+
+      const res = await fetch("https://huunghi.id.vn/api/address/addAddress", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${JSON.parse(typeTokenLocal)} ${JSON.parse(
+            accessTokenLocal
+          )}`,
+        },
+        body: JSON.stringify({
+          name: newAddress.name,
+          phone: newAddress.phone,
+          address: newAddress.address,
+          default: newAddress.isDefault,
+        }),
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        if (result.errors) {
+          const errors = result.errors;
+          setErrorsFormAddress({
+            name: errors.name ? errors.name[0] : "",
+            phone: errors.phone ? errors.phone[0] : "",
+            address: errors.address ? errors.address[0] : "",
+          });
+          return;
+        }
+
+        toast.success("Thêm địa chỉ thành công");
+        setShowAddressModal(false);
+        setNewAddress({ name: "", phone: "", address: "", isDefault: 0 });
+        // Cập nhật lại danh sách địa chỉ
+        const responseAddress = await fetch(
+          "https://huunghi.id.vn/api/address/listAddress",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${JSON.parse(typeTokenLocal)} ${JSON.parse(
+                accessTokenLocal
+              )}`,
+            },
+          }
+        );
+        const resultAddress = await responseAddress.json();
+        setAddressOfUser(resultAddress.data.address);
+      } else {
+        toast.error(result.message || "Thêm địa chỉ không thành công");
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm địa chỉ:", error);
+      toast.error("Đã xảy ra lỗi khi thêm địa chỉ");
+    }
+  };
+
   // hàm sử dụng địa chỉ giao hàng có sẵn của người dùng
   const changeAdress = (id_address: number) => {
     console.log("id_address", id_address);
@@ -169,6 +256,20 @@ const PayPage = () => {
     );
     const resultAddress = await responseAddress.json();
     setAddressOfUser(resultAddress.data.address);
+
+    // Thêm: Tự động chọn địa chỉ mặc định nếu có
+    const addressDefault = resultAddress.data.address.find(
+      (a: any, i: number) => a.mac_dinh == 1
+    );
+    console.log(addressDefault);
+    if (addressDefault) {
+      setOrderInfo((prev) => ({
+        ...prev,
+        name: addressDefault.ten_nguoi_nhan,
+        phone: addressDefault.so_dien_thoai_nguoi_nhan,
+        address: addressDefault.dia_chi_nguoi_nhan,
+      }));
+    }
 
     // Lấy danh sách tỉnh/thành phố
     const responseProvince = await fetch(
@@ -439,33 +540,139 @@ const PayPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 pt-[12%]">
+      {/* Thêm modal thêm địa chỉ mới */}
+      {showAddressModal && (
+        <div className=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 mt-32">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-4">Thêm địa chỉ mới</h3>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">
+                  Họ và tên
+                </label>
+                <input
+                  type="text"
+                  value={newAddress.name}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, name: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  placeholder="Nhập họ và tên"
+                />
+                {errorsFormAddress.name && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errorsFormAddress.name}*
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">
+                  Số điện thoại
+                </label>
+                <input
+                  type="text"
+                  value={newAddress.phone}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, phone: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  placeholder="Nhập số điện thoại"
+                />
+                {errorsFormAddress.phone && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errorsFormAddress.phone}*
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-600 mb-1">
+                  Địa chỉ
+                </label>
+                <input
+                  type="text"
+                  value={newAddress.address}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, address: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                  placeholder="Nhập địa chỉ"
+                />
+                {errorsFormAddress.address && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errorsFormAddress.address}*
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="defaultAddress"
+                  value={1}
+                  onChange={(e: any) => {
+                    const { checked } = e.target;
+                    setNewAddress({
+                      ...newAddress,
+                      isDefault: checked ? 1 : 0,
+                    });
+                  }}
+                  className="mr-2"
+                />
+                <label
+                  htmlFor="defaultAddress"
+                  className="text-sm text-gray-600"
+                >
+                  Đặt làm địa chỉ mặc định
+                </label>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowAddressModal(false);
+                  setErrorsFormAddress({ name: "", phone: "", address: "" });
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={addNewAddress}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Lưu địa chỉ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Order Form */}
           <div className="lg:col-span-2 space-y-6">
             {/* Delivery Information */}
             <div className="bg-white rounded-lg shadow p-6">
-              {/* <div className="flex items-center space-x-4 w-80 h-auto">
-                                <img src="/assets/images/LogoAgain.png" alt="160Store" className="h-20" />
-                            </div> */}
               <h3 className="text-2xl font-semibold mb-4">
                 Thông tin giao hàng
               </h3>
 
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4">
-                  {/* user */}
-                  <div>
-                    <img
-                      src={`https://huunghi.id.vn/storage/avatars/${getUser?.anh_dai_dien_user}`}
-                      alt=""
-                    />
-                  </div>
+                <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4 overflow-hidden">
+                  <img
+                    src={`https://huunghi.id.vn/storage/avatars/${getUser?.anh_dai_dien_user}`}
+                    alt="Avatar"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <p className="text-gray-600">{getUser?.ten_user}</p>
                   <p
-                    onClick={() => logout()}
+                    onClick={() => setLogoutUser(true)}
                     className="text-blue-500 cursor-pointer hover:underline"
                   >
                     Đăng xuất
@@ -473,28 +680,36 @@ const PayPage = () => {
                 </div>
               </div>
               <div className="space-y-4">
-                <div>
+                <div className="flex items-center justify-between">
                   <label className="block text-sm text-gray-600 mb-1">
-                    Thêm địa chỉ mới
+                    Địa chỉ giao hàng
                   </label>
-                  <select
-                    onChange={(e) => {
-                      changeAdress(parseInt(e.target.value));
-                    }}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  <button
+                    onClick={() => setShowAddressModal(true)}
+                    className="text-blue-500 text-sm hover:underline flex items-center"
                   >
-                    <option value="">Chọn địa chỉ giao hàng</option>
-                    {addressOfUser.map((address, index) => (
-                      <option value={address.id_dia_chi_giao_hang} key={index}>
-                        {address.ten_nguoi_nhan +
-                          ", " +
-                          address.so_dien_thoai_nguoi_nhan +
-                          ", " +
-                          address.dia_chi_nguoi_nhan}
-                      </option>
-                    ))}
-                  </select>
+                    <FontAwesomeIcon icon={faPlus} className="w-3 h-3 mr-1" />
+                    Thêm địa chỉ mới
+                  </button>
                 </div>
+
+                <select
+                  onChange={(e) => {
+                    changeAdress(parseInt(e.target.value));
+                  }}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Chọn địa chỉ giao hàng</option>
+                  {addressOfUser.map((address, index) => (
+                    <option value={address.id_dia_chi_giao_hang} key={index}>
+                      {address.ten_nguoi_nhan +
+                        ", " +
+                        address.so_dien_thoai_nguoi_nhan +
+                        ", " +
+                        address.dia_chi_nguoi_nhan}
+                    </option>
+                  ))}
+                </select>
 
                 <div>
                   <label className="block text-sm text-gray-600 mb-1">
@@ -865,6 +1080,8 @@ const PayPage = () => {
           </div>
         </div>
       </div>
+      {/* Thêm ToastContainer */}
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
