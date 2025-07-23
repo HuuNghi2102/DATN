@@ -32,7 +32,7 @@ export const createdArticle = async (newArticle: CreateArticle, imageFile: File)
         if (!res.ok) {
             console.error("Lỗi chi tiết:", data);
             
-            throw new Error(`Lỗi ${res.status}`);
+            return { success: false, errors: data.errors || {} };
         }
         return data;
 

@@ -22,6 +22,12 @@ const CategoryPage = () => {
     description: "",
     parent: "",
   });
+  const [errors, setErrors] = useState({
+    nameCate: "",
+    slug: "",
+  })
+
+
   const [categoryList, setCategoryList] = useState<categoryInterface[]>([]);
   useEffect(() => {
     const FetchCate = async () => {
@@ -47,36 +53,45 @@ const CategoryPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const parentId = formData.parent ? parseInt(formData.parent) : null;
-
     const payload = {
       ten_loai: formData.name,
       duong_dan: formData.slug,
       mota_loai: formData.description,
       id_danh_muc_cha: parentId,
     };
-
-
     try {
       if (editingSlug) {
         // SỬA DANH MỤC
         const result = await editCategories(editingSlug, payload);
+        if (result.errors) {
+          const errors = result.errors;
+          setErrors({
+            nameCate: errors.nameCate ? errors.nameCate : "",
+            slug: errors.slug ? errors.slug : ""
+          })
+        }
         console.log("✅ Đã cập nhật:", result);
       } else {
         // THÊM MỚI
         const result = await addCategories(payload);
-        console.log("✅ Đã thêm:", result);
+        if (result?.errors) {
+          const errors = result.errors;
+          setErrors({
+            nameCate: errors.nameCate ? errors.nameCate : "",
+            slug: errors.slug ? errors.slug : ""
+          })
+        }else{
+                // Reset form
+      setFormData({ name: '', slug: '', description: '', parent: '' });
+      setEditingSlug(null);
+      setShowForm(false);
+        }
       }
       // Làm mới lại danh sách
       const data = await getAPICategories();
       setCategoryList(data);
-
-      // Reset form
-      setFormData({ name: '', slug: '', description: '', parent: '' });
-      setEditingSlug(null);
-      setShowForm(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Lỗi khi lưu danh mục:", error);
     }
   };
@@ -186,6 +201,9 @@ const CategoryPage = () => {
                 className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
                 placeholder="Ví dụ: Áo thun nam"
               />
+              {errors.nameCate && (
+                <p className="text-red-500 text-sm mt-1">{errors.nameCate}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -199,6 +217,9 @@ const CategoryPage = () => {
                 className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
                 placeholder="Ví dụ: ao-thun-nam"
               />
+              {errors.slug && (
+                <p className="text-red-500 text-sm mt-1">{errors.slug[0]}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -244,7 +265,7 @@ const CategoryPage = () => {
                 type="submit"
                 className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700"
               >
-                <i className="fas fa-save mr-1"></i>{" "}
+                <i className="fas fa-save mr-1"></i>
                 {editingSlug ? "Cập nhật" : "Lưu danh mục"}
               </button>
             </div>
@@ -281,7 +302,7 @@ const CategoryPage = () => {
                     : '-'}
                 </td>
                 <td className="p-2 flex gap-2">
-                  <button className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600">
+                  <button onClick={() => handleEdit(cat.duong_dan)} className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600">
                     <FontAwesomeIcon icon={faPencil} />
                   </button>
                   <button onClick={async () => {

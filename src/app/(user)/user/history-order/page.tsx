@@ -50,9 +50,8 @@ export default function UserProfile() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${typeTokenLocal ? JSON.parse(typeTokenLocal) : ""} ${
-            accessTokenLocal ? JSON.parse(accessTokenLocal) : ""
-          }`,
+          Authorization: `${typeTokenLocal ? JSON.parse(typeTokenLocal) : ""} ${accessTokenLocal ? JSON.parse(accessTokenLocal) : ""
+            }`,
         },
       }
     );
@@ -126,13 +125,13 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-[11%]">
+    <div className="min-h-screen bg-gray-100 max-md:pt[190px] max-sm:pt-[120px]">
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       />
 
-      <div className="bg-white border-b px-40 py-3">
+      <div className="bg-white border-b lg:pt-[180px] max-lg:pt-[190px] max-sm:pt-[0px] py-3">
         <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
             <span>
@@ -143,7 +142,7 @@ export default function UserProfile() {
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto p-4">
+      <div className="max-w-[1200px] mx-auto py-4">
         <div className=" md:flex gap-6">
           {/* Sidebar */}
           <div className="w-full md:w-80 bg-white rounded-lg shadow-sm max-h-[530px] lg:sticky top-40">
@@ -162,11 +161,10 @@ export default function UserProfile() {
                   <li key={index}>
                     <Link href={item.href}>
                       <button
-                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
-                          item.active
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
                             ? "bg-black text-white"
                             : "text-gray-700 hover:bg-gray-50"
-                        }`}
+                          }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
                         <span className="text-sm">{item.text}</span>
@@ -190,11 +188,10 @@ export default function UserProfile() {
                   <button
                     key={tab.value}
                     onClick={() => setSelectedStatus(tab.value)}
-                    className={`pb-2 border-b-2 ${
-                      selectedStatus === tab.value
+                    className={`pb-2 border-b-2 ${selectedStatus === tab.value
                         ? "border-black text-black font-semibold"
                         : "border-transparent text-gray-600 hover:text-black"
-                    }`}
+                      }`}
                   >
                     {tab.label}
                   </button>
@@ -235,10 +232,10 @@ export default function UserProfile() {
                         <td className="border border-gray-300 p-3 text-center text-black">
                           {order.ten_nguoi_nhan}
                         </td>
-                        <td className="border border-gray-300 p-3 text-center text-black">
+                        <td className="border border-gray-300 p-3 text-center text-black whitespace-nowrap overflow-hidden text-ellipsis">
                           {order.so_dien_thoai_nguoi_nhan}
                         </td>
-                        <td className="border border-gray-300 p-3 text-center text-black font-medium">
+                        <td className="border border-gray-300 p-3 text-center text-black font-medium whitespace-nowrap overflow-hidden text-ellipsis">
                           {order.gia_tong_don_hang.toLocaleString("vi-VN")}đ
                         </td>
                         <td className="border border-gray-300 p-3 text-center text-sm text-gray-800">

@@ -289,7 +289,7 @@ const AccountSettingsPage = () => {
                     alt="Avatar"
                     className="w-20 h-20 rounded-full object-cover border-2 border-white shadow-md"
                   />
-                  <label className="absolute bottom-0 right-0 bg-blue-500 text-white p-1.5 rounded-full cursor-pointer hover:bg-blue-600 transition-colors">
+                  <label className="absolute bottom-0 right-0 bg-indigo-500 text-white p-1 rounded-full cursor-pointer hover:bg-indigo-600 transition-colors">
                     <i className="fas fa-camera text-xs"></i>
                     <input
                       type="file"
@@ -372,13 +372,13 @@ const AccountSettingsPage = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
                 <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                  <i className="fas fa-user-circle text-blue-500 mr-2"></i>
+                  <i className="fas fa-user-circle text-indigo-500 mr-2"></i>
                   Thông tin cá nhân
                 </h2>
                 {!isEditingProfile ? (
                   <button
                     onClick={() => setIsEditingProfile(true)}
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center"
+                    className="text-indigo-500 hover:text-indigo-600 text-sm font-medium flex items-center"
                   >
                     <i className="fas fa-edit mr-1"></i> Chỉnh sửa
                   </button>
@@ -470,7 +470,7 @@ const AccountSettingsPage = () => {
                     </button>
                     <button
                       type="submit"
-                      className="px-4 py-2.5 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                      className="px-4 py-2.5 text-sm text-white bg-indigo-600 rounded-lg hover:bg-blue-700"
                     >
                       Lưu thay đổi
                     </button>
@@ -520,13 +520,13 @@ const AccountSettingsPage = () => {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
                 <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                  <i className="fas fa-shield-alt text-blue-500 mr-2"></i>
+                  <i className="fas fa-shield-alt text-indigo-500 mr-2"></i>
                   Bảo mật tài khoản
                 </h2>
                 {!isEditingPassword ? (
                   <button
                     onClick={() => setIsEditingPassword(true)}
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center"
+                    className="text-indigo-600 hover:text-indigo-600 text-sm font-medium flex items-center"
                   >
                     <i className="fas fa-edit mr-1"></i> Đổi mật khẩu
                   </button>

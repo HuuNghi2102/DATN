@@ -3,15 +3,8 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import orderInterface from "../components/interface/orderInterface";
-import {
-  FaEye,
-  FaMapMarkerAlt,
-  FaPhone,
-  FaFilter,
-  FaSyncAlt,
-  FaPrint,
-  FaCheck,
-} from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft,faMapMarkerAlt,faPhone,faFilter,faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
 //array status order of shipper
@@ -230,10 +223,10 @@ const OrderManagement = () => {
           </div>
           <div className="flex gap-3 mt-4 md:mt-0">
             <button className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-100 flex items-center">
-              <FaFilter className="mr-2" /> Lọc
+              <FontAwesomeIcon className="mr-2" icon={faFilter} /> Lọc
             </button>
             <button className="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center">
-              <FaSyncAlt className="mr-2" /> Làm mới
+              <FontAwesomeIcon className="mr-2" icon={faSyncAlt} /> Làm mới
             </button>
           </div>
         </div>
@@ -310,7 +303,7 @@ const OrderManagement = () => {
                             href={`/admin/shipper/detail-order/${order.id_don_hang}`}
                           >
                             <button className="p-2 border rounded hover:bg-gray-100">
-                              <FaEye />
+                              <FontAwesomeIcon icon={faEye} />
                             </button>
                           </Link>
                           <button
@@ -319,11 +312,11 @@ const OrderManagement = () => {
                             }
                             className="p-2 border rounded hover:bg-gray-100"
                           >
-                            <FaMapMarkerAlt />
+                            <FontAwesomeIcon icon={faMapMarkerAlt} />
                           </button>
                           <Link href={`tel:${order.so_dien_thoai_nguoi_nhan}`}>
                             <button className="p-2 border rounded hover:bg-gray-100">
-                              <FaPhone />
+                              <FontAwesomeIcon icon={faPhone} />
                             </button>
                           </Link>
                           {nextSatatusOrder(order.trang_thai_don_hang).map(
@@ -413,7 +406,7 @@ const OrderManagement = () => {
                 : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            Trước
+            <FontAwesomeIcon icon={faChevronLeft} />
           </button>
 
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -452,7 +445,7 @@ const OrderManagement = () => {
               onClick={() => handlePageChange(totalPages)}
               className={`px-3 py-1 rounded-md border ${
                 currentPage === totalPages
-                  ? "bg-blue-500 text-white"
+                  ? "bg-indigo-500 text-white"
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
@@ -469,7 +462,7 @@ const OrderManagement = () => {
                 : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            Sau
+            <FontAwesomeIcon icon={faChevronRight} />
           </button>
         </div>
       </div>

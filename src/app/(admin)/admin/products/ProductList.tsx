@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import TableRow from "../components/TableRow";
 import { useRouter } from "next/navigation";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import categoryInterface from "../components/interface/categoryProInterface";
 
@@ -283,7 +283,7 @@ const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Trước
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
 
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -304,7 +304,7 @@ const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
                   onClick={() => handlePageChange(pageNum)}
                   className={`px-3 py-1 rounded-md border ${
                     currentPage === pageNum
-                      ? "bg-blue-500 text-white"
+                      ? "bg-indigo-500 text-white"
                       : "bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
@@ -339,7 +339,7 @@ const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Sau
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
         </div>

@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import orderInterface from "../components/interface/orderInterface";
 import Link from "next/link";
 
@@ -943,7 +945,7 @@ const OrderManager = () => {
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Trước
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
 
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -964,7 +966,7 @@ const OrderManager = () => {
                   onClick={() => handlePageChange(pageNum)}
                   className={`px-3 py-1 rounded-md border ${
                     currentPage === pageNum
-                      ? "bg-blue-500 text-white"
+                      ? "bg-indigo-500 text-white"
                       : "bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
@@ -999,7 +1001,7 @@ const OrderManager = () => {
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Sau
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faPencil, faRepeat,faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash, faPencil, faRepeat, faSearch,faChevronRight,faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { addVoucher, deleteVoucher, editVoucher } from "../services/voucherServices";
 import interfaceVoucher from "../types/voucher";
 import { CreateVoucher } from "../types/voucher";
@@ -20,11 +20,10 @@ export default function VoucherManager() {
   const [formData, setFormData] = useState<CreateVoucher>({
     ma_giam_gia: "",
     loai_giam_gia: "",
-    gia_tri_giam: 0,
-    gia_tri_don_hang: 0,
+    gia_tri_giam: "",
+    gia_tri_don_hang: "",
     ngay_bat_dau: "",
     ngay_het_han: "",
-    trang_thai: -1,
   });
 
   // State dữ liệu voucher
@@ -32,6 +31,10 @@ export default function VoucherManager() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(20);
+    const [search, setSearch] = useState<string | "">("");
+    const [type, setType] = useState<string|"">("");
+  const [getstatus, setgetStatus] = useState<number | "">("");
+
   const getAPIVouchers = async (): Promise<interfaceVoucher[]> => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -40,7 +43,7 @@ export default function VoucherManager() {
         const parseaccessToken = JSON.parse(accessToken);
         const parsetypeToken = JSON.parse(typeToken);
 
-        const res = await fetch(`https://huunghi.id.vn/api/voucher/listVoucher?page=${currentPage}`, {
+        const res = await fetch(`https://huunghi.id.vn/api/voucher/listVoucher?page=${currentPage}&search=${search}&type=${type}&status=${getstatus}`, {
           method: "GET",
           headers: {
             "Authorization": `${parsetypeToken} ${parseaccessToken}`,
@@ -73,19 +76,8 @@ export default function VoucherManager() {
     }
   };
 
-  // State bộ lọc
-  const [searchCode, setSearchCode] = useState("");
-  const [discountValueFilter, setDiscountValueFilter] = useState<number | "">(
-    ""
-  );
-  const [startDateFilter, setStartDateFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  // Options cho giá trị giảm
-  const discountValueOptions = [
-    { value: "phan_tram", label: "Phần trăm" },
-    { value: "so_tien", label: "Số tiền" },
-  ];
+
 
   // Lấy dữ liệu voucher từ API
   useEffect(() => {
@@ -100,71 +92,49 @@ export default function VoucherManager() {
     };
 
     fetchVouchers();
-  }, [currentPage]);
-
-  // Hàm lọc voucher
-  const filteredVouchers = vouchers.filter((voucher) => {
-    // Lọc theo mã
-    if (
-      searchCode &&
-      !voucher.ma_giam_gia.toLowerCase().includes(searchCode.toLowerCase())
-    ) {
-      return false;
-    }
-
-    // Lọc theo giá trị giảm
-    if (
-      discountValueFilter !== "" &&
-      voucher.gia_tri_giam !== discountValueFilter
-    ) {
-      return false;
-    }
-
-    // Lọc theo ngày bắt đầu
-    if (
-      startDateFilter &&
-      new Date(voucher.ngay_bat_dau) < new Date(startDateFilter)
-    ) {
-      return false;
-    }
-
-    // Lọc theo trạng thái
-    if (statusFilter !== "all") {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const startDate = new Date(voucher.ngay_bat_dau);
-      const endDate = new Date(voucher.ngay_het_han);
-
-      switch (statusFilter) {
-        case "active":
-          return (
-            startDate <= today && endDate >= today && voucher.trang_thai === 1
-          );
-        case "inactive":
-          return voucher.trang_thai === 0;
-        case "expired":
-          return endDate < today;
-        case "upcoming":
-          return startDate > today;
-        default:
-          return true;
-      }
-    }
-
-    return true;
-  });
+  }, [currentPage,search,type,getstatus]);
 
   // Xử lý thay đổi form
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        name === "trang_thai" || type === "number" ? Number(value) : value,
-    }));
+
+    if (name === "gia_tri_giam") {
+      const numericValue = Number(value);
+
+      // Nếu là loại giảm giá phần trăm, giới hạn tối đa 100
+      if (formData.loai_giam_gia === "phan_tram" && numericValue > 100) {
+        alert("❌ Giá trị giảm theo phần trăm không được vượt quá 100%");
+        return;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    } else if (name === "loai_giam_gia") {
+      setFormData((prev) => {
+        const updated = {
+          ...prev,
+          [name]: value,
+        };
+
+        // Nếu đang chuyển sang phần trăm mà giá trị hiện tại > 100, tự động giới hạn lại
+        if (value === "phan_tram" && Number(prev.gia_tri_giam) > 100) {
+          updated.gia_tri_giam = 100;
+        }
+
+        return updated;
+      });
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "number" ? Number(value) : value,
+      }));
+    }
   };
+
 
   // Thêm voucher mới
   const handleSubmit = async (e: React.FormEvent) => {
@@ -238,11 +208,10 @@ export default function VoucherManager() {
     setFormData({
       ma_giam_gia: "",
       loai_giam_gia: "",
-      gia_tri_giam: 0,
-      gia_tri_don_hang: 0,
+      gia_tri_giam: "",
+      gia_tri_don_hang: "",
       ngay_bat_dau: "",
       ngay_het_han: "",
-      trang_thai: -1,
     });
     setErrorMessages({});
   };
@@ -284,11 +253,10 @@ export default function VoucherManager() {
               setFormData({
                 ma_giam_gia: "",
                 loai_giam_gia: "",
-                gia_tri_giam: 0,
-                gia_tri_don_hang: 0,
+                gia_tri_giam: "",
+                gia_tri_don_hang: "",
                 ngay_bat_dau: "",
                 ngay_het_han: "",
-                trang_thai: -1,
               });
             }}
             className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center"
@@ -302,7 +270,7 @@ export default function VoucherManager() {
           <h3 className="font-medium mb-4">Bộ lọc voucher</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Lọc theo mã */}
+            {/* Tìm theo mã */}
             <div>
               <label className="block text-sm font-medium mb-1">
                 {" "}
@@ -311,8 +279,11 @@ export default function VoucherManager() {
               <div className="relative">
                 <input
                   type="text"
-                  value={searchCode}
-                  onChange={(e) => setSearchCode(e.target.value)}
+                  value={search}
+              onChange={(e: any) => {
+                setCurrentPage(1);
+                setSearch(e.target.value);
+              }}
                   placeholder="Nhập mã cần tìm..."
                   className="w-full pl-8 pr-4 py-2 border rounded"
                 />
@@ -330,39 +301,35 @@ export default function VoucherManager() {
                 Giá trị giảm
               </label>
               <select
-                value={discountValueFilter}
+                value={type}
                 onChange={(e) =>
-                  setDiscountValueFilter(
-                    e.target.value ? Number(e.target.value) : ""
+                  setType(
+                    e.target.value
                   )
                 }
                 className="w-full px-4 py-2 border rounded"
               >
                 <option value="">Tất cả giá trị</option>
-                {discountValueOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
+                <option value="so_tien">Số tiền VNĐ</option>
+                <option value="phan_tram">Phần trăm %</option>
               </select>
             </div>
 
             {/* Lọc theo trạng thái */}
             <div>
               <label className="block text-sm font-medium mb-1">
-                {" "}
                 Trạng thái
               </label>
               <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
+                value={getstatus}
+                onChange={(e:any) => setgetStatus(e.target.value)}
                 className="w-full px-4 py-2 border rounded"
               >
                 <option value="">Tất cả</option>
                 <option value="dang_hoat_dong">Đang hoạt động</option>
                 <option value="dung_hoat_dong">Dừng hoạt động</option>
-                <option value="het_han">Hết hạn</option>
-                <option value="chua_bat_dau">Chưa bắt đầu</option>
+                <option value="het_han">Ngày hết hạn</option>
+                <option value="chua_bat_dau">Ngày bắt đầu</option>
               </select>
             </div>
           </div>
@@ -389,8 +356,8 @@ export default function VoucherManager() {
                     name="ma_giam_gia"
                     value={formData.ma_giam_gia}
                     onChange={handleChange}
-                    required
                     className="w-full border px-4 py-2 rounded"
+                    maxLength={255}
                   />
                   {errorMessages.codeVoucher && (
                     <p className="text-red-500 text-sm mt-1">
@@ -402,13 +369,16 @@ export default function VoucherManager() {
                   <label className="block text-sm font-medium mb-1">
                     Loại giảm giá *
                   </label>
-                  <input
+                  <select
                     name="loai_giam_gia"
                     value={formData.loai_giam_gia}
                     onChange={handleChange}
-                    required
                     className="w-full border px-4 py-2 rounded"
-                  />
+                  >
+                    <option value="">-- Chọn loại giảm giá --</option>
+                    <option value="phan_tram">Phần trăm (%)</option>
+                    <option value="so_tien">Số tiền (VNĐ)</option>
+                  </select>
                   {errorMessages.typeVoucher && (
                     <p className="text-red-500 text-sm mt-1">
                       {errorMessages.typeVoucher[0]}
@@ -417,15 +387,21 @@ export default function VoucherManager() {
                 </div>
 
                 <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Giá trị giảm *
+                  </label>
                   <input
                     name="gia_tri_giam"
                     type="number"
                     value={formData.gia_tri_giam}
                     onChange={handleChange}
-                    required
-                    placeholder="Giá trị giảm"
+                    placeholder="0"
+                    min={0}
+                    max={formData.loai_giam_gia === "phan_tram" ? 100 : undefined}
                     className="w-full border px-4 py-2 rounded"
+                    maxLength={255}
                   />
+
                   {errorMessages.valueRedution && (
                     <p className="text-red-500 text-sm mt-1">
                       {errorMessages.valueRedution[0]}
@@ -434,14 +410,17 @@ export default function VoucherManager() {
                 </div>
 
                 <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Giá trị đơn hàng *
+                  </label>
                   <input
                     name="gia_tri_don_hang"
                     type="number"
                     value={formData.gia_tri_don_hang}
                     onChange={handleChange}
-                    required
-                    placeholder="Đơn tối thiểu"
+                    placeholder="0"
                     className="w-full border px-4 py-2 rounded"
+                    maxLength={255}
                   />
                   {errorMessages.minOrderValue && (
                     <p className="text-red-500 text-sm mt-1">
@@ -451,28 +430,32 @@ export default function VoucherManager() {
                 </div>
 
                 <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Ngày bắt đầu *
+                  </label>
                   <input
                     name="ngay_bat_dau"
                     type="date"
                     value={formData.ngay_bat_dau}
                     onChange={handleChange}
-                    required
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.dateStart && (
                     <p className="text-red-500 text-sm mt-1">
-                      {errorMessages.dateStart[0]}
+                      {errorMessages.dateStart}
                     </p>
                   )}
                 </div>
 
                 <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Ngày hết hạn *
+                  </label>
                   <input
                     name="ngay_het_han"
                     type="date"
                     value={formData.ngay_het_han}
                     onChange={handleChange}
-                    required
                     className="w-full border px-4 py-2 rounded"
                   />
                   {errorMessages.dateEnd && (
@@ -480,26 +463,6 @@ export default function VoucherManager() {
                       {errorMessages.dateEnd[0]}
                     </p>
                   )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Trạng thái *
-                  </label>
-                  <select
-                    name="trang_thai"
-                    value={formData.trang_thai}
-                    onChange={handleChange}
-                    required
-                    className="w-full border px-4 py-2 rounded"
-                  >
-                    <option value={-1} disabled>
-                      -- Chọn trạng thái --
-                    </option>
-                    <option value={1}>Đang hoạt động</option>
-
-                    <option value={0}>Dừng hoạt động</option>
-                  </select>
                 </div>
 
                 <div className="flex justify-end gap-3 pt-4">
@@ -526,8 +489,8 @@ export default function VoucherManager() {
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold">
-              Danh sách Voucher{" "}
-              <span className="text-gray-500">({filteredVouchers.length})</span>
+              Danh sách Voucher
+              <span className="text-gray-500">({vouchers.length})</span>
             </h2>
           </div>
           <div className="overflow-x-auto p-6">
@@ -617,7 +580,6 @@ export default function VoucherManager() {
                             gia_tri_don_hang: voucher.gia_tri_don_hang ?? 0,
                             ngay_bat_dau: voucher.ngay_bat_dau,
                             ngay_het_han: voucher.ngay_het_han,
-                            trang_thai: voucher.trang_thai,
                           });
                         }}
                       >
@@ -652,7 +614,7 @@ export default function VoucherManager() {
               disabled={currentPage === 1}
               className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
             >
-              Trước
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
 
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -671,7 +633,7 @@ export default function VoucherManager() {
                 <button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                 >
                   {pageNum}
                 </button>
@@ -685,7 +647,7 @@ export default function VoucherManager() {
             {totalPages > 5 && currentPage < totalPages - 2 && (
               <button
                 onClick={() => handlePageChange(totalPages)}
-                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
               >
                 {totalPages}
               </button>
@@ -696,7 +658,7 @@ export default function VoucherManager() {
               disabled={currentPage === totalPages}
               className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
             >
-              Sau
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
         </div>

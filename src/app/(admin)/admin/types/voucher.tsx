@@ -14,9 +14,8 @@ export default interface interfaceVoucher {
 export interface CreateVoucher {
   ma_giam_gia: string;
   loai_giam_gia: string;
-  gia_tri_giam: number;
-  gia_tri_don_hang: number;
+  gia_tri_giam: number|string;
+  gia_tri_don_hang: number|string;
   ngay_bat_dau: string;
   ngay_het_han: string;
-  trang_thai: number;
 }

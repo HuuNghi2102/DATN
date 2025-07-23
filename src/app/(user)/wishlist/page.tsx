@@ -260,7 +260,7 @@ const WishlistPage = () => {
                     </div>
                   </div>
                   <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                    Move to detailll
+                    Move to detail
                   </button>
                 </div>
               </div>
@@ -296,7 +296,7 @@ const WishlistPage = () => {
               <div key={i} className="p-4">
                 <div className="flex items-start space-x-3">
                   <button className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
-                    <i className="fas fa-times text-sm"></i>
+                    <i className=" text-sm">X</i>
                   </button>
 
                   <div className="w-16 h-20  rounded-sm flex items-center justify-center">
@@ -325,7 +325,7 @@ const WishlistPage = () => {
                     </div>
 
                     <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                      Move to detaillllllllllegeg
+                      Move to detail
                     </button>
                   </div>
                 </div>

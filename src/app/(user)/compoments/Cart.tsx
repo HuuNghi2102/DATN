@@ -322,7 +322,7 @@ const CartPage = () => {
                   đ
                 </span>
               </div>
-              <div className="flex justify-between text-sm mb-3">
+              {/* <div className="flex justify-between text-sm mb-3">
                 <span className="text-gray-600">Giá giảm:</span>
                 <span className="text-gray-900">
                   -
@@ -331,7 +331,7 @@ const CartPage = () => {
                   )}
                   đ
                 </span>
-              </div>
+              </div> */}
               <div className="flex justify-between text-sm mb-3 font-semibold">
                 <span className="text-gray-900">Tổng tiền:</span>
                 <span className="text-gray-900">

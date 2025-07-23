@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import "@/app/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import detailOrderInterface from "../components/interface/detailOrderInterface";
 import userInterface from "../components/interface/userInterface";
 import productInterface from "../components/interface/productInterface";
@@ -351,7 +352,7 @@ const ReviewManagerPage = () => {
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                Trước
+                <FontAwesomeIcon icon={faChevronLeft} />
               </button>
 
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -372,7 +373,7 @@ const ReviewManagerPage = () => {
                     onClick={() => handlePageChange(pageNum)}
                     className={`px-3 py-1 rounded-md ${
                       currentPage === pageNum
-                        ? "bg-blue-500 text-white"
+                        ? "bg-indigo-500 text-white"
                         : "bg-white text-gray-700 hover:bg-gray-50"
                     }`}
                   >
@@ -390,7 +391,7 @@ const ReviewManagerPage = () => {
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
               >
-                Sau
+                <FontAwesomeIcon icon={faChevronRight} />
               </button>
             </div>
           </div>

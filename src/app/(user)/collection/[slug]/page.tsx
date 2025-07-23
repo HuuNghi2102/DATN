@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Bannerinterface from "../../compoments/Bannerinterface";
 import Slider from "react-slick";
+
 import {
   faSearch,
   faCartShopping,
@@ -31,7 +32,7 @@ export default function AllProductPage() {
   const [pageStart, setPageStart] = useState(1);
   const [pageEnd, setPageEnd] = useState(1);
   const [banners, setBanners] = useState<Bannerinterface[]>([]);
-
+  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
       className="absolute top-1/2 text-white text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
@@ -192,7 +193,7 @@ export default function AllProductPage() {
   }, []);
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 pt-[11%]">
+    <div className="max-w-[1200px] mx-auto px-4 pt-[12%]">
       {/* Breadcrumb */}
       <nav className="text-[11px] font-medium pb-2">
         <ul className="flex items-center gap-1">
@@ -281,21 +282,18 @@ export default function AllProductPage() {
           <div key={i} className="p-2">
             <div className="bg-white p-2 rounded-lg cursor-pointer">
               <div className="relative group overflow-hidden">
-                <Link
-                  href={`/product/${product.duong_dan}`}
-                  className="relative"
-                >
-                  <img
-                    src={`https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`}
-                    alt="aa"
-                    className="w-full"
-                  />
-                  <img
-                    src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
-                    alt="product"
-                    className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  />
-                </Link>
+                      <Link href={`/product/${product.duong_dan}`} className="relative block">
+                        <img
+                          src={hoveredProduct === i
+                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                          }
+                          alt="product"
+                          className="w-full transition-all duration-300"
+                          onMouseEnter={() => setHoveredProduct(i)}
+                          onMouseLeave={() => setHoveredProduct(null)}
+                        />
+                      </Link>
                 <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   <FontAwesomeIcon
                     icon={faSearch}
@@ -312,14 +310,16 @@ export default function AllProductPage() {
                       product.id_san_pham
                     )
                   }
-                  className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                  className="absolute right-2 bottom-2  w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
                 >
                   <FontAwesomeIcon icon={faHeart} />
                 </a>
               </div>
               <div className="px-1 mt-2">
-                <p className="text-sm">{product.ten_san_pham}</p>
-                <strong className="text-sm">
+                <p className="text-sm line-clamp- h-[40px]">
+                        {product.ten_san_pham}
+                      </p>
+                <strong className="text-sm text-red-500">
                   {product.gia_da_giam.toLocaleString("vi-VN") + " VNĐ"}
                 </strong>
               </div>
@@ -351,7 +351,7 @@ export default function AllProductPage() {
                 }}
                 className={`px-3 py-1 border text-sm rounded ${
                   currentPage === page
-                    ? "bg-black text-white"
+                    ? "bg-amber-500 text-white"
                     : "bg-white text-black border-gray-300 hover:bg-gray-100"
                 }`}
               >
@@ -361,7 +361,7 @@ export default function AllProductPage() {
         )}
         {currentPage < totalPage && (
           <button
-            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
           >
             {`...`}
           </button>
@@ -369,7 +369,7 @@ export default function AllProductPage() {
         {currentPage < totalPage && (
           <button
             onClick={() => setCurrentPage(totalPage)}
-            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
           >
             {totalPage}
           </button>
@@ -377,7 +377,7 @@ export default function AllProductPage() {
         {currentPage < totalPage && (
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
-            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
           >
             {">"}
           </button>

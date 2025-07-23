@@ -4,7 +4,7 @@ import React from 'react';
 import '@/app/globals.css';
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import articleInterface from "../types/article";
 import { createdArticle, deleteArticle, editArticle, changeStatusArticle } from "../services/articleService";
 import { Editor } from '@tinymce/tinymce-react';
@@ -102,7 +102,7 @@ const PendingPostsPage = () => {
                       <div className="w-10 h-10 rounded overflow-hidden mr-3">
                         <img src={`https://huunghi.id.vn/storage/posts/${post.anh_bai_viet}`} alt="Bài viết" className="w-10 h-10 rounded object-cover" />
                       </div>
-                      <span>{post.ten_bai_viet}</span>
+                      <span className='line-clamp-2 w-[250px]'>{post.ten_bai_viet}</span>
                     </div>
                   </td>
                   <td className="px-4 py-4 border-b border-gray-200">
@@ -157,7 +157,7 @@ const PendingPostsPage = () => {
               disabled={currentPage === 1}
               className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
             >
-              Trước
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               let pageNum;
@@ -175,7 +175,7 @@ const PendingPostsPage = () => {
                 <button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                 >
                   {pageNum}
                 </button>
@@ -189,7 +189,7 @@ const PendingPostsPage = () => {
             {totalPages > 5 && currentPage < totalPages - 2 && (
               <button
                 onClick={() => handlePageChange(totalPages)}
-                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
               >
                 {totalPages}
               </button>
@@ -200,7 +200,7 @@ const PendingPostsPage = () => {
               disabled={currentPage === totalPages}
               className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
             >
-              Sau
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
         </div>
