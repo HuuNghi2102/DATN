@@ -66,6 +66,7 @@ export default function CustomerManager() {
                 Họ tên
               </label>
               <input
+              maxLength={255}
                 type="text"
                 className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                 placeholder="Nhập họ tên"
@@ -76,6 +77,7 @@ export default function CustomerManager() {
                 Email
               </label>
               <input
+              maxLength={255}
                 type="email"
                 className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                 placeholder="example@email.com"
@@ -86,6 +88,7 @@ export default function CustomerManager() {
                 Số điện thoại
               </label>
               <input
+              maxLength={255}
                 type="text"
                 className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                 placeholder="Nhập số điện thoại"
@@ -145,6 +148,7 @@ export default function CustomerManager() {
             Tìm kiếm
           </label>
           <input
+          maxLength={255}
             type="text"
             className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
             placeholder="Tìm theo tên, SĐT, email..."

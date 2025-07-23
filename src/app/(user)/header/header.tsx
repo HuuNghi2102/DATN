@@ -8,6 +8,8 @@ import {
   faCartShopping,
   faChevronDown,
   faHeart,
+  faUser,
+  faShoppingCart
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./header.module.css";
 import type userInterface from "../compoments/userInterface";
@@ -192,7 +194,7 @@ const Header = () => {
     };
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   if (!isClient) return null;
   return (
@@ -279,12 +281,7 @@ const Header = () => {
                 onClick={handleToggleUserDropdown}
                 style={{ cursor: "pointer" }}
               >
-                <img
-                  src="https://theme.hstatic.net/1000253775/1001315144/14/user-account.svg?v=2041"
-                  width="24"
-                  height="24"
-                  alt=""
-                />
+                <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
               </div>
 
               {currentUser ? (
@@ -327,12 +324,7 @@ const Header = () => {
             <div className={styles["user-control-item"]}>
               <div className={`${styles.icon} ${styles["cart-icon"]}`}>
                 <Link href="/cart">
-                  <img
-                    src="https://theme.hstatic.net/1000253775/1001315144/14/shopping-cart.svg?v=2041"
-                    width="24"
-                    height="24"
-                    alt=""
-                  />
+                  <FontAwesomeIcon className="w-6 h-6" icon={faCartShopping} />
                 </Link>
                 <div className={styles["cart-count"]}>{cartCount}</div>
               </div>
@@ -418,9 +410,8 @@ const Header = () => {
         onClick={handleOverlayClick}
       ></div>
       <nav
-        className={`${styles["mobile-nav"]} ${
-          isMobileMenuOpen ? styles.active : ""
-        }`}
+        className={`${styles["mobile-nav"]} ${isMobileMenuOpen ? styles.active : ""
+          }`}
       >
         <div className={styles["mobile-nav-header"]}>
           <div>MENU</div>
@@ -473,9 +464,8 @@ const Header = () => {
               </button>
             </div>
             <div
-              className={`${styles["mobile-dropdown-content"]} ${
-                activeDropdowns["sanpham"] ? styles.active : ""
-              }`}
+              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
+                }`}
             >
               <a
                 href="/collection/all"
@@ -521,9 +511,8 @@ const Header = () => {
                     </button>
                   </div>
                   <div
-                    className={`${styles["mobile-dropdown-content"]} ${
-                      activeDropdowns[index] ? styles.active : ""
-                    }`}
+                    className={`${styles["mobile-dropdown-content"]} ${activeDropdowns[index] ? styles.active : ""
+                      }`}
                   >
                     {item.categories.map((subItem: any, subIndex: number) => (
                       <a
@@ -570,9 +559,8 @@ const Header = () => {
               </button>
             </div>
             <div
-              className={`${styles["mobile-dropdown-content"]} ${
-                activeDropdowns["sanpham"] ? styles.active : ""
-              }`}
+              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
+                }`}
             >
               <a href="#" className={styles["mobile-dropdown-item"]}>
                 ProCOOL™

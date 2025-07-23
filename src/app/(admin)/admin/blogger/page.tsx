@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faTrash, faPencil, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTrash, faPencil, faPlus,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import articleInterface from "../types/article";
-import { createdArticle, deleteArticle, editArticle } from "../services/articleService";
+import { createdArticle, deleteArticle, editArticle, } from "../services/articleService";
 import { Editor } from '@tinymce/tinymce-react';
 
 export default function AdminPostManagement() {
@@ -175,7 +175,7 @@ export default function AdminPostManagement() {
                     <form className="space-y-4" onSubmit={handleSubmit}>
                         <div>
                             <label className="block text-sm font-medium mb-1">Tiêu đề bài viết</label>
-                            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nhập tiêu đề bài viết" className="w-full border px-3 py-2 rounded" />
+                            <input maxLength={255} type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nhập tiêu đề bài viết" className="w-full border px-3 py-2 rounded" />
                         </div>
 
                         <div>
@@ -184,7 +184,7 @@ export default function AdminPostManagement() {
                                 <span className="px-3 py-2 bg-gray-100 border border-r-0 rounded-l text-sm text-gray-500">
                                     https://example.com/
                                 </span>
-                                <input type="text" value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full border px-3 py-2 rounded-r" placeholder="duong-dan-bai-viet" />
+                                <input maxLength={255} type="text" value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full border px-3 py-2 rounded-r" placeholder="duong-dan-bai-viet" />
                             </div>
                         </div>
 
@@ -240,11 +240,6 @@ export default function AdminPostManagement() {
                             )}
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <input id="postStatus" type="checkbox" checked={status} onChange={(e) => setStatus(e.target.checked)} className="h-5 w-5" />
-                            <label htmlFor="postStatus">Riêng tư</label>
-                        </div>
-
                         <div className="flex justify-end gap-2">
                             <button type="button" className="px-4 py-2 border rounded text-sm font-medium text-gray-700 bg-white shadow" onClick={() => setShowForm(false)}>
                                 Hủy bỏ
@@ -273,19 +268,23 @@ export default function AdminPostManagement() {
                     <tbody>
                         {posts.map((post, index) => (
                             <tr key={index} className="border-t">
-                                <td className="px-4 py-3 font-medium text-gray-800">{post.id_bai_viet}</td>
-                                <td className="px-4 py-3 flex items-center gap-3">
+                                <td className="px-4 py-3 font-medium text-gray-800 ">{post.id_bai_viet}</td>
+                                <td className="px-4 py-3 flex items-center gap-3 w-[250px]">
                                     <img src={`https://huunghi.id.vn/storage/posts/${post.anh_bai_viet}`} alt="Bài viết" className="w-10 h-10 rounded object-cover" />
-                                    <span>{post.ten_bai_viet}</span>
+                                    <span className="line-clamp-2 w-[250px]">{post.ten_bai_viet}</span>
                                 </td>
-                                <td className="px-4 py-3 text-gray-700">{post.duong_dan}</td>
+                                <td className="px-4 py-3 text-gray-700 w-[250px]">
+                                                      <div className="line-clamp-2">
+                    {post.duong_dan}
+                  </div>
+                                    </td>
                                 <td className="px-4 py-3 text-gray-700">
                                     <div dangerouslySetInnerHTML={{ __html: post.noi_dung_bai_viet.slice(0, 30) }} />
                                 </td>
                                 <td className="px-4 py-3 text-gray-700">{new Date(post.created_at).toLocaleDateString("vi-VN")}</td>
                                 <td>
                                     <label className={`relative inline-flex text-xs items-center px-3 py-1 text-white rounded-full cursor-pointer ${post.trang_thai === 1 ? "bg-green-500" : "bg-red-500"}`}>
-                                        {post.trang_thai === 1 ? "Hoạt động" : "Không hoạt động"}
+                                        {post.trang_thai === 1 ? "Đang hoạt động" : "Không hoạt động"}
                                     </label>
                                 </td>
                                 <td className="px-4 py-3">
@@ -329,7 +328,7 @@ export default function AdminPostManagement() {
                         disabled={currentPage === 1}
                         className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                     >
-                        Trước
+                        <FontAwesomeIcon icon={faChevronLeft} />
                     </button>
 
                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -348,7 +347,7 @@ export default function AdminPostManagement() {
                             <button
                                 key={pageNum}
                                 onClick={() => handlePageChange(pageNum)}
-                                className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                                className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                             >
                                 {pageNum}
                             </button>
@@ -362,7 +361,7 @@ export default function AdminPostManagement() {
                     {totalPages > 5 && currentPage < totalPages - 2 && (
                         <button
                             onClick={() => handlePageChange(totalPages)}
-                            className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-blue-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                            className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                         >
                             {totalPages}
                         </button>
@@ -373,7 +372,7 @@ export default function AdminPostManagement() {
                         disabled={currentPage === totalPages}
                         className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                     >
-                        Sau
+                        <FontAwesomeIcon icon={faChevronRight} />
                     </button>   
                 </div>
             </div>

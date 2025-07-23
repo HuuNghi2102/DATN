@@ -325,6 +325,7 @@ const ProductForm = ({
                 Tên sản phẩm
               </label>
               <input
+              maxLength={255}
                 value={product.name}
                 onChange={(e: any) => {
                   setProduct({ ...product, name: e.target.value });
@@ -342,6 +343,7 @@ const ProductForm = ({
                 Đường dẫn
               </label>
               <input
+              maxLength={255}
                 value={product.slug}
                 onChange={(e: any) => {
                   setProduct({ ...product, slug: e.target.value });
@@ -378,6 +380,7 @@ const ProductForm = ({
                   Giá cũ (VND)
                 </label>
                 <input
+                maxLength={255}
                   value={product.price_old}
                   onChange={(e: any) => {
                     setProduct({ ...product, price_old: e.target.value });
@@ -398,6 +401,7 @@ const ProductForm = ({
                   Giảm giá (%)
                 </label>
                 <input
+                maxLength={255}
                   value={product.percent}
                   onChange={(e: any) => {
                     setProduct({
@@ -423,6 +427,7 @@ const ProductForm = ({
                 Giá khuyến mãi (VND)
               </label>
               <input
+              maxLength={255}
                 value={product.price_sale}
                 onChange={(e: any) => {
                   setProduct({ ...product, price_sale: e.target.value });

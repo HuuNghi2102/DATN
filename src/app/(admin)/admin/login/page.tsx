@@ -72,6 +72,7 @@ const HaravanAdminLogin = () => {
               </label>
               <div className="mt-1">
                 <input
+                maxLength={255}
                   id="email"
                   name="email"
                   type="email"
@@ -93,6 +94,7 @@ const HaravanAdminLogin = () => {
               </label>
               <div className="mt-1">
                 <input
+                maxLength={255}
                   id="password"
                   name="password"
                   type="password"
@@ -108,6 +110,7 @@ const HaravanAdminLogin = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
+                maxLength={255}
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"

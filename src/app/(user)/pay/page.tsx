@@ -542,7 +542,7 @@ const PayPage = () => {
     <div className="min-h-screen bg-gray-50 pt-[12%]">
       {/* Thêm modal thêm địa chỉ mới */}
       {showAddressModal && (
-        <div className=" fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 mt-32">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4">Thêm địa chỉ mới</h3>
 
@@ -951,14 +951,14 @@ const PayPage = () => {
             {/* Action Buttons */}
             <div className="flex space-x-4">
               <Link href={`/cart`}>
-                <button className="px-6 py-3 text-black border border-black rounded-lg hover:bg-blue-50">
+                <button className="px-6 py-3 text-amber-500 border border-amber-500 rounded-lg hover:bg-blue-50">
                   Giỏ hàng
                 </button>
               </Link>
 
               <button
                 onClick={(e) => Pay()}
-                className="flex-1 px-6 py-3 bg-amber-400 text-black rounded-lg active:bg-amber-500"
+                className="flex-1 px-6 py-3 bg-amber-400 text-white rounded-lg active:bg-amber-500"
               >
                 Hoàn tất đơn hàng
               </button>
@@ -1009,7 +1009,7 @@ const PayPage = () => {
               </div>
 
               <div className="mb-4">
-                <p className="text-blue-500 cursor-pointer hover:underline mb-3">
+                <p className="text-amber-500 cursor-pointer hover:underline mb-3">
                   <i className="fas fa-plus mr-2"></i>Xem thêm mã giảm giá
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -1017,10 +1017,10 @@ const PayPage = () => {
                     <button
                       key={index}
                       onClick={() => setInputDiscount(option.ma_giam_gia)}
-                      className={`px-3 py-1 border rounded-full text-sm transition-colors ${
+                      className={`px-3 py-1 border border-amber-500 rounded-full text-sm transition-colors ${
                         selectedDiscount === option.value
-                          ? "border-blue-500 text-blue-500 bg-blue-50"
-                          : "border-blue-300 text-blue-600 hover:border-blue-500"
+                          ? "border-amber-500 text-amber-500"
+                          : "border-blue-300 text-amber-600 hover:border-amber-500"
                       }`}
                     >
                       Giảm{" "}

@@ -2,7 +2,8 @@
 import { InputHTMLAttributes, useEffect, useState } from "react";
 import roleInterface from "../components/interface/roleInterface";
 import { useRouter } from "next/navigation";
-import { FaEye, FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
 interface userInterface {
@@ -244,7 +245,7 @@ export default function CustomerManager() {
             onClick={() => setShowForm(true)}
             className="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium"
           >
-            <i className="fas fa-plus mr-2"></i>Thêm khách hàng
+            <FontAwesomeIcon icon={faPlus} />Thêm khách hàng
           </button>
         </div>
       </div>
@@ -260,6 +261,7 @@ export default function CustomerManager() {
                 Họ tên
               </label>
               <input
+              maxLength={255}
                 value={formAddUser.name}
                 type="text"
                 name="name"
@@ -276,6 +278,7 @@ export default function CustomerManager() {
                 Email
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 name="email"
                 type="email"
@@ -292,6 +295,7 @@ export default function CustomerManager() {
                 Số điện thoại
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 type="text"
                 name="phone"
@@ -308,6 +312,7 @@ export default function CustomerManager() {
                 Địa chỉ
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 type="text"
                 name="address"
@@ -326,6 +331,7 @@ export default function CustomerManager() {
                 Mật khẩu
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 name="password"
                 type="password"
@@ -423,6 +429,7 @@ export default function CustomerManager() {
             Tìm kiếm
           </label>
           <input
+          maxLength={255}
             type="text"
             value={search}
             onChange={(e: any) => {
@@ -537,7 +544,7 @@ export default function CustomerManager() {
                         className="text-indigo-600 hover:text-indigo-800"
                         title="Xem chi tiết"
                       >
-                        <FaEye />
+                        <FontAwesomeIcon icon={faEye} />
                       </button>
                     </Link>
 
@@ -545,13 +552,13 @@ export default function CustomerManager() {
                       className="text-yellow-600 hover:text-yellow-800"
                       title="Chỉnh sửa"
                     >
-                      <FaPencilAlt />
+                      <FontAwesomeIcon icon={faPencil} />
                     </button>
                     <button
                       className="text-red-500 hover:text-red-700"
                       title="Xóa"
                     >
-                      <FaTrash />
+                      <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </td>
                 </tr>
@@ -587,7 +594,7 @@ export default function CustomerManager() {
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Trước
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
 
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -608,7 +615,7 @@ export default function CustomerManager() {
                   onClick={() => handlePageChange(pageNum)}
                   className={`px-3 py-1 rounded-md border ${
                     currentPage === pageNum
-                      ? "bg-blue-500 text-white"
+                      ? "bg-indigo-500 text-white"
                       : "bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
@@ -643,7 +650,7 @@ export default function CustomerManager() {
                   : "bg-white text-gray-700 hover:bg-gray-50"
               }`}
             >
-              Sau
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
         </div>

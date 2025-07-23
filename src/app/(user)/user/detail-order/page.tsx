@@ -425,7 +425,7 @@ export default function OrderDetail() {
                                   onClick={() =>
                                     redirectProduct(item.id_san_pham_bien_the,item.id_chi_tiet_don_hang)
                                   }
-                                  className="bg-yellow-300 p-1.5 rounded-xl text-[14px]"
+                                  className="bg-amber-500 p-2 active:bg-amber-600 rounded-xl text-[16px]"
                                 >
                                   Đánh giá
                                 </button>

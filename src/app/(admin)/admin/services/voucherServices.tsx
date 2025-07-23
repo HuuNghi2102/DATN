@@ -18,7 +18,6 @@ export const addVoucher = async (newVoucher: CreateVoucher): Promise<{ success: 
         valueOrder: newVoucher.gia_tri_don_hang,
         dateStart: newVoucher.ngay_bat_dau,
         dateEnd: newVoucher.ngay_het_han,
-        status: newVoucher.trang_thai,
       };
 
       const res = await fetch("https://huunghi.id.vn/api/voucher/addVoucher", {
@@ -109,12 +108,11 @@ export const editVoucher = async (idVoucher: string | number, updatedVoucher: an
 
     const data = await res.json();
 
-    if (res.ok) {
-      return data;
-    } else {
-      // Nếu API trả lỗi chi tiết (thường là lỗi validation)
-      throw data;
-    }
+      if (!res.ok) {
+        return { success: false, errors: data.errors || {} };
+      }
+
+      return { success: true };
   } catch (error: any) {
     console.error("❌ Lỗi khi gọi editVoucher:", error);
     // Trả lỗi ra ngoài để component xử lý tiếp

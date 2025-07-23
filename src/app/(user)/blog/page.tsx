@@ -149,7 +149,7 @@ const MainContent = () => {
           {currentPage > 1 && (
             <button
               onClick={() => handlePageChange(currentPage - 1)}
-              className="px-4 py-2 border text-sm  bg-black text-white"
+              className="px-4 py-2 border text-sm  bg-amber-500 text-white"
             >
               {"<"}
             </button>
@@ -164,7 +164,7 @@ const MainContent = () => {
                   onClick={() => handlePageChange(page)}
                   className={`px-4 py-2 border text-sm  ${
                     currentPage === page
-                      ? "bg-black text-white"
+                      ? "bg-amber-500 text-white"
                       : "bg-white text-black border-gray-300 hover:bg-gray-100"
                   }`}
                 >
@@ -174,16 +174,16 @@ const MainContent = () => {
           )}
           {currentPage < totalPage && (
             <>
-              <button className="px-4 py-2 border text-sm  bg-black text-white">{`...`}</button>
+              <button className="px-4 py-2 border text-sm  bg-amber-500 text-white">{`...`}</button>
               <button
                 onClick={() => handlePageChange(totalPage)}
-                className="px-4 py-2 border text-sm  bg-black text-white"
+                className="px-4 py-2 border text-sm  bg-amber-500 text-white"
               >
                 {totalPage}
               </button>
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
-                className="px-4 py-2 border text-sm  bg-black text-white"
+                className="px-4 py-2 border text-sm  bg-amber-500 text-white"
               >
                 {">"}
               </button>

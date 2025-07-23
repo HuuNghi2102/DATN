@@ -338,7 +338,7 @@ const Home = () => {
                       </div>
                       <a
                         onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
-                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                        className="absolute right-2 bottom-2 w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
                       </a>
@@ -347,9 +347,10 @@ const Home = () => {
                       </div>
                     </div>
                     <div className="px-1 mt-2">
-                      <p className="text-sm">{product.ten_san_pham}</p>
+                      <p className="text-sm line-clamp-2">
+                        {product.ten_san_pham}
+                      </p>
                       <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '} <del className='text-gray-400 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
-
                     </div>
                   </div>
                 </div>
@@ -386,13 +387,15 @@ const Home = () => {
                       </div>
                       <a
                         onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
-                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                        className="absolute right-2 bottom-2  w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
                       </a>
                     </div>
                     <div className="px-1 mt-2">
-                      <p className="text-sm">{product.ten_san_pham}</p>
+                      <p className="text-sm line-clamp-2 h-[40px]">
+                        {product.ten_san_pham}
+                      </p>
                       <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                     </div>
                   </div>
@@ -430,13 +433,15 @@ const Home = () => {
                       </div>
                       <a
                         onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
-                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                        className="absolute right-2 bottom-2  w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
                       </a>
                     </div>
                     <div className="px-1 mt-2">
-                      <p className="text-sm">{product.ten_san_pham}</p>
+                      <p className="text-sm line-clamp-2">
+                        {product.ten_san_pham}
+                      </p>
                       <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                     </div>
                   </div>
@@ -486,14 +491,16 @@ const Home = () => {
                             </div>
                             <a
                               onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
-                              className="absolute right-2 bottom-2 bg-black cursor-pointer w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                              className="absolute right-2 bottom-2  cursor-pointer w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
                             >
                               <FontAwesomeIcon icon={faHeart} />
                             </a>
                           </div>
                           <div className="mt-2 px-1">
-                            <a href="#" className="block font-medium text-sm ">{product.ten_san_pham}</a>
-                            <p className=" font-semibold text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ` VNĐ`}</p>
+                                                  <p className="text-sm line-clamp-2 h-[40px]">
+                        {product.ten_san_pham}
+                      </p>
+                                                  <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                           </div>
                         </div>
                       )
@@ -520,7 +527,7 @@ const Home = () => {
             ))}
           </div>
           <div className="flex justify-center my-4">
-            <button className="w-[100px] h-[35px] border rounded-lg bg-white text-black hover:bg-black hover:text-white transition-colors duration-500 cursor-pointer text-sm">
+            <button className="w-[100px] h-[35px] border rounded-lg bg-amber-400 text-white hover:bg-amber-500 hover:text-white transition-colors duration-500 cursor-pointer text-sm">
               Xem tất cả
             </button>
           </div>

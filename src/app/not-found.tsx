@@ -1,19 +1,32 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const NotFoundPage = () => {
+  const [stars, setStars] = useState<
+    { left: string; top: string; delay: string }[]
+  >([]);
+
+  useEffect(() => {
+    const generatedStars = Array.from({ length: 100 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 3}s`,
+    }));
+    setStars(generatedStars);
+  }, []);
+
   return (
     <div className="min-h-screen bg-black relative overflow-hidden pt-[12%]">
       {/* Animated Stars */}
       <div className="absolute inset-0">
-        {[...Array(100)].map((_, i) => (
+        {stars.map((star, i) => (
           <div
             key={i}
             className="absolute w-1 h-1 bg-white rounded-full opacity-70"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
+              left: star.left,
+              top: star.top,
+              animationDelay: star.delay,
             }}
           />
         ))}
@@ -88,7 +101,7 @@ const NotFoundPage = () => {
               className="group px-8 py-4 bg-amber-400 border-2 text-black font-semibold rounded-full hover:from-cyan-600 hover:to-amber-500 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               <i className="fas fa-home mr-2"></i>
-              Return to Earth
+              Trở lại!
             </button>
           </div>
         </div>

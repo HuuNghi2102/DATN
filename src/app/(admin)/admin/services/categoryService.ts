@@ -60,15 +60,16 @@ export const addCategories = async(NewCate: CreatedCategory) =>{
         const data = await res.json();
 
         if(!res.ok){
-            console.log('Lỗi',data.status);
-            return { errors: data.errors };
-        }else{
-            return data;
+            console.log('Lỗi không thêm được',data.status);
+            return { success: false, errors: data.errors || {} };
+
         }
+        return { success: true };
     }    
     } catch (error) {
         console.log("lỗi rồi",error);
-        return null;
+            return { success: false, errors: { general: ["Lỗi kết nối server"] } };
+
         
     }
 }
@@ -132,26 +133,17 @@ export const editCategories = async (slugCate: string | number, updatedCate: any
       body: JSON.stringify(mappedCate),
     });
 
-    const text = await res.text();
+    const data = await res.json();
 
-    // ⚠ Nếu response là HTML (lỗi), thì không parse JSON
-    if (!res.ok) {
-      console.error("❌ Server trả lỗi HTML:", text);
-      throw new Error(`Server error ${res.status}`);
-    }
+      if (!res.ok) {
+        return { success: false, errors: data.errors || {} };
+      }
 
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (err) {
-      console.error("❌ Lỗi parse JSON (có thể là HTML):", text);
-      throw new Error("Server trả về không phải JSON");
-    }
-
-    return data;
+      return { success: true };
   } catch (error: any) {
-    console.error("❌ Lỗi khi gọi editCategories:", error);
-    return null;
+    console.error("❌ Lỗi khi gọi editCate:", error);
+    // Trả lỗi ra ngoài để component xử lý tiếp
+    throw error;
   }
 };
 export const hiddenCate = async (slug: number | string) => {

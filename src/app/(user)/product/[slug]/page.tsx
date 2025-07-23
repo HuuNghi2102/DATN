@@ -148,7 +148,7 @@ const ProductPageDetail = () => {
     duong_dan: product?.duong_dan,
     id_san_pham_bien_the: productVariant?.id_san_pham_bien_the,
   });
-
+  const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const [formAddEvalue, setFormAddEvalue] = useState({
     content: "",
     point: 5,
@@ -481,7 +481,7 @@ const ProductPageDetail = () => {
     prevArrow: <PrevArrow />,
     responsive: [
       { breakpoint: 1280, settings: { slidesToShow: 4 } },
-      { breakpoint: 768, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
       { breakpoint: 480, settings: { slidesToShow: 2 } },
     ],
   };
@@ -541,9 +541,9 @@ const ProductPageDetail = () => {
     );
   }
   return (
-    <div className="min-h-screen bg-gray-50 pt-[12%]">
+    <div className=" bg-gray-50 lg:pt-[180px] max-sm:pt-[120px] px-3">
       {/* Header */}
-      <div className="bg-white shadow-sm py-4 pl-28">
+      <div className="bg-white shadow-sm py-4 pl-28 max-sm:pl-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-1 text-sm text-gray-600">
             <span>Trang chủ /</span>
@@ -657,13 +657,13 @@ const ProductPageDetail = () => {
               </div>
             </div>
             {/* Promo Codes */}
-            {/* <div>
+            <div>
                             <p className="text-sm text-gray-600 mb-3">Mã giảm giá bạn có thể sử dụng:</p>
                             <div className="flex flex-wrap gap-2">
                                 {voucher.map((voucher, index) => (
                                     <button
                                         key={index}
-                                        className="relative bg-black text-white px-4 py-1 rounded text-sm font-medium hover:bg-gray-800 transition-colors">
+                                        className="relative bg-amber-500  text-white px-4 py-1 rounded text-sm font-medium hover:bg-amber-600 transition-colors">
                                         {voucher.ma_giam_gia}
                                         <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] '>
                                         </div>
@@ -672,7 +672,7 @@ const ProductPageDetail = () => {
                                     </button>
                                 ))}
                             </div>
-                        </div> */}
+                        </div>
 
             {/* Color Selection */}
             {colors.length > 1 && (
@@ -802,7 +802,7 @@ const ProductPageDetail = () => {
                           : quantity + 1
                       );
                     }}
-                    className="px-3 py-2 hover:bg-gray-100"
+                    className="px-6 py-3 hover:bg-gray-100"
                   >
                     +
                   </button>
@@ -811,7 +811,7 @@ const ProductPageDetail = () => {
                   onClick={() => {
                     addToCart(true);
                   }}
-                  className="flex-1 bg-amber-400  text-white py-3 px-6 rounded font-medium hover:bg-amber-500 transition-colors"
+                  className=" bg-amber-500  text-white py-3 px-6 rounded font-medium hover:bg-amber-600 transition-colors"
                 >
                   THÊM VÀO GIỎ
                 </button>
@@ -819,7 +819,7 @@ const ProductPageDetail = () => {
                   onClick={() => {
                     addToCart(false);
                   }}
-                  className=" bg-white border-2 border-black text-black py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors"
+                  className=" bg-white border-2 border-amber-400 text-amber-500 py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors"
                 >
                   MUA NGAY
                 </button>
@@ -1197,21 +1197,18 @@ const ProductPageDetail = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <Link
-                        href={`/product/${product.duong_dan}`}
-                        className="relative"
-                      >
-                        <img
-                          src={`https://huunghi.id.vn/storage/products/${product.images[0].link_anh}`}
-                          alt="product"
-                          className="w-full"
-                        />
-                        <img
-                          src={`https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`}
-                          alt="product"
-                          className="w-full absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        />
-                      </Link>
+                            <Link href={`/product/${product.duong_dan}`} className="relative block">
+                              <img
+                                src={hoveredProduct === product.id_san_pham
+                                  ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                                  : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                                }
+                                alt="product"
+                                className="w-full transition-all duration-300"
+                                onMouseEnter={() => setHoveredProduct(product.id_san_pham)}
+                                onMouseLeave={() => setHoveredProduct(null)}
+                              />
+                            </Link>
                       <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                         <FontAwesomeIcon
                           icon={faSearch}
@@ -1228,16 +1225,14 @@ const ProductPageDetail = () => {
                             product.id_san_pham
                           )
                         }
-                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                        className="absolute right-2 bottom-2  w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
                       >
                         <FontAwesomeIcon icon={faHeart} />
                       </a>
                     </div>
                     <div className="px-1 mt-2">
-                      <p className="text-sm">{product.ten_san_pham}</p>
-                      <strong className="text-sm">
-                        {product.gia_da_giam.toLocaleString("vi-VN")}đ
-                      </strong>
+                      <p className="text-sm ">{product.ten_san_pham}</p>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                     </div>
                   </div>
                 </div>

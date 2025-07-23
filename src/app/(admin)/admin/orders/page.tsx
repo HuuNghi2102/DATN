@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faTrash, faPencil, faPlus, faCheck, faClock, faEyeSlash, faChevronRight, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import orderInterface from "../components/interface/orderInterface";
 import Link from "next/link";
 
@@ -497,6 +499,7 @@ const OrderManager = () => {
                 }}
               >
                 <input
+                  maxLength={255}
                   type="text"
                   placeholder="Tìm kiếm đơn hàng DH123"
                   value={searchQuery}
@@ -551,7 +554,7 @@ const OrderManager = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Tên khách hàng
                 </label>
-                <input
+                <input maxLength={255}
                   type="text"
                   placeholder="Nhập tên khách hàng"
                   value={newOrder.customer}
@@ -567,6 +570,7 @@ const OrderManager = () => {
                   Số điện thoại
                 </label>
                 <input
+                  maxLength={255}
                   type="text"
                   placeholder="Nhập số điện thoại"
                   value={newOrder.phone}
@@ -596,6 +600,7 @@ const OrderManager = () => {
                   Tổng tiền
                 </label>
                 <input
+                  maxLength={255}
                   type="text"
                   placeholder="Vd: 1.250.000đ"
                   value={newOrder.total}
@@ -637,11 +642,10 @@ const OrderManager = () => {
                       setActiveTab(tab.codeStatus);
                       setCurrentPage(1);
                     }}
-                    className={`flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors min-w-fit mx-0.5 ${
-                      activeTab === tab.codeStatus
+                    className={`flex-1 flex items-center justify-center px-3 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition-colors min-w-fit mx-0.5 ${activeTab === tab.codeStatus
                         ? "bg-indigo-600 text-white shadow-md"
                         : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
-                    }`}
+                      }`}
                   >
                     {/* Khi không active - chỉ hiện icon + số lượng */}
                     {activeTab !== tab.codeStatus && (
@@ -835,25 +839,24 @@ const OrderManager = () => {
                                 action.action === "print"
                                   ? handlePrint(order.id_don_hang)
                                   : updateStatus(
-                                      order.id_don_hang,
-                                      action.codeNextStatus != undefined
-                                        ? action.codeNextStatus
-                                        : ""
-                                    )
+                                    order.id_don_hang,
+                                    action.codeNextStatus != undefined
+                                      ? action.codeNextStatus
+                                      : ""
+                                  )
                               }
-                              className={`p-2 rounded-full ${
-                                action.color === "green"
+                              className={`p-2 rounded-full ${action.color === "green"
                                   ? "text-green-600 hover:bg-green-50"
                                   : action.color === "red"
-                                  ? "text-red-600 hover:bg-red-50"
-                                  : action.color === "blue"
-                                  ? "text-blue-600 hover:bg-blue-50"
-                                  : action.color === "purple"
-                                  ? "text-purple-600 hover:bg-purple-50"
-                                  : action.color === "pink"
-                                  ? "text-pink-600 hover:bg-pink-50"
-                                  : "text-gray-600 hover:bg-gray-50"
-                              } transition-colors`}
+                                    ? "text-red-600 hover:bg-red-50"
+                                    : action.color === "blue"
+                                      ? "text-blue-600 hover:bg-blue-50"
+                                      : action.color === "purple"
+                                        ? "text-purple-600 hover:bg-purple-50"
+                                        : action.color === "pink"
+                                          ? "text-pink-600 hover:bg-pink-50"
+                                          : "text-gray-600 hover:bg-gray-50"
+                                } transition-colors`}
                               title={action.title}
                             >
                               <i className={`fas fa-${action.icon}`}></i>
@@ -937,13 +940,12 @@ const OrderManager = () => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === 1
+              className={`px-3 py-1 rounded-md border ${currentPage === 1
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                   : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+                }`}
             >
-              Trước
+              <FontAwesomeIcon icon={faChevronLeft} />
             </button>
 
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -962,11 +964,10 @@ const OrderManager = () => {
                 <button
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 rounded-md border ${
-                    currentPage === pageNum
-                      ? "bg-blue-500 text-white"
+                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum
+                      ? "bg-indigo-500 text-white"
                       : "bg-white text-gray-700 hover:bg-gray-50"
-                  }`}
+                    }`}
                 >
                   {pageNum}
                 </button>
@@ -980,11 +981,10 @@ const OrderManager = () => {
             {totalPages > 5 && currentPage < totalPages - 2 && (
               <button
                 onClick={() => handlePageChange(totalPages)}
-                className={`px-3 py-1 rounded-md border ${
-                  currentPage === totalPages
+                className={`px-3 py-1 rounded-md border ${currentPage === totalPages
                     ? "bg-blue-500 text-white"
                     : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 {totalPages}
               </button>
@@ -993,13 +993,12 @@ const OrderManager = () => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === totalPages
+              className={`px-3 py-1 rounded-md border ${currentPage === totalPages
                   ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                   : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+                }`}
             >
-              Sau
+              <FontAwesomeIcon icon={faChevronRight} />
             </button>
           </div>
         </div>
