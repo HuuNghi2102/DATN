@@ -109,7 +109,7 @@ export default function InventoryManager({
       `https://huunghi.id.vn/api/productVariant/deleteProductVariant/${idVariant}`,
       {
         method: "DELETE",
-        headers: {
+        headers: {  
           "Content-Type": "application/json",
           Authorization: `${typeToken} ${accessToken}`,
         },

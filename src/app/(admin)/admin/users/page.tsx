@@ -261,6 +261,7 @@ export default function CustomerManager() {
                 Họ tên
               </label>
               <input
+              maxLength={255}
                 value={formAddUser.name}
                 type="text"
                 name="name"
@@ -277,6 +278,7 @@ export default function CustomerManager() {
                 Email
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 name="email"
                 type="email"
@@ -293,6 +295,7 @@ export default function CustomerManager() {
                 Số điện thoại
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 type="text"
                 name="phone"
@@ -309,6 +312,7 @@ export default function CustomerManager() {
                 Địa chỉ
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 type="text"
                 name="address"
@@ -327,6 +331,7 @@ export default function CustomerManager() {
                 Mật khẩu
               </label>
               <input
+              maxLength={255}
                 onChange={handleChangeInput}
                 name="password"
                 type="password"
@@ -424,6 +429,7 @@ export default function CustomerManager() {
             Tìm kiếm
           </label>
           <input
+          maxLength={255}
             type="text"
             value={search}
             onChange={(e: any) => {

@@ -1,9 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faTrash, faPencil, faRepeat, faSearch,faChevronRight,faChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import { addVoucher, deleteVoucher, editVoucher } from "../services/voucherServices";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPlus,
+  faTrash,
+  faPencil,
+  faRepeat,
+  faSearch,
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  addVoucher,
+  deleteVoucher,
+  editVoucher,
+} from "../services/voucherServices";
 import interfaceVoucher from "../types/voucher";
 import { CreateVoucher } from "../types/voucher";
 import { changeStatusVoucher } from "../services/voucherServices";
@@ -42,7 +54,6 @@ export default function VoucherManager() {
       if (accessToken && typeToken) {
         const parseaccessToken = JSON.parse(accessToken);
         const parsetypeToken = JSON.parse(typeToken);
-
         const res = await fetch(`https://huunghi.id.vn/api/voucher/listVoucher?page=${currentPage}&search=${search}&type=${type}&status=${getstatus}`, {
           method: "GET",
           headers: {
@@ -85,6 +96,7 @@ export default function VoucherManager() {
       try {
         const data = await getAPIVouchers();
         setVouchers(data);
+        console.log(data);
         setIsLoading(false);
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu voucher:", error);
@@ -504,6 +516,7 @@ export default function VoucherManager() {
                     "Đơn tối thiểu",
                     "Ngày bắt đầu",
                     "Ngày kết thúc",
+                    "Lượt dùng",
                     "Trạng thái",
                     "Thao tác",
                   ].map((h) => (
@@ -518,10 +531,17 @@ export default function VoucherManager() {
               </thead>
               <tbody>
                 {vouchers.map((voucher, i) => (
-                  <tr key={i} className="border-b last:border-none hover:bg-gray-50">
-                    <td className="p-4 font-semibold whitespace-nowrap">{voucher.ma_giam_gia}</td>
+                  <tr
+                    key={i}
+                    className="border-b last:border-none hover:bg-gray-50"
+                  >
+                    <td className="p-4 font-semibold whitespace-nowrap">
+                      {voucher.ma_giam_gia}
+                    </td>
                     <td className="p-4 whitespace-nowrap">
-                      {voucher.loai_giam_gia === "phan_tram" ? "Phần trăm" : "Số tiền"}
+                      {voucher.loai_giam_gia === "phan_tram"
+                        ? "Phần trăm"
+                        : "Số tiền"}
                     </td>
                     <td className="p-4 whitespace-nowrap">
                       {voucher.loai_giam_gia === "phan_tram"
@@ -543,12 +563,17 @@ export default function VoucherManager() {
                         "vi-VN"
                       )}
                     </td>
+                    <td>{voucher.order_count}</td>
                     <td className="p-4">
                       <button
                         onClick={async () => {
-                          const confirmChange = confirm("Bạn có chắc chắn muốn đổi trạng thái voucher này?");
+                          const confirmChange = confirm(
+                            "Bạn có chắc chắn muốn đổi trạng thái voucher này?"
+                          );
                           if (!confirmChange) return;
-                          const success = await changeStatusVoucher(voucher.id_ma_giam_gia);
+                          const success = await changeStatusVoucher(
+                            voucher.id_ma_giam_gia
+                          );
                           if (!success) {
                             alert("❌ Đổi trạng thái thất bại");
                           } else {
@@ -560,11 +585,18 @@ export default function VoucherManager() {
                         className=" rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
                         title="Đổi trạng thái"
                       >
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${Number(voucher.trang_thai) === 1 ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}>
-                          {Number(voucher.trang_thai) === 1 ? "Đang hoạt động" : "Dừng hoạt động"}
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            Number(voucher.trang_thai) === 1
+                              ? "bg-green-500 text-white"
+                              : "bg-red-500 text-white"
+                          }`}
+                        >
+                          {Number(voucher.trang_thai) === 1
+                            ? "Đang hoạt động"
+                            : "Dừng hoạt động"}
                         </span>
                       </button>
-
                     </td>
                     <td className="p-4 flex gap-2">
                       <button
@@ -593,7 +625,6 @@ export default function VoucherManager() {
                         <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
@@ -604,15 +635,29 @@ export default function VoucherManager() {
         <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
           {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
           <div className="text-sm text-gray-600">
-            Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '}
-            <span className="font-medium">{Math.min(currentPage * perPage, vouchers.length + (currentPage - 1) * perPage)}</span>{' '}
-            trong tổng số <span className="font-medium">{vouchers.length}</span> voucher
+            Hiển thị{" "}
+            <span className="font-medium">
+              {(currentPage - 1) * perPage + 1}
+            </span>{" "}
+            đến{" "}
+            <span className="font-medium">
+              {Math.min(
+                currentPage * perPage,
+                vouchers.length + (currentPage - 1) * perPage
+              )}
+            </span>{" "}
+            trong tổng số <span className="font-medium">{vouchers.length}</span>{" "}
+            voucher
           </div>
           <div className="flex space-x-2">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`px-3 py-1 rounded-md border ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`px-3 py-1 rounded-md border ${
+                currentPage === 1
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
             >
               <FontAwesomeIcon icon={faChevronLeft} />
             </button>
@@ -656,7 +701,11 @@ export default function VoucherManager() {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`px-3 py-1 rounded-md border ${
+                currentPage === totalPages
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
             >
               <FontAwesomeIcon icon={faChevronRight} />
             </button>

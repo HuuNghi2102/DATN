@@ -194,6 +194,7 @@ const CategoryPage = () => {
                 Tên danh mục
               </label>
               <input
+              maxLength={255}
                 type="text"
                 id="name"
                 value={formData.name}
@@ -210,6 +211,7 @@ const CategoryPage = () => {
                 Đường dẫn
               </label>
               <input
+              maxLength={255}
                 type="text"
                 id="slug"
                 value={formData.slug}

@@ -646,6 +646,57 @@ const OrderDetailPage = () => {
               )}
             </div>
           </div>
+          {voucher && (
+            <div className="bg-white rounded shadow p-4">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                Mã giảm giá
+              </h2>
+              <div className="space-y-2 text-sm text-gray-700">
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">Mã:</span>
+                  <span className="font-semibold text-indigo-600">
+                    {voucher.ma_giam_gia}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">
+                    Giá trị giảm:
+                  </span>
+                  <span className="text-red-500 font-semibold">
+                    {voucher.gia_tri_giam.toLocaleString("vi-VN")}₫
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">
+                    Điều kiện áp dụng:
+                  </span>
+                  <span>
+                    {voucher.gia_tri_don_hang
+                      ? "Đơn hàng trên " +
+                        voucher.gia_tri_don_hang.toLocaleString("vi-VN") +
+                        " đ"
+                      : "Không có"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">
+                    Ngày bắt đầu:
+                  </span>
+                  <span>
+                    {new Date(voucher.ngay_bat_dau).toLocaleDateString("vi-VN")}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">
+                    Ngày hết hạn:
+                  </span>
+                  <span>
+                    {new Date(voucher.ngay_het_han).toLocaleDateString("vi-VN")}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

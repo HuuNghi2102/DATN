@@ -175,7 +175,7 @@ export default function AdminPostManagement() {
                     <form className="space-y-4" onSubmit={handleSubmit}>
                         <div>
                             <label className="block text-sm font-medium mb-1">Tiêu đề bài viết</label>
-                            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nhập tiêu đề bài viết" className="w-full border px-3 py-2 rounded" />
+                            <input maxLength={255} type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nhập tiêu đề bài viết" className="w-full border px-3 py-2 rounded" />
                         </div>
 
                         <div>
@@ -184,7 +184,7 @@ export default function AdminPostManagement() {
                                 <span className="px-3 py-2 bg-gray-100 border border-r-0 rounded-l text-sm text-gray-500">
                                     https://example.com/
                                 </span>
-                                <input type="text" value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full border px-3 py-2 rounded-r" placeholder="duong-dan-bai-viet" />
+                                <input maxLength={255} type="text" value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full border px-3 py-2 rounded-r" placeholder="duong-dan-bai-viet" />
                             </div>
                         </div>
 

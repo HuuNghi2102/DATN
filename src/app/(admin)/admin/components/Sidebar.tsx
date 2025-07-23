@@ -1,13 +1,13 @@
 'use client'
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import userInterface from './interface/userInterface';
 import React, { useEffect, useState } from 'react';
 import {
   FaTachometerAlt, FaBoxOpen, FaTags, FaUsers,
-  FaShoppingBag, FaStar, FaImage, FaTicketAlt,
-  FaBlog, FaPodcast, FaUsersCog, FaBars, FaSignOutAlt
+  FaShoppingBag, FaChartPie, FaCog, FaBars, FaStar, FaComment, FaImage, FaTicketAlt, FaUsersCog, FaCircle, FaBlog,FaPodcast
 } from 'react-icons/fa';
+import { FaSignOutAlt } from 'react-icons/fa';
 import { toast } from "react-toastify";
 
 interface SidebarProps {
@@ -33,31 +33,38 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { icon: <FaBlog />, label: 'Bài viết', slug: '/admin/article' },
     { icon: <FaPodcast />, label: 'Chấp nhận bài viết', slug: '/admin/acceptPost' },
     { icon: <FaUsersCog />, label: 'Tài khoản', slug: '/admin/userinfo' },
-  ];
+  ]
 
   const sideBarShipper = [
     { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin' },
     { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/shipper/' },
-  ];
+  ]
 
   const sideBarBlogger = [
+    // { icon: <FaTachometerAlt />, label: 'Dashboard', slug: '/admin' },
+    // { icon: <FaBoxOpen />, label: 'Sản phẩm', slug: '/admin/products' },
+    // { icon: <FaTags />, label: 'Danh mục', slug: '/admin/categoryproduct' },
     { icon: <FaBlog />, label: 'Bài viết', slug: '/admin/blogger' },
     { icon: <FaUsersCog />, label: 'Tài khoản', slug: '/admin/userinfo' },
-  ];
+    // { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/users' },
+    // { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders/' },
+  ]
 
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const [selectedSideBar, setSelectedSideBar] = useState<sideBar[]>([]);
   const [getUser, setgetUser] = useState<userInterface>();
-
   const defaultData = async () => {
+
     const accessTokenLocal = localStorage.getItem('accessToken');
     const typeTokenLocal = localStorage.getItem('typeToken');
     const userLocal = localStorage.getItem('user');
 
     if (accessTokenLocal && typeTokenLocal && userLocal) {
       const user = JSON.parse(userLocal);
+
       if (user.id_vai_tro == 1 || user.id_vai_tro == 3 || user.id_vai_tro == 4) {
+
         if (user.id_vai_tro == 1) {
           setSelectedSideBar(sideBarAdmin);
         } else if (user.id_vai_tro == 3) {
@@ -66,10 +73,10 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           setSelectedSideBar(sideBarBlogger);
         }
       } else {
-        router.push('/user/userprofile');
+        router.push("/user/userprofile");
       }
     } else {
-      router.push('/login');
+      router.push("/login");
     }
   };
 
@@ -84,9 +91,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         const response = await fetch("https://huunghi.id.vn/api/user/logout", {
           method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `${parsetypeToken} ${parseaccessToken}`,
-          }
+            "Content-Type": "application/json",
+            Authorization: `${parsetypeToken} ${parseaccessToken}`,
+          },
         });
         if (response.ok) {
           localStorage.removeItem("user");
@@ -95,14 +102,19 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           localStorage.removeItem("cart");
           router.push("/login");
         } else {
-          toast.error('Không thể đăng xuất');
+          toast.error("Không thể đăng xuất");
         }
       }
     } catch (error) {
-      console.log('Lỗi: ', error);
+      console.log("Lỗi: ", error);
     }
   };
 
+  useEffect(() => {
+    defaultData();
+  }, [])
+
+  console.log(selectedSideBar);
   const userFetch = () => {
     try {
       const getUser = localStorage.getItem("user");
@@ -112,13 +124,11 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
+  }
   useEffect(() => {
     defaultData();
     userFetch();
-  }, []);
-
+  }, [])
   return (
     <>
       {/* Nút mở sidebar (chỉ mobile) */}
@@ -143,18 +153,21 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 p-6 z-40
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          md:translate-x-0 md:block
-          overflow-y-auto
+          md:translate-x-0  md:block 
           ${className}
         `}
       >
         <div className="brand flex items-center mb-8 pb-4 border-b border-gray-200">
-          <div className="brand-logo w-9 h-9 bg-indigo-500 text-white rounded flex items-center justify-center mr-3 font-semibold">P</div>
-          <div className="brand-name text-lg font-semibold text-gray-900">Premium Admin</div>
+          <div className="brand-logo w-9 h-9 bg-indigo-500 text-white rounded flex items-center justify-center mr-3 font-semibold">
+            P
+          </div>
+          <div className="brand-name text-lg font-semibold text-gray-900">
+            Premium Admin
+          </div>
         </div>
 
         <nav className="nav flex-1">
-          {selectedSideBar.map((item, index) => (
+          {selectedSideBar && selectedSideBar.map((item, index) => (
             <Link
               key={index}
               href={item.slug}
@@ -163,6 +176,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               <div className="mr-3 w-5 text-center">{item.icon}</div>
               <span>{item.label}</span>
             </Link>
+
           ))}
           <button
             onClick={handleLogout}
@@ -175,26 +189,24 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         {/* Hồ sơ người dùng */}
         <div className="user-profile mt-auto pt-4 border-t border-black flex items-center">
           <div className="user-avatar w-9 h-9 rounded-full bg-black mr-3 overflow-hidden">
-            <img
-              src={`https://huunghi.id.vn/storage/avatars/${getUser?.anh_dai_dien_user}`}
-              alt=""
-              className="w-full h-full object-cover"
-            />
+            <img src={`https://huunghi.id.vn/storage/avatars/${getUser?.anh_dai_dien_user}`} alt="" />
           </div>
           <Link href={`/admin/userinfo`}>
             <div className="user-info">
               <h4 className="text-sm font-medium mb-0.5">{getUser?.ten_user}</h4>
-              <p className="text-xs text-gray-500">
-                Xin chào, {
-                  getUser?.id_vai_tro === 1 ? "Admin" :
-                    getUser?.id_vai_tro === 3 ? "Shipper" :
-                      getUser?.id_vai_tro === 4 ? "Blogger" : "Quản trị viên"
-                }
-              </p>
+              <p className="text-xs text-gray-500">Xin chào,{getUser?.id_vai_tro === 1 ? "Admin" : getUser?.id_vai_tro===3?"Shipper": getUser?.id_vai_tro===4?"Blogger":"Quản trị viên"}</p>
             </div>
           </Link>
         </div>
       </aside>
+
+      {/* Overlay on Mobile */}
+      {isOpen && (
+        <div
+          className=""
+          onClick={() => setIsOpen(false)}
+        />
+      )}
     </>
   );
 };

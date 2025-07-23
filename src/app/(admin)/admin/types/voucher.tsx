@@ -9,6 +9,7 @@ export default interface interfaceVoucher {
   trang_thai: number;
   created_at: string;
   updated_at: string;
+  order_count: number | null;
   deleted_at?: string | null;
 }
 export interface CreateVoucher {

@@ -13,7 +13,7 @@ const statusOrderOfShipper = [
   { status: "Đơn hàng chờ nhận", codeStatus: "cho_lay_hang" },
   { status: "Đang giao", codeStatus: "dang_giao" },
   { status: "Đang hoàn hàng", codeStatus: "hoan_hang" },
-  { status: "Giao thành công", codeStatus: "giao_thanh_cong" },
+  { status: "Thành công", codeStatus: "giao_thanh_cong" },
   { status: "Giao thất bại", codeStatus: "da_huy" },
 ];
 
@@ -126,7 +126,7 @@ const OrderManagement = () => {
       case "hoan_hang":
         return `Hoàn hàng`;
       case "giao_thanh_cong":
-        return `Giao thành công`;
+        return `Thành công`;
       case "da_huy":
         return `Đã hủy`;
       default:
@@ -222,12 +222,12 @@ const OrderManagement = () => {
             <p className="text-sm text-gray-500">Danh sách đơn hàng cần giao</p>
           </div>
           <div className="flex gap-3 mt-4 md:mt-0">
-            <button className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-100 flex items-center">
-              <FontAwesomeIcon className="mr-2" icon={faFilter} /> Lọc
+            {/* <button className="px-4 py-2 text-sm border border-gray-300 rounded hover:bg-gray-100 flex items-center">
+              <FaFilter className="mr-2" /> Lọc
             </button>
             <button className="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center">
-              <FontAwesomeIcon className="mr-2" icon={faSyncAlt} /> Làm mới
-            </button>
+              <FaSyncAlt className="mr-2" /> Làm mới
+            </button> */}
           </div>
         </div>
 
@@ -292,11 +292,20 @@ const OrderManagement = () => {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`inline-block text-white px-3 bg-green-500 py-1 rounded-full text-xs font-medium ${order.trang_thai_don_hang}`}
+                          className={`inline-block px-2 py-1 rounded-full text-xs font-medium text-white ${
+                            order.trang_thai_don_hang === "da_huy"
+                              ? "bg-red-500"
+                              : order.trang_thai_don_hang === "giao_thanh_cong"
+                              ? "bg-green-600"
+                              : order.trang_thai_don_hang === "cho_lay_hang"
+                              ? "bg-yellow-500"
+                              : "bg-green-500"
+                          }`}
                         >
                           {returStatus(order.trang_thai_don_hang)}
                         </span>
                       </td>
+
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 flex-nowrap flex-row ">
                           <Link
@@ -306,19 +315,32 @@ const OrderManagement = () => {
                               <FontAwesomeIcon icon={faEye} />
                             </button>
                           </Link>
-                          <button
-                            onClick={() =>
-                              positionMap(order.dia_chi_nguoi_nhan)
-                            }
-                            className="p-2 border rounded hover:bg-gray-100"
-                          >
-                            <FontAwesomeIcon icon={faMapMarkerAlt} />
-                          </button>
-                          <Link href={`tel:${order.so_dien_thoai_nguoi_nhan}`}>
-                            <button className="p-2 border rounded hover:bg-gray-100">
-                              <FontAwesomeIcon icon={faPhone} />
-                            </button>
-                          </Link>
+
+
+                          {/* Ẩn Map & Phone nếu đã giao, đã hủy hoặc chờ lấy hàng */}
+                          {![
+                            "giao_thanh_cong",
+                            "da_huy",
+                            "cho_lay_hang",
+                          ].includes(order.trang_thai_don_hang) && (
+                            <>
+                              <button
+                                onClick={() =>
+                                  positionMap(order.dia_chi_nguoi_nhan)
+                                }
+                                className="p-2 border rounded hover:bg-gray-100"
+                              >
+                                <FontAwesomeIcon icon={faMapMarkerAlt} />
+                              </button>
+                              <Link
+                                href={`tel:${order.so_dien_thoai_nguoi_nhan}`}
+                              >
+                                <button className="p-2 border rounded hover:bg-gray-100">
+                                  <FontAwesomeIcon icon={faPhone} />
+                                </button>
+                              </Link>
+                            </>
+                          )}
                           {nextSatatusOrder(order.trang_thai_don_hang).map(
                             (e, i) => (
                               <button
