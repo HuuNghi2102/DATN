@@ -154,15 +154,15 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           md:translate-x-0  md:block 
-          ${className}
+          ${className || ''}
         `}
       >
         <div className="brand flex items-center mb-8 pb-4 border-b border-gray-200">
           <div className="brand-logo w-9 h-9 bg-indigo-500 text-white rounded flex items-center justify-center mr-3 font-semibold">
-            P
+            V
           </div>
           <div className="brand-name text-lg font-semibold text-gray-900">
-            Premium Admin
+            VerveStyle Admin
           </div>
         </div>
 

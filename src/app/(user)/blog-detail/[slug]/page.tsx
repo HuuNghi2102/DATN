@@ -522,7 +522,7 @@ className="text-xs"
                   onClick={() => handleStorePageChange(page)}
                   className={`px-3 py-1 border text-sm rounded ${
                     storePage === page
-                      ? "bg-black text-white"
+                      ? "bg-amber-500 text-white"
                       : "bg-white text-black border-gray-300 hover:bg-gray-100"
                   }`}
                 >

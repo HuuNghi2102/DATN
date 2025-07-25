@@ -328,7 +328,7 @@ const clearViewedProducts = () => {
                                                     </div>
                                                     <a
                                                         onClick={()=> addWhistList(product.ten_san_pham,product.anh_san_pham,product.gia_san_pham,product.duong_dan,product.id_san_pham)}
-                                                        className="absolute right-2 bottom-2 bg-black w-7 h-7 rounded-full flex justify-center items-center text-white text-sm hover:bg-white hover:text-red-500"
+                                                        className="absolute right-2 bottom-2 bg-gray-100 w-7 h-7 rounded-full flex justify-center items-center text-red-500 text-sm "
                                                     >
                                                         <FontAwesomeIcon icon={faHeart} />
                                                     </a>

@@ -290,7 +290,7 @@ const Header = () => {
                     style={{ cursor: "pointer" }}
                     onClick={handleToggleUserDropdown}
                   >
-                    Hi, {currentUser.ten_user}
+                    Hi, {currentUser.ten_user.slice(0,5)+'...'}
                   </span>
                   {currentUser && showUserDropdown && (
                     <div className={styles.dropdown}>
@@ -422,15 +422,18 @@ const Header = () => {
             ✕
           </button>
         </div>
-
         <div className={styles["mobile-search-container"]}>
-          <form className={styles["mobile-search-form"]}>
+          <form 
+          onSubmit={(e: any) => e.preventDefault()}
+          className={styles["mobile-search-form"]}>
             <input
+            onChange={(e: any) => setInputSearch(e.target.value)}
               type="text"
               className={styles["search-input"]}
               placeholder="Bạn đang tìm gì..."
             />
             <button
+              onClick={() => router.push(`/search?q=${inputSeach}`)}
               type="submit"
               className={styles["search-button"]}
               style={{ fontSize: "23px" }}

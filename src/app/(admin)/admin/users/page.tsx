@@ -538,16 +538,16 @@ export default function CustomerManager() {
                       {checkRole(cus.id_vai_tro)}
                     </span>
                   </td>
-                  <td className="px-4 py-3 flex gap-2">
+                  <td className="px-4 py-4 border-b border-gray-200">
                     <Link href={`/admin/users/detail-user/${cus.id_user}`}>
                       <button
-                        className="text-indigo-600 hover:text-indigo-800"
+                        className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-gray-600 text-gray-600"
                         title="Xem chi tiết"
                       >
                         <FontAwesomeIcon icon={faEye} />
                       </button>
                     </Link>
-
+{/* 
                     <button
                       className="text-yellow-600 hover:text-yellow-800"
                       title="Chỉnh sửa"
@@ -559,7 +559,7 @@ export default function CustomerManager() {
                       title="Xóa"
                     >
                       <FontAwesomeIcon icon={faTrash} />
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}

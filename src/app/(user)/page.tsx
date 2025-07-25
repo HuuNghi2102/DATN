@@ -313,7 +313,7 @@ const Home = () => {
         </div>
         {/* Product Sections */}
         <div className="my-4">
-          {/* BestSalerProducts */}
+          {/* ProductNews */}
           <div>
             <img src="../assets/images/yptvddzi.jpg" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
@@ -357,12 +357,14 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
+                                <Link href={'/collection/new'}>
               <button className="rounded-lg  bg-amber-400 text-white font-semibold h-10 px-5 hover:bg-amber-500 hover:text-white transition-all duration-500 text-sm sm:text-base">
-                Xem tất cả
+                  Xem tất cả
               </button>
+                </Link>
             </div>
           </div>
-          {/* NewProducts */}
+          {/* ProductSaler */}
           <div>
             <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
@@ -403,9 +405,11 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
+                <Link href={'/collection/'}>
               <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 font-semibold transition-all duration-500 text-sm sm:text-base">
-                Xem tất cả
+                  Xem tất cả
               </button>
+                </Link>
             </div>
           </div>
           {/* ProductSaler */}
@@ -449,9 +453,11 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
+                <Link href={'/collection/bestsellers'}>
               <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 transition-all duration-500 font-semibold text-sm sm:text-base">
-                Xem tất cả
+                  Xem tất cả
               </button>
+                </Link>
             </div>
           </div>
         </div>
@@ -459,7 +465,7 @@ const Home = () => {
         <div className="my-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {productsCate.map((category, index) => (
-              category.products.length > 0 && (
+              category.products.length >= 3 && (
                 <div key={index} className="bg-white rounded-[10px] shadow-md p-4">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>

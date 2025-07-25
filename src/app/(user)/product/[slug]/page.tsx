@@ -663,7 +663,7 @@ const ProductPageDetail = () => {
                                 {voucher.map((voucher, index) => (
                                     <button
                                         key={index}
-                                        className="relative bg-amber-500  text-white px-4 py-1 rounded text-sm font-medium hover:bg-amber-600 transition-colors">
+                                        className="relative bg-amber-400  text-white px-4 py-1 rounded text-sm font-medium hover:bg-amber-600 transition-colors">
                                         {voucher.ma_giam_gia}
                                         <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] '>
                                         </div>
@@ -776,7 +776,7 @@ const ProductPageDetail = () => {
                         Math.max(1, quantity - 1)
                       );
                     }}
-                    className="px-3 py-2 hover:bg-gray-100"
+                    className="px-6 py-3 hover:bg-gray-100"
                   >
                     {" "}
                     -
@@ -811,7 +811,7 @@ const ProductPageDetail = () => {
                   onClick={() => {
                     addToCart(true);
                   }}
-                  className=" bg-amber-500  text-white py-3 px-6 rounded font-medium hover:bg-amber-600 transition-colors"
+                  className=" bg-amber-400  text-white py-3 px-6 rounded font-medium hover:bg-amber-600 transition-colors"
                 >
                   THÊM VÀO GIỎ
                 </button>
@@ -819,7 +819,7 @@ const ProductPageDetail = () => {
                   onClick={() => {
                     addToCart(false);
                   }}
-                  className=" bg-white border-2 border-amber-400 text-amber-500 py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors"
+                  className=" bg-white border-2 border-amber-400 text-amber-400 py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors"
                 >
                   MUA NGAY
                 </button>

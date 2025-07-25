@@ -563,7 +563,7 @@ export default function VoucherManager() {
                         "vi-VN"
                       )}
                     </td>
-                    <td>{voucher.order_count}</td>
+                    <td className="p-4 whitespace-nowrap text-center">{voucher.order_count}</td>
                     <td className="p-4">
                       <button
                         onClick={async () => {

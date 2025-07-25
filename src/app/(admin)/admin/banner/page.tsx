@@ -332,7 +332,7 @@ const BannerManagerPage = () => {
                 <td className="p-3 space-x-2">
                   <button
                     onClick={() => handleDelete(banner.id)}
-                    className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                    className="w-8 h-8 border border-gray-300  flex items-center justify-center   text-red-500 text-xs rounded hover:border-red-600"
                     title="Xóa"
                   >
                     <i className="fas fa-trash"></i>

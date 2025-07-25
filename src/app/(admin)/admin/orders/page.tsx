@@ -740,7 +740,7 @@ const OrderManager = () => {
           </div>
         </div>
         {/* Orders Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+        <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200 mt-2">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -845,7 +845,7 @@ const OrderManager = () => {
                                       : ""
                                   )
                               }
-                              className={`p-2 rounded-full ${action.color === "green"
+                              className={`w-8 h-8 border border-gray-300 rounded flex items-center justify-center ${action.color === "green"
                                   ? "text-green-600 hover:bg-green-50"
                                   : action.color === "red"
                                     ? "text-red-600 hover:bg-red-50"
@@ -867,7 +867,7 @@ const OrderManager = () => {
                           >
                             <button
                               // onClick={() => setSelectedOrder(order)}
-                              className="p-2 rounded-full text-indigo-600 hover:bg-indigo-50 transition-colors"
+                              className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center text-indigo-600 hover:bg-indigo-50 transition-colors"
                               title="Xem chi tiết"
                             >
                               <i className="fas fa-eye"></i>

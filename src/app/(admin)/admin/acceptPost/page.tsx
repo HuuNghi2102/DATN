@@ -82,7 +82,7 @@ const PendingPostsPage = () => {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold">Danh sách bài viết chờ duyệt</h2>
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{posts.length} bài viết hiển thị</span>
+          <span className="inline-block px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{posts.filter(post => Number(post.trang_thai) === 0).length} bài viết cần duyệt</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -94,7 +94,7 @@ const PendingPostsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {posts.map((post, idx) => (
+              {posts.filter(post => Number(post.trang_thai) === 0).map((post, idx) => (
                 <tr key={idx} className="hover:bg-gray-50">
                   <td className="px-4 py-4 border-b border-gray-200">{post.id_bai_viet}</td>
                   <td className="px-4 py-4 border-b border-gray-200">

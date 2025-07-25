@@ -35,7 +35,7 @@ export default function AllProductPage() {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
   const NextArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
-      className="absolute top-1/2 text-white text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+      className="absolute top-1/2 text-black hover:text-amber-500 text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
       onClick={onClick}
     >
       <FontAwesomeIcon icon={faChevronRight} />
@@ -44,7 +44,7 @@ export default function AllProductPage() {
 
   const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
     <div
-      className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+      className="absolute top-1/2 text-black hover:text-amber-500 text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
       onClick={onClick}
     >
       <FontAwesomeIcon icon={faChevronLeft} />
@@ -319,9 +319,7 @@ export default function AllProductPage() {
                 <p className="text-sm line-clamp- h-[40px]">
                         {product.ten_san_pham}
                       </p>
-                <strong className="text-sm text-red-500">
-                  {product.gia_da_giam.toLocaleString("vi-VN") + " VNĐ"}
-                </strong>
+                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
               </div>
             </div>
           </div>
@@ -333,7 +331,7 @@ export default function AllProductPage() {
         {currentPage > 1 && (
           <button
             onClick={() => setCurrentPage(currentPage - 1)}
-            className={`px-3 py-1 border text-sm rounded bg-black text-white `}
+            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
           >
             {"<"}
           </button>

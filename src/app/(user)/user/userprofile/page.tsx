@@ -178,7 +178,7 @@ export default function UserProfile() {
         <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600">
             <span>
-              <Link href="/" className="hover:text-blue-600">
+              <Link href="/" className="hover:text-amber-500">
                 Trang chủ
               </Link>
             </span>{" "}
@@ -238,7 +238,7 @@ export default function UserProfile() {
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="px-4 py-2 bg-black text-white rounded-lg font-medium hover:bg-amber-500 transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-edit"></i>
                     <span>Chỉnh sửa</span>
@@ -291,7 +291,7 @@ export default function UserProfile() {
                 {isEditing && (
                   <button
                     onClick={triggerFileInput}
-                    className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                    className="mt-2 text-sm text-blue-600 hover:text-amber-500"
                   >
                     Thay đổi ảnh đại diện
                   </button>
@@ -365,7 +365,7 @@ export default function UserProfile() {
                     <button
                       onClick={updateUserProfile}
                       disabled={isLoading}
-                      className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+                      className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-amber-500 transition-colors flex items-center gap-2"
                     >
                       {isLoading ? (
                         <>
@@ -439,7 +439,7 @@ export default function UserProfile() {
                 {!isEditing && (
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="px-3 py-1 bg-black text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors"
+                    className="px-3 py-1 bg-black text-white rounded-lg font-medium text-sm hover:bg-amber-500 transition-colors"
                   >
                     <i className="fas fa-edit mr-1"></i>
                     <span>Chỉnh sửa</span>
@@ -490,7 +490,7 @@ export default function UserProfile() {
                 {isEditing && (
                   <button
                     onClick={triggerFileInput}
-                    className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                    className="mt-2 text-sm text-blue-600 hover:text-amber-800"
                   >
                     Thay đổi ảnh đại diện
                   </button>
@@ -562,7 +562,7 @@ export default function UserProfile() {
                     <button
                       onClick={updateUserProfile}
                       disabled={isLoading}
-                      className="px-4 py-2 bg-black text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors flex items-center gap-1"
+                      className="px-4 py-2 bg-black text-white rounded-lg font-medium text-sm hover:bg-amber-700 transition-colors flex items-center gap-1"
                     >
                       {isLoading ? (
                         <>
