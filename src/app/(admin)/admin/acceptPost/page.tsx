@@ -114,9 +114,6 @@ const PendingPostsPage = () => {
             Danh sách bài viết đang chờ phê duyệt
           </p>
         </div>
-        <button className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-100">
-          <FontAwesomeIcon icon={faClock} /> Bài viết chờ xác nhận
-        </button>
       </header>
 
       <div className="bg-white rounded-lg shadow overflow-hidden">

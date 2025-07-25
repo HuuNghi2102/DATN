@@ -459,7 +459,7 @@ const Home = () => {
         <div className="my-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {productsCate.map((category, index) => (
-              category.products.length > 0 && (
+              category.products.length >= 3 && (
                 <div key={index} className="bg-white rounded-[10px] shadow-md p-4">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">{category.ten_loai}</h3>

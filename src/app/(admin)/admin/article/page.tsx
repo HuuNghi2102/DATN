@@ -7,7 +7,9 @@ import {
   faTrash,
   faPencil,
   faPlus,
-  faChevronRight,faChevronLeft
+  faChevronRight,
+  faChevronLeft,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import articleInterface from "../types/article";
 import {
@@ -32,6 +34,7 @@ export default function AdminPostManagement() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(20);
+  const [totalAwaitPost, setTotalAwaitPost] = useState(0);
   // State cho bộ lọc (đã cập nhật)
   const [titleFilter, setTitleFilter] = useState("");
   // const [contentFilter, setContentFilter] = useState("");
@@ -46,7 +49,7 @@ export default function AdminPostManagement() {
   const editorRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string | "">("");
-  const [getstatus, setgetStatus] = useState<number | "">("");
+  const [getstatus, setgetStatus] = useState<string | "">("");
   const [date, setDate] = useState<string | "">("");
   const getAPIArticle = async (): Promise<articleInterface[]> => {
     try {
@@ -55,11 +58,13 @@ export default function AdminPostManagement() {
       if (accessToken && typeToken) {
         const parseaccessToken = JSON.parse(accessToken);
         const parsetypeToken = JSON.parse(typeToken);
-        const res = await fetch(`https://huunghi.id.vn/api/post/indexAdmin?page=${currentPage}&search=${search}&status=${getstatus}&date=${date}`, {
-          method: "GET",
-          headers: {
-            "Authorization": `${parsetypeToken} ${parseaccessToken}`,
-            "Content-Type": "application/json",
+        const res = await fetch(
+          `https://huunghi.id.vn/api/post/indexAdmin?page=${currentPage}&search=${search}&status=${getstatus}&date=${date}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `${parsetypeToken} ${parseaccessToken}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -69,6 +74,8 @@ export default function AdminPostManagement() {
         }
         const data = await res.json();
         const article = data?.data?.posts?.data;
+        setTotalAwaitPost(data?.data?.total);
+        console.log(article);
         return article;
       }
       return [];
@@ -185,7 +192,7 @@ export default function AdminPostManagement() {
 
   useEffect(() => {
     refreshPosts();
-  }, [search, getstatus,date]);
+  }, [search, getstatus, date]);
 
   const handleDelete = async (slugArticle: string | number) => {
     const getdeleteArticle = await deleteArticle(slugArticle);
@@ -202,8 +209,7 @@ export default function AdminPostManagement() {
     }
   };
 
-
-    if (isLoading) {
+  if (isLoading) {
     return (
       <div
         id="loading-screen"
@@ -233,20 +239,36 @@ export default function AdminPostManagement() {
             Tạo mới và quản lý các bài viết trên website
           </p>
         </div>
-        <button
-          className="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium"
-          onClick={() => {
-            setShowForm(true);
-            setSelectedPost(null);
-            setTitle("");
-            setSlug("");
-            setImageFile(null);
-            setStatus(false);
-            editorRef.current?.setContent("");
-          }}
-        >
-          <FontAwesomeIcon icon={faPlus} /> Thêm mới
-        </button>
+        <div className="flex gap-3">
+          <button
+            className="px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium"
+            onClick={() => {
+              setShowForm(true);
+              setSelectedPost(null);
+              setTitle("");
+              setSlug("");
+              setImageFile(null);
+              setStatus(false);
+              editorRef.current?.setContent("");
+            }}
+          >
+            <FontAwesomeIcon icon={faPlus} /> Thêm mới
+          </button>
+          <button
+            onClick={() => setgetStatus("khong_hoat_dong")}
+            className="relative inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded text-sm font-medium"
+          >
+            <FontAwesomeIcon icon={faClock} />
+            <span className="ml-2">Bài viết chờ xác nhận</span>
+
+            {/* Badge góc phải trên cùng */}
+            {totalAwaitPost > 0 && (
+              <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5">
+                {totalAwaitPost}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
       {showForm && (
@@ -260,7 +282,7 @@ export default function AdminPostManagement() {
                 Tiêu đề bài viết
               </label>
               <input
-              maxLength={255}
+                maxLength={255}
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -268,7 +290,9 @@ export default function AdminPostManagement() {
                 className="w-full border px-3 py-2 rounded"
               />
               {errorMessages.title && (
-                <p className="text-red-500 text-sm mt-1">{errorMessages.title}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.title}
+                </p>
               )}
             </div>
 
@@ -281,7 +305,7 @@ export default function AdminPostManagement() {
                   https://example.com/
                 </span>
                 <input
-                maxLength={255}
+                  maxLength={255}
                   type="text"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
@@ -290,7 +314,9 @@ export default function AdminPostManagement() {
                 />
               </div>
               {errorMessages.slug && (
-                <p className="text-red-500 text-sm mt-1">{errorMessages.slug}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.slug}
+                </p>
               )}
             </div>
 
@@ -353,7 +379,9 @@ export default function AdminPostManagement() {
                 }}
               />
               {errorMessages.content && (
-                <p className="text-red-500 text-sm mt-1">{errorMessages.content}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.content}
+                </p>
               )}
             </div>
 
@@ -376,7 +404,9 @@ export default function AdminPostManagement() {
                 </div>
               )}
               {errorMessages.image && (
-                <p className="text-red-500 text-sm mt-1">{errorMessages.image}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.image}
+                </p>
               )}
             </div>
 
@@ -408,7 +438,7 @@ export default function AdminPostManagement() {
           <div className="col-span-1 md:col-span-1">
             <label className="block text-sm font-medium mb-1">Từ khóa</label>
             <input
-            maxLength={255}
+              maxLength={255}
               type="text"
               value={search}
               onChange={(e: any) => {
@@ -476,18 +506,17 @@ export default function AdminPostManagement() {
                     alt="Bài viết"
                     className="w-10 h-10 rounded object-cover"
                   />
-                  <span className="line-clamp-2 w-[250px]">{post.ten_bai_viet}</span>
+                  <span className="line-clamp-2 w-[250px]">
+                    {post.ten_bai_viet}
+                  </span>
                 </td>
                 <td className="px-4 py-3 text-gray-700 w-[250px]">
-                  <div className="line-clamp-2">
-                    {post.duong_dan}
-                  </div>
-
+                  <div className="line-clamp-2">{post.duong_dan}</div>
                 </td>
                 <td className="px-4 py-3 text-gray-700">
                   <div
                     dangerouslySetInnerHTML={{
-                      __html: post.noi_dung_bai_viet.slice(0, 30) + '...',
+                      __html: post.noi_dung_bai_viet.slice(0, 30) + "...",
                     }}
                   />
                 </td>
@@ -606,7 +635,11 @@ export default function AdminPostManagement() {
               <button
                 key={pageNum}
                 onClick={() => handlePageChange(pageNum)}
-                className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                className={`px-3 py-1 rounded-md border ${
+                  currentPage === pageNum
+                    ? "bg-indigo-500 text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                }`}
               >
                 {pageNum}
               </button>
@@ -620,7 +653,11 @@ export default function AdminPostManagement() {
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <button
               onClick={() => handlePageChange(totalPages)}
-              className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              className={`px-3 py-1 rounded-md border ${
+                currentPage === totalPages
+                  ? "bg-indigo-500 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-50"
+              }`}
             >
               {totalPages}
             </button>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL Architecture Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            background: white;
+            padding: 60px;
+        }
+        
+        .component {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        /* Desktop - left */
+        .desktop {
+            left: 80px;
+            top: 120px;
+        }
+        
+        .desktop-icon {
+            width: 100px;
+            height: 70px;
+            background: #1e90ff;
+            border-radius: 8px;
+            position: relative;
+            border: 3px solid #1e90ff;
+        }
+        
+        .desktop-icon::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 6px;
+            background: #1e90ff;
+            border-radius: 3px;
+        }
+        
+        /* Server - center */
+        .server {
+            left: 350px;
+            top: 80px;
+        }
+        
+        .server-icon {
+            width: 80px;
+            height: 120px;
+            background: #1e90ff;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        
+        .server-slot {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 2px;
+        }
+        
+        .server-light {
+            position: absolute;
+            right: 8px;
+            top: 15px;
+            width: 6px;
+            height: 6px;
+            background: #00ff00;
+            border-radius: 50%;
+        }
+        
+        /* MySQL Database - top right */
+        .database {
+            right: 80px;
+            top: 40px;
+        }
+        
+        .database-icon {
+            width: 80px;
+            height: 80px;
+            background: #ff6b35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .mysql-logo {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .database-label {
+            margin-top: 10px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        /* Mobile/Tablet - bottom right */
+        .mobile {
+            right: 120px;
+            bottom: 80px;
+        }
+        
+        .mobile-icon {
+            width: 50px;
+            height: 80px;
+            background: #1e90ff;
+            border-radius: 12px;
+            position: relative;
+            border: 2px solid #1e90ff;
+        }
+        
+        .mobile-screen {
+            position: absolute;
+            top: 8px;
+            left: 6px;
+            width: 36px;
+            height: 50px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 4px;
+        }
+        
+        .mobile-button {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+        }
+        
+        .tablet-icon {
+            width: 60px;
+            height: 45px;
+            background: #1e90ff;
+            border-radius: 8px;
+            position: relative;
+            margin-left: 20px;
+            border: 2px solid #1e90ff;
+        }
+        
+        .tablet-screen {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 50px;
+            height: 35px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 4px;
+        }
+        
+        /* Connection Lines */
+        .connection-line {
+            position: absolute;
+            background: #999;
+            z-index: 1;
+        }
+        
+        .line-1 {
+            left: 180px;
+            top: 153px;
+            width: 170px;
+            height: 2px;
+        }
+        
+        .line-2 {
+            left: 430px;
+            top: 120px;
+            width: 140px;
+            height: 2px;
+            transform: rotate(-15deg);
+            transform-origin: left center;
+        }
+        
+        .line-3 {
+            left: 430px;
+            top: 200px;
+            width: 120px;
+            height: 2px;
+            transform: rotate(25deg);
+            transform-origin: left center;
+        }
+        
+        /* Arrow heads */
+        .arrow-head {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        .arrow-head-right {
+            border-left: 8px solid #999;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .arrow-head-1 {
+            left: 342px;
+            top: 149px;
+        }
+        
+        .arrow-head-2 {
+            right: 88px;
+            top: 102px;
+            transform: rotate(-15deg);
+        }
+        
+        .arrow-head-3 {
+            right: 128px;
+            bottom: 105px;
+            transform: rotate(25deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Desktop -->
+        <div class="component desktop">
+            <div class="desktop-icon"></div>
+        </div>
+        
+        <!-- Server -->
+        <div class="component server">
+            <div class="server-icon">
+                <div class="server-slot"></div>
+                <div class="server-slot"></div>
+                <div class="server-slot"></div>
+                <div class="server-slot"></div>
+                <div class="server-slot"></div>
+                <div class="server-light"></div>
+            </div>
+        </div>
+        
+        <!-- MySQL Database -->
+        <div class="component database">
+            <div class="database-icon">
+                <div class="mysql-logo">🐬</div>
+            </div>
+            <div class="database-label">MySQL</div>
+        </div>
+        
+        <!-- Mobile devices -->
+        <div class="component mobile">
+            <div style="display: flex; align-items: flex-end;">
+                <div class="mobile-icon">
+                    <div class="mobile-screen"></div>
+                    <div class="mobile-button"></div>
+                </div>
+                <div class="tablet-icon">
+                    <div class="tablet-screen"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Connection Lines -->
+        <div class="connection-line line-1"></div>
+        <div class="connection-line line-2"></div>
+        <div class="connection-line line-3"></div>
+        
+        <!-- Arrow Heads -->
+        <div class="arrow-head arrow-head-right arrow-head-1"></div>
+        <div class="arrow-head arrow-head-right arrow-head-2"></div>
+        <div class="arrow-head arrow-head-right arrow-head-3"></div>
+    </div>
+</body>
+</html>

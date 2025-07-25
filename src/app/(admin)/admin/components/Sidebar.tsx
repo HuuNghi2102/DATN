@@ -45,16 +45,16 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     { icon: <FaImage />, label: "Banner", slug: "/admin/banner" },
     { icon: <FaTicketAlt />, label: "Voucher", slug: "/admin/voucher" },
     { icon: <FaBlog />, label: "Bài viết", slug: "/admin/article" },
-    {
-      icon: <FaPodcast />,
-      label: "Chấp nhận bài viết",
-      slug: "/admin/acceptPost",
-    },
+    // {
+    //   icon: <FaPodcast />,
+    //   label: "Chấp nhận bài viết",
+    //   slug: "/admin/acceptPost",
+    // },
     { icon: <FaUsersCog />, label: "Tài khoản", slug: "/admin/userinfo" },
   ];
 
   const sideBarShipper = [
-    { icon: <FaTachometerAlt />, label: "Dashboard", slug: "/admin" },
+    // { icon: <FaTachometerAlt />, label: "Dashboard", slug: "/admin" },
     { icon: <FaShoppingBag />, label: "Đơn hàng", slug: "/admin/shipper/" },
   ];
 
@@ -63,7 +63,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     // { icon: <FaBoxOpen />, label: 'Sản phẩm', slug: '/admin/products' },
     // { icon: <FaTags />, label: 'Danh mục', slug: '/admin/categoryproduct' },
     { icon: <FaBlog />, label: "Bài viết", slug: "/admin/blogger" },
-    { icon: <FaUsersCog />, label: "Tài khoản", slug: "/admin/userinfo" },
+    // { icon: <FaUsersCog />, label: "Tài khoản", slug: "/admin/userinfo" },
     // { icon: <FaUsers />, label: 'Khách hàng', slug: '/admin/users' },
     // { icon: <FaShoppingBag />, label: 'Đơn hàng', slug: '/admin/orders/' },
   ];
@@ -200,7 +200,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
             ))}
           <button
             onClick={handleLogout}
-            className="nav-item flex items-center px-3 py-2 rounded text-red-700 mb-1 hover:bg-indigo-500 hover:text-white transition-colors"
+            className="w-full nav-item flex items-center px-3 py-2 rounded text-red-700 mb-1 hover:bg-indigo-500 hover:text-white transition-colors"
           >
             <FaSignOutAlt className="mr-3 w-5 text-center" /> Đăng xuất
           </button>
