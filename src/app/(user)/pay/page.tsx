@@ -1,7 +1,7 @@
 "use client";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React, { useEffect, useState } from "react";
+import React, { HTMLAttributes, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaDotCircle } from "react-icons/fa";
@@ -24,6 +24,12 @@ const PayPage = () => {
     province: "",
     district: "",
     ward: "",
+  });
+
+  const [errorsFormAddress, setErrorsFormAddress] = useState({
+    name: "",
+    phone: "",
+    address: "",
   });
 
   const [selectedProvince, setSelectedProvince] = useState<number>();
@@ -62,11 +68,16 @@ const PayPage = () => {
     name: "",
     phone: "",
     address: "",
-    isDefault: false,
+    isDefault: 0,
   });
+
+  const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { type, name } = e.target;
+  };
 
   // Thêm hàm thêm địa chỉ mới
   const addNewAddress = async () => {
+    console.log("ok");
     try {
       const accessTokenLocal = localStorage.getItem("accessToken");
       const typeTokenLocal = localStorage.getItem("typeToken");
@@ -85,18 +96,28 @@ const PayPage = () => {
           )}`,
         },
         body: JSON.stringify({
-          ten_nguoi_nhan: newAddress.name,
-          so_dien_thoai_nguoi_nhan: newAddress.phone,
-          dia_chi_nguoi_nhan: newAddress.address,
-          mac_dinh: newAddress.isDefault ? 1 : 0,
+          name: newAddress.name,
+          phone: newAddress.phone,
+          address: newAddress.address,
+          default: newAddress.isDefault,
         }),
       });
 
       const result = await res.json();
       if (res.ok) {
+        if (result.errors) {
+          const errors = result.errors;
+          setErrorsFormAddress({
+            name: errors.name ? errors.name[0] : "",
+            phone: errors.phone ? errors.phone[0] : "",
+            address: errors.address ? errors.address[0] : "",
+          });
+          return;
+        }
+
         toast.success("Thêm địa chỉ thành công");
         setShowAddressModal(false);
-        setNewAddress({ name: "", phone: "", address: "", isDefault: false });
+        setNewAddress({ name: "", phone: "", address: "", isDefault: 0 });
         // Cập nhật lại danh sách địa chỉ
         const responseAddress = await fetch(
           "https://huunghi.id.vn/api/address/listAddress",
@@ -240,13 +261,14 @@ const PayPage = () => {
     const addressDefault = resultAddress.data.address.find(
       (a: any, i: number) => a.mac_dinh == 1
     );
+    console.log(addressDefault);
     if (addressDefault) {
-      setOrderInfo({
-        ...orderInfo,
-        name: addressDefault?.ten_nguoi_nhan,
-        phone: addressDefault?.so_dien_thoai_nguoi_nhan,
-        address: addressDefault?.dia_chi_nguoi_nhan,
-      });
+      setOrderInfo((prev) => ({
+        ...prev,
+        name: addressDefault.ten_nguoi_nhan,
+        phone: addressDefault.so_dien_thoai_nguoi_nhan,
+        address: addressDefault.dia_chi_nguoi_nhan,
+      }));
     }
 
     // Lấy danh sách tỉnh/thành phố
@@ -538,6 +560,11 @@ const PayPage = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Nhập họ và tên"
                 />
+                {errorsFormAddress.name && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errorsFormAddress.name}*
+                  </p>
+                )}
               </div>
 
               <div>
@@ -553,6 +580,11 @@ const PayPage = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Nhập số điện thoại"
                 />
+                {errorsFormAddress.phone && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errorsFormAddress.phone}*
+                  </p>
+                )}
               </div>
 
               <div>
@@ -568,19 +600,25 @@ const PayPage = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                   placeholder="Nhập địa chỉ"
                 />
+                {errorsFormAddress.address && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errorsFormAddress.address}*
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center">
                 <input
                   type="checkbox"
                   id="defaultAddress"
-                  checked={newAddress.isDefault}
-                  onChange={(e) =>
+                  value={1}
+                  onChange={(e: any) => {
+                    const { checked } = e.target;
                     setNewAddress({
                       ...newAddress,
-                      isDefault: e.target.checked,
-                    })
-                  }
+                      isDefault: checked ? 1 : 0,
+                    });
+                  }}
                   className="mr-2"
                 />
                 <label
@@ -594,7 +632,10 @@ const PayPage = () => {
 
             <div className="flex justify-end space-x-3 mt-6">
               <button
-                onClick={() => setShowAddressModal(false)}
+                onClick={() => {
+                  setShowAddressModal(false);
+                  setErrorsFormAddress({ name: "", phone: "", address: "" });
+                }}
                 className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
               >
                 Hủy

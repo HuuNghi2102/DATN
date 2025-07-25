@@ -435,10 +435,6 @@ const Dashboard = () => {
               <option value="week">Tuần này</option>
               <option value="month">Tháng này</option>
             </select>
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-indigo-700 flex items-center">
-              <span className="mr-2">Xuất báo cáo</span>
-              <i className="fas fa-download"></i>
-            </button>
           </div>
         </div>
 
@@ -532,9 +528,12 @@ const Dashboard = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Sản phẩm bán chạy</h2>
-              <a href="#" className="text-sm text-indigo-600 hover:underline">
+              <Link
+                href="/admin/products?type=ban_chay"
+                className="text-sm text-indigo-600 hover:underline"
+              >
                 Xem tất cả
-              </a>
+              </Link>
             </div>
             <div className="space-y-4">
               {productBestSeller?.map(
@@ -585,9 +584,12 @@ const Dashboard = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Sản phẩm bán chậm</h2>
-              <a href="#" className="text-sm text-indigo-600 hover:underline">
+              <Link
+                href="/admin/products?type=ban_cham"
+                className="text-sm text-indigo-600 hover:underline"
+              >
                 Xem tất cả
-              </a>
+              </Link>
             </div>
             <div className="space-y-4">
               {productBestSellerAsc?.map(
@@ -641,9 +643,6 @@ const Dashboard = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Mã giảm giá sắp hết hạn</h2>
-              <button className="text-sm bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700">
-                + Thêm mã
-              </button>
             </div>
             <div className="space-y-3">
               {listVoucher.map((coupon, index) => (
@@ -696,18 +695,34 @@ const Dashboard = () => {
             <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
               <div className="text-center">
                 <div className="text-3xl font-bold text-amber-500">
-                  {pointStart
-                    ? Number(
-                        pointStart.one * 1 +
-                          pointStart.two * 2 +
-                          pointStart.three * 3 +
-                          pointStart.four * 4 +
-                          pointStart.five * 5
-                      ) / pointStart.all
-                    : 0}
+                  {Math.round(
+                    pointStart
+                      ? Number(
+                          pointStart.one * 1 +
+                            pointStart.two * 2 +
+                            pointStart.three * 3 +
+                            pointStart.four * 4 +
+                            pointStart.five * 5
+                        ) / pointStart.all
+                      : 0
+                  )}
                 </div>
                 <div className="flex justify-center">
-                  {[...Array(5)].map((_, i) => (
+                  {[
+                    ...Array(
+                      Math.round(
+                        pointStart
+                          ? Number(
+                              pointStart.one * 1 +
+                                pointStart.two * 2 +
+                                pointStart.three * 3 +
+                                pointStart.four * 4 +
+                                pointStart.five * 5
+                            ) / pointStart.all
+                          : 0
+                      )
+                    ),
+                  ].map((_, i) => (
                     <svg
                       key={i}
                       className="w-5 h-5 text-amber-400"

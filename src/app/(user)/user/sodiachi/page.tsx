@@ -14,11 +14,14 @@ export default function AccountPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [addresses, setAddresses] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [accessToken, setAccessToken] = useState<string>("");
+  const [typeToken, setTypeToken] = useState<string>("");
   const [addressForm, setAddressForm] = useState({
     id_dia_chi_giao_hang: null,
     ten_nguoi_nhan: "",
     so_dien_thoai_nguoi_nhan: "",
     dia_chi_nguoi_nhan: "",
+    mac_dinh: 0,
   });
 
   const [errorFormAddress, setErrFormAddress] = useState({
@@ -39,6 +42,8 @@ export default function AccountPage() {
     const accessTokenLocal = localStorage.getItem("accessToken");
     const typeTokenLocal = localStorage.getItem("typeToken");
     if (u && accessTokenLocal && typeTokenLocal) {
+      setTypeToken(JSON.parse(typeTokenLocal));
+      setAccessToken(JSON.parse(accessTokenLocal));
       setUser(JSON.parse(u));
       const fetchAddress = async () => {
         const res = await fetch(
@@ -61,22 +66,38 @@ export default function AccountPage() {
     }
   }, []);
 
-  const handleSetDefault = (id: number) => {
-    setAddresses((prev) =>
-      prev.map((addr) => ({
-        ...addr,
-        isDefault: addr.id_dia_chi_giao_hang === id,
-      }))
+  const handleSetDefault = async (id: number) => {
+    console.log(typeToken);
+    console.log(accessToken);
+    const res = await fetch(
+      `https://huunghi.id.vn/api/address/changeDefautAddress/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${typeToken} ${accessToken}`,
+        },
+      }
     );
-    setSelectedAddressId(id);
-    toast.success("Đã đặt làm địa chỉ mặc định!");
+    if (res.ok) {
+      toast.success("Đã đặt làm địa chỉ mặc định!");
+      setAddresses((prev) =>
+        prev.map((address) =>
+          address.id_dia_chi_giao_hang == id
+            ? { ...address, mac_dinh: 1 }
+            : { ...address, mac_dinh: 0 }
+        )
+      );
+    } else {
+      toast.error("Đặt làm địa chỉ mặc định không thành công!");
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setAddressForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? (checked ? value : 0) : value,
     }));
   };
 
@@ -86,6 +107,7 @@ export default function AccountPage() {
       ten_nguoi_nhan: address.ten_nguoi_nhan,
       so_dien_thoai_nguoi_nhan: address.so_dien_thoai_nguoi_nhan,
       dia_chi_nguoi_nhan: address.dia_chi_nguoi_nhan,
+      mac_dinh: address.mac_dinh,
     });
     setIsEditing(true);
     setShowAddressForm(true);
@@ -97,6 +119,7 @@ export default function AccountPage() {
       ten_nguoi_nhan: "",
       so_dien_thoai_nguoi_nhan: "",
       dia_chi_nguoi_nhan: "",
+      mac_dinh: 0,
     });
     setIsEditing(false);
     setShowAddressForm(true);
@@ -205,6 +228,7 @@ export default function AccountPage() {
                 name: addressForm.ten_nguoi_nhan,
                 address: addressForm.dia_chi_nguoi_nhan,
                 phone: addressForm.so_dien_thoai_nguoi_nhan,
+                default: addressForm.mac_dinh,
               }),
             }
           );
@@ -247,6 +271,7 @@ export default function AccountPage() {
             ten_nguoi_nhan: "",
             so_dien_thoai_nguoi_nhan: "",
             dia_chi_nguoi_nhan: "",
+            mac_dinh: 0,
           });
           setIsEditing(false);
           toast.success(
@@ -386,9 +411,7 @@ export default function AccountPage() {
                       <input
                         type="radio"
                         name="address"
-                        checked={
-                          selectedAddressId === address.id_dia_chi_giao_hang
-                        }
+                        checked={1 === address.mac_dinh}
                         onChange={() =>
                           handleSetDefault(address.id_dia_chi_giao_hang)
                         }
@@ -426,7 +449,7 @@ export default function AccountPage() {
                         </p>
                       )}
 
-                      {address.isDefault && (
+                      {address.mac_dinh == 1 && (
                         <span className="inline-block bg-black text-white px-3 py-1 rounded-full text-sm">
                           mặc định
                         </span>
@@ -507,18 +530,20 @@ export default function AccountPage() {
                         {errorFormAddress.dia_chi_nguoi_nhan}*
                       </p>
                     )}
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="isDefault"
-                        // checked={addressForm.isDefault}
-                        onChange={handleInputChange}
-                        className="w-4 h-4 accent-black"
-                      />
-                      <label className="ml-2 text-sm text-gray-700">
-                        Đặt làm địa chỉ mặc định
-                      </label>
-                    </div>
+                    {!isEditing && (
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="mac_dinh"
+                          value={1}
+                          onChange={handleInputChange}
+                          className="w-4 h-4 accent-black"
+                        />
+                        <label className="ml-2 text-sm text-gray-700">
+                          Đặt làm địa chỉ mặc định
+                        </label>
+                      </div>
+                    )}
                     <div className="pt-2">
                       <button
                         type="submit"
@@ -546,6 +571,7 @@ export default function AccountPage() {
         </div>
       </div>
       <ToastContainer position="top-center" autoClose={3000} />
+      {addressForm.mac_dinh}
     </div>
   );
 }

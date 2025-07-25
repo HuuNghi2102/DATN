@@ -5,7 +5,17 @@ import Image from "next/image";
 import "@/app/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faTrash,
+  faPencil,
+  faPlus,
+  faCheck,
+  faClock,
+  faEyeSlash,
+  faChevronRight,
+  faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import detailOrderInterface from "../components/interface/detailOrderInterface";
 import userInterface from "../components/interface/userInterface";
 import productInterface from "../components/interface/productInterface";
@@ -86,6 +96,7 @@ const ReviewManagerPage = () => {
       setCurrentPage(result.data.evaluates.current_page);
       setPerPage(result.data.evaluates.per_page);
       setReviews(rawData);
+      console.log(rawData);
 
       const resProduct = await fetch(
         `https://huunghi.id.vn/api/product/getAllProduct`,

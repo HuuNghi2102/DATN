@@ -272,10 +272,6 @@ const AccountSettingsPage = () => {
               Quản lý thông tin cá nhân và cài đặt tài khoản
             </p>
           </div>
-          <button className="mt-4 md:mt-0 flex items-center px-4 py-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">
-            <i className="fas fa-history mr-2 text-gray-400"></i>
-            Lịch sử hoạt động
-          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

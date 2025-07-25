@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faClock as faClockRegular } from "@fortawesome/free-regular-svg-icons";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 const IntegratedPage = () => {
   const useParam = useParams();
@@ -91,7 +92,7 @@ const IntegratedPage = () => {
     {
       id: 2,
       name: "ĐẮK LẮK - BUÔN MA THUỘT",
-address: "14 Phan Chu Trinh, Thắng Lợi, Buôn Ma Thuột, Đắk Lắk, Vietnam",
+      address: "14 Phan Chu Trinh, Thắng Lợi, Buôn Ma Thuột, Đắk Lắk, Vietnam",
       hours: "8:30 - 22:00",
       phone: "02871008789",
       image:
@@ -181,7 +182,7 @@ address: "14 Phan Chu Trinh, Thắng Lợi, Buôn Ma Thuột, Đắk Lắk, Viet
     {
       id: 11,
       name: "HỒ CHÍ MINH - TRẦN HƯNG ĐẠO",
-address: "391/37/5 Trần Hưng Đạo, Phường Cầu Kho, Quận 1, TP.HCM",
+      address: "391/37/5 Trần Hưng Đạo, Phường Cầu Kho, Quận 1, TP.HCM",
       hours: "8:30 - 22:00",
       phone: "02871008789",
       image:
@@ -273,7 +274,7 @@ address: "391/37/5 Trần Hưng Đạo, Phường Cầu Kho, Quận 1, TP.HCM",
   );
 
   const totalArticlePages = Math.ceil(articles.length / articlesPerPage);
-const totalStorePages = Math.ceil(PRODUCTS.length / storesPerPage);
+  const totalStorePages = Math.ceil(PRODUCTS.length / storesPerPage);
 
   const handleArticlePageChange = (page: number) => {
     setArticlePage(page);
@@ -326,81 +327,150 @@ const totalStorePages = Math.ceil(PRODUCTS.length / storesPerPage);
             </li>
           </ul>
         </nav>
-        <h1 className="font-bold text-[15px] mb-3">
+        <h1 className="font-bold md:text-[26px] mb-3 ">
           {currentPost?.ten_bai_viet}
         </h1>
 
-        {/* Nội dung chính */}
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="flex-1">
+        {/* Nội dung chính với layout mới */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Nội dung bài viết chính - chiếm 2/3 width */}
+          <div className="lg:w-2/3">
             <img
-              className="w-10 mb-2"
+              className="w-full mb-4 rounded-lg"
               src={`https://huunghi.id.vn/storage/posts/${currentPost?.anh_bai_viet}`}
-              alt="Shop áo sơ mi nam ở Gò Vấp"
+              alt={currentPost?.ten_bai_viet}
             />
             <div
+              className="prose max-w-none"
               dangerouslySetInnerHTML={{
-                __html: currentPost.noi_dung_bai_viet,
+                __html: currentPost?.noi_dung_bai_viet,
               }}
             />
           </div>
-        </div>
 
-        {/* Phần bài viết */}
-        <div ref={titleRef} className="mt-10">
-          <h1 className="font-bold text-[18px] text-center mb-3">
-            CÁC BÀI VIẾT MỚI NHẤT
-          </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {arrayPostNew.map((article) => (
-              <article
-                key={article.id_bai_viet}
-className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col"
-              >
-                <img
-                  src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
-                  alt={article.ten_bai_viet}
-                  className="w-full h-36 object-cover"
-                  loading="lazy"
-                />
-                <div className="p-4 flex flex-col flex-grow">
-                  <h2 className="text-sm font-bold mb-2">
-                    {article.ten_bai_viet}
-                  </h2>
-                  <div className="text-xs text-gray-600 mb-3 flex-grow">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: article.noi_dung_bai_viet.slice(0, 50),
-                      }}
-                    />
-                  </div>
-                  <div className="flex justify-between items-center text-xs text-gray-500">
-                    <time className="flex items-center gap-1">
-                      <svg
-                        className="w-3 h-3"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7a2 2 0 002 2z"
+          {/* Sidebar bài viết liên quan - thiết kế cao cấp */}
+          <div className="lg:w-1/3">
+            <div className="sticky top-24 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+              {/* Header với icon */}
+              <div className="flex items-center mb-6 pb-4 border-b border-gray-100">
+                <svg
+                  className="w-5 h-5 text-blue-600 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  />
+                </svg>
+                <h2 className="text-lg font-bold text-gray-800">
+                  BÀI VIẾT LIÊN QUAN
+                </h2>
+              </div>
+
+              {/* Danh sách bài viết */}
+              <div className="space-y-5">
+                {arrayPostNew.slice(0, 5).map((article) => (
+                  <Link
+                    key={article.id_bai_viet}
+                    href={article.duong_dan}
+                    className="group block transition duration-200 hover:-translate-y-0.5"
+                  >
+                    <div className="flex gap-4">
+                      {/* Hình ảnh với hiệu ứng */}
+                      <div className="relative flex-shrink-0 w-24 h-24 overflow-hidden rounded-lg shadow-sm">
+                        <img
+                          src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
+                          alt={article.ten_bai_viet}
+                          className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                          loading="lazy"
                         />
-                      </svg>
-                      {new Date(article.created_at).toLocaleDateString("vi-VN")}
-                    </time>
-                    <a
-                      href={article.duong_dan}
-                      className="hover:text-yellow-400 transition"
-                    >
-                      Xem thêm ›
-                    </a>
-                  </div>
-                </div>
-              </article>
-            ))}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                      </div>
+
+                      {/* Nội dung text */}
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-[15px] leading-snug text-gray-800 group-hover:text-blue-600 transition line-clamp-2">
+                          {article.ten_bai_viet}
+                        </h3>
+
+                        {/* Nội dung demo rút gọn */}
+                        <p className="mt-1 text-xs text-gray-500 line-clamp-2">
+                          {article.noi_dung_bai_viet
+                            .replace(/<[^>]*>/g, "")
+                            .substring(0, 80)}
+                          ...
+                        </p>
+
+                        {/* Ngày đăng và đọc tiếp */}
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="flex items-center text-xs text-gray-400">
+                            <svg
+                              className="w-3 h-3 mr-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
+                            </svg>
+                            {new Date(article.created_at).toLocaleDateString(
+                              "vi-VN"
+                            )}
+                          </span>
+                          <span className="text-xs font-medium text-blue-500 flex items-center group-hover:text-blue-600 transition">
+                            Đọc tiếp
+                            <svg
+                              className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Nút xem thêm */}
+              <div className="mt-6 text-center">
+                <a
+                  href="/blog"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-200 shadow-sm"
+                >
+                  Xem tất cả bài viết
+                  <svg
+                    className="w-4 h-4 ml-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -424,7 +494,7 @@ className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden 
                 icon={faShieldAlt}
                 className="text-yellow-500 text-xl flex-shrink-0"
               />
-<div className="text-xs sm:text-sm text-gray-700 font-semibold">
+              <div className="text-xs sm:text-sm text-gray-700 font-semibold">
                 BẢO HÀNH TRONG 30 NGÀY
               </div>
             </div>
@@ -490,7 +560,7 @@ className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden 
                   <p className="text-xs mt-1 flex items-center gap-1">
                     <FontAwesomeIcon
                       icon={faClockRegular}
-className="text-xs"
+                      className="text-xs"
                     />
                     {store.hours}
                     <span className="ml-auto text-xs font-semibold rounded bg-blue-200 text-blue-400 px-2 py-0.5">
