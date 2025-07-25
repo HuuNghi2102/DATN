@@ -105,8 +105,9 @@ export default function OrderDetail() {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${typeTokenLocal ? JSON.parse(typeTokenLocal) : ""
-              } ${accessTokenLocal ? JSON.parse(accessTokenLocal) : ""}`,
+            Authorization: `${
+              typeTokenLocal ? JSON.parse(typeTokenLocal) : ""
+            } ${accessTokenLocal ? JSON.parse(accessTokenLocal) : ""}`,
           },
         }
       );
@@ -159,7 +160,9 @@ export default function OrderDetail() {
       `https://huunghi.id.vn/api/productVariant/getProductVariant/${idVariant}`
     );
     const resultResProduct = await resProduct.json();
-    router.push(`/product/${resultResProduct.data.product.duong_dan}?idDetailOrder=${idDetailOrder}`);
+    router.push(
+      `/product/${resultResProduct.data.product.duong_dan}?idDetailOrder=${idDetailOrder}`
+    );
   };
 
   const menuItems = [
@@ -255,10 +258,11 @@ export default function OrderDetail() {
                   <li key={index}>
                     <Link href={item.href}>
                       <button
-                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
+                          item.active
                             ? "bg-black text-white"
                             : "text-gray-700 hover:bg-gray-50"
-                          }`}
+                        }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
                         <span className="text-sm">{item.text}</span>
@@ -278,13 +282,14 @@ export default function OrderDetail() {
                   CHI TIẾT ĐƠN HÀNG #{order.id_don_hang}
                 </h2>
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${order.trang_thai_don_hang === "giao_thanh_cong"
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    order.trang_thai_don_hang === "giao_thanh_cong"
                       ? "bg-green-100 text-green-800"
                       : order.trang_thai_don_hang === "da_huy" ||
                         order.trang_thai_don_hang === "hoan_hang"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
+                      ? "bg-red-100 text-red-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }`}
                 >
                   {getStatusText(order.trang_thai_don_hang)}
                 </span>
@@ -365,12 +370,11 @@ export default function OrderDetail() {
                           <th className="p-3 text-center text-sm font-semibold text-gray-700">
                             Thành tiền
                           </th>
-                          {order.trang_thai_don_hang == 'giao_thanh_cong' &&
+                          {order.trang_thai_don_hang == "giao_thanh_cong" && (
                             <th className="p-3 text-center text-sm font-semibold text-gray-700">
                               Đánh giá
                             </th>
-                          }
-
+                          )}
                         </tr>
                       </thead>
                       <tbody>
@@ -415,12 +419,15 @@ export default function OrderDetail() {
                                 item.gia_san_pham * item.so_luong_san_pham
                               )}
                             </td>
-                            {order.trang_thai_don_hang == 'giao_thanh_cong' &&
+                            {order.trang_thai_don_hang == "giao_thanh_cong" && (
                               <td className="p-3 text-center font-medium">
                                 {item.kiemtra_danhgia == 0 ? (
                                   <button
                                     onClick={() =>
-                                      redirectProduct(item.id_san_pham_bien_the, item.id_chi_tiet_don_hang)
+                                      redirectProduct(
+                                        item.id_san_pham_bien_the,
+                                        item.id_chi_tiet_don_hang
+                                      )
                                     }
                                     className="bg-amber-400 p-2 active:bg-amber-600 rounded-xl text-[16px]"
                                   >
@@ -430,8 +437,7 @@ export default function OrderDetail() {
                                   "Đã đánh giá"
                                 )}
                               </td>
-                            }
-
+                            )}
                           </tr>
                         ))}
                       </tbody>
@@ -448,7 +454,7 @@ export default function OrderDetail() {
                         <span>
                           {formatPrice(
                             order.gia_tong_don_hang +
-                            (voucher ? voucher.gia_tri_giam : 0)
+                              (voucher ? voucher.gia_tri_giam : 0)
                           )}
                         </span>
                       </div>
@@ -535,10 +541,11 @@ export default function OrderDetail() {
                   <li key={index}>
                     <Link href={item.href}>
                       <button
-                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
+                          item.active
                             ? "bg-black text-white"
                             : "text-gray-700 hover:bg-gray-50"
-                          }`}
+                        }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
                         <span className="text-sm">{item.text}</span>
@@ -556,13 +563,14 @@ export default function OrderDetail() {
                   ĐƠN HÀNG #{order.id_don_hang}
                 </h2>
                 <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${order.trang_thai_don_hang === "giao_thanh_cong"
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    order.trang_thai_don_hang === "giao_thanh_cong"
                       ? "bg-green-100 text-green-800"
                       : order.trang_thai_don_hang === "da_huy" ||
                         order.trang_thai_don_hang === "hoan_hang"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
+                      ? "bg-red-100 text-red-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }`}
                 >
                   {getStatusText(order.trang_thai_don_hang)}
                 </span>
@@ -623,7 +631,7 @@ export default function OrderDetail() {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <div className="flex-1">
+                        <div className="flex">
                           <p className="font-medium">{item.ten_san_pham}</p>
                           <p className="text-sm text-gray-600">
                             {item.mau_san_pham}, {item.kich_thuoc_san_pham}
@@ -638,30 +646,30 @@ export default function OrderDetail() {
                                 item.gia_san_pham * item.so_luong_san_pham
                               )}
                             </span>
-
                           </div>
-                                                                                  {order.trang_thai_don_hang == 'giao_thanh_cong' &&
-                              <td className="p-3 text-center font-medium">
-                                {item.kiemtra_danhgia == 0 ? (
-                                  <button
-                                    onClick={() =>
-                                      redirectProduct(item.id_san_pham_bien_the, item.id_chi_tiet_don_hang)
-                                    }
-                                    className="bg-amber-400 px-8 py-2 active:bg-amber-600 text-white rounded-xl text-[13px]"
-                                  >
-                                    <p>Đánh giá</p>
-                                  </button>
-                                ) : (
-                                  ''
-                                )}
-                              </td>
-                            }
+                          {order.trang_thai_don_hang == "giao_thanh_cong" && (
+                            <div className="p-3 text-center font-medium">
+                              {item.kiemtra_danhgia == 0 ? (
+                                <button
+                                  onClick={() =>
+                                    redirectProduct(
+                                      item.id_san_pham_bien_the,
+                                      item.id_chi_tiet_don_hang
+                                    )
+                                  }
+                                  className="bg-amber-400 px-8 py-2 active:bg-amber-600 text-white rounded-xl text-[13px]"
+                                >
+                                  <p>Đánh giá</p>
+                                </button>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
-                      
                     ))}
                   </div>
-                  
                 </div>
 
                 <div className="bg-gray-50 p-3 rounded-lg">
@@ -672,7 +680,7 @@ export default function OrderDetail() {
                       <span>
                         {formatPrice(
                           order.gia_tong_don_hang +
-                          (voucher ? voucher.gia_tri_giam : 0)
+                            (voucher ? voucher.gia_tri_giam : 0)
                         )}
                       </span>
                     </div>

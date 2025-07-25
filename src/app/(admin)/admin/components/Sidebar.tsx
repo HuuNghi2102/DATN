@@ -72,6 +72,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const router = useRouter();
   const [selectedSideBar, setSelectedSideBar] = useState<sideBar[]>([]);
   const [getUser, setgetUser] = useState<userInterface>();
+  const [hasMounted, setHasMounted] = useState(false);
   const defaultData = async () => {
     const accessTokenLocal = localStorage.getItem("accessToken");
     const typeTokenLocal = localStorage.getItem("typeToken");

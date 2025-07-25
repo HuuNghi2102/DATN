@@ -143,7 +143,17 @@ export default function AdminPostManagement() {
     };
 
     try {
-      await createdArticle(newArticle, imageFile as File);
+      const data = await createdArticle(newArticle, imageFile as File);
+      const errors = data.errors;
+      if (errors) {
+        setErrorMessages({
+          title: errors.name ? errors.name[0] : "",
+          slug: errors.slug ? errors.slug[0] : "",
+          content: errors.content ? errors.content[0] : "",
+          image: errors.image ? errors.image[0] : "",
+        });
+        return;
+      }
       await refreshPosts();
       alert("Thêm bài viết thành công!");
       resetForm();
@@ -168,11 +178,21 @@ export default function AdminPostManagement() {
     };
 
     try {
-      await editArticle(
+      const data = await editArticle(
         selectedPost.duong_dan,
         updateArticle,
         imageFile as File
       );
+      const errors = data.errors;
+      if (errors) {
+        setErrorMessages({
+          title: errors.name ? errors.name[0] : "",
+          slug: errors.slug ? errors.slug[0] : "",
+          content: errors.content ? errors.content[0] : "",
+          image: errors.image ? errors.image[0] : "",
+        });
+        return;
+      }
       await refreshPosts();
       alert("Sửa bài viết thành công");
       resetForm();
