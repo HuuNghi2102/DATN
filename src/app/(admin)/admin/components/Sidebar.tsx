@@ -174,7 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           transform transition-transform duration-300 ease-in-out
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0  md:block 
-          ${className || ""}
+
         `}
       >
         <div className="brand flex items-center mb-8 pb-4 border-b border-gray-200">
