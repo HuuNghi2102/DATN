@@ -278,7 +278,7 @@ const OrderDetailShipper = () => {
               Thông tin đơn hàng
             </h2>
             <span
-              className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${order.statusClass}`}
+              className={`inline-block px-3 py-1 rounded-full text-xs font-medium`}
             >
               {returStatus(order.trang_thai_don_hang)}
             </span>
