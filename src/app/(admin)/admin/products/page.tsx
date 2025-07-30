@@ -1,9 +1,8 @@
 "use client";
-
 import { FaBars, FaPlus } from "react-icons/fa";
 import ProductForm from "./ProductForm";
 import ProductList from "./ProductList";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 export default function ProductsPage() {
   const [flagAdd, setFlagAdd] = useState<boolean>(false);
@@ -40,7 +39,9 @@ export default function ProductsPage() {
         isOpenForm={isOpenForm}
         onProductAdded={changeFlagAddProduct}
       />
-      <ProductList changeFlag={flagAdd} />
+      <Suspense>
+        <ProductList changeFlag={flagAdd} />
+      </Suspense>
     </div>
   );
 }
