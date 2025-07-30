@@ -6,6 +6,8 @@ import React, { useEffect, useState, useRef } from "react";
 import userInterface from "../../compoments/userInterface";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Config from "@/config";
 
 interface FormData {
   name: string;
@@ -24,6 +26,7 @@ export default function UserProfile() {
     address: "",
     avatar: null,
   });
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState("");
@@ -40,6 +43,7 @@ export default function UserProfile() {
         setAvatarPreview(uu.avatar_user);
       }
     } else {
+      router.push("/login");
       toast.info("Vui lòng đăng nhập");
     }
   }, []);

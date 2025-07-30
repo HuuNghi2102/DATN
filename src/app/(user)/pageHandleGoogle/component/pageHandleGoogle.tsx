@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { redirect, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Config from "@/config";
 
 const PageHandleGoogle = () => {
   const useSearchParam = useSearchParams();
@@ -50,7 +51,15 @@ const PageHandleGoogle = () => {
       localStorage.setItem("accessToken", JSON.stringify(accessToken));
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("typeToken", JSON.stringify("Bearer"));
-      router.push("/user/userprofile");
+      if (user.role == 1) {
+        router.push(`${Config.DOMAIN ? Config.DOMAIN : ""}admin`);
+      } else if (user.role == 3) {
+        router.push(`${Config.DOMAIN ? Config.DOMAIN : ""}admin/shipper`);
+      } else if (user.role == 4) {
+        router.push(`${Config.DOMAIN ? Config.DOMAIN : ""}admin/blogger`);
+      } else {
+        router.push(`${Config.DOMAIN ? Config.DOMAIN : ""}user/userprofile`);
+      }
     } else {
       toast.error("Token không hợp lệ vui lòng đăng nhập lại");
       router.push("/login");
