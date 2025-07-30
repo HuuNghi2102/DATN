@@ -147,6 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
     }
   };
   useEffect(() => {
+    setHasMounted(true);
     defaultData();
     userFetch();
   }, []);
@@ -179,9 +180,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         `}
       >
         <div className="brand flex items-center mb-8 pb-4 border-b border-gray-200">
-          <div className="brand-logo w-9 h-9 bg-indigo-500 text-white rounded flex items-center justify-center mr-3 font-semibold">
-            V
-          </div>
+<div className="brand-logo w-9 h-9 bg-indigo-500 text-white rounded flex items-center justify-center mr-3 font-semibold">
+  {getUser?.ten_user?.charAt(0).toUpperCase() ?? ""}
+</div>
           <div className="brand-name text-lg font-semibold text-gray-900">
             VerveStyle Admin
           </div>

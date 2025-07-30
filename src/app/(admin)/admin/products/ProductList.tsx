@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import TableRow from "../components/TableRow";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { faSearch,faChevronRight,faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSearch,
+  faChevronRight,
+  faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import categoryInterface from "../components/interface/categoryProInterface";
 
@@ -22,7 +26,7 @@ interface Product {
 
 const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
   const params = useSearchParams();
-  const type = params.get('type');
+  const type = params.get("type");
   const router = useRouter();
   const [listProduct, setListProduct] = useState<any[]>([]);
   const [listCategory, setListCategory] = useState<categoryInterface[]>([]);
@@ -32,10 +36,10 @@ const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
   const [perPage] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
   const [category, setCategory] = useState<number | "">("");
-  const [status, setStatus] = useState<string>(type ? (type=='ban_chay' ? 'ban_chay' : 'ban_cham')  : "");
+  const [status, setStatus] = useState<string>(
+    type ? (type == "ban_chay" ? "ban_chay" : "ban_cham") : ""
+  );
   const [inventory, setInventory] = useState<string>("");
-
-  
 
   const fetchProduct = async (page: number = 1) => {
     const accessTokenLocal = localStorage.getItem("accessToken");
@@ -200,8 +204,8 @@ const ProductList = ({ changeFlag }: { changeFlag: boolean }) => {
               <option value="">Tất cả trạng thái</option>
               <option value="dang_ban">Đang bán</option>
               <option value="ngung_ban">Ngừng bán</option>
-              <option value="ban_chay">Bán Chạy</option>
-              <option value="ban_cham">Bán Chậm</option>
+              <option value="ban_chay">Số lượng bán cao - thấp</option>
+              <option value="ban_cham">Số lượng bán thấp - cao</option>
             </select>
           </div>
 
