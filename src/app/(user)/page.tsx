@@ -172,7 +172,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://huunghi.id.vn/api/product/getProductNews');
+        const res = await fetch('https://huunghi.id.vn/api/product/getProductNews');
         const result = await res.json();
         setProductsNew(result.data.productNews);
         console.log(setProductsNew);
@@ -214,7 +214,7 @@ const Home = () => {
   useEffect(() => {
     const fetchBanner = async () => {
       try {
-        let getAPIbanner = await fetch('http://huunghi.id.vn/api/banner/getBannerByPage');
+        let getAPIbanner = await fetch('https://huunghi.id.vn/api/banner/getBannerByPage');
         let data = await getAPIbanner.json()
         setBanners(data.data.banners)
       } catch (error) {
