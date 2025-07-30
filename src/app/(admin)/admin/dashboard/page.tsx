@@ -694,7 +694,19 @@ const Dashboard = () => {
             {/* Thống kê đánh giá */}
             <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
               <div className="text-center">
-                <div className="text-3xl font-bold text-amber-500">{100}</div>
+                <div className="text-3xl font-bold text-amber-500">
+                  {Math.round(
+                    pointStart
+                      ? Number(
+                          pointStart.one * 1 +
+                            pointStart.two * 2 +
+                            pointStart.three * 3 +
+                            pointStart.four * 4 +
+                            pointStart.five * 5
+                        ) / pointStart.all
+                      : 0
+                  )}
+                </div>
                 <div className="flex justify-center">
                   {[
                     ...Array(
