@@ -51,6 +51,8 @@ const PageHandleGoogle = () => {
       localStorage.setItem("accessToken", JSON.stringify(accessToken));
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("typeToken", JSON.stringify("Bearer"));
+      window.dispatchEvent(new Event("userChanged"));
+      window.dispatchEvent(new Event("quantityCartChange"));
       if (user.role == 1) {
         router.push(`${Config.DOMAIN ? Config.DOMAIN : ""}admin`);
       } else if (user.role == 3) {
@@ -65,7 +67,6 @@ const PageHandleGoogle = () => {
       router.push("/login");
     }
   };
-
   return (
     <div
       id="loading-screen"
