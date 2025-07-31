@@ -181,7 +181,7 @@ export default function AllProductPage() {
     const fetchBanner = async () => {
       try {
         let getAPIbanner = await fetch(
-          "http://huunghi.id.vn/api/banner/getBannerByPage?position=trang_san_pham"
+          "https://huunghi.id.vn/api/banner/getBannerByPage?position=trang_san_pham"
         );
         let data = await getAPIbanner.json();
         setBanners(data.data.banners);
@@ -282,18 +282,22 @@ export default function AllProductPage() {
           <div key={i} className="p-2">
             <div className="bg-white p-2 rounded-lg cursor-pointer">
               <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative block">
-                        <img
-                          src={hoveredProduct === i
-                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
-                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
-                          }
-                          alt="product"
-                          className="w-full transition-all duration-300"
-                          onMouseEnter={() => setHoveredProduct(i)}
-                          onMouseLeave={() => setHoveredProduct(null)}
-                        />
-                      </Link>
+                <Link
+                  href={`/product/${product.duong_dan}`}
+                  className="relative block"
+                >
+                  <img
+                    src={
+                      hoveredProduct === i
+                        ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                        : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                    }
+                    alt="product"
+                    className="w-full transition-all duration-300"
+                    onMouseEnter={() => setHoveredProduct(i)}
+                    onMouseLeave={() => setHoveredProduct(null)}
+                  />
+                </Link>
                 <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   <FontAwesomeIcon
                     icon={faSearch}
@@ -317,9 +321,16 @@ export default function AllProductPage() {
               </div>
               <div className="px-1 mt-2">
                 <p className="text-sm line-clamp- h-[40px]">
-                        {product.ten_san_pham}
-                      </p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
+                  {product.ten_san_pham}
+                </p>
+                <strong className="text-sm text-red-500">
+                  {product.gia_da_giam.toLocaleString("vi-VN") + " VNĐ "}
+                  <del className="text-gray-700 text-xs">
+                    {product.gia_chua_giam != null
+                      ? product.gia_chua_giam.toLocaleString("vi-VN") + "đ"
+                      : ""}
+                  </del>
+                </strong>
               </div>
             </div>
           </div>
