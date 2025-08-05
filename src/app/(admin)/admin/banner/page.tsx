@@ -2,7 +2,7 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 const GET_BANNER_URL = "http://huunghi.id.vn/api/banner/getBannerIndex";
 const POST_BANNER_URL = "http://huunghi.id.vn/api/banner/addBanner";
 const DELETE_BANNER_URL = "http://huunghi.id.vn/api/banner/deleteBanner/";
@@ -58,13 +58,13 @@ const BannerManagerPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem("accessToken");
-    if (!token) return alert("Vui lòng đăng nhập lại.");
+    if (!token) return toast.error("Vui lòng đăng nhập lại.");
 
     const data = new FormData();
     data.append("title", form.title);
     data.append("position", form.position);
     data.append("status", form.status.toString());
-    if (!form.image) return alert("Vui lòng chọn ảnh banner");
+    if (!form.image) return toast.error("Vui lòng chọn ảnh banner");
     data.append("image", form.image);
 
     try {
@@ -82,7 +82,7 @@ const BannerManagerPage = () => {
       const message = err.response?.data
         ? JSON.stringify(err.response.data)
         : "Lỗi không xác định";
-      alert("❌ Gửi API thất bại: " + message);
+      toast.error("Gửi API thất bại: " + message);
     }
   };
 
@@ -97,7 +97,7 @@ const BannerManagerPage = () => {
       setBanners(banners.filter((banner) => banner.id !== id));
     } catch (err) {
       console.error("❌ Lỗi xoá banner:", err);
-      alert("Không thể xoá banner. Kiểm tra lại quyền hoặc trạng thái server.");
+      toast.error("Không thể xoá banner. Kiểm tra lại quyền hoặc trạng thái server.");
     }
   };
 
@@ -116,7 +116,7 @@ const BannerManagerPage = () => {
       fetchBanners();
     } catch (err) {
       console.error("Lỗi khi đưa banner lên đầu:", err);
-      alert("Không thể thay đổi vị trí banner");
+      toast.error("Không thể thay đổi vị trí banner");
     }
   };
 
@@ -140,7 +140,7 @@ const BannerManagerPage = () => {
       );
     } catch (err) {
       console.error("Lỗi khi thay đổi trạng thái:", err);
-      alert("Không thể thay đổi trạng thái banner");
+      toast.error("Không thể thay đổi trạng thái banner");
     }
   };
 
@@ -163,7 +163,7 @@ const BannerManagerPage = () => {
       );
     } catch (err) {
       console.error("Lỗi khi thay đổi vị trí:", err);
-      alert("Không thể thay đổi vị trí banner");
+      toast.error("Không thể thay đổi vị trí banner");
     }
   };
 
@@ -182,7 +182,7 @@ const BannerManagerPage = () => {
       fetchBanners();
     } catch (err) {
       console.error("Lỗi khi thay đổi ưu tiên:", err);
-      alert("Không thể thay đổi độ ưu tiên");
+      toast.error("Không thể thay đổi độ ưu tiên");
     }
   };
 
@@ -207,15 +207,18 @@ const BannerManagerPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-semibold text-gray-700">Quản lý Banner</h1>
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-gray-700 text-center sm:text-left">
+          Quản lý Banner
+        </h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 w-full sm:w-auto text-center"
         >
           {showForm ? "Đóng" : "+ Thêm banner"}
         </button>
       </header>
+
 
       {showForm && (
         <form
@@ -315,14 +318,14 @@ const BannerManagerPage = () => {
                 <td className="p-3">
                   <span
                     onClick={() => handleToggleStatus(banner.id)}
-                    className={`px-2 py-1 rounded-full text-xs cursor-pointer ${
-                      banner.trang_thai == 1
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
+                    className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-medium cursor-pointer whitespace-nowrap ${banner.trang_thai == 1
+                        ? "bg-green-500 text-white"
+                        : "bg-red-500 text-white"
+                      }`}
                   >
-                    {banner.trang_thai == 1 ? "Đang hoạt động" : "Tạm ngưng"}
+                    {banner.trang_thai == 1 ? "Đang hoạt động" : "Dừng hoạt động"}
                   </span>
+
                 </td>
                 <td className="p-3">
                   {banner.created_at

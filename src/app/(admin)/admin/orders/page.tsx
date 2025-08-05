@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import orderInterface from "../components/interface/orderInterface";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const OrderManager = () => {
   const [totalOrder, setTotalOrder] = useState<number>(0);
@@ -101,7 +102,7 @@ const OrderManager = () => {
       setOrders(orders.filter((e, i) => e.id_don_hang != idOrder));
       setCountAwaitRefund(countAwaitRefund - 1);
     } else {
-      alert("Thay đổi không thành công");
+      toast("Thay đổi không thành công");
     }
   };
 
@@ -150,7 +151,7 @@ const OrderManager = () => {
           setCountAwaitRefund(resultOrder.data.countAwaitRefund);
           setIsLoading(false);
         } else {
-          alert("Lấy danh sách đơn hàng thành công");
+          toast("Lấy danh sách đơn hàng thành công");
         }
       } else {
         router.push("/user/userprofile");
@@ -205,13 +206,13 @@ const OrderManager = () => {
         }
         setTotalCateOrder(newStatus);
       } else {
-        alert("Cập nhật không thành công");
+        toast("Cập nhật không thành công");
       }
     }
   };
 
   const handlePrint = (orderId: number) => {
-    alert(`In hóa đơn cho đơn hàng ${orderId}`);
+    toast(`In hóa đơn cho đơn hàng ${orderId}`);
   };
 
   const handleAddOrder = () => {
@@ -931,93 +932,94 @@ const OrderManager = () => {
           </div>
         </div>
         {/* Phân Trang */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
-          {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
-          <div className="text-sm text-gray-600">
-            Hiển thị{" "}
-            <span className="font-medium">
-              {(currentPage - 1) * perPage + 1}
-            </span>{" "}
-            đến{" "}
-            <span className="font-medium">
-              {Math.min(
-                currentPage * perPage,
-                orders.length + (currentPage - 1) * perPage
-              )}
-            </span>{" "}
-            trong tổng số <span className="font-medium">{totalOrder}</span> đơn
-            hàng
-          </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === 1
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-            >
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
+<div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 border-t border-gray-200 bg-white">
+  {/* Thông tin tổng đơn */}
+  <div className="text-sm text-gray-600">
+    Hiển thị{" "}
+    <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{" "}
+    <span className="font-medium">
+      {Math.min(currentPage * perPage, totalOrder)}
+    </span>{" "}
+    trong tổng số <span className="font-medium">{totalOrder}</span> đơn hàng
+  </div>
 
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
+  {/* Nút phân trang */}
+  <div className="w-full md:w-auto overflow-x-auto">
+    <div className="flex justify-center md:justify-end space-x-2 min-w-max">
+      {/* Prev */}
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={`px-3 py-1 rounded-md border ${
+          currentPage === 1
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-gray-50"
+        }`}
+      >
+        <FontAwesomeIcon icon={faChevronLeft} />
+      </button>
 
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 rounded-md border ${
-                    currentPage === pageNum
-                      ? "bg-indigo-500 text-white"
-                      : "bg-white text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
+      {/* Page numbers */}
+      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+        let pageNum;
+        if (totalPages <= 5) {
+          pageNum = i + 1;
+        } else if (currentPage <= 3) {
+          pageNum = i + 1;
+        } else if (currentPage >= totalPages - 2) {
+          pageNum = totalPages - 4 + i;
+        } else {
+          pageNum = currentPage - 2 + i;
+        }
 
-            {totalPages > 5 && currentPage < totalPages - 2 && (
-              <span className="px-3 py-1">...</span>
-            )}
+        return (
+          <button
+            key={pageNum}
+            onClick={() => handlePageChange(pageNum)}
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === pageNum
+                ? "bg-indigo-500 text-white"
+                : "bg-white text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            {pageNum}
+          </button>
+        );
+      })}
 
-            {totalPages > 5 && currentPage < totalPages - 2 && (
-              <button
-                onClick={() => handlePageChange(totalPages)}
-                className={`px-3 py-1 rounded-md border ${
-                  currentPage === totalPages
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                {totalPages}
-              </button>
-            )}
+      {/* Dấu ba chấm */}
+      {totalPages > 5 && currentPage < totalPages - 2 && (
+        <>
+          <span className="px-3 py-1">...</span>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === totalPages
+                ? "bg-indigo-500 text-white"
+                : "bg-white text-gray-700 hover:bg-gray-50"
+            }`}
+          >
+            {totalPages}
+          </button>
+        </>
+      )}
 
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === totalPages
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-            >
-              <FontAwesomeIcon icon={faChevronRight} />
-            </button>
-          </div>
-        </div>
+      {/* Next */}
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`px-3 py-1 rounded-md border ${
+          currentPage === totalPages
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-gray-50"
+        }`}
+      >
+        <FontAwesomeIcon icon={faChevronRight} />
+      </button>
+    </div>
+  </div>
+</div>
+
       </div>
     </main>
   );

@@ -54,12 +54,13 @@ export default function AllProductPage() {
   const settings = {
     dots: true,
     infinite: true,
-    autoplaySpeed: 3000,
+    autoplay: true,
+    autoplaySpeed: 2000,
     speed: 200,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    // nextArrow: <NextArrow />,
+    // prevArrow: <PrevArrow />,
   };
 
   const addWhistList = async (
@@ -282,18 +283,18 @@ export default function AllProductPage() {
           <div key={i} className="p-2">
             <div className="bg-white p-2 rounded-lg cursor-pointer">
               <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative block">
-                        <img
-                          src={hoveredProduct === i
-                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
-                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
-                          }
-                          alt="product"
-                          className="w-full transition-all duration-300"
-                          onMouseEnter={() => setHoveredProduct(i)}
-                          onMouseLeave={() => setHoveredProduct(null)}
-                        />
-                      </Link>
+                <Link href={`/product/${product.duong_dan}`} className="relative block">
+                  <img
+                    src={hoveredProduct === i
+                      ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                      : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                    }
+                    alt="product"
+                    className="w-full transition-all duration-300"
+                    onMouseEnter={() => setHoveredProduct(i)}
+                    onMouseLeave={() => setHoveredProduct(null)}
+                  />
+                </Link>
                 <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   <FontAwesomeIcon
                     icon={faSearch}
@@ -316,10 +317,10 @@ export default function AllProductPage() {
                 </a>
               </div>
               <div className="px-1 mt-2">
-                <p className="text-sm line-clamp- h-[40px]">
-                        {product.ten_san_pham}
-                      </p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
+                <p className="text-sm line-clamp-2 h-[40px]">
+                  {product.ten_san_pham}
+                </p>
+                <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
               </div>
             </div>
           </div>
@@ -347,11 +348,10 @@ export default function AllProductPage() {
                   setCurrentPage(page);
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                className={`px-3 py-1 border text-sm rounded ${
-                  currentPage === page
+                className={`px-3 py-1 border text-sm rounded ${currentPage === page
                     ? "bg-amber-500 text-white"
                     : "bg-white text-black border-gray-300 hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 {page}
               </button>

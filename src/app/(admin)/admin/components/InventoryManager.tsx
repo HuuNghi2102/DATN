@@ -11,6 +11,7 @@ import {
 import productVariant from "./interface/variantInterface";
 import sizeInterface from "./interface/sizeInterface";
 import productInterface from "./interface/productInterface";
+import { toast } from "react-toastify";
 
 interface Props {
   variants: productVariant[];
@@ -101,7 +102,7 @@ export default function InventoryManager({
 
   const handleDelete = async (idVariant: number) => {
     if (variants.length <= 1) {
-      alert("Sản phẩm phải có ít nhất 1 biến thể");
+      toast.error("Sản phẩm phải có ít nhất 1 biến thể");
       return;
     }
 
@@ -119,12 +120,12 @@ export default function InventoryManager({
     const resultDeleteVariant = await resDeleteVariant.json();
 
     if (resultDeleteVariant.status == true) {
-      alert("Xóa biển thể thành công");
+      toast.success("Xóa biển thể thành công");
       setVariants(
         variants.filter((v, i) => v.id_san_pham_bien_the != idVariant)
       );
     } else {
-      alert("Xóa biến thể không thành công");
+      toast.error("Xóa biến thể không thành công");
       console.log(resultDeleteVariant);
     }
   };
@@ -136,7 +137,7 @@ export default function InventoryManager({
       !currentVariant?.ma_mau ||
       !currentVariant?.id_kich_thuoc
     ) {
-      alert("Vui lòng điền đầy đủ thông tin");
+      toast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
 
@@ -169,9 +170,9 @@ export default function InventoryManager({
               : v
           )
         );
-        alert("Cập nhật biển thể thành công");
+        toast.success("Cập nhật biển thể thành công");
       } else {
-        alert("Cập nhật biển thể thành công");
+        toast.success("Cập nhật biển thể thành công");
         console.log(resultUpdateVariant);
       }
     } else {
@@ -185,7 +186,7 @@ export default function InventoryManager({
       );
 
       if (flag != true) {
-        alert("Biến thể đã tồn tại");
+        toast.error("Biến thể đã tồn tại");
         return;
       }
 
@@ -212,9 +213,9 @@ export default function InventoryManager({
       if (resultAddVariant.status == true) {
         const newVariant = resultAddVariant.data;
         setVariants([...variants, newVariant]);
-        alert("Thêm biển thể thành công");
+        toast.success("Thêm biển thể thành công");
       } else {
-        alert("Cập nhật biển thể thành công");
+        toast.success("Cập nhật biển thể thành công");
         console.log(resultAddVariant);
       }
     }

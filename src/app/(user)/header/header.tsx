@@ -281,7 +281,9 @@ const Header = () => {
                 onClick={handleToggleUserDropdown}
                 style={{ cursor: "pointer" }}
               >
+                <Link href="/login">
                 <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                </Link>
               </div>
 
               {currentUser ? (
@@ -290,7 +292,7 @@ const Header = () => {
                     style={{ cursor: "pointer" }}
                     onClick={handleToggleUserDropdown}
                   >
-                    Hi, {currentUser.ten_user.slice(0,5)+'...'}
+                    Hi, {currentUser.ten_user.slice(0, 5) + '...'}
                   </span>
                   {currentUser && showUserDropdown && (
                     <div className={styles.dropdown}>
@@ -298,10 +300,16 @@ const Header = () => {
                         THÔNG TIN TÀI KHOẢN
                       </h1>
                       <p className="text-center text-sm">
-                        Số điện thoại:{" "}
                         <strong className="text-black">
-                          {currentUser.sdt_user}
-                        </strong>
+                        Tên tài khoản:{" "}
+                          {currentUser.ten_user}
+                        </strong><br />
+                        {currentUser.sdt_user && 
+                        <strong className="text-black">
+                          Số điện thoại: {""}
+                          {currentUser.sdt_user || ''}
+                        </strong>}
+
                       </p>
                       <div className={styles.dropdownButtons}>
                         <Link href="/user/userprofile">
@@ -423,11 +431,11 @@ const Header = () => {
           </button>
         </div>
         <div className={styles["mobile-search-container"]}>
-          <form 
-          onSubmit={(e: any) => e.preventDefault()}
-          className={styles["mobile-search-form"]}>
+          <form
+            onSubmit={(e: any) => e.preventDefault()}
+            className={styles["mobile-search-form"]}>
             <input
-            onChange={(e: any) => setInputSearch(e.target.value)}
+              onChange={(e: any) => setInputSearch(e.target.value)}
               type="text"
               className={styles["search-input"]}
               placeholder="Bạn đang tìm gì..."
@@ -578,7 +586,7 @@ const Header = () => {
           </li>
           {/* Mục cố định: TIN THỜI TRANG */}
           <li className={styles["mobile-nav-item"]}>
-            <a href="/tin-thoi-trang" className={styles["mobile-nav-link"]}>
+            <a href="/blog" className={styles["mobile-nav-link"]}>
               TIN THỜI TRANG
             </a>
           </li>

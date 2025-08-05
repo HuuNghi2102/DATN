@@ -4,6 +4,7 @@ import { FaCloudUploadAlt, FaTimes } from "react-icons/fa";
 import Images from "./interface/imageInterface";
 import productInterface from "./interface/productInterface";
 import imageInterface from "./interface/imageInterface";
+import { toast } from "react-toastify";
 
 interface Props {
   images: Images[];
@@ -30,7 +31,7 @@ export default function ProductImages({
     if (!confirmed) return;
 
     if (imagess.length == 1) {
-      alert("Sản phẩm phải có ít nhất 1 ảnh");
+      toast.error("Sản phẩm phải có ít nhất 1 ảnh");
       return;
     }
 
@@ -50,7 +51,7 @@ export default function ProductImages({
     if (resultDeleteImages.status == true) {
       setImages(imagess.filter((image, i) => image.id_anh_san_pham != idImage));
     } else {
-      alert("Xóa sản phẩm không thành công");
+      toast.error("Xóa sản phẩm không thành công");
     }
   };
 
@@ -84,7 +85,7 @@ export default function ProductImages({
       const arrayNewImage = resultAddImages.data.images;
       setImages([...imagess, ...arrayNewImage]);
     } else {
-      alert("Thêm ảnh sản phẩm không thành công");
+      toast("Thêm ảnh sản phẩm không thành công");
     }
 
     // Thực tế bạn sẽ upload ảnh và cập nhật `setImages`

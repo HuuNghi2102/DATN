@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
@@ -103,7 +104,7 @@ export default function AdminPostManagement() {
     try {
       await createdArticle(newArticle, imageFile as File);
       await refreshPosts();
-      alert("Thêm bài viết thành công!");
+      toast.success("Thêm bài viết thành công!");
       resetForm();
     } catch (error) {
       console.error("❌ Lỗi khi tạo bài viết:", error);
@@ -133,10 +134,10 @@ export default function AdminPostManagement() {
         imageFile as File
       );
       await refreshPosts();
-      alert("Sửa bài viết thành công");
+      toast.success("Sửa bài viết thành công");
       resetForm();
     } catch (error) {
-      console.error("❌ Lỗi khi cập nhật bài viết:", error);
+      console.error("Lỗi khi cập nhật bài viết:", error);
     }
   };
 
@@ -157,10 +158,10 @@ export default function AdminPostManagement() {
   const handleDelete = async (slugArticle: string | number) => {
     const getdeleteArticle = await deleteArticle(slugArticle);
     if (getdeleteArticle) {
-      alert("Xóa thành công");
+      toast.success("Xóa bài viết thành công");
       await refreshPosts();
     } else {
-      alert("Xóa thất bại");
+      toast.error("Xóa bài viết thất bại");
     }
   };
   const handlePageChange = (page: number) => {

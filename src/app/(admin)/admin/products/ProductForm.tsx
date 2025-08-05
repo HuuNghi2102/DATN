@@ -6,6 +6,7 @@ import InventoryItem from "../components/InventoryItem";
 import sizeInterface from "../components/interface/sizeInterface";
 import categoryProductInterface from "../components/interface/categoryProInterface";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const ProductForm = ({
   onChangeStatusForm,
@@ -122,7 +123,7 @@ const ProductForm = ({
             const listSize = result.data;
             setListSize(listSize);
           } else {
-            alert("Lấy sản phẩm không thành công");
+            toast.error("Lấy sản phẩm không thành công");
             setListSize([]);
           }
 
@@ -143,7 +144,7 @@ const ProductForm = ({
             const resultCategory = await resCategory.json();
             setListCategory(resultCategory.data);
           } else {
-            alert("Lấy danh mục không thành công");
+            toast.error("Lấy danh mục không thành công");
             setListCategory([]);
           }
         } catch (error) {
@@ -225,7 +226,7 @@ const ProductForm = ({
 
           if (result.status == true) {
             onProductAdded();
-            alert(result.message);
+            toast.success(result.message);
           } else {
             if (result.errors) {
               const err = result.errors;
@@ -251,7 +252,7 @@ const ProductForm = ({
               });
               return;
             }
-            alert(result.message);
+            toast.success(result.message);
           }
         } catch (error) {
           console.error("Error fetching products:", error);

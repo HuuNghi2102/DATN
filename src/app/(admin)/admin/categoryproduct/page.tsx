@@ -1,10 +1,11 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faTrash, faPencil, faPlus, faEdit, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTrash, faPencil, faPlus, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import categoryInterface from "../types/category";
 import { getAPICategories, addCategories, editCategories, hiddenCate } from "../services/categoryService";
 import React, { useState, useEffect } from 'react';
 import '@/app/globals.css';
+import { toast } from "react-toastify";
 type FormData = {
   name: string;
   slug: string;
@@ -25,10 +26,10 @@ const CategoryPage = () => {
   const [errors, setErrors] = useState({
     nameCate: "",
     slug: "",
-  })
-
+  });
 
   const [categoryList, setCategoryList] = useState<categoryInterface[]>([]);
+
   useEffect(() => {
     const FetchCate = async () => {
       try {
@@ -40,7 +41,7 @@ const CategoryPage = () => {
       }
     };
     FetchCate();
-  }, [])
+  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -62,39 +63,33 @@ const CategoryPage = () => {
     };
     try {
       if (editingSlug) {
-        // SỬA DANH MỤC
         const result = await editCategories(editingSlug, payload);
         if (result.errors) {
-          const errors = result.errors;
           setErrors({
-            nameCate: errors.nameCate ? errors.nameCate : "",
-            slug: errors.slug ? errors.slug : ""
-          })
+            nameCate: result.errors.nameCate || "",
+            slug: result.errors.slug || ""
+          });
         }
-        console.log("✅ Đã cập nhật:", result);
       } else {
-        // THÊM MỚI
         const result = await addCategories(payload);
         if (result?.errors) {
-          const errors = result.errors;
           setErrors({
-            nameCate: errors.nameCate ? errors.nameCate : "",
-            slug: errors.slug ? errors.slug : ""
-          })
-        }else{
-                // Reset form
-      setFormData({ name: '', slug: '', description: '', parent: '' });
-      setEditingSlug(null);
-      setShowForm(false);
+            nameCate: result.errors.nameCate || "",
+            slug: result.errors.slug || ""
+          });
+        } else {
+          setFormData({ name: '', slug: '', description: '', parent: '' });
+          setEditingSlug(null);
+          setShowForm(false);
         }
       }
-      // Làm mới lại danh sách
       const data = await getAPICategories();
       setCategoryList(data);
     } catch (error: any) {
       console.error("❌ Lỗi khi lưu danh mục:", error);
     }
   };
+
   const handleEdit = (slugToEdit: string) => {
     const category = categoryList.find((cat) => cat.duong_dan === slugToEdit);
     if (!category) return;
@@ -105,23 +100,17 @@ const CategoryPage = () => {
       description: category.mota_loai || '',
       parent: category.id_danh_muc_cha?.toString() || '',
     });
-
-    setEditingSlug(slugToEdit); // Đánh dấu đang sửa
-    setShowForm(true); // Mở form
+    setEditingSlug(slugToEdit);
+    setShowForm(true);
   };
-
 
   const buildCategoryTree = (
     categories: categoryInterface[],
     parentId: number | null = null
   ): React.ReactElement[] => {
-    // Lấy ra các danh mục con có id_danh_muc_cha bằng parentId
     const children = categories.filter(cat => cat.id_danh_muc_cha === parentId);
-
     return children.map(cat => {
-      // Kiểm tra xem danh mục này có danh mục con hay không
       const hasChildren = categories.some(c => c.id_danh_muc_cha === cat.id_loai_san_pham);
-
       return (
         <li key={cat.duong_dan} className="mb-2">
           <div className="flex items-center justify-between bg-gray-50 px-3 py-1 rounded hover:bg-gray-100">
@@ -129,8 +118,6 @@ const CategoryPage = () => {
               {cat.ten_loai}
             </span>
           </div>
-
-          {/* Đệ quy nếu có danh mục con */}
           {hasChildren && (
             <ul className="ml-6 mt-1 border-l-2 border-gray-200 pl-4">
               {buildCategoryTree(categories, cat.id_loai_san_pham)}
@@ -143,10 +130,7 @@ const CategoryPage = () => {
 
   if (isLoading) {
     return (
-      <div
-        id="loading-screen"
-        className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
-      >
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500">
         <div className="flex flex-col items-center space-y-6">
           <div className="text-3xl font-semibold tracking-widest text-black uppercase">
             VERVESTYLE
@@ -161,26 +145,22 @@ const CategoryPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <header className="mb-6 flex justify-between items-center">
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
+      <header className="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Quản lý Danh Mục</h1>
-          <p className="text-sm text-gray-500">
-            Thêm mới và quản lý danh mục sản phẩm
-          </p>
+          <p className="text-sm text-gray-500">Thêm mới và quản lý danh mục sản phẩm</p>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              setFormData({ name: "", slug: "", description: "", parent: "" });
-              setEditingSlug(null);
-              setShowForm(true);
-            }}
-            className="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
-          >
-            <FontAwesomeIcon icon={faPlus} /> Thêm mới
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            setFormData({ name: "", slug: "", description: "", parent: "" });
+            setEditingSlug(null);
+            setShowForm(true);
+          }}
+          className="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+        >
+          <FontAwesomeIcon icon={faPlus} /> Thêm mới
+        </button>
       </header>
 
       {showForm && (
@@ -188,45 +168,33 @@ const CategoryPage = () => {
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             {editingSlug ? "Chỉnh sửa danh mục" : "Thông tin danh mục"}
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Tên danh mục
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Tên danh mục</label>
               <input
-              maxLength={255}
+                maxLength={255}
                 type="text"
                 id="name"
                 value={formData.name}
                 onChange={handleInputChange}
                 className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                placeholder="Ví dụ: Áo thun nam"
               />
-              {errors.nameCate && (
-                <p className="text-red-500 text-sm mt-1">{errors.nameCate}</p>
-              )}
+              {errors.nameCate && <p className="text-red-500 text-sm mt-1">{errors.nameCate}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Đường dẫn
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Đường dẫn</label>
               <input
-              maxLength={255}
+                maxLength={255}
                 type="text"
                 id="slug"
                 value={formData.slug}
                 onChange={handleInputChange}
                 className="mt-1 w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                placeholder="Ví dụ: ao-thun-nam"
               />
-              {errors.slug && (
-                <p className="text-red-500 text-sm mt-1">{errors.slug[0]}</p>
-              )}
+              {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug}</p>}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Mô tả danh mục
-              </label>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">Mô tả danh mục</label>
               <textarea
                 id="description"
                 value={formData.description}
@@ -235,10 +203,8 @@ const CategoryPage = () => {
                 rows={3}
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Danh mục cha
-              </label>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">Danh mục cha</label>
               <select
                 id="parent"
                 value={formData.parent}
@@ -255,19 +221,11 @@ const CategoryPage = () => {
                   ))}
               </select>
             </div>
-            <div className="flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="px-4 py-2 border border-gray-300 text-sm rounded hover:bg-gray-100"
-              >
+            <div className="md:col-span-2 flex justify-end gap-2">
+              <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 border border-gray-300 text-sm rounded hover:bg-gray-100">
                 Hủy bỏ
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700"
-              >
-                <i className="fas fa-save mr-1"></i>
+              <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700">
                 {editingSlug ? "Cập nhật" : "Lưu danh mục"}
               </button>
             </div>
@@ -276,62 +234,60 @@ const CategoryPage = () => {
       )}
 
       <div className="bg-white rounded shadow p-6 mb-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          Danh sách danh mục
-        </h2>
-        <table className="w-full text-sm border-t">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="text-left p-2">Tên danh mục</th>
-              <th className="text-left p-2">Đường dẫn</th>
-              <th className="text-left p-2">Mô tả</th>
-              <th className="text-left p-2">Danh mục cha</th>
-              <th className="text-left p-2">Hành động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categoryList.map((cat) => (
-              <tr
-                key={cat.id_loai_san_pham}
-                className={`border-t ${cat.trang_thai === 0 ? 'text-gray-400 italic opacity-70' : ''}`}
-              >
-                <td className="p-2">{cat.ten_loai}</td>
-                <td className="p-2">{cat.duong_dan}</td>
-                <td className="p-2">{cat.mota_loai}</td>
-                <td className="p-2">
-                  {cat.id_danh_muc_cha
-                    ? categoryList.find((c) => c.id_loai_san_pham === cat.id_danh_muc_cha)?.ten_loai || 'Không rõ'
-                    : '-'}
-                </td>
-                <td className="p-2 flex gap-2">
-                  <button onClick={() => handleEdit(cat.duong_dan)} className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600">
-                    <FontAwesomeIcon icon={faPencil} />
-                  </button>
-                  <button onClick={async () => {
-                    const confirmChange = confirm("Bạn có chắc chắn muốn ẩn|hiện danh mục này?");
-                    if (!confirmChange) return;
-                    const success = await hiddenCate(cat.duong_dan);
-                    if (!success) {
-                      alert("❌ Đổi trạng thái thất bại");
-                    } else {
-                      alert("✅ Đổi trạng thái thành công");
-                      const updated = await getAPICategories();
-                      setCategoryList(updated);
-                    }
-                  }} className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 text-red-600">
-                    {cat.trang_thai === 0 ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
-                  </button>
-                </td>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Danh sách danh mục</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm border-t">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="text-left p-2">Tên danh mục</th>
+                <th className="text-left p-2">Đường dẫn</th>
+                <th className="text-left p-2">Mô tả</th>
+                <th className="text-left p-2">Danh mục cha</th>
+                <th className="text-left p-2">Hành động</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {categoryList.map((cat) => (
+                <tr key={cat.id_loai_san_pham} className={`border-t ${cat.trang_thai === 0 ? 'text-gray-400 italic opacity-70' : ''}`}>
+                  <td className="p-2">{cat.ten_loai}</td>
+                  <td className="p-2">{cat.duong_dan}</td>
+                  <td className="p-2">{cat.mota_loai}</td>
+                  <td className="p-2">
+                    {cat.id_danh_muc_cha
+                      ? categoryList.find((c) => c.id_loai_san_pham === cat.id_danh_muc_cha)?.ten_loai || 'Không rõ'
+                      : '-'}
+                  </td>
+                  <td className="p-2 flex gap-2">
+                    <button onClick={() => handleEdit(cat.duong_dan)} className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600">
+                      <FontAwesomeIcon icon={faPencil} />
+                    </button>
+                    <button
+                      onClick={async () => {
+                        const confirmChange = confirm("Bạn có chắc chắn muốn ẩn|hiện danh mục này?");
+                        if (!confirmChange) return;
+                        const success = await hiddenCate(cat.duong_dan);
+                        if (!success) {
+                          toast.error("Đổi trạng thái thất bại");
+                        } else {
+                          toast.success("Đổi trạng thái thành công");
+                          const updated = await getAPICategories();
+                          setCategoryList(updated);
+                        }
+                      }}
+                      className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 text-red-600"
+                    >
+                      {cat.trang_thai === 0 ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div className="bg-white rounded shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          Xem dạng cây
-        </h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Xem dạng cây</h2>
         <ul className="ml-4">{buildCategoryTree(categoryList)}</ul>
       </div>
     </div>

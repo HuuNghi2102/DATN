@@ -5,6 +5,7 @@ import Image from "next/image";
 import "@/app/globals.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 import {
   faEye,
   faTrash,
@@ -113,7 +114,7 @@ const ReviewManagerPage = () => {
         const resultResProduct = await resProduct.json();
         setListProduct(resultResProduct.data.product);
       } else {
-        alert("Lấy sản phẩm không thành công");
+        toast.error("Lấy sản phẩm không thành công");
       }
     } catch (err) {
       console.error("Lỗi API:", err);

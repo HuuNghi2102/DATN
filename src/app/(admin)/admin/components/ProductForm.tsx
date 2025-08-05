@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import ProductInterface from "./interface/productInterface";
 import CategoryInterface from "./interface/categoryProInterface";
+import { toast } from "react-toastify";
 
 interface Props {
   product: ProductInterface;
@@ -100,16 +101,16 @@ export default function ProductForm({
             idCate: errors.idCate ? errors.idCate[0] : "",
           });
         }
-        alert("Cập nhật sản phẩm không thành công");
+        toast.error("Cập nhật sản phẩm không thành công");
       }
       // Here you would typically call an API to save the product
       console.log("Saving product:", formData);
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Thông tin sản phẩm đã được lưu thành công!");
+      toast.success("Thông tin sản phẩm đã được lưu thành công!");
     } catch (error) {
       console.error("Error saving product:", error);
-      alert("Có lỗi xảy ra khi lưu thông tin sản phẩm");
+      toast.error("Có lỗi xảy ra khi lưu thông tin sản phẩm");
     } finally {
       setIsSaving(false);
     }

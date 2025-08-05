@@ -1,6 +1,7 @@
 // File: AdvancedSettings.tsx
 import React, { useState } from 'react';
 import productsNewInterface from '../components/interface/productInterface';
+import { toast } from "react-toastify";
 
 interface Props {
     product: productsNewInterface;
@@ -25,7 +26,7 @@ export default function AdvancedSettings({ product, accessToken, typeToken , onC
                 }
             });
             if (resChangeStatus.ok) {
-                alert('Thay đổi trạng thái thành công');
+                toast.success('Thay đổi trạng thái thành công');
                 setPro({
                     ...pro,
                     trang_thai: status
@@ -40,7 +41,7 @@ export default function AdvancedSettings({ product, accessToken, typeToken , onC
                 // })
                 // return;
             } else {
-                alert('Thay đổi trạng thái không thành công');
+                toast.error('Thay đổi trạng thái không thành công');
             }
         }
 

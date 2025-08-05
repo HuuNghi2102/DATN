@@ -256,8 +256,8 @@ export default function OrderDetail() {
                     <Link href={item.href}>
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
-                            ? "bg-black text-white"
-                            : "text-gray-700 hover:bg-gray-50"
+                          ? "bg-black text-white"
+                          : "text-gray-700 hover:bg-gray-50"
                           }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
@@ -279,11 +279,11 @@ export default function OrderDetail() {
                 </h2>
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${order.trang_thai_don_hang === "giao_thanh_cong"
-                      ? "bg-green-100 text-green-800"
-                      : order.trang_thai_don_hang === "da_huy" ||
-                        order.trang_thai_don_hang === "hoan_hang"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
+                    ? "bg-green-100 text-green-800"
+                    : order.trang_thai_don_hang === "da_huy" ||
+                      order.trang_thai_don_hang === "hoan_hang"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-yellow-100 text-yellow-800"
                     }`}
                 >
                   {getStatusText(order.trang_thai_don_hang)}
@@ -536,8 +536,8 @@ export default function OrderDetail() {
                     <Link href={item.href}>
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
-                            ? "bg-black text-white"
-                            : "text-gray-700 hover:bg-gray-50"
+                          ? "bg-black text-white"
+                          : "text-gray-700 hover:bg-gray-50"
                           }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
@@ -557,11 +557,11 @@ export default function OrderDetail() {
                 </h2>
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-medium ${order.trang_thai_don_hang === "giao_thanh_cong"
-                      ? "bg-green-100 text-green-800"
-                      : order.trang_thai_don_hang === "da_huy" ||
-                        order.trang_thai_don_hang === "hoan_hang"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
+                    ? "bg-green-100 text-green-800"
+                    : order.trang_thai_don_hang === "da_huy" ||
+                      order.trang_thai_don_hang === "hoan_hang"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-yellow-100 text-yellow-800"
                     }`}
                 >
                   {getStatusText(order.trang_thai_don_hang)}
@@ -640,28 +640,28 @@ export default function OrderDetail() {
                             </span>
 
                           </div>
-                                                                                  {order.trang_thai_don_hang == 'giao_thanh_cong' &&
-                              <td className="p-3 text-center font-medium">
-                                {item.kiemtra_danhgia == 0 ? (
-                                  <button
-                                    onClick={() =>
-                                      redirectProduct(item.id_san_pham_bien_the, item.id_chi_tiet_don_hang)
-                                    }
-                                    className="bg-amber-400 px-8 py-2 active:bg-amber-600 text-white rounded-xl text-[13px]"
-                                  >
-                                    <p>Đánh giá</p>
-                                  </button>
-                                ) : (
-                                  ''
-                                )}
-                              </td>
-                            }
+                          {order.trang_thai_don_hang == 'giao_thanh_cong' &&
+                            <div className="p-3 text-center font-medium">
+                              {item.kiemtra_danhgia == 0 ? (
+                                <button
+                                  onClick={() =>
+                                    redirectProduct(item.id_san_pham_bien_the, item.id_chi_tiet_don_hang)
+                                  }
+                                  className="bg-amber-400 px-8 py-2 active:bg-amber-600 text-white rounded-xl text-[13px]"
+                                >
+                                  <p>Đánh giá</p>
+                                </button>
+                              ) : (
+                                ''
+                              )}
+                            </div>
+                          }
                         </div>
                       </div>
-                      
+
                     ))}
                   </div>
-                  
+
                 </div>
 
                 <div className="bg-gray-50 p-3 rounded-lg">
