@@ -166,10 +166,11 @@ const TableRow: React.FC<TableRowProps> = ({ product }) => {
           }`}
         >
           {
-            getStatusInfo(
-              product.product_variants_sum_so_luong /
-                product.product_variants_count
-            ).text
+            // getStatusInfo(
+            //   product.product_variants_sum_so_luong /
+            //     product.product_variants_count
+            // ).text
+            product.product_variants_sum_so_luong
           }
         </span>
       </td>

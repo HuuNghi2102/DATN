@@ -2,10 +2,12 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
 import { toast } from "react-toastify";
 const GET_BANNER_URL = "http://huunghi.id.vn/api/banner/getBannerIndex";
 const POST_BANNER_URL = "http://huunghi.id.vn/api/banner/addBanner";
 const DELETE_BANNER_URL = "http://huunghi.id.vn/api/banner/deleteBanner/";
+
 
 interface Banner {
   id: number;
@@ -107,7 +109,7 @@ const BannerManagerPage = () => {
     const token = localStorage.getItem("accessToken");
     try {
       await axios.put(
-        `http://huunghi.id.vn/api/banner/moveToTop/${id}`,
+        `https://huunghi.id.vn/api/banner/moveToTop/${id}`,
         {},
         {
           headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
@@ -125,7 +127,7 @@ const BannerManagerPage = () => {
     const token = localStorage.getItem("accessToken");
     try {
       await axios.patch(
-        `http://huunghi.id.vn/api/banner/changeStatus/${id}`,
+        `https://huunghi.id.vn/api/banner/changeStatus/${id}`,
         {},
         {
           headers: { Authorization: `Bearer ${JSON.parse(token!)}` },
@@ -148,7 +150,7 @@ const BannerManagerPage = () => {
     const token = localStorage.getItem("accessToken");
     try {
       await axios.patch(
-        `http://huunghi.id.vn/api/banner/changePosition/${id}`,
+        `https://huunghi.id.vn/api/banner/changePosition/${id}`,
         {
           position: newPosition,
         },
@@ -171,7 +173,7 @@ const BannerManagerPage = () => {
     const token = localStorage.getItem("accessToken");
     try {
       await axios.put(
-        `http://huunghi.id.vn/api/banner/changePriority/${id}`,
+        `https://huunghi.id.vn/api/banner/changePriority/${id}`,
         {
           priority,
         },

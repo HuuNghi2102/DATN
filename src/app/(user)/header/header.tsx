@@ -9,7 +9,7 @@ import {
   faChevronDown,
   faHeart,
   faUser,
-  faShoppingCart
+  faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./header.module.css";
 import type userInterface from "../compoments/userInterface";
@@ -187,6 +187,7 @@ const Header = () => {
 
     // mỗi lần sự login sẽ gửi sk về để set lại current user
     window.addEventListener("userChanged", handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     // Cleanup
     return () => {
@@ -194,7 +195,7 @@ const Header = () => {
     };
   }, []);
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   if (!isClient) return null;
   return (
@@ -231,7 +232,7 @@ const Header = () => {
           </button>
           <div className={styles.logo}>
             <Link href="/">
-              <img src="/assets/images/Logo.png" alt="160STORE" />
+              <img src="/assets/images/logo.png" alt="160STORE" />
             </Link>
           </div>
 
@@ -418,8 +419,9 @@ const Header = () => {
         onClick={handleOverlayClick}
       ></div>
       <nav
-        className={`${styles["mobile-nav"]} ${isMobileMenuOpen ? styles.active : ""
-          }`}
+        className={`${styles["mobile-nav"]} ${
+          isMobileMenuOpen ? styles.active : ""
+        }`}
       >
         <div className={styles["mobile-nav-header"]}>
           <div>MENU</div>
@@ -434,6 +436,7 @@ const Header = () => {
           <form
             onSubmit={(e: any) => e.preventDefault()}
             className={styles["mobile-search-form"]}>
+
             <input
               onChange={(e: any) => setInputSearch(e.target.value)}
               type="text"
@@ -475,8 +478,9 @@ const Header = () => {
               </button>
             </div>
             <div
-              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
-                }`}
+              className={`${styles["mobile-dropdown-content"]} ${
+                activeDropdowns["sanpham"] ? styles.active : ""
+              }`}
             >
               <a
                 href="/collection/all"
@@ -522,8 +526,9 @@ const Header = () => {
                     </button>
                   </div>
                   <div
-                    className={`${styles["mobile-dropdown-content"]} ${activeDropdowns[index] ? styles.active : ""
-                      }`}
+                    className={`${styles["mobile-dropdown-content"]} ${
+                      activeDropdowns[index] ? styles.active : ""
+                    }`}
                   >
                     {item.categories.map((subItem: any, subIndex: number) => (
                       <a
@@ -570,8 +575,9 @@ const Header = () => {
               </button>
             </div>
             <div
-              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
-                }`}
+              className={`${styles["mobile-dropdown-content"]} ${
+                activeDropdowns["sanpham"] ? styles.active : ""
+              }`}
             >
               <a href="#" className={styles["mobile-dropdown-item"]}>
                 ProCOOL™
