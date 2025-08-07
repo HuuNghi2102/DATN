@@ -195,7 +195,7 @@ const Header = () => {
     };
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   if (!isClient) return null;
   return (
@@ -282,9 +282,7 @@ const Header = () => {
                 onClick={handleToggleUserDropdown}
                 style={{ cursor: "pointer" }}
               >
-                <Link href="/login">
                 <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
-                </Link>
               </div>
 
               {currentUser ? (
@@ -302,14 +300,14 @@ const Header = () => {
                       </h1>
                       <p className="text-center text-sm">
                         <strong className="text-black">
-                        Tên tài khoản:{" "}
+                          Tên tài khoản:{" "}
                           {currentUser.ten_user}
                         </strong><br />
-                        {currentUser.sdt_user && 
-                        <strong className="text-black">
-                          Số điện thoại: {""}
-                          {currentUser.sdt_user || ''}
-                        </strong>}
+                        {currentUser.sdt_user &&
+                          <strong className="text-black">
+                            Số điện thoại: {""}
+                            {currentUser.sdt_user || ''}
+                          </strong>}
 
                       </p>
                       <div className={styles.dropdownButtons}>
@@ -325,7 +323,8 @@ const Header = () => {
                 </>
               ) : (
                 <span>
-                  <Link href="/login">Đăng nhập</Link>
+                  <Link href="/login">                  <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                  </Link>
                 </span>
               )}
             </div>
@@ -419,9 +418,8 @@ const Header = () => {
         onClick={handleOverlayClick}
       ></div>
       <nav
-        className={`${styles["mobile-nav"]} ${
-          isMobileMenuOpen ? styles.active : ""
-        }`}
+        className={`${styles["mobile-nav"]} ${isMobileMenuOpen ? styles.active : ""
+          }`}
       >
         <div className={styles["mobile-nav-header"]}>
           <div>MENU</div>
@@ -478,9 +476,8 @@ const Header = () => {
               </button>
             </div>
             <div
-              className={`${styles["mobile-dropdown-content"]} ${
-                activeDropdowns["sanpham"] ? styles.active : ""
-              }`}
+              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
+                }`}
             >
               <a
                 href="/collection/all"
@@ -526,9 +523,8 @@ const Header = () => {
                     </button>
                   </div>
                   <div
-                    className={`${styles["mobile-dropdown-content"]} ${
-                      activeDropdowns[index] ? styles.active : ""
-                    }`}
+                    className={`${styles["mobile-dropdown-content"]} ${activeDropdowns[index] ? styles.active : ""
+                      }`}
                   >
                     {item.categories.map((subItem: any, subIndex: number) => (
                       <a
@@ -575,9 +571,8 @@ const Header = () => {
               </button>
             </div>
             <div
-              className={`${styles["mobile-dropdown-content"]} ${
-                activeDropdowns["sanpham"] ? styles.active : ""
-              }`}
+              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
+                }`}
             >
               <a href="#" className={styles["mobile-dropdown-item"]}>
                 ProCOOL™
