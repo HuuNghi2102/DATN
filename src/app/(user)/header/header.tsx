@@ -283,14 +283,14 @@ const Header = () => {
                 {currentUser ? (
                   <>
                     <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
-                    <span style={{ cursor: "pointer" }} onClick={handleToggleUserDropdown}>
+                    <span className="cursor-pointer pt-1" onClick={handleToggleUserDropdown}>
                       Hi, {currentUser.ten_user.slice(0, 5) + "..."}
                     </span>
                   </>
                 ) : (
                   <Link href="/login" style={{ display: "flex", flexDirection: "column", alignItems: "center", textDecoration: "none", color: "inherit" }}>
                     <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
-                    <span style={{ fontSize: "0.8rem" }}>Đăng nhập</span>
+                    <span className="pt-1">Đăng nhập</span>
                   </Link>
                 )}
               </div>
