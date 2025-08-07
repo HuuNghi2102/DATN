@@ -233,38 +233,46 @@ const WishlistPage = () => {
         {/* Tablet Layout */}
         <div className="hidden md:block lg:hidden pt-[11%]">
           <div className="bg-white rounded-lg">
-            <div className="p-6">
-              <div className="flex items-start space-x-4">
-                <button className="text-gray-300 hover:text-gray-500 transition-colors mt-2">
-                  <i className="fas fa-times text-sm"></i>
-                </button>
-                <div className="w-20 h-24 rounded-sm flex items-center justify-center">
-                  <img src="/assets/images/zzz.webp" alt="" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-normal text-gray-800 mb-4">
-                    Áo sơ mi
-                  </h3>
-                  <div className="flex space-x-8 mb-4">
-                    <div>
-                      <span className="text-sm text-gray-600">Price:</span>
-                      <span className="text-lg font-medium text-gray-800 ml-2">
-                        120.000₫
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-sm text-gray-600">Stock:</span>
-                      <span className="text-sm text-gray-600 ml-2">
-                        In Stock
-                      </span>
-                    </div>
-                  </div>
-                  <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                    Move to detail
+            {listWhistList.map((e, i) => (
+              <div key={i} className="p-4">
+                <div className="flex items-start space-x-3">
+                  <button className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
+                    <i className=" text-sm">X</i>
                   </button>
+
+                  <div className="w-16 h-20  rounded-sm flex items-center justify-center">
+                    <img
+                      src={`https://huunghi.id.vn/storage/products/${e.anh_san_pham}`}
+                      alt=""
+                    />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-normal text-gray-800 mb-3">
+                      {e.ten_san_pham}
+                    </h3>
+
+                    <div className="mb-3">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-sm text-gray-600">Price:</span>
+                        <span className="font-medium text-gray-800">
+                          {e.gia_san_pham.toLocaleString("vi-VN")}đ
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Stock:</span>
+                        <span className="text-sm text-gray-600">In Stock</span>
+                      </div>
+                    </div>
+<Link href={`/product/${e.duong_dan}`}>
+                    <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
+                      Move to detail
+                    </button>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
 
             {/* Share Section */}
             <div className="px-6 pb-6">
@@ -323,10 +331,11 @@ const WishlistPage = () => {
                         <span className="text-sm text-gray-600">In Stock</span>
                       </div>
                     </div>
-
+<Link href={`/product/${e.duong_dan}`}>
                     <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
                       Move to detail
                     </button>
+                    </Link>
                   </div>
                 </div>
               </div>

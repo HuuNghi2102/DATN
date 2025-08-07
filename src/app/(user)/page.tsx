@@ -147,7 +147,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://huunghi.id.vn/api/product/getBestSalerProducts');
+        const res = await fetch('https://huunghi.id.vn/api/product/getBestSalerProducts');
         const result = await res.json();
         setProductsBestSaler(result.data.productBestSeller);
       } catch (error) {
@@ -226,7 +226,7 @@ const Home = () => {
   }, [])
   return (
     <div>
-      <div className="container  mx-auto lg:pt-[12%] pt-[20%] max-w-[1200px] px-4">
+      <div className="container  mx-auto lg:pt-[12%] pt-[25%] max-w-[1200px] px-4">
         {/* Banner */}
         <div className="container mx-auto max-w-[1200px] relative">
           {banners.length > 1 && (
