@@ -273,61 +273,51 @@ const Header = () => {
               </div>
               <span>Wishlist</span>
             </div>
-            <div
-              className={styles["user-control-item"]}
-              style={{ position: "relative" }}
-            >
+            <div className={styles["user-control-item"]} style={{ position: "relative" }}>
+              {/* Phần icon user luôn hiển thị */}
               <div
                 className={styles.icon}
-                onClick={handleToggleUserDropdown}
-                style={{ cursor: "pointer" }}
+                onClick={currentUser ? handleToggleUserDropdown : undefined}
+                style={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center" }}
               >
-                <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                {currentUser ? (
+                  <>
+                    <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                    <span style={{ cursor: "pointer" }} onClick={handleToggleUserDropdown}>
+                      Hi, {currentUser.ten_user.slice(0, 5) + "..."}
+                    </span>
+                  </>
+                ) : (
+                  <Link href="/login" style={{ display: "flex", flexDirection: "column", alignItems: "center", textDecoration: "none", color: "inherit" }}>
+                    <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                    <span style={{ fontSize: "0.8rem" }}>Đăng nhập</span>
+                  </Link>
+                )}
               </div>
 
-              {currentUser ? (
-                <>
-                  <span
-                    style={{ cursor: "pointer" }}
-                    onClick={handleToggleUserDropdown}
-                  >
-                    Hi, {currentUser.ten_user.slice(0, 5) + '...'}
-                  </span>
-                  {currentUser && showUserDropdown && (
-                    <div className={styles.dropdown}>
-                      <h1 className="text-center text-xl">
-                        THÔNG TIN TÀI KHOẢN
-                      </h1>
-                      <p className="text-center text-sm">
-                        <strong className="text-black">
-                          Tên tài khoản:{" "}
-                          {currentUser.ten_user}
-                        </strong><br />
-                        {currentUser.sdt_user &&
-                          <strong className="text-black">
-                            Số điện thoại: {""}
-                            {currentUser.sdt_user || ''}
-                          </strong>}
-
-                      </p>
-                      <div className={styles.dropdownButtons}>
-                        <Link href="/user/userprofile">
-                          <button className={styles.btn}>Xem chi tiết</button>
-                        </Link>
-                        <button className={styles.btn} onClick={() => logout()}>
-                          Đăng xuất
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <span>
-                  <Link href="/login">                  <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
-                  </Link>
-                </span>
+              {/* Dropdown khi đã đăng nhập */}
+              {currentUser && showUserDropdown && (
+                <div className={styles.dropdown}>
+                  <h1 className="text-center text-xl">THÔNG TIN TÀI KHOẢN</h1>
+                  <p className="text-center text-sm">
+                    <strong className="text-black">Tên tài khoản: {currentUser.ten_user}</strong><br />
+                    {currentUser.sdt_user && (
+                      <strong className="text-black">Số điện thoại: {currentUser.sdt_user}</strong>
+                    )}
+                  </p>
+                  <div className={styles.dropdownButtons}>
+                    <Link href="/user/userprofile">
+                      <button className={styles.btn}>Xem chi tiết</button>
+                    </Link>
+                    <button className={styles.btn} onClick={logout}>
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
+
+
 
             <div className={styles["user-control-item"]}>
               <div className={`${styles.icon} ${styles["cart-icon"]}`}>
