@@ -3,9 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faPencil, faPlus, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import categoryInterface from "../types/category";
 import { getAPICategories, addCategories, editCategories, hiddenCate } from "../services/categoryService";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '@/app/globals.css';
 import { toast } from "react-toastify";
+
 type FormData = {
   name: string;
   slug: string;
@@ -27,8 +28,9 @@ const CategoryPage = () => {
     nameCate: "",
     slug: "",
   });
-
   const [categoryList, setCategoryList] = useState<categoryInterface[]>([]);
+
+  const formRef = useRef<HTMLDivElement | null>(null); // ref để scroll tới form
 
   useEffect(() => {
     const FetchCate = async () => {
@@ -50,6 +52,12 @@ const CategoryPage = () => {
   ) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const scrollToForm = () => {
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -102,6 +110,7 @@ const CategoryPage = () => {
     });
     setEditingSlug(slugToEdit);
     setShowForm(true);
+    scrollToForm();
   };
 
   const buildCategoryTree = (
@@ -156,6 +165,7 @@ const CategoryPage = () => {
             setFormData({ name: "", slug: "", description: "", parent: "" });
             setEditingSlug(null);
             setShowForm(true);
+            scrollToForm();
           }}
           className="px-4 py-2 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
         >
@@ -164,7 +174,7 @@ const CategoryPage = () => {
       </header>
 
       {showForm && (
-        <div className="bg-white rounded shadow p-6 mb-6">
+        <div ref={formRef} className="bg-white rounded shadow p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             {editingSlug ? "Chỉnh sửa danh mục" : "Thông tin danh mục"}
           </h2>

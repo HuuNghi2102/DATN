@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import { toast } from "react-toastify";
-const GET_BANNER_URL = "http://huunghi.id.vn/api/banner/getBannerIndex";
-const POST_BANNER_URL = "http://huunghi.id.vn/api/banner/addBanner";
-const DELETE_BANNER_URL = "http://huunghi.id.vn/api/banner/deleteBanner/";
+const GET_BANNER_URL = "https://huunghi.id.vn/api/banner/getBannerIndex";
+const POST_BANNER_URL = "https://huunghi.id.vn/api/banner/addBanner";
+const DELETE_BANNER_URL = "https://huunghi.id.vn/api/banner/deleteBanner/";
 
 
 interface Banner {

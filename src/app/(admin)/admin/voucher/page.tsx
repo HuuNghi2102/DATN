@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-toastify";
 import {
@@ -22,6 +22,7 @@ import { CreateVoucher } from "../types/voucher";
 import { changeStatusVoucher } from "../services/voucherServices";
 export default function VoucherManager() {
   // State quản lý form
+  const formRef = useRef<HTMLDivElement | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<null | number>(null);
@@ -88,7 +89,11 @@ export default function VoucherManager() {
     }
   };
 
-
+const scrollToForm = () => {
+  setTimeout(() => {
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 0);
+};
 
 
   // Lấy dữ liệu voucher từ API
@@ -168,11 +173,15 @@ export default function VoucherManager() {
       toast.error("Thêm voucher thất bại!");
     }
   };
+
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
+
+// hàm sửa
   const handleSubmitEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingVoucher) return;
@@ -185,6 +194,7 @@ export default function VoucherManager() {
         setVouchers(newData);
         resetForm();
         toast.success("Cập nhật voucher thành công!");
+
       } else {
         setErrorMessages(result.errors || {});
       }
@@ -195,23 +205,23 @@ export default function VoucherManager() {
   };
 
   // Xóa voucher
-  const handleDelete = async (id: string | number) => {
-    if (!confirm("Bạn có chắc chắn muốn xóa voucher này?")) return;
+  // const handleDelete = async (id: string | number) => {
+  //   if (!confirm("Bạn có chắc chắn muốn xóa voucher này?")) return;
 
-    try {
-      const success = await deleteVoucher(id);
-      if (success) {
-        const updated = await getAPIVouchers();
-        setVouchers(updated);
-        toast.success("Xóa voucher thành công!");
-      } else {
-        toast.error("Xóa voucher thất bại!");
-      }
-    } catch (error) {
-      console.error("Lỗi khi xóa voucher:", error);
-      toast.error("Đã xảy ra lỗi khi xóa voucher!");
-    }
-  };
+  //   try {
+  //     const success = await deleteVoucher(id);
+  //     if (success) {
+  //       const updated = await getAPIVouchers();
+  //       setVouchers(updated);
+  //       toast.success("Xóa voucher thành công!");
+  //     } else {
+  //       toast.error("Xóa voucher thất bại!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi xóa voucher:", error);
+  //     toast.error("Đã xảy ra lỗi khi xóa voucher!");
+  //   }
+  // };
 
   // Reset form
   const resetForm = () => {
@@ -271,6 +281,7 @@ export default function VoucherManager() {
                 ngay_bat_dau: "",
                 ngay_het_han: "",
               });
+              scrollToForm();
             }}
             className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center"
           >
@@ -350,7 +361,7 @@ export default function VoucherManager() {
 
         {/* Form thêm/sửa voucher */}
         {showForm && (
-          <div className="bg-white rounded-lg shadow mb-6">
+          <div ref={formRef} className="bg-white rounded-lg shadow mb-6">
             <div className="px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold">
                 {editMode ? "Chỉnh sửa Voucher" : "Thêm Voucher mới"}
@@ -589,8 +600,8 @@ export default function VoucherManager() {
                       >
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${Number(voucher.trang_thai) === 1
-                              ? "bg-green-500 text-white"
-                              : "bg-red-500 text-white"
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
                             }`}
                         >
                           {Number(voucher.trang_thai) === 1
@@ -614,6 +625,7 @@ export default function VoucherManager() {
                             ngay_bat_dau: voucher.ngay_bat_dau,
                             ngay_het_han: voucher.ngay_het_han,
                           });
+                          scrollToForm();
                         }}
                       >
                         <FontAwesomeIcon icon={faPencil} />
@@ -634,93 +646,89 @@ export default function VoucherManager() {
           </div>
         </div>
         {/* phân trang */}
-<div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 border-t border-gray-200 bg-white">
-  {/* Thông tin tổng đơn */}
-  <div className="text-sm text-gray-600">
-    Hiển thị{" "}
-    <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{" "}
-    <span className="font-medium">
-      {Math.min(currentPage * perPage, vouchers.length + (currentPage - 1) * perPage)}
-    </span>{" "}
-    trong tổng số <span className="font-medium">{vouchers.length}</span> đơn hàng
-  </div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 border-t border-gray-200 bg-white">
+          {/* Thông tin tổng đơn */}
+          <div className="text-sm text-gray-600">
+            Hiển thị{" "}
+            <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{" "}
+            <span className="font-medium">
+              {Math.min(currentPage * perPage, vouchers.length + (currentPage - 1) * perPage)}
+            </span>{" "}
+            trong tổng số <span className="font-medium">{vouchers.length}</span> đơn hàng
+          </div>
 
-  {/* Nút phân trang */}
-  <div className="w-full md:w-auto overflow-x-auto">
-    <div className="flex justify-center md:justify-end space-x-2 min-w-max">
-      {/* Prev */}
-      <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className={`px-3 py-1 rounded-md border ${
-          currentPage === 1
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-white text-gray-700 hover:bg-gray-50"
-        }`}
-      >
-        <FontAwesomeIcon icon={faChevronLeft} />
-      </button>
+          {/* Nút phân trang */}
+          <div className="w-full md:w-auto overflow-x-auto">
+            <div className="flex justify-center md:justify-end space-x-2 min-w-max">
+              {/* Prev */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded-md border ${currentPage === 1
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                  }`}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
 
-      {/* Page numbers */}
-      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-        let pageNum;
-        if (totalPages <= 5) {
-          pageNum = i + 1;
-        } else if (currentPage <= 3) {
-          pageNum = i + 1;
-        } else if (currentPage >= totalPages - 2) {
-          pageNum = totalPages - 4 + i;
-        } else {
-          pageNum = currentPage - 2 + i;
-        }
+              {/* Page numbers */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
 
-        return (
-          <button
-            key={pageNum}
-            onClick={() => handlePageChange(pageNum)}
-            className={`px-3 py-1 rounded-md border ${
-              currentPage === pageNum
-                ? "bg-indigo-500 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            {pageNum}
-          </button>
-        );
-      })}
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-1 rounded-md border ${currentPage === pageNum
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                      }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
 
-      {/* Dấu ba chấm */}
-      {totalPages > 5 && currentPage < totalPages - 2 && (
-        <>
-          <span className="px-3 py-1">...</span>
-          <button
-            onClick={() => handlePageChange(totalPages)}
-            className={`px-3 py-1 rounded-md border ${
-              currentPage === totalPages
-                ? "bg-indigo-500 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-50"
-            }`}
-          >
-            {totalPages}
-          </button>
-        </>
-      )}
+              {/* Dấu ba chấm */}
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <>
+                  <span className="px-3 py-1">...</span>
+                  <button
+                    onClick={() => handlePageChange(totalPages)}
+                    className={`px-3 py-1 rounded-md border ${currentPage === totalPages
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                      }`}
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
 
-      {/* Next */}
-      <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className={`px-3 py-1 rounded-md border ${
-          currentPage === totalPages
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-white text-gray-700 hover:bg-gray-50"
-        }`}
-      >
-        <FontAwesomeIcon icon={faChevronRight} />
-      </button>
-    </div>
-  </div>
-</div>
+              {/* Next */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded-md border ${currentPage === totalPages
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                  }`}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
+          </div>
+        </div>
 
       </main>
     </div>

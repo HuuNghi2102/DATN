@@ -329,7 +329,7 @@ const Home = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(i)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -380,7 +380,7 @@ const Home = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(i)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -428,7 +428,7 @@ const Home = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(i)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -488,7 +488,7 @@ const Home = () => {
                                   : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                                 }
                                 alt="product"
-                                className="w-full transition-all duration-300"
+                                className="w-[173px] h-[171px] object-cover transition-all duration-300"
                                 onMouseEnter={() => setHoveredProduct(product.id_san_pham)}
                                 onMouseLeave={() => setHoveredProduct(null)}
                               />
@@ -533,11 +533,11 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-center my-4">
+          {/* <div className="flex justify-center my-4">
             <button className="w-[100px] h-[35px] border rounded-lg bg-amber-400 text-white hover:bg-amber-500 hover:text-white transition-colors duration-500 cursor-pointer text-sm">
               Xem tất cả
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       <ToastContainer position="top-center" autoClose={3000} />

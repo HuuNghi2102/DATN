@@ -42,6 +42,7 @@ export default function AdminPostManagement() {
   // const [contentFilter, setContentFilter] = useState("");
   // const [statusFilter, setStatusFilter] = useState<number | "">("");
   // const [dateFilter, setDateFilter] = useState("");
+    const formRef = useRef<HTMLDivElement | null>(null); // ref để scroll tới form
   const [errorMessages, setErrorMessages] = useState({
     title: "",
     slug: "",
@@ -230,7 +231,11 @@ export default function AdminPostManagement() {
       setCurrentPage(page);
     }
   };
-
+  const scrollToForm = () => {
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
   if (isLoading) {
     return (
       <div
@@ -272,6 +277,7 @@ export default function AdminPostManagement() {
               setImageFile(null);
               setStatus(false);
               editorRef.current?.setContent("");
+              scrollToForm();
             }}
           >
             <FontAwesomeIcon icon={faPlus} /> Thêm mới
@@ -294,7 +300,7 @@ export default function AdminPostManagement() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded shadow p-6 mb-6">
+        <div ref={formRef} className="bg-white rounded shadow p-6 mb-6">
           <h2 className="text-lg font-semibold mb-4">
             {selectedPost ? "Chỉnh sửa bài viết" : "Thêm bài viết mới"}
           </h2>
@@ -595,6 +601,7 @@ export default function AdminPostManagement() {
                             );
                           }
                         }, 0);
+                        scrollToForm();
                       }}
                       className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600"
                     >

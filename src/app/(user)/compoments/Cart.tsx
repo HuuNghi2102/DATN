@@ -445,7 +445,7 @@ const CartPage = () => {
                 </button>
                 <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center justify-center space-x-2">
                   <i className="fas fa-shopping-cart"></i>
-                  <a href="/">
+                  <a href="/collection/all">
                     <span>Tiếp tục mua hàng</span>
                   </a>
                 </button>

@@ -33,23 +33,7 @@ export default function AllProductPage() {
   const [pageEnd, setPageEnd] = useState(1);
   const [banners, setBanners] = useState<Bannerinterface[]>([]);
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const NextArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      className="absolute top-1/2 text-black hover:text-amber-500 text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
-      onClick={onClick}
-    >
-      <FontAwesomeIcon icon={faChevronRight} />
-    </div>
-  );
 
-  const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      className="absolute top-1/2 text-black hover:text-amber-500 text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
-      onClick={onClick}
-    >
-      <FontAwesomeIcon icon={faChevronLeft} />
-    </div>
-  );
 
   const settings = {
     dots: true,
@@ -201,7 +185,7 @@ export default function AllProductPage() {
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
           <li className="text-gray-500 font-normal">/</li>
           <li className="text-[12px] sm:text-[13px] md:text-[14px] font-semibold mt-0.5">
-            Tất Cả Sản Phẩm
+            {}
           </li>
         </ul>
       </nav>
@@ -295,7 +279,7 @@ export default function AllProductPage() {
                         : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                     }
                     alt="product"
-                    className="w-full transition-all duration-300"
+                    className="w-[202px] h-[202px] object-cover transition-all duration-300 "
                     onMouseEnter={() => setHoveredProduct(i)}
                     onMouseLeave={() => setHoveredProduct(null)}
                   />

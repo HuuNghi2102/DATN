@@ -304,13 +304,6 @@ const Dashboard = () => {
 
   const [orderStatusData, setOrderStatusData] = useState<data[]>([]);
 
-  const topProducts = [
-    { name: "Áo thun nam", sales: 125 },
-    { name: "Quần jean nữ", sales: 98 },
-    { name: "Giày thể thao", sales: 75 },
-    { name: "Túi xách da", sales: 60 },
-    { name: "Ví nam", sales: 45 },
-  ];
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -360,37 +353,6 @@ const Dashboard = () => {
     },
   ];
 
-  // Danh sách đơn hàng mới
-  const recentOrders = [
-    {
-      id: "#DH20230025",
-      customer: "Trần Văn An",
-      amount: "850.000₫",
-      status: "Đã giao",
-      time: "15 phút trước",
-    },
-    {
-      id: "#DH20230026",
-      customer: "Lê Thị Mai",
-      amount: "1.250.000₫",
-      status: "Đang xử lý",
-      time: "30 phút trước",
-    },
-    {
-      id: "#DH20230027",
-      customer: "Phạm Văn Đức",
-      amount: "550.000₫",
-      status: "Đang giao",
-      time: "1 giờ trước",
-    },
-    {
-      id: "#DH20230028",
-      customer: "Nguyễn Thị Hương",
-      amount: "1.450.000₫",
-      status: "Đã hủy",
-      time: "2 giờ trước",
-    },
-  ];
 
   console.log(dayData);
 

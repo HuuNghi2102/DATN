@@ -164,7 +164,6 @@ export default function UserProfile() {
       text: "Sổ địa chỉ",
       href: "/user/sodiachi",
     },
-    { icon: "fas fa-ticket-alt", text: "Vouchers", href: "/" },
     { icon: "fas fa-heart", text: "Sản phẩm đã xem", href: "/user/sanphamdaxem" },
     { icon: "fas fa-lock", text: "Đổi mật khẩu", href: "/user/changePassword" },
   ];
@@ -364,7 +363,7 @@ export default function UserProfile() {
                       onClick={() => setIsEditing(false)}
                       className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors"
                     >
-                      Hủy bỏ:
+                      Hủy bỏ
                     </button>
                     <button
                       onClick={updateUserProfile}
