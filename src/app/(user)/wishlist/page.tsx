@@ -236,7 +236,11 @@ const WishlistPage = () => {
             {listWhistList.map((e, i) => (
               <div key={i} className="p-4">
                 <div className="flex items-start space-x-3">
-                  <button className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
+                  <button
+                    onClick={() =>
+                      removeWhilist(isUser ? e.id_san_pham_yeu_thich : i)
+                    }
+                    className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
                     <i className=" text-sm">X</i>
                   </button>
 
@@ -264,10 +268,10 @@ const WishlistPage = () => {
                         <span className="text-sm text-gray-600">In Stock</span>
                       </div>
                     </div>
-<Link href={`/product/${e.duong_dan}`}>
-                    <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                      Move to detail
-                    </button>
+                    <Link href={`/product/${e.duong_dan}`}>
+                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
+                        Move to detail
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -303,7 +307,11 @@ const WishlistPage = () => {
             {listWhistList.map((e, i) => (
               <div key={i} className="p-4">
                 <div className="flex items-start space-x-3">
-                  <button className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
+                  <button
+                    onClick={() =>
+                      removeWhilist(isUser ? e.id_san_pham_yeu_thich : i)
+                    }
+                    className="text-gray-300 hover:text-gray-500 transition-colors mt-1">
                     <i className=" text-sm">X</i>
                   </button>
 
@@ -331,10 +339,10 @@ const WishlistPage = () => {
                         <span className="text-sm text-gray-600">In Stock</span>
                       </div>
                     </div>
-<Link href={`/product/${e.duong_dan}`}>
-                    <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
-                      Move to detail
-                    </button>
+                    <Link href={`/product/${e.duong_dan}`}>
+                      <button className="text-blue-600 hover:text-blue-700 text-sm font-medium underline transition-colors">
+                        Move to detail
+                      </button>
                     </Link>
                   </div>
                 </div>

@@ -17,7 +17,7 @@ const PaymentSuccess = () => {
       fetchOrder();
     } else {
       toast.error("Đơn hàng không tồn tại!");
-      router.push("/history-order");
+      router.push("/user/history-order");
     }
   }, []);
 
@@ -44,7 +44,7 @@ const PaymentSuccess = () => {
         setIsLoading(false);
       } else {
         toast.error("Đơn hàng không tồn tại!");
-        router.push("/history-order");
+        router.push("/user/history-order");
       }
     } else {
       toast.error("Vui lòng đăng nhập!");
