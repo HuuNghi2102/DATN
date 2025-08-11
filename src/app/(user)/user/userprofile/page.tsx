@@ -468,9 +468,17 @@ export default function UserProfile() {
                       height={100}
                       className="rounded-full w-24 h-24 object-cover border-4 border-white shadow-md"
                     />
+                  ) : user?.anh_dai_dien_user ? (
+                    <img
+                      src={`https://huunghi.id.vn/storage/avatars/${user?.anh_dai_dien_user}`}
+                      alt="User Avatar"
+                      width={120}
+                      height={120}
+                      className="rounded-full w-32 h-32 object-cover border-4 border-white shadow-md"
+                    />
                   ) : (
-                    <div className="rounded-full w-24 h-24 bg-gray-200 flex items-center justify-center border-4 border-white shadow-md">
-                      <i className="fas fa-user text-3xl text-gray-400"></i>
+                    <div className="rounded-full w-32 h-32 bg-gray-200 flex items-center justify-center border-4 border-white shadow-md">
+                      <i className="fas fa-user text-4xl text-gray-400"></i>
                     </div>
                   )}
 
