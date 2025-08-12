@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import ProductInterface from "./interface/productInterface";
 import CategoryInterface from "./interface/categoryProInterface";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 interface Props {
   product: ProductInterface;
@@ -16,6 +18,7 @@ export default function ProductForm({
   typeToken,
   accessToken,
 }: Props) {
+  const router = useRouter();
   const [formData, setFormData] = useState<ProductInterface>(product);
   const [isSaving, setIsSaving] = useState(false);
   const [errForm, setErrForm] = useState({
@@ -100,16 +103,17 @@ export default function ProductForm({
             idCate: errors.idCate ? errors.idCate[0] : "",
           });
         }
-        alert("Cập nhật sản phẩm không thành công");
+        return;
       }
       // Here you would typically call an API to save the product
       console.log("Saving product:", formData);
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Thông tin sản phẩm đã được lưu thành công!");
+      toast.success("Thông tin sản phẩm đã được lưu thành công!");
+      router.push(`/admin/products/edit-product/${formData.duong_dan}`);
     } catch (error) {
       console.error("Error saving product:", error);
-      alert("Có lỗi xảy ra khi lưu thông tin sản phẩm");
+      toast.error("Có lỗi xảy ra khi lưu thông tin sản phẩm");
     } finally {
       setIsSaving(false);
     }
@@ -197,7 +201,9 @@ export default function ProductForm({
                 type="number"
                 name="gia_chua_giam"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                value={formData.gia_chua_giam ?? ""}
+                value={
+                  formData.gia_chua_giam <= 0 ? "" : formData.gia_chua_giam
+                }
                 onChange={handleChange}
               />
 
@@ -213,7 +219,7 @@ export default function ProductForm({
                 type="number"
                 name="phan_tram_giam"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                value={formData.phan_tram_giam ?? ""}
+                value={formData.phan_tram_giam ? formData.phan_tram_giam : ""}
                 onChange={handleChange}
                 min={0}
                 max={100}
@@ -229,10 +235,11 @@ export default function ProductForm({
               Giá bán (VND) *
             </label>
             <input
+              min={0}
               type="number"
-              name="id_loai_san_pham"
+              name="gia_da_giam"
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              value={formData.gia_da_giam}
+              value={formData.gia_da_giam ? formData.gia_da_giam : ""}
               onChange={handleChange}
             />
             {errForm.priceNew && (

@@ -108,28 +108,20 @@ const CartPage = () => {
         "https://huunghi.id.vn/api/function/getProvince"
       );
       const result2 = await res2.json();
-      const province = result2.province.data;
+      const province = result2.province;
       setArrProvince(province);
       setIsLoading(false);
     };
     fetchCarts();
   }, []);
 
-  const getDistrict = async (idProvince: number) => {
+  const getWard = async (idProvince: number) => {
     const res = await fetch(
-      `https://huunghi.id.vn/api/function/getDistrict/${idProvince}`
+      `https://huunghi.id.vn/api/function/getWard/${idProvince}`
     );
     const result = await res.json();
-    const district = result.district.data;
-    setArrDistrict(district);
-  };
-
-  const getWard = async (idDistrict: number) => {
-    const res = await fetch(
-      `https://huunghi.id.vn/api/function/getWard/${idDistrict}`
-    );
-    const result = await res.json();
-    const ward = result.ward.data;
+    const ward = result.ward;
+    console.log(ward);
     setArrWard(ward);
   };
   const deliveryDate = async (idDistrict: number, wardCode: number) => {
@@ -347,7 +339,7 @@ const CartPage = () => {
               </div>
 
               {/* Shipping Info */}
-              <div className="mb-6">
+              {/* <div className="mb-6">
                 <div className="flex items-center space-x-2 mb-4">
                   <i className="fas fa-truck text-gray-600"></i>
                   <span className="font-medium text-gray-900">
@@ -360,52 +352,37 @@ const CartPage = () => {
                     // value={selectedProvince}
                     onChange={(e: any) => {
                       setSelectedProvince(e.target.value);
-                      getDistrict(e.target.value);
+                      getWard(e.target.value);
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
                     <option>Chọn tỉnh/thành phố</option>
                     {arrProvince.map((province: any, index) => (
-                      <option key={index} value={province?.ProvinceID}>
-                        {province?.ProvinceName}
+                      <option key={index} value={province?.province_code}>
+                        {province?.name}
                       </option>
                     ))}
                   </select>
-
                   <select
-                    value={selectedDistrict}
+                    value={selectedWard}
                     onChange={(e: any) => {
-                      setSelectedDistrict(e.target.value);
-                      getWard(e.target.value);
+                      setSelectedWard(e.target.value);
+                      deliveryDate(selectedDistrict, e.target.value);
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   >
-                    <option value="">Chọn Quận/huyện</option>
-                    {arrDistrict.map((district, index) => (
-                      <option key={index} value={district?.DistrictID}>
-                        {district?.DistrictName}
+                    <option value="">Chọn Phường/xã</option>
+                    {arrWard?.map((ward, index) => (
+                      <option key={index} value={ward?.ward_code}>
+                        {ward?.ward_name}
                       </option>
                     ))}
                   </select>
                 </div>
-                <select
-                  value={selectedWard}
-                  onChange={(e: any) => {
-                    setSelectedWard(e.target.value);
-                    deliveryDate(selectedDistrict, e.target.value);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 my-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                >
-                  <option value="">Chọn Phường/xã</option>
-                  {arrWard?.map((ward, index) => (
-                    <option key={index} value={ward?.WardCode}>
-                      {ward?.WardName}
-                    </option>
-                  ))}
-                </select>
+
                 <br></br>
                 <h3>Ngày giao hàng dự kiến : {dateDeliver}</h3>
-              </div>
+              </div> */}
 
               {/* Order Notes */}
               <div className="mb-6">

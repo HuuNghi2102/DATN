@@ -4,8 +4,10 @@ import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import userInterface from "@/app/(user)/compoments/userInterface";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UserProfile() {
+  const router = useRouter();
   const [user, setUser] = useState<userInterface>();
   const [orders, setOrders] = useState<any[]>([]);
   const [reload, setReload] = useState<boolean>(true);
@@ -38,6 +40,7 @@ export default function UserProfile() {
       setUser(uu);
     } else {
       toast.error("Vui lòng đăng nhập");
+      router.push("/login");
     }
   }, [reload]);
 
@@ -50,8 +53,9 @@ export default function UserProfile() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${typeTokenLocal ? JSON.parse(typeTokenLocal) : ""} ${accessTokenLocal ? JSON.parse(accessTokenLocal) : ""
-            }`,
+          Authorization: `${typeTokenLocal ? JSON.parse(typeTokenLocal) : ""} ${
+            accessTokenLocal ? JSON.parse(accessTokenLocal) : ""
+          }`,
         },
       }
     );
@@ -161,10 +165,11 @@ export default function UserProfile() {
                   <li key={index}>
                     <Link href={item.href}>
                       <button
-                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${item.active
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
+                          item.active
                             ? "bg-black text-white"
                             : "text-gray-700 hover:bg-gray-50"
-                          }`}
+                        }`}
                       >
                         <i className={`${item.icon} w-4`}></i>
                         <span className="text-sm">{item.text}</span>
@@ -188,10 +193,11 @@ export default function UserProfile() {
                   <button
                     key={tab.value}
                     onClick={() => setSelectedStatus(tab.value)}
-                    className={`pb-2 border-b-2 ${selectedStatus === tab.value
+                    className={`pb-2 border-b-2 ${
+                      selectedStatus === tab.value
                         ? "border-black text-black font-semibold"
                         : "border-transparent text-gray-600 hover:text-black"
-                      }`}
+                    }`}
                   >
                     {tab.label}
                   </button>

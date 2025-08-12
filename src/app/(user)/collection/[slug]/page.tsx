@@ -24,7 +24,7 @@ export default function AllProductPage() {
     "Sản phẩm nổi bật",
     "",
   ]);
-
+  const [nameCategory, setNameCategory] = useState<string>("Tất cả sản phẩm");
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState("");
   const [products, setProducts] = useState<any[]>([]);
@@ -136,6 +136,30 @@ export default function AllProductPage() {
   const params = useParams();
   const { slug } = params;
 
+  const fetchCategory = async () => {
+    const response = await fetch(
+      `https://huunghi.id.vn/api/categoryProduct/showCategoryProduct/${slug}`
+    );
+    if (response.ok) {
+      const data = await response.json();
+      setNameCategory(data.data.ten_loai);
+    } else {
+      alert("Lấy danh mục không thành công");
+    }
+  };
+
+  useEffect(() => {
+    if (slug == "all") {
+      setNameCategory("Tất cả sản phẩm");
+    } else if (slug == "bestsellers") {
+      setNameCategory("Sản phẩm bán chạy");
+    } else if (slug == "new") {
+      setNameCategory("Sản phẩm mới");
+    } else {
+      fetchCategory();
+    }
+  }, [slug]);
+
   useEffect(() => {
     fetchProducts();
   }, [sort, currentPage]);
@@ -160,7 +184,6 @@ export default function AllProductPage() {
     } else {
       toast.error(data.message);
     }
-    console.log("Nay cung sort", data.data.sort);
   };
 
   // console.log('sort',sort);
@@ -200,7 +223,7 @@ export default function AllProductPage() {
           <li className="text-[12px] font-semibold mt-0.5">Trang chủ</li>
           <li className="text-gray-500 font-normal">/</li>
           <li className="text-[12px] sm:text-[13px] md:text-[14px] font-semibold mt-0.5">
-            Tất Cả Sản Phẩm
+            {nameCategory}
           </li>
         </ul>
       </nav>

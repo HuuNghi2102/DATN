@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 export default function AccountPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("address");
   const [user, setUser] = useState<any>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
@@ -63,6 +65,9 @@ export default function AccountPage() {
         setIsLoading(false);
       };
       fetchAddress();
+    } else {
+      toast.error("Vui lòng đăng nhập");
+      router.push("/login");
     }
   }, []);
 

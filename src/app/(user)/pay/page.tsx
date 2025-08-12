@@ -6,17 +6,12 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FaDotCircle } from "react-icons/fa";
 import userInterface from "../compoments/userInterface";
-import {
-  faSearch,
-  faCartShopping,
-  faCalendarDays,
-  faChevronRight,
-  faBox,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBox, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
 const PayPage = () => {
+  const [isCreateOrder, setIsCreateOrder] = useState(false);
+
   const [errors, setErrors] = useState({
     name: "",
     phone: "",
@@ -55,7 +50,6 @@ const PayPage = () => {
   const [arrMethodPayment, setArrMethodPayment] = useState<any[]>([]);
   const [logoutUser, setLogoutUser] = useState(false);
   const [arrayProvince, setArrayProvince] = useState<any[]>([]);
-  const [arrDistrict, setArrDistrict] = useState<any[]>([]);
   const [arrWard, setArrWard] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -276,8 +270,8 @@ const PayPage = () => {
       "https://huunghi.id.vn/api/function/getProvince"
     );
     const resultProvince = await responseProvince.json();
-    setArrayProvince(resultProvince.province.data);
-    console.log(resultProvince.province.data);
+    setArrayProvince(resultProvince.province);
+    console.log(resultProvince);
 
     // Lấy danh sách phương thức thanh toán
     const responsePaymentMethods = await fetch(
@@ -297,25 +291,14 @@ const PayPage = () => {
     setIsLoading(false);
   };
 
-  // Lấy danh sách quận/huyện theo tỉnh/thành phố
-  const getDistrict = async (idProvince: number) => {
-    const res = await fetch(
-      `https://huunghi.id.vn/api/function/getDistrict/${idProvince}`
-    );
-    const result = await res.json();
-    const district = result.district.data;
-    setArrDistrict(district);
-  };
-
   // Lấy danh sách phường/xã theo quận/huyện
-  const getWard = async (idDistrict: number) => {
+  const getWard = async (idProvince: number) => {
     const res = await fetch(
-      `https://huunghi.id.vn/api/function/getWard/${idDistrict}`
+      `https://huunghi.id.vn/api/function/getWard/${idProvince}`
     );
     const result = await res.json();
-    const ward = result.ward.data;
+    const ward = result.ward;
     setArrWard(ward);
-    console.log("ward", ward);
   };
 
   useEffect(() => {
@@ -328,16 +311,13 @@ const PayPage = () => {
     }
     setSelectedWard(idWard);
     const province = arrayProvince.find(
-      (province) => province.ProvinceID == selectedProvince
+      (province) => province.province_code == selectedProvince
     );
-    const district = arrDistrict.find(
-      (district) => district.DistrictID == selectedDistrict
-    );
-    const ward = arrWard.find((ward) => ward.WardCode === idWard);
+    const ward = arrWard.find((ward) => ward.ward_code === idWard);
 
     setOrderInfo({
       ...orderInfo,
-      location: `${orderInfo.address} ${ward.WardName}, ${district.DistrictName}, ${province.ProvinceName}`,
+      location: `${orderInfo.address} ${ward.ward_name} , ${province.name}`,
     });
     if (selectedProvince !== undefined) {
       setShip(selectedProvince);
@@ -364,10 +344,6 @@ const PayPage = () => {
     let flag = true;
     if (selectedProvince === undefined) {
       arrError.province = "Vui lòng chọn tỉnh/thành phố*";
-      flag = false;
-    }
-    if (selectedDistrict === undefined) {
-      arrError.district = "Vui lòng chọn quận/huyện*";
       flag = false;
     }
     if (selectedWard === undefined) {
@@ -397,6 +373,12 @@ const PayPage = () => {
     });
 
     if (flag == true) {
+      setIsCreateOrder(true);
+
+      setTimeout(() => {
+        setIsCreateOrder(false);
+      }, 6000);
+
       const accessTokenLocal = localStorage.getItem("accessToken");
       const typeTokenLocal = localStorage.getItem("typeToken");
       const userLocal = localStorage.getItem("user");
@@ -425,7 +407,6 @@ const PayPage = () => {
           });
 
           const result = await res.json();
-          console.log(result);
           const idOrder = result.data.idOrder;
 
           if (res.ok) {
@@ -783,7 +764,7 @@ const PayPage = () => {
                   )}
                 </div>
                 <div></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2">
                   <div>
                     <select
                       // value={selectedProvince}
@@ -792,37 +773,7 @@ const PayPage = () => {
                           ? setSelectedProvince(e.target.value)
                           : setSelectedProvince(undefined);
 
-                        setArrDistrict([]);
                         setArrWard([]);
-
-                        setSelectedDistrict(undefined);
-                        setSelectedWard(undefined);
-
-                        !isNaN(e.target.value)
-                          ? getDistrict(e.target.value)
-                          : setArrDistrict([]);
-                      }}
-                      className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                    >
-                      <option>Chọn tỉnh/thành phố</option>
-                      {arrayProvince.map((province, index) => (
-                        <option key={index} value={province.ProvinceID}>
-                          {province?.ProvinceName}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.province && (
-                      <p className="text-red-500 text-sm mt-1">
-                        {errors.province}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <select
-                      onChange={(e: any) => {
-                        !isNaN(e.target.value)
-                          ? setSelectedDistrict(e.target.value)
-                          : setSelectedDistrict(undefined);
 
                         setSelectedWard(undefined);
 
@@ -832,19 +783,20 @@ const PayPage = () => {
                       }}
                       className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                     >
-                      <option>Chọn Quận/huyện</option>
-                      {arrDistrict.map((district, index) => (
-                        <option key={index} value={district.DistrictID}>
-                          {district.DistrictName}
+                      <option>Chọn tỉnh/thành phố</option>
+                      {arrayProvince.map((province, index) => (
+                        <option key={index} value={province.province_code}>
+                          {province.name}
                         </option>
                       ))}
                     </select>
-                    {errors.district && (
+                    {errors.province && (
                       <p className="text-red-500 text-sm mt-1">
-                        {errors.district}
+                        {errors.province}
                       </p>
                     )}
                   </div>
+
                   <div>
                     <select
                       onChange={(e: any) => {
@@ -857,8 +809,8 @@ const PayPage = () => {
                     >
                       <option value={undefined}>Chọn Phường/xã</option>
                       {arrWard.map((ward, index) => (
-                        <option key={index} value={ward.WardCode}>
-                          {ward.WardName}
+                        <option key={index} value={ward.ward_code}>
+                          {ward.ward_name}
                         </option>
                       ))}
                     </select>
@@ -957,10 +909,34 @@ const PayPage = () => {
               </Link>
 
               <button
+                disabled={isCreateOrder}
                 onClick={(e) => Pay()}
-                className="flex-1 px-6 py-3 bg-amber-400 text-white rounded-lg active:bg-amber-500"
+                className="flex-1 px-6 py-3 bg-amber-400 text-white rounded-lg active:bg-amber-500 flex items-center justify-center"
               >
-                Hoàn tất đơn hàng
+                {isCreateOrder ? (
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                    ></path>
+                  </svg>
+                ) : (
+                  "Hoàn tất đơn hàng"
+                )}
               </button>
             </div>
           </div>

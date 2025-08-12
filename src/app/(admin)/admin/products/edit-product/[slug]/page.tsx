@@ -1,6 +1,7 @@
 // File: ProductEditPage.tsx
 "use client";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 import HearderEdit from "../../../components/HearderEdit";
 import ProductForm from "../../../components/ProductForm";
@@ -13,6 +14,7 @@ import ImagetInterFace from "../../../components/interface/imageInterface";
 import VariantInterFace from "../../../components/interface/variantInterface";
 import CategoryInterface from "../../../components/interface/categoryProInterface";
 import SizeInterface from "../../../components/interface/sizeInterface";
+import { error } from "console";
 
 export default function ProductEditPage() {
   const basicColors = [
@@ -178,12 +180,12 @@ export default function ProductEditPage() {
               const sizesList = resultSizes.data;
               setSizes(sizesList ? sizesList : []);
             } else {
-              alert("Lấy kích thước không thành công");
+              toast.error("Lấy kích thước không thành công");
               setSizes([]);
             }
           } else {
-            alert("Lấy sản phẩm không thành công");
-            setProduct(product);
+            toast.error("Lấy sản phẩm không thành công");
+            return router.push("/admin/products");
           }
         } catch (error) {
           console.error("Error fetching products:", error);
