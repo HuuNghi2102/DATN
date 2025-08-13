@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import sizeInterface from '../components/interface/sizeInterface';
 import { useRouter } from 'next/navigation';
+import { toast } from "react-toastify";
 
 interface InventoryItemProps {
   onRemove: () => void;
@@ -35,7 +36,7 @@ const InventoryItem: React.FC<InventoryItemProps> = ({ onRemove, isLast }) => {
             const listSize = result.data;
             setListSize(listSize);
           } else {
-            alert('Lấy sản phẩm không thành công');
+            toast.error('Lấy sản phẩm không thành công');
             setListSize([]);
           }
         } catch (error) {

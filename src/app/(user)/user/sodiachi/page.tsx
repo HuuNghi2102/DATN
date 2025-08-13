@@ -313,7 +313,6 @@ export default function AccountPage() {
       href: "/user/sodiachi",
       active: true,
     },
-    { icon: "fas fa-ticket-alt", text: "Vouchers", href: "" },
     {
       icon: "fas fa-heart",
       text: "Sản phẩm đã xem",

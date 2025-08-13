@@ -3,6 +3,7 @@ import { map } from "jquery";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "../components/interface/imageInterface";
+import { toast } from "react-toastify";
 // import voucherInterface from "../components/interface/voucherInterface";
 import {
   LineChart,
@@ -115,7 +116,7 @@ const Dashboard = () => {
           }));
           setRevenueData(getOk);
         } else {
-          alert("Lấy dữ liệu daonh thu tháng không thành công");
+          toast.error("Lấy dữ liệu daonh thu tháng không thành công");
         }
 
         //
@@ -153,7 +154,7 @@ const Dashboard = () => {
           ];
           setOrderStatusData(getOk);
         } else {
-          alert("Lấy dữ liệu daonh thu tháng không thành công");
+          toast.error("Lấy dữ liệu doanh thu tháng không thành công");
         }
 
         //
@@ -175,7 +176,7 @@ const Dashboard = () => {
             resultResProductBestSeller.data.productBestSeller
           );
         } else {
-          alert("Lấy dữ liệu sản phẩm bán chạy không thành công");
+          toast.error("Lấy dữ liệu sản phẩm bán chạy không thành công");
         }
 
         //
@@ -198,7 +199,7 @@ const Dashboard = () => {
             resultResProductBestSellerAsc.data.productBestSeller
           );
         } else {
-          alert("Lấy dữ liệu sản phẩm bán chạy không thành công");
+          toast.error("Lấy dữ liệu sản phẩm bán chạy không thành công");
         }
 
         const resPointEvalues = await fetch(
@@ -224,7 +225,7 @@ const Dashboard = () => {
             five: parseInt(resultResPointEvalues.data.fiveStart),
           });
         } else {
-          alert("Lấy dữ liệu sản phẩm bán chạy không thành công");
+          toast.error("Lấy dữ liệu sản phẩm bán chạy không thành công");
         }
 
         const resDataOrder = await fetch(
@@ -252,7 +253,7 @@ const Dashboard = () => {
             pendingOrders: resultResDataOrder.data.orderProcess,
           });
         } else {
-          alert("Lấy dữ liệu data báo cáo");
+          toast.info("Lấy dữ liệu data báo cáo");
         }
 
         const resDiscount = await fetch(
@@ -270,7 +271,7 @@ const Dashboard = () => {
           const resultResDiscount = await resDiscount.json();
           setListVoucher(resultResDiscount.data.discount);
         } else {
-          alert("Lấy dữ liệu data báo cáo");
+          toast.info("Lấy dữ liệu data báo cáo");
         }
 
         setIsLoading(false);
@@ -303,13 +304,6 @@ const Dashboard = () => {
 
   const [orderStatusData, setOrderStatusData] = useState<data[]>([]);
 
-  const topProducts = [
-    { name: "Áo thun nam", sales: 125 },
-    { name: "Quần jean nữ", sales: 98 },
-    { name: "Giày thể thao", sales: 75 },
-    { name: "Túi xách da", sales: 60 },
-    { name: "Ví nam", sales: 45 },
-  ];
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -359,37 +353,6 @@ const Dashboard = () => {
     },
   ];
 
-  // Danh sách đơn hàng mới
-  const recentOrders = [
-    {
-      id: "#DH20230025",
-      customer: "Trần Văn An",
-      amount: "850.000₫",
-      status: "Đã giao",
-      time: "15 phút trước",
-    },
-    {
-      id: "#DH20230026",
-      customer: "Lê Thị Mai",
-      amount: "1.250.000₫",
-      status: "Đang xử lý",
-      time: "30 phút trước",
-    },
-    {
-      id: "#DH20230027",
-      customer: "Phạm Văn Đức",
-      amount: "550.000₫",
-      status: "Đang giao",
-      time: "1 giờ trước",
-    },
-    {
-      id: "#DH20230028",
-      customer: "Nguyễn Thị Hương",
-      amount: "1.450.000₫",
-      status: "Đã hủy",
-      time: "2 giờ trước",
-    },
-  ];
 
   console.log(dayData);
 

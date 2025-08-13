@@ -9,6 +9,7 @@ import {
   faChevronDown,
   faHeart,
   faUser,
+  faChevronRight,
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./header.module.css";
@@ -195,7 +196,7 @@ const Header = () => {
     };
   }, []);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   if (!isClient) return null;
   return (
@@ -273,54 +274,51 @@ const Header = () => {
               </div>
               <span>Wishlist</span>
             </div>
-            <div
-              className={styles["user-control-item"]}
-              style={{ position: "relative" }}
-            >
+            <div className={styles["user-control-item"]} style={{ position: "relative" }}>
+              {/* Phần icon user luôn hiển thị */}
               <div
                 className={styles.icon}
-                onClick={handleToggleUserDropdown}
-                style={{ cursor: "pointer" }}
+                onClick={currentUser ? handleToggleUserDropdown : undefined}
+                style={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center" }}
               >
-                <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                {currentUser ? (
+                  <>
+                    <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                    <span className="cursor-pointer pt-1" onClick={handleToggleUserDropdown}>
+                      Hi, {currentUser.ten_user.slice(0, 5) + "..."}
+                    </span>
+                  </>
+                ) : (
+                  <a href="/login" style={{ display: "flex", flexDirection: "column", alignItems: "center", textDecoration: "none", color: "inherit" }}>
+                    <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
+                    <span className="pt-1">Đăng nhập</span>
+                  </a>
+                )}
               </div>
 
-              {currentUser ? (
-                <>
-                  <span
-                    style={{ cursor: "pointer" }}
-                    onClick={handleToggleUserDropdown}
-                  >
-                    Hi, {currentUser.ten_user.slice(0, 5) + "..."}
-                  </span>
-                  {currentUser && showUserDropdown && (
-                    <div className={styles.dropdown}>
-                      <h1 className="text-center text-xl">
-                        THÔNG TIN TÀI KHOẢN
-                      </h1>
-                      <p className="text-center text-sm">
-                        Số điện thoại:{" "}
-                        <strong className="text-black">
-                          {currentUser.sdt_user}
-                        </strong>
-                      </p>
-                      <div className={styles.dropdownButtons}>
-                        <Link href="/user/userprofile">
-                          <button className={styles.btn}>Xem chi tiết</button>
-                        </Link>
-                        <button className={styles.btn} onClick={() => logout()}>
-                          Đăng xuất
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <span>
-                  <Link href="/login">Đăng nhập</Link>
-                </span>
+              {/* Dropdown khi đã đăng nhập */}
+              {currentUser && showUserDropdown && (
+                <div className={styles.dropdown}>
+                  <h1 className="text-center text-xl">THÔNG TIN TÀI KHOẢN</h1>
+                  <p className="text-center text-sm">
+                    <strong className="text-black">Tên tài khoản: {currentUser.ten_user}</strong><br />
+                    {currentUser.sdt_user && (
+                      <strong className="text-black">Số điện thoại: {currentUser.sdt_user}</strong>
+                    )}
+                  </p>
+                  <div className={styles.dropdownButtons}>
+                    <a href="/user/userprofile">
+                      <button className={styles.btn}>Xem chi tiết</button>
+                    </a>
+                    <button className={styles.btn} onClick={logout}>
+                      Đăng xuất
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
+
+
 
             <div className={styles["user-control-item"]}>
               <div className={`${styles.icon} ${styles["cart-icon"]}`}>
@@ -352,17 +350,204 @@ const Header = () => {
                 <li>
                   <Link href="/collection/bestsellers">HÀNG BÁN CHẠY</Link>
                 </li>
-                <li>
-                  <Link href="#">ÁO</Link>
+                <li className="relative group">
+                  <Link
+                    href="#"
+                  >
+                    ÁO NAM
+                    <FontAwesomeIcon className="pr-1 pl-24" icon={faChevronRight} />
+                  </Link>
+
+                  {/* Menu con */}
+                  <ul className="absolute left-[200px] top-0 bg-white shadow-lg hidden group-hover:block min-w-[200px] z-50">
+                    <li>
+                      <Link
+                        href="/collection/ao-thun"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo thun
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/ao-polo"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo Polo
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/ao-so-mi"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo sơ mi
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/ao-khoac"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo khoác
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/ao-ba-lo"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo ba lỗ
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/ao-ni-sweater"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo nỉ - SWEATER
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/ao-hoodie"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo hoodie
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/ao-len"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Áo len
+                      </Link>
+                    </li>
+                  </ul>
+                </li>
+
+                <li className="relative group">
+                  <Link href="#">QUẦN
+                    <FontAwesomeIcon className="pr-1 pl-28" icon={faChevronRight} />
+                  </Link>
+                  {/* Menu con */}
+                  <ul className="absolute left-[200px] top-0 bg-white shadow-lg hidden group-hover:block min-w-[200px] z-50">
+                    <li>
+                      <Link
+                        href="/collection/quan-jean"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Quần jean
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/quan-short"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Quần short
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/quan-tay"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Quần tây
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/quan-jogger-quan-dai"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Quần jogger - quần dài
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/quan-kaki"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Quần Kaki
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/quan-boxer"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Quần Boxer
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
                 <li>
-                  <Link href="#">QUẦN</Link>
+                  <Link href="/collection/quan-boxer">ĐỒ lót - Boxer</Link>
                 </li>
-                <li>
-                  <Link href="#">SET QUẦN ÁO</Link>
-                </li>
-                <li>
-                  <Link href="#">PHỤ KIỆN</Link>
+                <li className="relative group">
+                  <Link href="#">PHỤ KIỆN
+                    <FontAwesomeIcon className="pr-1 pl-24" icon={faChevronRight} />
+                  </Link>
+                  <ul className="absolute left-[200px] top-0 bg-white shadow-lg hidden group-hover:block min-w-[200px] z-50">
+                    <li>
+                      <Link
+                        href="/collection/non"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Nón
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/that-lung"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Thắt lưng
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/balo-tui-xach"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Balo - túi xách
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/vi"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Ví
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/giay-dep"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Giày dép
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/mat-kinh"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Mắt kính
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/collection/vo"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                      >
+                        Vớ
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
               </ul>
             </li>
@@ -382,23 +567,6 @@ const Header = () => {
                 )}
               </li>
             ))}
-            <li className={styles["nav-item"]} style={{ color: "#ff0000" }}>
-              <a href="collections/price-new">GIÁ MỚI</a>
-            </li>
-            <li className={styles["nav-item"]}>
-              JEANS <FontAwesomeIcon icon={faChevronDown} />
-              <ul>
-                <li>
-                  <a href="#">ProCOOL™</a>
-                </li>
-                <li>
-                  <a href="#">SMARTJEAN™</a>
-                </li>
-                <li>
-                  <a href="#">ICON105 Lightweight™</a>
-                </li>
-              </ul>
-            </li>
             <li className={styles["nav-item"]}>
               <Link href="/blog">TIN THỜI TRANG</Link>
             </li>
@@ -411,9 +579,8 @@ const Header = () => {
         onClick={handleOverlayClick}
       ></div>
       <nav
-        className={`${styles["mobile-nav"]} ${
-          isMobileMenuOpen ? styles.active : ""
-        }`}
+        className={`${styles["mobile-nav"]} ${isMobileMenuOpen ? styles.active : ""
+          }`}
       >
         <div className={styles["mobile-nav-header"]}>
           <div>MENU</div>
@@ -427,8 +594,8 @@ const Header = () => {
         <div className={styles["mobile-search-container"]}>
           <form
             onSubmit={(e: any) => e.preventDefault()}
-            className={styles["mobile-search-form"]}
-          >
+            className={styles["mobile-search-form"]}>
+
             <input
               onChange={(e: any) => setInputSearch(e.target.value)}
               type="text"
@@ -469,44 +636,147 @@ const Header = () => {
                 {activeDropdowns["sanpham"] ? "-" : "+"}
               </button>
             </div>
+
+            {/* Menu con của SẢN PHẨM */}
             <div
-              className={`${styles["mobile-dropdown-content"]} ${
-                activeDropdowns["sanpham"] ? styles.active : ""
-              }`}
+              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
+                }`}
             >
-              <a
-                href="/collection/all"
-                className={styles["mobile-dropdown-item"]}
-              >
+              <a href="/collection/all" className={styles["mobile-dropdown-item"]}>
                 TẤT CẢ SẢN PHẨM
               </a>
-              <a
-                href="/collection/bestsellers"
-                className={styles["mobile-dropdown-item"]}
-              >
+              <a href="/collection/bestsellers" className={styles["mobile-dropdown-item"]}>
                 HÀNG BÁN CHẠY
               </a>
-              <a href="#" className={styles["mobile-dropdown-item"]}>
-                ÁO
-              </a>
-              <a href="#" className={styles["mobile-dropdown-item"]}>
-                QUẦN
-              </a>
-              <a href="#" className={styles["mobile-dropdown-item"]}>
-                SET QUẦN ÁO
-              </a>
-              <a href="#" className={styles["mobile-dropdown-item"]}>
-                PHỤ KIỆN
-              </a>
+
+              {/* ÁO NAM */}
+              <div className={styles["mobile-nav-link"]}>
+                <div className="font-medium">
+                  <p>ÁO NAM</p>
+                </div>
+                <button
+                  className={styles["mobile-dropdown-toggle"]}
+                  onClick={() => toggleDropdown("aoNam")}
+                  type="button"
+                >
+                  {activeDropdowns["aoNam"] ? "-" : "+"}
+                </button>
+              </div>
+              <div
+                className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["aoNam"] ? styles.active : ""
+                  }`}
+              >
+                <a href="/collection/ao-thun" className={styles["mobile-dropdown-item"]}>
+                  Áo thun
+                </a>
+                <a href="/collection/ao-polo" className={styles["mobile-dropdown-item"]}>
+                  Áo polo
+                </a>
+                <a href="/collection/ao-so-mi" className={styles["mobile-dropdown-item"]}>
+                  Áo sơ mi
+                </a>
+                <a href="/collection/ao-khoac" className={styles["mobile-dropdown-item"]}>
+                  Áo khoác
+                </a>
+                <a href="/collection/ao-ba-lo" className={styles["mobile-dropdown-item"]}>
+                  Áo ba lỗ
+                </a>
+                <a href="/collection/ao-ni-sweater" className={styles["mobile-dropdown-item"]}>
+                  Áo nỉ - SWEATER
+                </a>
+                <a href="/collection/ao-hoodie" className={styles["mobile-dropdown-item"]}>
+                  Áo hoodie
+                </a>
+                <a href="/collection/ao-len" className={styles["mobile-dropdown-item"]}>
+                  Áo len
+                </a>
+              </div>
+
+              {/* QUẦN */}
+              <div className={styles["mobile-nav-link"]}>
+                <div className="font-medium">
+                  <p>QUẦN NAM</p>
+                </div>
+                <button
+                  className={styles["mobile-dropdown-toggle"]}
+                  onClick={() => toggleDropdown("quan")}
+                  type="button"
+                >
+                  {activeDropdowns["quan"] ? "-" : "+"}
+                </button>
+              </div>
+              <div
+                className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["quan"] ? styles.active : ""
+                  }`}
+              >
+                <a href="/collection/quan-jean" className={styles["mobile-dropdown-item"]}>
+                  Quần jean
+                </a>
+                <a href="/collection/quan-short" className={styles["mobile-dropdown-item"]}>
+                  Quần short
+                </a>
+                <a href="/collection/quan-tay" className={styles["mobile-dropdown-item"]}>
+                  Quần tây
+                </a>
+                <a href="/collection/quan-jogger-quan-dai" className={styles["mobile-dropdown-item"]}>
+                  Quần jogger - quần dài
+                </a>
+                <a href="/collection/quan-kaki" className={styles["mobile-dropdown-item"]}>
+                  Quần Kaki
+                </a>
+                <a href="/collection/quan-boxer" className={styles["mobile-dropdown-item"]}>
+                  Quần Boxer
+                </a>
+              </div>
+
+              {/* PHỤ KIỆN */}
+              <div className={styles["mobile-nav-link"]}>
+                <div className="font-medium">
+                  <p>PHỤ KIỆN</p>
+                </div>                <button
+                  className={styles["mobile-dropdown-toggle"]}
+                  onClick={() => toggleDropdown("phuKien")}
+                  type="button"
+                >
+                  {activeDropdowns["phuKien"] ? "-" : "+"}
+                </button>
+              </div>
+              <div
+                className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["phuKien"] ? styles.active : ""
+                  }`}
+              >
+                <a href="/collection/non" className={styles["mobile-dropdown-item"]}>
+                  Nón
+                </a>
+                <a href="/collection/that-lung" className={styles["mobile-dropdown-item"]}>
+                  Thắt lưng
+                </a>
+                <a href="/collection/balo-tui-xach" className={styles["mobile-dropdown-item"]}>
+                  Balo - Túi xách
+                </a>
+                <a href="/collection/vi" className={styles["mobile-dropdown-item"]}>
+                  Ví
+                </a>
+                <a href="/collection/giay-dep" className={styles["mobile-dropdown-item"]}>
+                  Giày dép
+                </a>
+                <a href="/collection/mat-kinh" className={styles["mobile-dropdown-item"]}>
+                  Mắt kính
+                </a>
+                <a href="/collection/vo" className={styles["mobile-dropdown-item"]}>
+                  Vớ
+                </a>
+              </div>
             </div>
           </li>
+
           {/* Duyệt danh mục từ API */}
           {category.map((item, index) => (
             <li className={styles["mobile-nav-item"]} key={index}>
               {item.categories && item.categories.length > 0 ? (
                 <>
                   <div className={styles["mobile-nav-link"]}>
-                    <a href={`/${item.duong_dan}`}>
+                    <a href={`/collection/${item.duong_dan}`}>
                       {item.ten_loai.toUpperCase()}
                     </a>
                     <button
@@ -518,14 +788,13 @@ const Header = () => {
                     </button>
                   </div>
                   <div
-                    className={`${styles["mobile-dropdown-content"]} ${
-                      activeDropdowns[index] ? styles.active : ""
-                    }`}
+                    className={`${styles["mobile-dropdown-content"]} ${activeDropdowns[index] ? styles.active : ""
+                      }`}
                   >
                     {item.categories.map((subItem: any, subIndex: number) => (
                       <a
                         key={subIndex}
-                        href={`/${subItem.duong_dan}`}
+                        href={`/collection/${subItem.duong_dan}`}
                         className={styles["mobile-dropdown-item"]}
                       >
                         {subItem.ten_loai}
@@ -535,7 +804,7 @@ const Header = () => {
                 </>
               ) : (
                 <a
-                  href={`/${item.duong_dan}`}
+                  href={`/collection/${item.duong_dan}`}
                   className={styles["mobile-nav-link"]}
                 >
                   {item.ten_loai.toUpperCase()}
@@ -567,9 +836,8 @@ const Header = () => {
               </button>
             </div>
             <div
-              className={`${styles["mobile-dropdown-content"]} ${
-                activeDropdowns["sanpham"] ? styles.active : ""
-              }`}
+              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
+                }`}
             >
               <a href="#" className={styles["mobile-dropdown-item"]}>
                 ProCOOL™
@@ -584,7 +852,7 @@ const Header = () => {
           </li>
           {/* Mục cố định: TIN THỜI TRANG */}
           <li className={styles["mobile-nav-item"]}>
-            <a href="/tin-thoi-trang" className={styles["mobile-nav-link"]}>
+            <a href="/blog" className={styles["mobile-nav-link"]}>
               TIN THỜI TRANG
             </a>
           </li>

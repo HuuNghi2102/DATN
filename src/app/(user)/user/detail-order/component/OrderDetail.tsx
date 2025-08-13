@@ -183,8 +183,7 @@ export default function OrderDetail() {
       text: "Sổ địa chỉ",
       href: "/user/sodiachi",
     },
-    { icon: "fas fa-ticket-alt", text: "Vouchers", href: "/" },
-    { icon: "fas fa-heart", text: "Sản phẩm đã xem", href: "/" },
+    { icon: "fas fa-heart", text: "Sản phẩm đã xem", href: "/sanphamdaxem" },
     { icon: "fas fa-lock", text: "Đổi mật khẩu", href: "/user/changePassword" },
   ];
 

@@ -180,19 +180,19 @@ const TableRow: React.FC<TableRowProps> = ({ product }) => {
         <div className="flex space-x-2">
           <a href={`/admin/products/edit-product/${product.duong_dan}`}>
             <button
-              className="p-2 rounded-md text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+              className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600"
               aria-label="Edit"
             >
               <FaPencilAlt size={14} />
             </button>
           </a>
 
-          <button
+          {/* <button
             className="p-2 rounded-md text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
             aria-label="Delete"
           >
             <FaTrash size={14} />
-          </button>
+          </button> */}
         </div>
       </td>
     </tr>

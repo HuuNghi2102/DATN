@@ -3,6 +3,7 @@ import { map } from "jquery";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "./components/interface/imageInterface";
+import { toast } from "react-toastify";
 // import voucherInterface from "../components/interface/voucherInterface";
 import {
   LineChart,
@@ -64,7 +65,7 @@ interface data {
   value: number;
 }
 
-const Dashboard = () => {
+const PageAdmin = () => {
   const router = useRouter();
   const [dayData, setDayData] = useState<string>("day");
 
@@ -115,7 +116,7 @@ const Dashboard = () => {
           }));
           setRevenueData(getOk);
         } else {
-          alert("Lấy dữ liệu daonh thu tháng không thành công");
+          toast.error("Lấy dữ liệu daonh thu tháng không thành công");
         }
 
         //
@@ -153,7 +154,7 @@ const Dashboard = () => {
           ];
           setOrderStatusData(getOk);
         } else {
-          alert("Lấy dữ liệu daonh thu tháng không thành công");
+          toast.error("Lấy dữ liệu doanh thu tháng không thành công");
         }
 
         //
@@ -175,7 +176,7 @@ const Dashboard = () => {
             resultResProductBestSeller.data.productBestSeller
           );
         } else {
-          alert("Lấy dữ liệu sản phẩm bán chạy không thành công");
+          toast.error("Lấy dữ liệu sản phẩm bán chạy không thành công");
         }
 
         //
@@ -198,7 +199,7 @@ const Dashboard = () => {
             resultResProductBestSellerAsc.data.productBestSeller
           );
         } else {
-          alert("Lấy dữ liệu sản phẩm bán chạy không thành công");
+          toast.error("Lấy dữ liệu sản phẩm bán chạy không thành công");
         }
 
         const resPointEvalues = await fetch(
@@ -224,7 +225,7 @@ const Dashboard = () => {
             five: parseInt(resultResPointEvalues.data.fiveStart),
           });
         } else {
-          alert("Lấy dữ liệu sản phẩm bán chạy không thành công");
+          toast.error("Lấy dữ liệu sản phẩm bán chạy không thành công");
         }
 
         const resDataOrder = await fetch(
@@ -252,7 +253,7 @@ const Dashboard = () => {
             pendingOrders: resultResDataOrder.data.orderProcess,
           });
         } else {
-          alert("Lấy dữ liệu data báo cáo");
+          toast.info("Lấy dữ liệu data báo cáo");
         }
 
         const resDiscount = await fetch(
@@ -270,7 +271,7 @@ const Dashboard = () => {
           const resultResDiscount = await resDiscount.json();
           setListVoucher(resultResDiscount.data.discount);
         } else {
-          alert("Lấy dữ liệu data báo cáo");
+          toast.info("Lấy dữ liệu data báo cáo");
         }
 
         setIsLoading(false);
@@ -844,4 +845,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default PageAdmin;

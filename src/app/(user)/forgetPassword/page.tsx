@@ -2,7 +2,7 @@
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useState } from "react";
-
+import Link from "next/link";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [errorEmail, setErrEmail] = useState("");
@@ -103,12 +103,12 @@ export default function ForgotPasswordPage() {
             </div>
             {/* Login Link */}
             <div className="mt-6 text-center">
-              <a
-                href="#"
+              <Link
+                href="/login"
                 className="text-sm text-gray-500 hover:text-gray-700 transition duration-200"
               >
                 Đăng nhập
-              </a>
+              </Link>
             </div>
           </div>
         </div>

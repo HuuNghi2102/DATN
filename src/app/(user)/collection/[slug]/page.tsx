@@ -33,33 +33,17 @@ export default function AllProductPage() {
   const [pageEnd, setPageEnd] = useState(1);
   const [banners, setBanners] = useState<Bannerinterface[]>([]);
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
-  const NextArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      className="absolute top-1/2 text-black hover:text-amber-500 text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
-      onClick={onClick}
-    >
-      <FontAwesomeIcon icon={faChevronRight} />
-    </div>
-  );
-
-  const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
-    <div
-      className="absolute top-1/2 text-black hover:text-amber-500 text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
-      onClick={onClick}
-    >
-      <FontAwesomeIcon icon={faChevronLeft} />
-    </div>
-  );
 
   const settings = {
     dots: true,
     infinite: true,
-    autoplaySpeed: 3000,
+    autoplay: true,
+    autoplaySpeed: 2000,
     speed: 200,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    // nextArrow: <NextArrow />,
+    // prevArrow: <PrevArrow />,
   };
 
   const addWhistList = async (
@@ -316,7 +300,7 @@ export default function AllProductPage() {
                         : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                     }
                     alt="product"
-                    className="w-full transition-all duration-300"
+                    className="w-[202px] h-[202px] object-cover transition-all duration-300 "
                     onMouseEnter={() => setHoveredProduct(i)}
                     onMouseLeave={() => setHoveredProduct(null)}
                   />
@@ -343,7 +327,7 @@ export default function AllProductPage() {
                 </a>
               </div>
               <div className="px-1 mt-2">
-                <p className="text-sm line-clamp- h-[40px]">
+                <p className="text-sm line-clamp-2 h-[40px]">
                   {product.ten_san_pham}
                 </p>
                 <strong className="text-sm text-red-500">

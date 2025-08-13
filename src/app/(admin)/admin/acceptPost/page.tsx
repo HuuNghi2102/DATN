@@ -24,6 +24,7 @@ import {
 } from "../services/articleService";
 import { Editor } from "@tinymce/tinymce-react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 const PendingPostsPage = () => {
   const [posts, setPosts] = useState<articleInterface[]>([]);
   const [showForm, setShowForm] = useState(false);
@@ -187,9 +188,9 @@ const PendingPostsPage = () => {
                           post.duong_dan
                         );
                         if (!success) {
-                          alert("❌ Đổi trạng thái thất bại");
+                          toast.error(" Đổi trạng thái thất bại");
                         } else {
-                          alert("✅ Đổi trạng thái thành công");
+                          toast.success(" Đổi trạng thái thành công");
                           const updated = await getAPIArticle();
                           setPosts(updated);
                         }
@@ -217,7 +218,7 @@ const PendingPostsPage = () => {
                           <FontAwesomeIcon
                             icon={faEyeSlash}
                             onClick={() => {
-                              alert("Trạng thái phải hoạt động!");
+                              toast.error("Trạng thái phải hoạt động!");
                             }}
                           />
                         ) : (

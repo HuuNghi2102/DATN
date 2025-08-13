@@ -6,6 +6,7 @@ import orderInterface from "../components/interface/orderInterface";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faTrash, faPencil, faPlus, faCheck, faClock,faEyeSlash,faChevronRight,faChevronLeft,faMapMarkerAlt,faPhone,faFilter,faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 //array status order of shipper
 const statusOrderOfShipper = [
@@ -88,7 +89,7 @@ const OrderManagement = () => {
           setCountDestroy(resultOrder.data.countDestroy);
           setIsLoading(false);
         } else {
-          alert("Lấy danh sách đơn hàng thành công");
+          toast.success("Lấy danh sách đơn hàng thành công");
         }
       } else {
         router.push("/user/userprofile");
@@ -191,7 +192,7 @@ const OrderManagement = () => {
         }
         // setTotalCateOrder(newStatus);
       } else {
-        alert("Cập nhật không thành công");
+        toast.error("Cập nhật không thành công");
       }
     }
   };

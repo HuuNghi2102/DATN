@@ -15,6 +15,7 @@ import {
 import { useParams, useRouter } from "next/navigation";
 import userInterface from "../../../components/interface/userInterface";
 import roleInterface from "../../../components/interface/roleInterface";
+import { toast } from "react-toastify";
 
 export default function UserDetailPage() {
   const useParam = useParams();
@@ -66,7 +67,7 @@ export default function UserDetailPage() {
           setIdRole(user.id_vai_tro);
           setUser(user);
         } else {
-          alert("Người dùng không tồn tại");
+          toast.error("Người dùng không tồn tại");
           router.push("/admin/users");
         }
 
@@ -85,7 +86,7 @@ export default function UserDetailPage() {
           const roles = resultRole.data.roles;
           setListRole(roles);
         } else {
-          alert("Lấy danh sách role không thành công");
+          toast.error("Lấy danh sách role không thành công");
         }
 
         setIsLoading(false);
@@ -166,7 +167,7 @@ export default function UserDetailPage() {
       const userUpdated = result.data.user;
       setUser(userUpdated);
     } else {
-      alert("Đã xảy ra lỗi! Vui lòng thử lại.");
+      toast.error("Đã xảy ra lỗi! Vui lòng thử lại.");
     }
   };
 

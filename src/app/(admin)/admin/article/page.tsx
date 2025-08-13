@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
@@ -19,6 +20,7 @@ import {
   changeStatusArticle,
 } from "../services/articleService";
 import { Editor } from "@tinymce/tinymce-react";
+import { post } from "jquery";
 
 export default function AdminPostManagement() {
   const [posts, setPosts] = useState<articleInterface[]>([]);
@@ -40,6 +42,7 @@ export default function AdminPostManagement() {
   // const [contentFilter, setContentFilter] = useState("");
   // const [statusFilter, setStatusFilter] = useState<number | "">("");
   // const [dateFilter, setDateFilter] = useState("");
+    const formRef = useRef<HTMLDivElement | null>(null); // ref để scroll tới form
   const [errorMessages, setErrorMessages] = useState({
     title: "",
     slug: "",
@@ -155,7 +158,7 @@ export default function AdminPostManagement() {
         return;
       }
       await refreshPosts();
-      alert("Thêm bài viết thành công!");
+      toast.success("Thêm bài viết thành công!");
       resetForm();
     } catch (error) {
       console.error("Lỗi khi tạo bài viết:", error);
@@ -165,7 +168,7 @@ export default function AdminPostManagement() {
   const handleEditArticle = async () => {
     const content = editorRef.current?.getContent();
     if (!selectedPost || !title || !slug || !content || !imageFile) {
-      alert("Vui lòng nhập đầy đủ thông tin!");
+      toast.error("Vui lòng nhập đầy đủ thông tin!");
       return;
     }
 
@@ -194,7 +197,7 @@ export default function AdminPostManagement() {
         return;
       }
       await refreshPosts();
-      alert("Sửa bài viết thành công");
+      toast.success("Sửa bài viết thành công");
       resetForm();
     } catch (error) {
       console.error("Lỗi khi cập nhật bài viết:", error);
@@ -217,10 +220,10 @@ export default function AdminPostManagement() {
   const handleDelete = async (slugArticle: string | number) => {
     const getdeleteArticle = await deleteArticle(slugArticle);
     if (getdeleteArticle) {
-      alert("Xóa thành công");
+      toast.success("Xóa thành công");
       await refreshPosts();
     } else {
-      alert("Xóa thất bại");
+      toast.error("Xóa thất bại");
     }
   };
   const handlePageChange = (page: number) => {
@@ -228,7 +231,11 @@ export default function AdminPostManagement() {
       setCurrentPage(page);
     }
   };
-
+  const scrollToForm = () => {
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
   if (isLoading) {
     return (
       <div
@@ -270,6 +277,7 @@ export default function AdminPostManagement() {
               setImageFile(null);
               setStatus(false);
               editorRef.current?.setContent("");
+              scrollToForm();
             }}
           >
             <FontAwesomeIcon icon={faPlus} /> Thêm mới
@@ -292,7 +300,7 @@ export default function AdminPostManagement() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded shadow p-6 mb-6">
+        <div ref={formRef} className="bg-white rounded shadow p-6 mb-6">
           <h2 className="text-lg font-semibold mb-4">
             {selectedPost ? "Chỉnh sửa bài viết" : "Thêm bài viết mới"}
           </h2>
@@ -552,14 +560,14 @@ export default function AdminPostManagement() {
                       if (!confirmChange) return;
                       const success = await changeStatusArticle(post.duong_dan);
                       if (!success) {
-                        alert("❌ Đổi trạng thái thất bại");
+                        toast.error("Đổi trạng thái thất bại");
                       } else {
-                        alert("✅ Đổi trạng thái thành công");
+                        toast.success("Đổi trạng thái thành công");
                         const updated = await getAPIArticle();
                         setPosts(updated);
                       }
                     }}
-                    className=" rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
+                    className=" rounded flex w-[111px] items-center justify-center hover:border-yellow-500 text-yellow-600"
                     title="Đổi trạng thái"
                   >
                     <span
@@ -593,6 +601,7 @@ export default function AdminPostManagement() {
                             );
                           }
                         }, 0);
+                        scrollToForm();
                       }}
                       className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600"
                     >
@@ -611,91 +620,97 @@ export default function AdminPostManagement() {
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
-        {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
-        <div className="text-sm text-gray-600">
-          Hiển thị{" "}
-          <span className="font-medium">{(currentPage - 1) * perPage + 1}</span>{" "}
-          đến{" "}
-          <span className="font-medium">
-            {Math.min(
+<div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 border-t border-gray-200 bg-white">
+  {/* Thông tin tổng đơn */}
+  <div className="text-sm text-gray-600">
+    Hiển thị{" "}
+    <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{" "}
+    <span className="font-medium">
+                  {Math.min(
               currentPage * perPage,
               posts.length + (currentPage - 1) * perPage
             )}
-          </span>{" "}
-          trong tổng số <span className="font-medium">{posts.length}</span> bài
-          viết
-        </div>
-        <div className="flex space-x-2">
+    </span>{" "}
+    trong tổng số <span className="font-medium">{posts.length}</span> đơn hàng
+  </div>
+
+  {/* Nút phân trang */}
+  <div className="w-full md:w-auto overflow-x-auto">
+    <div className="flex justify-center md:justify-end space-x-2 min-w-max">
+      {/* Prev */}
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={`px-3 py-1 rounded-md border ${
+          currentPage === 1
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-gray-50"
+        }`}
+      >
+        <FontAwesomeIcon icon={faChevronLeft} />
+      </button>
+
+      {/* Page numbers */}
+      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+        let pageNum;
+        if (totalPages <= 5) {
+          pageNum = i + 1;
+        } else if (currentPage <= 3) {
+          pageNum = i + 1;
+        } else if (currentPage >= totalPages - 2) {
+          pageNum = totalPages - 4 + i;
+        } else {
+          pageNum = currentPage - 2 + i;
+        }
+
+        return (
           <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            key={pageNum}
+            onClick={() => handlePageChange(pageNum)}
             className={`px-3 py-1 rounded-md border ${
-              currentPage === 1
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              currentPage === pageNum
+                ? "bg-indigo-500 text-white"
                 : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            <FontAwesomeIcon icon={faChevronLeft} />
+            {pageNum}
           </button>
+        );
+      })}
 
-          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-            let pageNum;
-            if (totalPages <= 5) {
-              pageNum = i + 1;
-            } else if (currentPage <= 3) {
-              pageNum = i + 1;
-            } else if (currentPage >= totalPages - 2) {
-              pageNum = totalPages - 4 + i;
-            } else {
-              pageNum = currentPage - 2 + i;
-            }
-
-            return (
-              <button
-                key={pageNum}
-                onClick={() => handlePageChange(pageNum)}
-                className={`px-3 py-1 rounded-md border ${
-                  currentPage === pageNum
-                    ? "bg-indigo-500 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                {pageNum}
-              </button>
-            );
-          })}
-
-          {totalPages > 5 && currentPage < totalPages - 2 && (
-            <span className="px-3 py-1">...</span>
-          )}
-
-          {totalPages > 5 && currentPage < totalPages - 2 && (
-            <button
-              onClick={() => handlePageChange(totalPages)}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === totalPages
-                  ? "bg-indigo-500 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-            >
-              {totalPages}
-            </button>
-          )}
-
+      {/* Dấu ba chấm */}
+      {totalPages > 5 && currentPage < totalPages - 2 && (
+        <>
+          <span className="px-3 py-1">...</span>
           <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(totalPages)}
             className={`px-3 py-1 rounded-md border ${
               currentPage === totalPages
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                ? "bg-indigo-500 text-white"
                 : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            <FontAwesomeIcon icon={faChevronRight} />
+            {totalPages}
           </button>
-        </div>
-      </div>
+        </>
+      )}
+
+      {/* Next */}
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`px-3 py-1 rounded-md border ${
+          currentPage === totalPages
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-gray-50"
+        }`}
+      >
+        <FontAwesomeIcon icon={faChevronRight} />
+      </button>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 }

@@ -211,7 +211,7 @@ const EcommerceSearchPage: React.FC = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(i)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -230,7 +230,7 @@ const EcommerceSearchPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="px-1 mt-2">
-                    <p className="text-sm ">{product.ten_san_pham}</p>
+                    <p className="text-sm line-clamp-2 h-[40px] ">{product.ten_san_pham}</p>
                     <strong className="text-sm text-red-500">{product.gia_da_giam?.toLocaleString('vi-VN')} VNĐ</strong>
                   </div>
                 </div>

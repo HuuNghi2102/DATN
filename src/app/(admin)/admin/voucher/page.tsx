@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 import {
   faPlus,
   faTrash,
@@ -21,6 +22,7 @@ import { CreateVoucher } from "../types/voucher";
 import { changeStatusVoucher } from "../services/voucherServices";
 export default function VoucherManager() {
   // State quản lý form
+  const formRef = useRef<HTMLDivElement | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<null | number>(null);
@@ -43,8 +45,8 @@ export default function VoucherManager() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(20);
-    const [search, setSearch] = useState<string | "">("");
-    const [type, setType] = useState<string|"">("");
+  const [search, setSearch] = useState<string | "">("");
+  const [type, setType] = useState<string | "">("");
   const [getstatus, setgetStatus] = useState<number | "">("");
 
   const getAPIVouchers = async (): Promise<interfaceVoucher[]> => {
@@ -87,7 +89,11 @@ export default function VoucherManager() {
     }
   };
 
-
+const scrollToForm = () => {
+  setTimeout(() => {
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 0);
+};
 
 
   // Lấy dữ liệu voucher từ API
@@ -104,7 +110,7 @@ export default function VoucherManager() {
     };
 
     fetchVouchers();
-  }, [currentPage,search,type,getstatus]);
+  }, [currentPage, search, type, getstatus]);
 
   // Xử lý thay đổi form
   const handleChange = (
@@ -117,7 +123,7 @@ export default function VoucherManager() {
 
       // Nếu là loại giảm giá phần trăm, giới hạn tối đa 100
       if (formData.loai_giam_gia === "phan_tram" && numericValue > 100) {
-        alert("❌ Giá trị giảm theo phần trăm không được vượt quá 100%");
+        toast.error("❌ Giá trị giảm theo phần trăm không được vượt quá 100%");
         return;
       }
 
@@ -158,20 +164,24 @@ export default function VoucherManager() {
         const newData = await getAPIVouchers();
         setVouchers(newData);
         resetForm();
-        alert("Thêm voucher thành công!");
+        toast.success("Thêm voucher thành công!");
       } else {
         setErrorMessages(result.errors || {});
       }
     } catch (error) {
       console.error("Lỗi khi thêm voucher:", error);
-      alert("Thêm voucher thất bại!");
+      toast.error("Thêm voucher thất bại!");
     }
   };
+
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
+
+// hàm sửa
   const handleSubmitEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingVoucher) return;
@@ -183,34 +193,35 @@ export default function VoucherManager() {
         const newData = await getAPIVouchers();
         setVouchers(newData);
         resetForm();
-        alert("Cập nhật voucher thành công!");
+        toast.success("Cập nhật voucher thành công!");
+
       } else {
         setErrorMessages(result.errors || {});
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật voucher:", error);
-      alert("Cập nhật voucher thất bại!");
+      toast.error("Cập nhật voucher thất bại!");
     }
   };
 
   // Xóa voucher
-  const handleDelete = async (id: string | number) => {
-    if (!confirm("Bạn có chắc chắn muốn xóa voucher này?")) return;
+  // const handleDelete = async (id: string | number) => {
+  //   if (!confirm("Bạn có chắc chắn muốn xóa voucher này?")) return;
 
-    try {
-      const success = await deleteVoucher(id);
-      if (success) {
-        const updated = await getAPIVouchers();
-        setVouchers(updated);
-        alert("Xóa voucher thành công!");
-      } else {
-        alert("Xóa voucher thất bại!");
-      }
-    } catch (error) {
-      console.error("Lỗi khi xóa voucher:", error);
-      alert("Đã xảy ra lỗi khi xóa voucher!");
-    }
-  };
+  //   try {
+  //     const success = await deleteVoucher(id);
+  //     if (success) {
+  //       const updated = await getAPIVouchers();
+  //       setVouchers(updated);
+  //       toast.success("Xóa voucher thành công!");
+  //     } else {
+  //       toast.error("Xóa voucher thất bại!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi xóa voucher:", error);
+  //     toast.error("Đã xảy ra lỗi khi xóa voucher!");
+  //   }
+  // };
 
   // Reset form
   const resetForm = () => {
@@ -270,6 +281,7 @@ export default function VoucherManager() {
                 ngay_bat_dau: "",
                 ngay_het_han: "",
               });
+              scrollToForm();
             }}
             className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center"
           >
@@ -292,10 +304,10 @@ export default function VoucherManager() {
                 <input
                   type="text"
                   value={search}
-              onChange={(e: any) => {
-                setCurrentPage(1);
-                setSearch(e.target.value);
-              }}
+                  onChange={(e: any) => {
+                    setCurrentPage(1);
+                    setSearch(e.target.value);
+                  }}
                   placeholder="Nhập mã cần tìm..."
                   className="w-full pl-8 pr-4 py-2 border rounded"
                 />
@@ -334,7 +346,7 @@ export default function VoucherManager() {
               </label>
               <select
                 value={getstatus}
-                onChange={(e:any) => setgetStatus(e.target.value)}
+                onChange={(e: any) => setgetStatus(e.target.value)}
                 className="w-full px-4 py-2 border rounded"
               >
                 <option value="">Tất cả</option>
@@ -349,7 +361,7 @@ export default function VoucherManager() {
 
         {/* Form thêm/sửa voucher */}
         {showForm && (
-          <div className="bg-white rounded-lg shadow mb-6">
+          <div ref={formRef} className="bg-white rounded-lg shadow mb-6">
             <div className="px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold">
                 {editMode ? "Chỉnh sửa Voucher" : "Thêm Voucher mới"}
@@ -433,6 +445,7 @@ export default function VoucherManager() {
                     placeholder="0"
                     className="w-full border px-4 py-2 rounded"
                     maxLength={255}
+                    minLength={0}
                   />
                   {errorMessages.minOrderValue && (
                     <p className="text-red-500 text-sm mt-1">
@@ -575,22 +588,21 @@ export default function VoucherManager() {
                             voucher.id_ma_giam_gia
                           );
                           if (!success) {
-                            alert("❌ Đổi trạng thái thất bại");
+                            toast.error("Đổi trạng thái thất bại");
                           } else {
-                            alert("✅ Đổi trạng thái thành công");
+                            toast.success("Đổi trạng thái thành công");
                             const updated = await getAPIVouchers();
                             setVouchers(updated);
                           }
                         }}
-                        className=" rounded flex items-center justify-center hover:border-yellow-500 text-yellow-600"
+                        className=" rounded flex w-[111px] items-center justify-center hover:border-yellow-500 text-yellow-600"
                         title="Đổi trạng thái"
                       >
                         <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            Number(voucher.trang_thai) === 1
-                              ? "bg-green-500 text-white"
-                              : "bg-red-500 text-white"
-                          }`}
+                          className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${Number(voucher.trang_thai) === 1
+                            ? "bg-green-500 text-white"
+                            : "bg-red-500 text-white"
+                            }`}
                         >
                           {Number(voucher.trang_thai) === 1
                             ? "Đang hoạt động"
@@ -613,17 +625,19 @@ export default function VoucherManager() {
                             ngay_bat_dau: voucher.ngay_bat_dau,
                             ngay_het_han: voucher.ngay_het_han,
                           });
+                          scrollToForm();
                         }}
                       >
                         <FontAwesomeIcon icon={faPencil} />
                       </button>
 
-                      <button
+                      {/* <button
+                      disabled={true}
                         onClick={() => handleDelete(voucher.id_ma_giam_gia)}
                         className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 text-red-600"
                       >
                         <FontAwesomeIcon icon={faTrash} />
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))}
@@ -632,85 +646,90 @@ export default function VoucherManager() {
           </div>
         </div>
         {/* phân trang */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white">
-          {/* Hiển thị <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{' '} */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 border-t border-gray-200 bg-white">
+          {/* Thông tin tổng đơn */}
           <div className="text-sm text-gray-600">
             Hiển thị{" "}
+            <span className="font-medium">{(currentPage - 1) * perPage + 1}</span> đến{" "}
             <span className="font-medium">
-              {(currentPage - 1) * perPage + 1}
+              {Math.min(currentPage * perPage, vouchers.length + (currentPage - 1) * perPage)}
             </span>{" "}
-            đến{" "}
-            <span className="font-medium">
-              {Math.min(
-                currentPage * perPage,
-                vouchers.length + (currentPage - 1) * perPage
-              )}
-            </span>{" "}
-            trong tổng số <span className="font-medium">{vouchers.length}</span>{" "}
-            voucher
+            trong tổng số <span className="font-medium">{vouchers.length}</span> đơn hàng
           </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === 1
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-            >
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
 
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
-
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => handlePageChange(pageNum)}
-                  className={`px-3 py-1 rounded-md border ${currentPage === pageNum ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-
-            {totalPages > 5 && currentPage < totalPages - 2 && (
-              <span className="px-3 py-1">...</span>
-            )}
-
-            {totalPages > 5 && currentPage < totalPages - 2 && (
+          {/* Nút phân trang */}
+          <div className="w-full md:w-auto overflow-x-auto">
+            <div className="flex justify-center md:justify-end space-x-2 min-w-max">
+              {/* Prev */}
               <button
-                onClick={() => handlePageChange(totalPages)}
-                className={`px-3 py-1 rounded-md border ${currentPage === totalPages ? 'bg-indigo-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded-md border ${currentPage === 1
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                  }`}
               >
-                {totalPages}
+                <FontAwesomeIcon icon={faChevronLeft} />
               </button>
-            )}
 
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === totalPages
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
-            >
-              <FontAwesomeIcon icon={faChevronRight} />
-            </button>
+              {/* Page numbers */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-1 rounded-md border ${currentPage === pageNum
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                      }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+
+              {/* Dấu ba chấm */}
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <>
+                  <span className="px-3 py-1">...</span>
+                  <button
+                    onClick={() => handlePageChange(totalPages)}
+                    className={`px-3 py-1 rounded-md border ${currentPage === totalPages
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                      }`}
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
+
+              {/* Next */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded-md border ${currentPage === totalPages
+                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-gray-700 hover:bg-gray-50"
+                  }`}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
           </div>
         </div>
+
       </main>
     </div>
   );

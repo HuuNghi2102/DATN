@@ -189,12 +189,12 @@ const PayPage = () => {
           (voucher.loai_giam_gia === "so_tien"
             ? voucher.gia_tri_giam
             : (carts.reduce(
-                (total: number, cart: any) =>
-                  total + cart.gia_san_pham * cart.so_luong_san_pham,
-                0
-              ) /
-                100) *
-              voucher.gia_tri_giam),
+              (total: number, cart: any) =>
+                total + cart.gia_san_pham * cart.so_luong_san_pham,
+              0
+            ) /
+              100) *
+            voucher.gia_tri_giam),
         idVoucher: voucher.id_ma_giam_gia,
       });
     }
@@ -993,16 +993,19 @@ const PayPage = () => {
                     <button
                       key={index}
                       onClick={() => setInputDiscount(option.ma_giam_gia)}
-                      className={`px-3 py-1 border border-amber-500 rounded-full text-sm transition-colors ${
-                        selectedDiscount === option.value
+                      className={`relative bg-amber-400  text-white px-4 py-1 rounded text-sm font-medium transition-colors ${selectedDiscount === option.value
                           ? "border-amber-500 text-amber-500"
-                          : "border-blue-300 text-amber-600 hover:border-amber-500"
-                      }`}
+                          : "border-amber-400 text-amber-600"
+                        }`}
                     >
                       Giảm{" "}
                       {option.loai_giam_gia == "so_tien"
                         ? option.gia_tri_giam.toLocaleString("vi-VN") + " đ"
                         : option.gia_tri_giam + " %"}
+                      <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] '>
+                      </div>
+                      <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] right-[-6px] '>
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -1032,8 +1035,8 @@ const PayPage = () => {
                     {orderInfo.idVoucher
                       ? selectedDiscount?.loai_giam_gia === "so_tien"
                         ? selectedDiscount?.gia_tri_giam.toLocaleString(
-                            "vi-VN"
-                          ) + " đ"
+                          "vi-VN"
+                        ) + " đ"
                         : selectedDiscount?.gia_tri_giam + " %"
                       : "Không có"}
                   </span>

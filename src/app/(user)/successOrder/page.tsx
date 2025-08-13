@@ -31,7 +31,7 @@ const OrderSuccess = () => {
         </h1>
         <p className="text-gray-600 mb-4">Cảm ơn bạn đã đặt hàng.</p>
         <a
-          href="/lich-su-mua-hang"
+          href="/history-order"
           className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
         >
           Xem đơn hàng

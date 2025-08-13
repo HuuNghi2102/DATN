@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import detailOrder from "../../../components/interface/detailOrderInterface";
 import voucherInterface from "../../../components/interface/voucherInterface";
 import userInterface from "../../../components/interface/userInterface";
+import { toast } from "react-toastify";
 import {
   FiArrowLeft,
   FiEdit,
@@ -79,7 +80,7 @@ const OrderDetailPage = () => {
           setOrder({ ...order, trang_thai_don_hang: "da_huy" });
         }
       } else {
-        alert("Cập nhật không thành công");
+        toast.error("Cập nhật không thành công");
       }
     }
   };
@@ -103,7 +104,7 @@ const OrderDetailPage = () => {
           setOrder({ ...order, trang_thai_don_hang: "cho_lay_hang" });
         }
       } else {
-        alert("Cập nhật không thành công");
+        toast.error("Cập nhật không thành công");
       }
     }
   };
@@ -129,7 +130,7 @@ const OrderDetailPage = () => {
           setOrder({ ...order, trang_thai_don_hang: "dang_chuan_bi_hang" });
         }
       } else {
-        alert("Cập nhật không thành công");
+        toast.error("Cập nhật không thành công");
       }
     }
   };
@@ -155,14 +156,14 @@ const OrderDetailPage = () => {
           setOrder({ ...order, trang_thai_don_hang: "chu_y" });
         }
       } else {
-        alert("Cập nhật không thành công");
+        toast.error("Cập nhật không thành công");
       }
     }
   };
 
   const fetchDefaultData = async () => {
     if (!idOrder) {
-      alert("Đơn hàng không tồn tại");
+      toast.error("Đơn hàng không tồn tại");
       router.push("/admin/orders");
       return;
     }
@@ -211,7 +212,7 @@ const OrderDetailPage = () => {
               const getVoucher = resultGetOrder.data.voucher;
               setVoucher(getVoucher);
             } else {
-              alert("Lấy mã giảm giá không thành công");
+              toast.error("Lấy mã giảm giá không thành công");
             }
           }
 
@@ -235,12 +236,12 @@ const OrderDetailPage = () => {
               const getShipper = resultGetShipper.data.user;
               setShipper(getShipper);
             } else {
-              alert("Lấy thông tin người giao hàng không thành công");
+              toast.error("Lấy thông tin người giao hàng không thành công");
             }
           }
           setIsLoading(false);
         } else {
-          alert("Đơn hàng không tồn tại");
+          toast.error("Đơn hàng không tồn tại");
           router.push("/admin/orders");
         }
       } else {

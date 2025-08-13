@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
@@ -34,6 +35,7 @@ export default function AdminPostManagement() {
   const [perPage, setPerPage] = useState<number>(20);
   const editorRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const formRef = useRef<HTMLDivElement | null>(null); // ref để scroll tới form
   const getAPIArticle = async (): Promise<articleInterface[]> => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -103,7 +105,7 @@ export default function AdminPostManagement() {
     try {
       await createdArticle(newArticle, imageFile as File);
       await refreshPosts();
-      alert("Thêm bài viết thành công!");
+      toast.success("Thêm bài viết thành công!");
       resetForm();
     } catch (error) {
       console.error("❌ Lỗi khi tạo bài viết:", error);
@@ -133,10 +135,10 @@ export default function AdminPostManagement() {
         imageFile as File
       );
       await refreshPosts();
-      alert("Sửa bài viết thành công");
+      toast.success("Sửa bài viết thành công");
       resetForm();
     } catch (error) {
-      console.error("❌ Lỗi khi cập nhật bài viết:", error);
+      console.error("Lỗi khi cập nhật bài viết:", error);
     }
   };
 
@@ -157,10 +159,10 @@ export default function AdminPostManagement() {
   const handleDelete = async (slugArticle: string | number) => {
     const getdeleteArticle = await deleteArticle(slugArticle);
     if (getdeleteArticle) {
-      alert("Xóa thành công");
+      toast.success("Xóa bài viết thành công");
       await refreshPosts();
     } else {
-      alert("Xóa thất bại");
+      toast.error("Xóa bài viết thất bại");
     }
   };
   const handlePageChange = (page: number) => {
@@ -168,7 +170,11 @@ export default function AdminPostManagement() {
       setCurrentPage(page);
     }
   };
-
+  const scrollToForm = () => {
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 0);
+  };
   if (isLoading) {
     return (
       <div
@@ -209,6 +215,8 @@ export default function AdminPostManagement() {
             setImageFile(null);
             setStatus(false);
             editorRef.current?.setContent("");
+            scrollToForm();
+
           }}
         >
           <FontAwesomeIcon icon={faPlus} /> Thêm mới
@@ -216,7 +224,7 @@ export default function AdminPostManagement() {
       </div>
 
       {showForm && (
-        <div className="bg-white rounded shadow p-6 mb-6">
+        <div ref={formRef} className="bg-white rounded shadow p-6 mb-6">
           <h2 className="text-lg font-semibold mb-4">
             {selectedPost ? "Chỉnh sửa bài viết" : "Thêm bài viết mới"}
           </h2>
@@ -398,9 +406,8 @@ export default function AdminPostManagement() {
                 </td>
                 <td>
                   <label
-                    className={`relative inline-flex text-xs items-center px-3 py-1 text-white rounded-full cursor-pointer ${
-                      post.trang_thai === 1 ? "bg-green-500" : "bg-red-500"
-                    }`}
+                    className={`relative inline-flex text-xs items-center px-3 py-1 text-white rounded-full cursor-pointer ${post.trang_thai === 1 ? "bg-green-500" : "bg-red-500"
+                      }`}
                   >
                     {post.trang_thai === 1
                       ? "Đang hoạt động"
@@ -425,6 +432,8 @@ export default function AdminPostManagement() {
                             );
                           }
                         }, 0);
+                        scrollToForm();
+
                       }}
                       className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600"
                     >
@@ -462,11 +471,10 @@ export default function AdminPostManagement() {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-3 py-1 rounded-md border ${
-              currentPage === 1
+            className={`px-3 py-1 rounded-md border ${currentPage === 1
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-white text-gray-700 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <FontAwesomeIcon icon={faChevronLeft} />
           </button>
@@ -487,11 +495,10 @@ export default function AdminPostManagement() {
               <button
                 key={pageNum}
                 onClick={() => handlePageChange(pageNum)}
-                className={`px-3 py-1 rounded-md border ${
-                  currentPage === pageNum
+                className={`px-3 py-1 rounded-md border ${currentPage === pageNum
                     ? "bg-indigo-500 text-white"
                     : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 {pageNum}
               </button>
@@ -505,11 +512,10 @@ export default function AdminPostManagement() {
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <button
               onClick={() => handlePageChange(totalPages)}
-              className={`px-3 py-1 rounded-md border ${
-                currentPage === totalPages
+              className={`px-3 py-1 rounded-md border ${currentPage === totalPages
                   ? "bg-indigo-500 text-white"
                   : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+                }`}
             >
               {totalPages}
             </button>
@@ -518,11 +524,10 @@ export default function AdminPostManagement() {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-3 py-1 rounded-md border ${
-              currentPage === totalPages
+            className={`px-3 py-1 rounded-md border ${currentPage === totalPages
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-white text-gray-700 hover:bg-gray-50"
-            }`}
+              }`}
           >
             <FontAwesomeIcon icon={faChevronRight} />
           </button>

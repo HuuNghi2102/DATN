@@ -103,6 +103,7 @@ export default function ProductForm({
             idCate: errors.idCate ? errors.idCate[0] : "",
           });
         }
+        toast.error("Cập nhật sản phẩm không thành công");
         return;
       }
       // Here you would typically call an API to save the product

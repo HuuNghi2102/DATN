@@ -14,7 +14,6 @@ import ImagetInterFace from "../../../components/interface/imageInterface";
 import VariantInterFace from "../../../components/interface/variantInterface";
 import CategoryInterface from "../../../components/interface/categoryProInterface";
 import SizeInterface from "../../../components/interface/sizeInterface";
-import { error } from "console";
 
 export default function ProductEditPage() {
   const basicColors = [
@@ -116,7 +115,7 @@ export default function ProductEditPage() {
             } else {
               const resultImages = await resImages.json();
               console.log(resultImages);
-              alert("Lấy ảnh không thể không thành công");
+              toast.error("Lấy ảnh không thể không thành công");
               setImages([]);
             }
 
@@ -137,7 +136,7 @@ export default function ProductEditPage() {
               const variantsList = resultVariants.data;
               setVariants(variantsList ? variantsList : []);
             } else {
-              alert("Lấy biến thể không thành công");
+              toast.error("Lấy biến thể không thành công");
               setVariants([]);
             }
 
@@ -159,7 +158,7 @@ export default function ProductEditPage() {
               console.log(cateList);
               setCategories(cateList ? cateList : []);
             } else {
-              alert("Lấy danh mục không thành công");
+              toast.error("Lấy danh mục không thành công");
               setCategories([]);
             }
 

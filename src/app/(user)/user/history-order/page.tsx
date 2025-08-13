@@ -82,7 +82,6 @@ export default function UserProfile() {
       text: "Sổ địa chỉ",
       href: "/user/sodiachi",
     },
-    { icon: "fas fa-ticket-alt", text: "Vouchers", href: "/" },
     {
       icon: "fas fa-heart",
       text: "Sản phẩm đã xem",

@@ -35,12 +35,13 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
 const settings = {
   dots: true,
   infinite: true,
-  autoplaySpeed: 3000,
+  autoplay: true,
+  autoplaySpeed: 2000,
   speed: 200,
   slidesToShow: 1,
   slidesToScroll: 1,
-  nextArrow: <NextArrow />,
-  prevArrow: <PrevArrow />,
+  // nextArrow: <NextArrow />,
+  // prevArrow: <PrevArrow />,
 };
 const productSettings = {
   slidesToShow: 5,
@@ -146,7 +147,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://huunghi.id.vn/api/product/getBestSalerProducts');
+        const res = await fetch('https://huunghi.id.vn/api/product/getBestSalerProducts');
         const result = await res.json();
         setProductsBestSaler(result.data.productBestSeller);
       } catch (error) {
@@ -225,7 +226,7 @@ const Home = () => {
   }, [])
   return (
     <div>
-      <div className="container  mx-auto lg:pt-[12%] pt-[20%] max-w-[1200px] px-4">
+      <div className="container  mx-auto lg:pt-[12%] pt-[25%] max-w-[1200px] px-4">
         {/* Banner */}
         <div className="container mx-auto max-w-[1200px] relative">
           {banners.length > 1 && (
@@ -289,9 +290,9 @@ const Home = () => {
 
                       <h1 className="text-sm">
                         GIẢM: <span className=' text-amber-300 font-semibold'>
-                          {typeof voucher.gia_tri_giam === 'number'
+                          {voucher.loai_giam_gia === 'so_tien'
                             ? voucher.gia_tri_giam.toLocaleString('vi-VN') + ' VNĐ'
-                            : 'Không xác định'}
+                            : voucher.gia_tri_giam+'%'}
                         </span>
                       </h1>
 
@@ -328,7 +329,7 @@ const Home = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(i)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -357,11 +358,11 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-                                <Link href={'/collection/new'}>
-              <button className="rounded-lg  bg-amber-400 text-white font-semibold h-10 px-5 hover:bg-amber-500 hover:text-white transition-all duration-500 text-sm sm:text-base">
+              <Link href={'/collection/new'}>
+                <button className="rounded-lg  bg-amber-400 text-white font-semibold h-10 px-5 hover:bg-amber-500 hover:text-white transition-all duration-500 text-sm sm:text-base">
                   Xem tất cả
-              </button>
-                </Link>
+                </button>
+              </Link>
             </div>
           </div>
           {/* ProductSaler */}
@@ -379,7 +380,7 @@ const Home = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(i)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -405,11 +406,11 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-                <Link href={'/collection/'}>
-              <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 font-semibold transition-all duration-500 text-sm sm:text-base">
+              <Link href={'/collection/'}>
+                <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 font-semibold transition-all duration-500 text-sm sm:text-base">
                   Xem tất cả
-              </button>
-                </Link>
+                </button>
+              </Link>
             </div>
           </div>
           {/* ProductSaler */}
@@ -427,7 +428,7 @@ const Home = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(i)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -453,11 +454,11 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-                <Link href={'/collection/bestsellers'}>
-              <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 transition-all duration-500 font-semibold text-sm sm:text-base">
+              <Link href={'/collection/bestsellers'}>
+                <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 transition-all duration-500 font-semibold text-sm sm:text-base">
                   Xem tất cả
-              </button>
-                </Link>
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -487,7 +488,7 @@ const Home = () => {
                                   : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                                 }
                                 alt="product"
-                                className="w-full transition-all duration-300"
+                                className="w-[173px] h-[171px] object-cover transition-all duration-300"
                                 onMouseEnter={() => setHoveredProduct(product.id_san_pham)}
                                 onMouseLeave={() => setHoveredProduct(null)}
                               />
@@ -503,10 +504,10 @@ const Home = () => {
                             </a>
                           </div>
                           <div className="mt-2 px-1">
-                                                  <p className="text-sm line-clamp-2 h-[40px]">
-                        {product.ten_san_pham}
-                      </p>
-                                                  <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
+                            <p className="text-sm line-clamp-2 h-[40px]">
+                              {product.ten_san_pham}
+                            </p>
+                            <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                           </div>
                         </div>
                       )
@@ -532,11 +533,11 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-center my-4">
+          {/* <div className="flex justify-center my-4">
             <button className="w-[100px] h-[35px] border rounded-lg bg-amber-400 text-white hover:bg-amber-500 hover:text-white transition-colors duration-500 cursor-pointer text-sm">
               Xem tất cả
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       <ToastContainer position="top-center" autoClose={3000} />

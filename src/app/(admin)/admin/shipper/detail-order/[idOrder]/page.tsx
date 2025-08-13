@@ -12,6 +12,7 @@ import {
 import orderInterface from "../../../components/interface/orderInterface";
 import voucherInterface from "../../../components/interface/voucherInterface";
 import detailOrder from "../../../components/interface/detailOrderInterface";
+import { toast } from "react-toastify";
 
 interface OrderItem {
   id_san_pham: number;
@@ -127,7 +128,7 @@ const OrderDetailShipper = () => {
 
   const fetchDefaultData = async () => {
     if (!idOrder) {
-      alert("Đơn hàng không tồn tại");
+      toast.error("Đơn hàng không tồn tại");
       router.push("/admin/shipper");
       return;
     }
@@ -176,7 +177,7 @@ const OrderDetailShipper = () => {
               const getVoucher = resultGetOrder.data.voucher;
               setVoucher(getVoucher);
             } else {
-              alert("Lấy mã giảm giá không thành công");
+              toast.error("Lấy mã giảm giá không thành công");
             }
           }
 
@@ -184,7 +185,7 @@ const OrderDetailShipper = () => {
           setDetailOrder(resultGetOrder.data.order.detail_orders);
           setIsLoading(false);
         } else {
-          alert("Đơn hàng không tồn tại");
+          toast.error("Đơn hàng không tồn tại");
           router.push("/admin/orders");
         }
       } else {
@@ -220,7 +221,7 @@ const OrderDetailShipper = () => {
         }
         // setTotalCateOrder(newStatus);
       } else {
-        alert("Cập nhật không thành công");
+        toast("Cập nhật không thành công");
       }
     }
   };
