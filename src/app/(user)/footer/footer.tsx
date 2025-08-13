@@ -166,7 +166,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="border-t border-gray-700 mt-6 pt-4 text-center text-sm">
-          BẢN QUYỀN THUỘC VỀ VerveStyle
+          BẢN QUYỀN THUỘC VỀ VERVESTYLE
         </div>
       </div>
     </footer>

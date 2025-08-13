@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Admin Panel",
-  description: "Admin dashboard layout",
+  title: "Admin VerveStyle",
+  description: "Dashboard Admin",
 };
 
 export default function AdminLayout({
