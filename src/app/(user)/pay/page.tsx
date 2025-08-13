@@ -8,6 +8,7 @@ import { FaDotCircle } from "react-icons/fa";
 import userInterface from "../compoments/userInterface";
 import { faBox, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Spinner from "@/app/(admin)/admin/components/Spiner/Spiner";
 
 const PayPage = () => {
   const [isCreateOrder, setIsCreateOrder] = useState(false);
@@ -189,12 +190,12 @@ const PayPage = () => {
           (voucher.loai_giam_gia === "so_tien"
             ? voucher.gia_tri_giam
             : (carts.reduce(
-              (total: number, cart: any) =>
-                total + cart.gia_san_pham * cart.so_luong_san_pham,
-              0
-            ) /
-              100) *
-            voucher.gia_tri_giam),
+                (total: number, cart: any) =>
+                  total + cart.gia_san_pham * cart.so_luong_san_pham,
+                0
+              ) /
+                100) *
+              voucher.gia_tri_giam),
         idVoucher: voucher.id_ma_giam_gia,
       });
     }
@@ -913,30 +914,7 @@ const PayPage = () => {
                 onClick={(e) => Pay()}
                 className="flex-1 px-6 py-3 bg-amber-400 text-white rounded-lg active:bg-amber-500 flex items-center justify-center"
               >
-                {isCreateOrder ? (
-                  <svg
-                    className="animate-spin h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
-                    ></path>
-                  </svg>
-                ) : (
-                  "Hoàn tất đơn hàng"
-                )}
+                {isCreateOrder ? <Spinner /> : "Hoàn tất đơn hàng"}
               </button>
             </div>
           </div>
@@ -993,19 +971,18 @@ const PayPage = () => {
                     <button
                       key={index}
                       onClick={() => setInputDiscount(option.ma_giam_gia)}
-                      className={`relative bg-amber-400  text-white px-4 py-1 rounded text-sm font-medium transition-colors ${selectedDiscount === option.value
+                      className={`relative bg-amber-400  text-white px-4 py-1 rounded text-sm font-medium transition-colors ${
+                        selectedDiscount === option.value
                           ? "border-amber-500 text-amber-500"
                           : "border-amber-400 text-amber-600"
-                        }`}
+                      }`}
                     >
                       Giảm{" "}
                       {option.loai_giam_gia == "so_tien"
                         ? option.gia_tri_giam.toLocaleString("vi-VN") + " đ"
                         : option.gia_tri_giam + " %"}
-                      <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] '>
-                      </div>
-                      <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] right-[-6px] '>
-                      </div>
+                      <div className=" absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] "></div>
+                      <div className=" absolute rounded-full w-3 h-[10px] bg-white top-[9px] right-[-6px] "></div>
                     </button>
                   ))}
                 </div>
@@ -1035,8 +1012,8 @@ const PayPage = () => {
                     {orderInfo.idVoucher
                       ? selectedDiscount?.loai_giam_gia === "so_tien"
                         ? selectedDiscount?.gia_tri_giam.toLocaleString(
-                          "vi-VN"
-                        ) + " đ"
+                            "vi-VN"
+                          ) + " đ"
                         : selectedDiscount?.gia_tri_giam + " %"
                       : "Không có"}
                   </span>
