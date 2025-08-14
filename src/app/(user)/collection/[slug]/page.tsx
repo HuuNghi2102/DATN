@@ -138,15 +138,18 @@ export default function AllProductPage() {
     } else if (slug == "bestsellers") {
       setNameCategory("Sản phẩm bán chạy");
     } else if (slug == "new") {
-      setNameCategory("Sản phẩm mới");
-    } else {
+      setNameCategory("Sản phẩm mới");   
+    }else if (slug == "sale") {
+      setNameCategory("Sản phẩm giảm giá");
+    }
+     else {
       fetchCategory();
     }
   }, [slug]);
 
   useEffect(() => {
     fetchProducts();
-  }, [sort, currentPage]);
+  }, [sort,slug, currentPage]);
 
   const fetchProducts = async () => {
     const response = await fetch(

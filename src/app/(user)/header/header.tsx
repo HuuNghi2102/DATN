@@ -350,6 +350,9 @@ const Header = () => {
                 <li>
                   <Link href="/collection/bestsellers">HÀNG BÁN CHẠY</Link>
                 </li>
+                                <li>
+                  <Link href="/collection/sale">HÀNG GIẢM GIÁ</Link>
+                </li>
                 <li className="relative group">
                   <Link
                     href="#"
@@ -617,7 +620,7 @@ const Header = () => {
           {/* Mục cố định: HÀNG MỚI */}
           <li className={styles["mobile-nav-item"]}>
             <a
-              href="/hang-moi"
+              href="/collection/new"
               className={styles["mobile-nav-link"]}
               style={{ color: "red" }}
             >

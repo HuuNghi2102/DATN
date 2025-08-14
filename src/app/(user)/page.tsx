@@ -406,7 +406,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <Link href={'/collection/'}>
+              <Link href={'/collection/sale'}>
                 <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 font-semibold transition-all duration-500 text-sm sm:text-base">
                   Xem tất cả
                 </button>
