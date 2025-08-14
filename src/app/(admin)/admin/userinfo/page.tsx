@@ -79,9 +79,9 @@ const AccountSettingsPage = () => {
       const result = await resChangeAvatar.json();
       const newUser = result.data.user;
       localStorage.setItem("user", JSON.stringify(newUser));
-      alert("Cập nhật ảnh đại diện thành công");
+      toast.success("Cập nhật ảnh đại diện thành công");
     } else {
-      alert("Cập nhật ảnh đại diện không thành công");
+      toast.error("Cập nhật ảnh đại diện không thành công");
     }
   };
 
@@ -296,7 +296,7 @@ const AccountSettingsPage = () => {
                   </label>
                 </div>
                 <h2 className="text-lg font-semibold text-gray-800">
-                  {userCurrent?.ten_user}
+                  {userCurrent?.ten_user?.slice(0,20)+'...'}
                 </h2>
                 <p className="text-gray-500 text-sm">
                   {userCurrent?.email_user}
@@ -398,6 +398,7 @@ const AccountSettingsPage = () => {
                       <input
                         type="text"
                         name="ten_user"
+                        maxLength={50}
                         value={profileData?.ten_user}
                         onChange={handleProfileChange}
                         className="w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500"

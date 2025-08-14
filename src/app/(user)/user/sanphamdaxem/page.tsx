@@ -272,13 +272,14 @@ export default function UserProfile() {
       />
 
       {/* Header Navigation */}
-      <div className="bg-white border-b px-40 py-3">
+      <div className="bg-white border-b max-lg:pt-[190px] max-sm:pt-[90px]">
         <div className="max-w-[1200px] mx-auto">
-          <nav className="text-sm text-gray-600">
+          <nav className="text-sm text-gray-600 whitespace-nowrap p-3">
             <span>
               <a href="/">Trang chủ</a>
             </span>{" "}
-            / <span className="font-medium">Tài khoản</span>
+            / <span className="font-medium">Tài khoản </span>
+            <span className="font-medium"> / Sản phẩm đã xem</span>
           </nav>
         </div>
       </div>

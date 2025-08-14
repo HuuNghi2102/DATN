@@ -128,7 +128,7 @@ export default function AllProductPage() {
       const data = await response.json();
       setNameCategory(data.data.ten_loai);
     } else {
-      alert("Lấy danh mục không thành công");
+      toast.error("Lấy danh mục không thành công");
     }
   };
 
@@ -300,7 +300,7 @@ export default function AllProductPage() {
                         : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                     }
                     alt="product"
-                    className="w-[202px] h-[202px] object-cover transition-all duration-300 "
+                    className=" object-cover transition-all duration-300 "
                     onMouseEnter={() => setHoveredProduct(i)}
                     onMouseLeave={() => setHoveredProduct(null)}
                   />

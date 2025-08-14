@@ -10,7 +10,7 @@ interface InventoryItemProps {
 
 const InventoryItem: React.FC<InventoryItemProps> = ({ onRemove, isLast }) => {
   const router = useRouter();
-  const [listSize,setListSize] = useState<sizeInterface[]>();
+  const [listSize, setListSize] = useState<sizeInterface[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
@@ -18,7 +18,7 @@ const InventoryItem: React.FC<InventoryItemProps> = ({ onRemove, isLast }) => {
     const accessTokenLocal = localStorage.getItem('accessToken');
     const typeTokenLocal = localStorage.getItem('typeToken');
     const userLocal = localStorage.getItem('user');
-    
+
     if (accessTokenLocal && typeTokenLocal && userLocal) {
       const user = JSON.parse(userLocal);
       if (user.id_vai_tro == 1) {
@@ -30,7 +30,7 @@ const InventoryItem: React.FC<InventoryItemProps> = ({ onRemove, isLast }) => {
               "Authorization": `${JSON.parse(typeTokenLocal)} ${JSON.parse(accessTokenLocal)}`
             }
           });
-          
+
           if (resSizes) {
             const result = await resSizes.json();
             const listSize = result.data;
@@ -53,9 +53,9 @@ const InventoryItem: React.FC<InventoryItemProps> = ({ onRemove, isLast }) => {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchListSize();
-  },[]);
+  }, []);
 
   return (
     <div className="inventory-item bg-gray-100 p-4 rounded border border-dashed border-gray-300 mb-4 relative">
@@ -64,24 +64,24 @@ const InventoryItem: React.FC<InventoryItemProps> = ({ onRemove, isLast }) => {
           <label className="form-label block text-sm font-medium text-gray-700 mb-1">Màu sắc</label>
           <input type="text" className='form-control w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary-light outline-none text-sm' />
         </div>
-        
+
         <div className="form-group">
           <label className="form-label block text-sm font-medium text-gray-700 mb-1">Kích thước</label>
           <select className="form-control w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary-light outline-none text-sm">
             <option value="">Chọn size</option>
-            {listSize?.map((e,i)=>(
+            {listSize?.map((e, i) => (
               <option key={i} value={e.id_kich_thuoc}>{e.ten_kich_thuoc}</option>
             ))}
           </select>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label block text-sm font-medium text-gray-700 mb-1">Số lượng</label>
-          <input 
-            type="number" 
-            className="form-control w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary-light outline-none text-sm" 
-            placeholder="0" 
-            min="0" 
+          <input
+            type="number"
+            className="form-control w-full px-3 py-2 border border-gray-300 rounded focus:border-primary focus:ring-1 focus:ring-primary-light outline-none text-sm"
+            placeholder="0"
+            min={0}
           />
         </div>
       </div>

@@ -35,7 +35,7 @@ interface evalueInterface {
 // import { debounce } from 'lodash';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
-    className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    className="absolute top-1/2 text-black hover:text-amber-500  text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer transition-colors duration-300  p-2 rounded-full "
     onClick={onClick}
   >
     <FontAwesomeIcon icon={faChevronLeft} />
@@ -44,7 +44,7 @@ const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
 
 const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
-    className="absolute top-1/2 text-white text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    className="absolute top-1/2 text-black hover:text-amber-500 text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer transition-colors duration-300  p-2 rounded-full "
     onClick={onClick}
   >
     <FontAwesomeIcon icon={faChevronRight} />
@@ -1196,7 +1196,7 @@ const ProductPageDetail = () => {
                             : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className=" w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() => setHoveredProduct(product.id_san_pham)}
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
@@ -1223,7 +1223,9 @@ const ProductPageDetail = () => {
                       </a>
                     </div>
                     <div className="px-1 mt-2">
-                      <p className="text-sm ">{product.ten_san_pham}</p>
+                      <p className="text-sm line-clamp-2 h-[40px]">
+                        {product.ten_san_pham}
+                      </p>
                       <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
                     </div>
                   </div>

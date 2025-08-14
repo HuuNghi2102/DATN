@@ -76,27 +76,33 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pt-[12%]">
+    <div className="min-h-screen bg-gray-100 pt-[10%]">
       {/* Navigation */}
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       />
-      <nav className=" border-b border-gray-200 px-4 py-3">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex space-x-8 text-sm font-medium text-gray-700">
-            <a href="/" className="hover:text-gray-900 transition-colors">
-              Trang chủ
-            </a>
-            <a href="/" className="hover:text-gray-900 transition-colors">
-              Tài khoản
-            </a>
-            <a href="#" className="hover:text-gray-900 transition-colors">
-              Đăng ký
-            </a>
+      <header className="bg-white shadow-sm">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex space-x-8">
+              <a
+                href="/"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 "
+              >
+                Trang chủ
+              </a>
+              
+              <a
+                href="#"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-gray-900"
+              >
+                Đăng ký
+              </a>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       {/* Main Content */}
       <main className="flex items-center justify-center px-4 py-8 md:py-16">

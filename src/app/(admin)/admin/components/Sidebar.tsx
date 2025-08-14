@@ -219,7 +219,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           <Link href={`/admin/userinfo`}>
             <div className="user-info">
               <h4 className="text-sm font-medium mb-0.5">
-                {getUser?.ten_user}
+                {getUser?.ten_user.slice(0,30)}
               </h4>
               <p className="text-xs text-gray-500">
                 Xin chào,
