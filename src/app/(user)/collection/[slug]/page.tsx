@@ -139,6 +139,8 @@ export default function AllProductPage() {
       setNameCategory("Sản phẩm bán chạy");
     } else if (slug == "new") {
       setNameCategory("Sản phẩm mới");
+    } else if (slug == "sale") {
+      setNameCategory("Sản phẩm giảm giá");
     } else {
       fetchCategory();
     }
@@ -146,7 +148,7 @@ export default function AllProductPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [sort, currentPage]);
+  }, [sort, currentPage, slug]);
 
   const fetchProducts = async () => {
     const response = await fetch(
