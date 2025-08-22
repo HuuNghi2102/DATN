@@ -817,7 +817,7 @@ const Header = () => {
           ))}
 
           {/* Mục cố định: GIÁ MỚI */}
-          <li className={styles["mobile-nav-item"]}>
+          {/* <li className={styles["mobile-nav-item"]}>
             <a
               href="/collections/price-new"
               className={styles["mobile-nav-link"]}
@@ -825,9 +825,9 @@ const Header = () => {
             >
               GIÁ MỚI
             </a>
-          </li>
+          </li> */}
           {/* Jean */}
-          <li className={styles["mobile-nav-item"]}>
+          {/* <li className={styles["mobile-nav-item"]}>
             <div className={styles["mobile-nav-link"]}>
               <a href="/collection/all">JEAN</a>
               <button
@@ -852,7 +852,7 @@ const Header = () => {
                 ICON105 Lightweight™
               </a>
             </div>
-          </li>
+          </li> */}
           {/* Mục cố định: TIN THỜI TRANG */}
           <li className={styles["mobile-nav-item"]}>
             <a href="/blog" className={styles["mobile-nav-link"]}>

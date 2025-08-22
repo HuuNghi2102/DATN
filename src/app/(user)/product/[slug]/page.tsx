@@ -600,6 +600,9 @@ const ProductPageDetail = () => {
               <div className=" bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium">
                 Còn Hàng
               </div>
+              <div className="text-sm text-gray-600 mb-2">
+                Đánh giá trung bình: <strong className="font-semibold text-yellow-500 text-xl">★★★★★★</strong>
+              </div>
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                 <span>
                   Loại:{" "}

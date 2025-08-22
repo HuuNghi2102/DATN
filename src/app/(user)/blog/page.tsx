@@ -109,15 +109,15 @@ const MainContent = () => {
                   </Link>
                 </div>
                 <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
-                  <h1 className="text-center font-semibold">
+                  <h1 className="text-center font-semibold line-clamp-2 h-[40px] mb-1">
                     {article.ten_bai_viet.length > 50
-                      ? article.ten_bai_viet.slice(0, 50) + "..."
+                      ? article.ten_bai_viet
                       : article.ten_bai_viet}
                   </h1>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 line-clamp-2 h-[40px]">
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: article.noi_dung_bai_viet.slice(0, 30) + "...",
+                        __html: article.noi_dung_bai_viet,
                       }}
                     />
                   </div>

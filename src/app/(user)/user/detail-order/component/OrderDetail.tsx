@@ -220,7 +220,7 @@ export default function OrderDetail() {
       />
 
       {/* Header Navigation */}
-      <div className="bg-white border-b lg:pt-[180px] max-lg:pt-[190px] max-sm:pt-[90px]">
+      <div className="bg-white border-b  max-lg:pt-[190px] max-sm:pt-[90px]">
         <div className="max-w-[1200px] mx-auto">
           <nav className="text-sm text-gray-600 whitespace-nowrap p-3">
             <span>

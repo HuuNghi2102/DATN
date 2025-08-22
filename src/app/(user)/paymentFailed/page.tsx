@@ -16,7 +16,7 @@ const PaymentFailed = () => {
 
         <div className="flex justify-center gap-3">
           <Link
-            href="/history-order"
+            href="/user/history-order"
             className="px-4 py-2 border border-black text-black rounded-lg hover:bg-black hover:text-white transition"
           >
             Lịch sử mua hàng
