@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faCartShopping, faCalendarDays, faChevronRight,faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCartShopping, faCalendarDays, faChevronRight, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ToastContainer, toast } from 'react-toastify';
@@ -178,8 +178,8 @@ const EcommerceSearchPage: React.FC = () => {
             <button
               onClick={() => handleTabClick('product')}
               className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${activeTab === 'product'
-                  ? 'bg-amber-400 text-white'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                ? 'bg-amber-400 text-white'
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               type="button"
             >
@@ -188,8 +188,8 @@ const EcommerceSearchPage: React.FC = () => {
             <button
               onClick={() => handleTabClick('post')}
               className={`px-6 py-2 text-sm font-medium rounded-sm transition-colors ${activeTab === 'post'
-                  ? 'bg-amber-400 text-white'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                ? 'bg-amber-400 text-white'
+                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                 }`}
               type="button"
             >
@@ -204,30 +204,30 @@ const EcommerceSearchPage: React.FC = () => {
               <div key={i} className=" w-1/2 sm:w-1/3 lg:w-1/5 px-2 mb-6">
                 <div className="bg-white p-2 rounded-lg cursor-pointer">
                   <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative block">
-                        <img
-                          src={hoveredProduct === i
-                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
-                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
-                          }
-                          alt="product"
-                          className="w-[202px] h-[202px] object-cover transition-all duration-300"
-                          onMouseEnter={() => setHoveredProduct(i)}
-                          onMouseLeave={() => setHoveredProduct(null)}
-                        />
-                      </Link>
+                    <Link href={`/product/${product.duong_dan}`} className="relative block">
+                      <img
+                        src={hoveredProduct === i
+                          ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                          : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                        }
+                        alt="product"
+                        className="w-[202px] h-[202px] object-cover transition-all duration-300"
+                        onMouseEnter={() => setHoveredProduct(i)}
+                        onMouseLeave={() => setHoveredProduct(null)}
+                      />
+                    </Link>
                     <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                       <FontAwesomeIcon icon={faSearch} className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto" />
                     </div>
-                      <a
-                        onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
-                        className="absolute right-2 bottom-2 w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
-                      >
-                        <FontAwesomeIcon icon={faHeart} />
-                      </a>
-                    <div className="absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
+                    <a
+                      onClick={() => addWhistList(product.ten_san_pham, product.images[0]?.link_anh, product.gia_da_giam, product.duong_dan, product.id_san_pham)}
+                      className="absolute right-2 bottom-2 w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
+                    >
+                      <FontAwesomeIcon icon={faHeart} />
+                    </a>
+                    {/* <div className="absolute top-1 right-1 text-black bg-amber-400 text-xs rounded-md p-1 font-bold">
                       <p>{product.badge}</p>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="px-1 mt-2">
                     <p className="text-sm line-clamp-2 h-[40px] ">{product.ten_san_pham}</p>
@@ -241,110 +241,109 @@ const EcommerceSearchPage: React.FC = () => {
         {/* bài viết */}
         {activeTab === 'post' && (
           <div className="flex flex-wrap -mx-2">
-          {data.map((article, index) => (
-            <div key={index} className="w-full md:w-1/4 px-2 mb-6">
-              <div className="group">
-                <div className="h-[220px]">
-                  <Link href={`/blog-detail/${article.duong_dan}`}>
-                    <img
-                      className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900"
-                      src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
-                      alt={article.ten_bai_viet}
-                    />
-                  </Link>
-                </div>
-                <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
-                  <h1 className="text-center font-semibold">
-                    {article.ten_bai_viet.length > 50
-                      ? article.ten_bai_viet.slice(0, 50) + "..."
-                      : article.ten_bai_viet}
-                  </h1>
-                  <div className="text-sm text-gray-600">
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: article.noi_dung_bai_viet.slice(0, 30) + "...",
-                      }}
-                    />
-                  </div>
-                  <hr className="my-2" />
-                  <div className="flex justify-between">
-                    <span className="text-sm text-gray-500">
-                      <FontAwesomeIcon icon={faCalendarDays} />{" "}
-                      {new Date(article.created_at).toLocaleDateString("vi-VN")}
-                    </span>
-                    <Link
-                      href={`/blog-detail/${article.duong_dan}`}
-                      className="text-sm text-gray-500 hover:text-amber-400"
-                    >
-                      Xem thêm{" "}
-                      <FontAwesomeIcon
-                        className="text-sm"
-                        icon={faChevronRight}
+            {data.map((article, index) => (
+              <div key={index} className="w-full md:w-1/4 px-2 mb-6">
+                <div className="group">
+                  <div className="h-[220px]">
+                    <Link href={`/blog-detail/${article.duong_dan}`}>
+                      <img
+                        className="object-cover w-full h-full opacity-1 group-hover:opacity-90 group-hover:p-[2px] transition-p transition-opacity duration-900"
+                        src={`https://huunghi.id.vn/storage/posts/${article.anh_bai_viet}`}
+                        alt={article.ten_bai_viet}
                       />
                     </Link>
                   </div>
+                  <div className="bg-white mx-2 relative mt-[-25px] py-2 px-4 shadow">
+                    <h1 className="text-center font-semibold line-clamp-2 h-[40px] mb-1">
+                      {article.ten_bai_viet.length > 50
+                        ? article.ten_bai_viet
+                        : article.ten_bai_viet}
+                    </h1>
+                    <div className="text-sm text-gray-600 line-clamp-2 h-[40px]">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: article.noi_dung_bai_viet
+                        }}
+                      />
+                    </div>
+                    <hr className="my-2" />
+                    <div className="flex justify-between">
+                      <span className="text-sm text-gray-500">
+                        <FontAwesomeIcon icon={faCalendarDays} />{" "}
+                        {new Date(article.created_at).toLocaleDateString("vi-VN")}
+                      </span>
+                      <Link
+                        href={`/blog-detail/${article.duong_dan}`}
+                        className="text-sm text-gray-500 hover:text-amber-400"
+                      >
+                        Xem thêm{" "}
+                        <FontAwesomeIcon
+                          className="text-sm"
+                          icon={faChevronRight}
+                        />
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
           </div>
         )}
         {/* Load More Section */}
 
-      <div className="flex justify-center my-6 gap-2">
-        {currentPage > 1 && (
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
-          >
-            {"<"}
-          </button>
-        )}
-        {Array.from({ length: totalPage }, (_, i) => i + 1).map(
-          (page) =>
-            page >= pageStart &&
-            page <= pageEnd &&
-            totalPage > 1 && (
-              <button
-                key={page}
-                onClick={() => {
-                  setCurrentPage(page);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className={`px-3 py-1 border text-sm rounded ${
-                  currentPage === page
-                    ? "bg-amber-500 text-white"
-                    : "bg-white text-black border-gray-300 hover:bg-gray-100"
-                }`}
-              >
-                {page}
-              </button>
-            )
-        )}
-        {currentPage < totalPage && (
-          <button
-            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
-          >
-            {`...`}
-          </button>
-        )}
-        {currentPage < totalPage && (
-          <button
-            onClick={() => setCurrentPage(totalPage)}
-            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
-          >
-            {totalPage}
-          </button>
-        )}
-        {currentPage < totalPage && (
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
-          >
-            {">"}
-          </button>
-        )}
-      </div>
+        <div className="flex justify-center my-6 gap-2">
+          {currentPage > 1 && (
+            <button
+              onClick={() => setCurrentPage(currentPage - 1)}
+              className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
+            >
+              {"<"}
+            </button>
+          )}
+          {Array.from({ length: totalPage }, (_, i) => i + 1).map(
+            (page) =>
+              page >= pageStart &&
+              page <= pageEnd &&
+              totalPage > 1 && (
+                <button
+                  key={page}
+                  onClick={() => {
+                    setCurrentPage(page);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className={`px-3 py-1 border text-sm rounded ${currentPage === page
+                      ? "bg-amber-500 text-white"
+                      : "bg-white text-black border-gray-300 hover:bg-gray-100"
+                    }`}
+                >
+                  {page}
+                </button>
+              )
+          )}
+          {currentPage < totalPage && (
+            <button
+              className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
+            >
+              {`...`}
+            </button>
+          )}
+          {currentPage < totalPage && (
+            <button
+              onClick={() => setCurrentPage(totalPage)}
+              className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
+            >
+              {totalPage}
+            </button>
+          )}
+          {currentPage < totalPage && (
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              className={`px-3 py-1 border text-sm rounded bg-amber-500 text-white `}
+            >
+              {">"}
+            </button>
+          )}
+        </div>
       </main>
       {/* Font Awesome CDN */}
       <link

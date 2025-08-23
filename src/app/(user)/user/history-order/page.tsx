@@ -134,9 +134,9 @@ export default function UserProfile() {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       />
 
-      <div className="bg-white border-b lg:pt-[180px] max-lg:pt-[190px] max-sm:pt-[0px] py-3">
+      <div className="bg-white border-b lg:pt-[180px] max-lg:pt-[190px] max-sm:pt-[90px]">
         <div className="max-w-[1200px] mx-auto">
-          <nav className="text-sm text-gray-600">
+          <nav className="text-sm text-gray-600 whitespace-nowrap p-3">
             <span>
               <a href="/">Trang chủ</a>
             </span>{" "}

@@ -36,7 +36,7 @@ interface evalueInterface {
 // import { debounce } from 'lodash';
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
-    className="absolute top-1/2 text-white text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    className="absolute top-1/2 text-black hover:text-amber-500  text-4xl left-4 z-10 -translate-y-1/2 cursor-pointer transition-colors duration-300  p-2 rounded-full "
     onClick={onClick}
   >
     <FontAwesomeIcon icon={faChevronLeft} />
@@ -45,7 +45,7 @@ const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
 
 const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   <div
-    className="absolute top-1/2 text-white text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer  p-2 rounded-full "
+    className="absolute top-1/2 text-black hover:text-amber-500 text-4xl right-4 z-10 -translate-y-1/2 cursor-pointer transition-colors duration-300  p-2 rounded-full "
     onClick={onClick}
   >
     <FontAwesomeIcon icon={faChevronRight} />
@@ -183,10 +183,6 @@ const ProductPageDetail = () => {
   };
 
   const handleAddEvalue = async () => {
-    if (!formAddEvalue.content) {
-      toast.error("Bạn vui lòng điền đánh giá");
-      return;
-    }
     setIsLoadingButton(true);
     const resAddEvalue = await fetch(
       "https://huunghi.id.vn/api/evaluate/addEvaluate",
@@ -197,7 +193,9 @@ const ProductPageDetail = () => {
           Authorization: `${typeToken} ${accessToken}`,
         },
         body: JSON.stringify({
-          content: formAddEvalue.content,
+          content: formAddEvalue.content
+            ? formAddEvalue.content
+            : "Sản phẩm siêu tốt nha mọi người nên mua, chất lượng siêu ưng!",
           point: formAddEvalue.point,
           idProduct: product.id_san_pham,
           idDetailOrder: idDetailOrder,
@@ -603,6 +601,18 @@ const ProductPageDetail = () => {
               </h1>
               <div className=" bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium">
                 Còn Hàng
+              </div>
+              <div className="text-sm text-gray-600 mb-2">
+                Đánh giá trung bình:{" "}
+                <strong className="font-semibold text-yellow-500 text-xl">
+                  {!listEvalue
+                    ? `5`
+                    : listEvalue.reduce(
+                        (total, e) => total + e.diem_danh_gia,
+                        0
+                      ) / listEvalue.length}
+                  ★
+                </strong>
               </div>
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                 <span>
@@ -1114,7 +1124,7 @@ const ProductPageDetail = () => {
                           })
                         }
                         rows={4}
-                        placeholder="Hãy chia sẻ cảm nhận của bạn về sản phẩm..."
+                        placeholder="Sản phẩm siêu tốt nha mọi người nên mua, chất lượng siêu ưng!"
                         className="px-3 py-2 border rounded-md resize-none focus:outline-none focus:ring focus:border-blue-300"
                       ></textarea>
                     </div>
@@ -1150,7 +1160,11 @@ const ProductPageDetail = () => {
                     >
                       {/* Avatar */}
                       <img
-                        src={`https://huunghi.id.vn/storage/avatars/${e.user.anh_dai_dien_user}`}
+                        src={
+                          e.user.anh_dai_dien_user
+                            ? `https://huunghi.id.vn/storage/avatars/${e.user.anh_dai_dien_user}`
+                            : `https://tse4.mm.bing.net/th/id/OIP.NuH3z1Hx_LV6SONwz2pNwgAAAA?pid=Api&P=0&h=220`
+                        }
                         alt={`Avatar ${e.user.ten_user}`}
                         className="w-14 h-14 rounded-full object-cover"
                       />
@@ -1210,7 +1224,7 @@ const ProductPageDetail = () => {
                               : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
-                          className="w-full transition-all duration-300"
+                          className=" w-[202px] h-[202px] object-cover transition-all duration-300"
                           onMouseEnter={() =>
                             setHoveredProduct(product.id_san_pham)
                           }
@@ -1239,7 +1253,9 @@ const ProductPageDetail = () => {
                       </a>
                     </div>
                     <div className="px-1 mt-2">
-                      <p className="text-sm ">{product.ten_san_pham}</p>
+                      <p className="text-sm line-clamp-2 h-[40px]">
+                        {product.ten_san_pham}
+                      </p>
                       <strong className="text-sm text-red-500">
                         {product.gia_da_giam.toLocaleString("vi-VN") + " VNĐ "}
                         <del className="text-gray-700 text-xs">

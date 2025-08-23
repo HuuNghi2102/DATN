@@ -367,7 +367,7 @@ const Home = () => {
           </div>
           {/* ProductSaler */}
           <div>
-            <img src="/assets/images/z6380677082359_b0129104e7a13cb7b1bfbc38569724b8.webp" alt="Best Seller" className="w-full object-cover rounded-lg" />
+            <img src="/assets/images/SALE.png" alt="Best Seller" className="w-full object-cover rounded-lg" />
             <Slider {...productSettings} className="my-4">
               {productsSaler.map((product, i) => (
                 <div key={i} className="p-2">
@@ -406,7 +406,7 @@ const Home = () => {
               ))}
             </Slider>
             <div className="flex justify-center my-9">
-              <Link href={'/collection/'}>
+              <Link href={'/collection/sale'}>
                 <button className="rounded-lg  bg-amber-400 text-white h-10 px-5 hover:bg-amber-500 font-semibold transition-all duration-500 text-sm sm:text-base">
                   Xem tất cả
                 </button>
