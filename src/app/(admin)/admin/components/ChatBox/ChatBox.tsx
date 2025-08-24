@@ -50,10 +50,14 @@ export default function ChatBox() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ dataBefore: [], message: trimmed }),
+        body: JSON.stringify({ dataBefore: dataBefore, message: trimmed }),
       });
 
       const data = await res.json();
+
+      console.log(data.data);
+
+      setDataBefore(data.data);
 
       if (data.data && Array.isArray(data.data) && data.data.length > 0) {
         setMessages((prev) => [
