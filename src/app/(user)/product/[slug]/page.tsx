@@ -1,5 +1,5 @@
 "use client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CartItem } from "../../compoments/CartItem";
 import React, { useState, useEffect } from "react";
@@ -19,6 +19,7 @@ import voucherInterface from "@/app/(user)/compoments/vouchersInterface";
 import userInterface from "@/app/(user)/compoments/userInterface";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Spinner from "@/app/(admin)/admin/components/Spiner/Spiner";
 
 interface evalueInterface {
   id_danh_gia: number;
@@ -122,9 +123,8 @@ const ProductPageDetail = () => {
   const [sizesOfSelectedVariant, setSizesOfSelectedVariant] = useState<any[]>(
     []
   );
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [activeTab, setActiveTab] = useState<"danhgia" | "mota">("danhgia");
-  const [reviewStar, setReviewStar] = useState(5);
-  const [showReviewForm, setShowReviewForm] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState("");
   const [productVariant, setProductVariant] = useState<any>(null);
@@ -174,7 +174,7 @@ const ProductPageDetail = () => {
       const resultt = await resEavlue.json();
       const listEvalues = resultt.data.data;
 
-      setListEvalue(listEvalues);
+      setListEvalue(listEvalues ? listEvalues : []);
       setPerPage(resultt.data.per_page);
       setEvaluate(resultt.data.total);
     } else {
@@ -183,11 +183,7 @@ const ProductPageDetail = () => {
   };
 
   const handleAddEvalue = async () => {
-    if (!formAddEvalue.content) {
-      toast.error("Bạn vui lòng điền đánh giá");
-      return;
-    }
-
+    setIsLoadingButton(true);
     const resAddEvalue = await fetch(
       "https://huunghi.id.vn/api/evaluate/addEvaluate",
       {
@@ -197,7 +193,9 @@ const ProductPageDetail = () => {
           Authorization: `${typeToken} ${accessToken}`,
         },
         body: JSON.stringify({
-          content: formAddEvalue.content,
+          content: formAddEvalue.content
+            ? formAddEvalue.content
+            : "Sản phẩm siêu tốt nha mọi người nên mua, chất lượng siêu ưng!",
           point: formAddEvalue.point,
           idProduct: product.id_san_pham,
           idDetailOrder: idDetailOrder,
@@ -211,6 +209,7 @@ const ProductPageDetail = () => {
       setListEvalue([evaluate, ...listEvalue]);
       toast.success("Cảm ơn bạn đã đánh giá sản phẩm!");
       setIsOpenFormEvalue(false);
+      setIsLoadingButton(false);
     } else {
       toast.error("Đánh giá sản phẩm không thành công");
     }
@@ -299,7 +298,8 @@ const ProductPageDetail = () => {
 
         //fetch All size of product variant
         const resAllSize = await fetch(
-          `https://huunghi.id.vn/api/productVariant/getListProductVariantOfColor/${pro.id_san_pham
+          `https://huunghi.id.vn/api/productVariant/getListProductVariantOfColor/${
+            pro.id_san_pham
           }/byColor/${encodeURIComponent(arrColors[0].ma_mau)}`
         );
 
@@ -352,7 +352,7 @@ const ProductPageDetail = () => {
     };
     fetchProduct();
     // lấy voucher
-    const fetchVoucher = async () => { };
+    const fetchVoucher = async () => {};
     fetchVoucher();
   }, []);
 
@@ -563,8 +563,9 @@ const ProductPageDetail = () => {
             {/* Main Image */}
             <div className="relative bg-white rounded-lg overflow-hidden shadow-sm">
               <img
-                src={`https://huunghi.id.vn/storage/products/${currentImageIndex ? currentImageIndex : "Đang tải"
-                  }`}
+                src={`https://huunghi.id.vn/storage/products/${
+                  currentImageIndex ? currentImageIndex : "Đang tải"
+                }`}
                 alt="Product"
                 className="w-full h-96 lg:h-[650px] object-cover"
               />
@@ -576,10 +577,11 @@ const ProductPageDetail = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(img.link_anh)}
-                  className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-lg overflow-hidden border-2 ${currentImageIndex === img.link_anh
+                  className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-lg overflow-hidden border-2 ${
+                    currentImageIndex === img.link_anh
                       ? "border-blue-500"
                       : "border-gray-200"
-                    }`}
+                  }`}
                 >
                   <img
                     src={`https://huunghi.id.vn/storage/products/${img.link_anh}`}
@@ -597,11 +599,28 @@ const ProductPageDetail = () => {
               <h1 className="text-xl lg:text-xl font-bold text-gray-900 mb-2">
                 {product ? product.ten_san_pham : "Đang tải..."}
               </h1>
-              <div className=" bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium">
-                Còn Hàng
+              <div
+                className={
+                  productVariant.so_luong
+                    ? "bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium"
+                    : "bg-red-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium"
+                }
+              >
+                {productVariant.so_luong ? "Còn hàng" : "Hết hàng"}
               </div>
               <div className="text-sm text-gray-600 mb-2">
-                Đánh giá trung bình: <strong className="font-semibold text-yellow-500 text-xl">★★★★★★</strong>
+                Đánh giá trung bình:{" "}
+                <strong className="font-semibold text-yellow-500 text-xl">
+                  {listEvalue.length === 0
+                    ? (5).toFixed(1)
+                    : (
+                        listEvalue.reduce(
+                          (total, e) => e.diem_danh_gia + total,
+                          0
+                        ) / listEvalue.length
+                      ).toFixed(1)}{" "}
+                  ★
+                </strong>
               </div>
               <div className="flex items-center space-x-4 text-sm text-gray-600 mb-4">
                 <span>
@@ -658,17 +677,18 @@ const ProductPageDetail = () => {
             </div>
             {/* Promo Codes */}
             <div>
-              <p className="text-sm text-gray-600 mb-3">Mã giảm giá bạn có thể sử dụng:</p>
+              <p className="text-sm text-gray-600 mb-3">
+                Mã giảm giá bạn có thể sử dụng:
+              </p>
               <div className="flex flex-wrap gap-2">
                 {voucher.map((voucher, index) => (
                   <button
                     key={index}
-                    className="relative bg-amber-400  text-white px-4 py-1 rounded text-sm font-medium hover:bg-amber-600 transition-colors">
+                    className="relative bg-amber-400  text-white px-4 py-1 rounded text-sm font-medium hover:bg-amber-600 transition-colors"
+                  >
                     {voucher.ma_giam_gia}
-                    <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] '>
-                    </div>
-                    <div className=' absolute rounded-full w-3 h-[10px] bg-white top-[9px] right-[-6px] '>
-                    </div>
+                    <div className=" absolute rounded-full w-3 h-[10px] bg-white top-[9px] left-[-6px] "></div>
+                    <div className=" absolute rounded-full w-3 h-[10px] bg-white top-[9px] right-[-6px] "></div>
                   </button>
                 ))}
               </div>
@@ -702,10 +722,11 @@ const ProductPageDetail = () => {
                         // );
                       }}
                       style={{ backgroundColor: colorOption.ma_mau }}
-                      className={`w-8 h-8 rounded-full border-2  ${selectedColor?.ten_mau === colorOption.ten_mau
+                      className={`w-8 h-8 rounded-full border-2  ${
+                        selectedColor?.ten_mau === colorOption.ten_mau
                           ? "ring-2 ring-blue-500 ring-offset-2"
                           : ""
-                        }`}
+                      }`}
                     />
                   ))}
                 </div>
@@ -745,12 +766,13 @@ const ProductPageDetail = () => {
                           );
                         }}
                         disabled={!findSize}
-                        className={`w-20 h-10 border rounded text-sm font-medium ${selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
+                        className={`w-20 h-10 border rounded text-sm font-medium ${
+                          selectedSize?.ten_kich_thuoc === size.ten_kich_thuoc
                             ? "border-red-500 bg-red-50 text-red-600"
                             : findSize
-                              ? "border-gray-300 hover:border-gray-400"
-                              : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
-                          }`}
+                            ? "border-gray-300 hover:border-gray-400"
+                            : "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                        }`}
                       >
                         <p className="text-sm">{size.ten_kich_thuoc}</p>
                       </button>
@@ -788,8 +810,8 @@ const ProductPageDetail = () => {
                         productVariant?.so_luong == 0
                           ? 1
                           : quantity + 1 > productVariant?.so_luong
-                            ? productVariant?.so_luong
-                            : quantity + 1
+                          ? productVariant?.so_luong
+                          : quantity + 1
                       );
                       handleChangeQuantity(
                         product.id_san_pham,
@@ -979,19 +1001,21 @@ const ProductPageDetail = () => {
             <nav className="flex space-x-8 px-6" aria-label="Tabs">
               <button
                 onClick={() => setActiveTab("danhgia")}
-                className={`py-4 px-1 text-sm font-medium border-b-2 ${activeTab === "danhgia"
+                className={`py-4 px-1 text-sm font-medium border-b-2 ${
+                  activeTab === "danhgia"
                     ? "border-blue-500 text-blue-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
+                }`}
               >
                 ĐÁNH GIÁ
               </button>
               <button
                 onClick={() => setActiveTab("mota")}
-                className={`py-4 px-1 text-sm font-medium border-b-2 ${activeTab === "mota"
+                className={`py-4 px-1 text-sm font-medium border-b-2 ${
+                  activeTab === "mota"
                     ? "border-blue-500 text-blue-600"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
+                }`}
               >
                 MÔ TẢ
               </button>
@@ -1108,7 +1132,7 @@ const ProductPageDetail = () => {
                           })
                         }
                         rows={4}
-                        placeholder="Hãy chia sẻ cảm nhận của bạn về sản phẩm..."
+                        placeholder="Sản phẩm siêu tốt nha mọi người nên mua, chất lượng siêu ưng!"
                         className="px-3 py-2 border rounded-md resize-none focus:outline-none focus:ring focus:border-blue-300"
                       ></textarea>
                     </div>
@@ -1119,7 +1143,7 @@ const ProductPageDetail = () => {
                         handleAddEvalue();
                       }}
                     >
-                      Gửi đánh giá
+                      {isLoadingButton ? <Spinner /> : "Gửi đánh giá"}
                     </button>
                   </div>
                 )}
@@ -1136,14 +1160,19 @@ const ProductPageDetail = () => {
                   {listEvalue?.map((e, i) => (
                     <div
                       key={i}
-                      className={`flex items-start gap-4 pb-4 mb-4 ${i !== listEvalue.length - 1
+                      className={`flex items-start gap-4 pb-4 mb-4 ${
+                        i !== listEvalue.length - 1
                           ? "border-b border-gray-200"
                           : ""
-                        }`}
+                      }`}
                     >
                       {/* Avatar */}
                       <img
-                        src={`https://huunghi.id.vn/storage/avatars/${e.user.anh_dai_dien_user}`}
+                        src={
+                          e.user.anh_dai_dien_user
+                            ? `https://huunghi.id.vn/storage/avatars/${e.user.anh_dai_dien_user}`
+                            : `https://tse4.mm.bing.net/th/id/OIP.NuH3z1Hx_LV6SONwz2pNwgAAAA?pid=Api&P=0&h=220`
+                        }
                         alt={`Avatar ${e.user.ten_user}`}
                         className="w-14 h-14 rounded-full object-cover"
                       />
@@ -1192,15 +1221,21 @@ const ProductPageDetail = () => {
                 <div key={i} className="p-2">
                   <div className="bg-white p-2 rounded-lg cursor-pointer">
                     <div className="relative group overflow-hidden">
-                      <Link href={`/product/${product.duong_dan}`} className="relative block">
+                      <Link
+                        href={`/product/${product.duong_dan}`}
+                        className="relative block"
+                      >
                         <img
-                          src={hoveredProduct === product.id_san_pham
-                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
-                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                          src={
+                            hoveredProduct === product.id_san_pham
+                              ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                              : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
                           }
                           alt="product"
                           className=" w-[202px] h-[202px] object-cover transition-all duration-300"
-                          onMouseEnter={() => setHoveredProduct(product.id_san_pham)}
+                          onMouseEnter={() =>
+                            setHoveredProduct(product.id_san_pham)
+                          }
                           onMouseLeave={() => setHoveredProduct(null)}
                         />
                       </Link>
@@ -1229,7 +1264,15 @@ const ProductPageDetail = () => {
                       <p className="text-sm line-clamp-2 h-[40px]">
                         {product.ten_san_pham}
                       </p>
-                      <strong className="text-sm text-red-500">{product.gia_da_giam.toLocaleString('vi-VN') + ' VNĐ '}<del className='text-gray-700 text-xs'>{product.gia_chua_giam != null ? (product.gia_chua_giam.toLocaleString('vi-VN')) + 'đ' : ''}</del></strong>
+                      <strong className="text-sm text-red-500">
+                        {product.gia_da_giam.toLocaleString("vi-VN") + " VNĐ "}
+                        <del className="text-gray-700 text-xs">
+                          {product.gia_chua_giam != null
+                            ? product.gia_chua_giam.toLocaleString("vi-VN") +
+                              "đ"
+                            : ""}
+                        </del>
+                      </strong>
                     </div>
                   </div>
                 </div>

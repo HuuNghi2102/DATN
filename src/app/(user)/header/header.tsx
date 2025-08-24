@@ -1,5 +1,5 @@
 "use client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -196,7 +196,7 @@ const Header = () => {
     };
   }, []);
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   if (!isClient) return null;
   return (
@@ -274,17 +274,28 @@ const Header = () => {
               </div>
               <span>Wishlist</span>
             </div>
-            <div className={styles["user-control-item"]} style={{ position: "relative" }}>
+            <div
+              className={styles["user-control-item"]}
+              style={{ position: "relative" }}
+            >
               {/* Phần icon user luôn hiển thị */}
               <div
                 className={styles.icon}
                 onClick={currentUser ? handleToggleUserDropdown : undefined}
-                style={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center" }}
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
                 {currentUser ? (
                   <>
                     <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
-                    <span className="cursor-pointer pt-1" onClick={handleToggleUserDropdown}>
+                    <span
+                      className="cursor-pointer pt-1"
+                      onClick={handleToggleUserDropdown}
+                    >
                       Hi, {currentUser.ten_user.slice(0, 5) + "..."}
                     </span>
                   </>
@@ -301,9 +312,14 @@ const Header = () => {
                 <div className={styles.dropdown}>
                   <h1 className="text-center text-xl">THÔNG TIN TÀI KHOẢN</h1>
                   <p className="text-center text-sm">
-                    <strong className="text-black">Tên tài khoản: {currentUser.ten_user}</strong><br />
+                    <strong className="text-black">
+                      Tên tài khoản: {currentUser.ten_user}
+                    </strong>
+                    <br />
                     {currentUser.sdt_user && (
-                      <strong className="text-black">Số điện thoại: {currentUser.sdt_user}</strong>
+                      <strong className="text-black">
+                        Số điện thoại: {currentUser.sdt_user}
+                      </strong>
                     )}
                   </p>
                   <div className={styles.dropdownButtons}>
@@ -317,8 +333,6 @@ const Header = () => {
                 </div>
               )}
             </div>
-
-
 
             <div className={styles["user-control-item"]}>
               <div className={`${styles.icon} ${styles["cart-icon"]}`}>
@@ -350,15 +364,16 @@ const Header = () => {
                 <li>
                   <Link href="/collection/bestsellers">HÀNG BÁN CHẠY</Link>
                 </li>
-                                <li>
+                <li>
                   <Link href="/collection/sale">HÀNG GIẢM GIÁ</Link>
                 </li>
                 <li className="relative group">
-                  <Link
-                    href="#"
-                  >
+                  <Link href="#">
                     ÁO NAM
-                    <FontAwesomeIcon className="pr-1 pl-24" icon={faChevronRight} />
+                    <FontAwesomeIcon
+                      className="pr-1 pl-24"
+                      icon={faChevronRight}
+                    />
                   </Link>
 
                   {/* Menu con */}
@@ -431,8 +446,12 @@ const Header = () => {
                 </li>
 
                 <li className="relative group">
-                  <Link href="#">QUẦN
-                    <FontAwesomeIcon className="pr-1 pl-28" icon={faChevronRight} />
+                  <Link href="#">
+                    QUẦN
+                    <FontAwesomeIcon
+                      className="pr-1 pl-28"
+                      icon={faChevronRight}
+                    />
                   </Link>
                   {/* Menu con */}
                   <ul className="absolute left-[200px] top-0 bg-white shadow-lg hidden group-hover:block min-w-[200px] z-50">
@@ -490,8 +509,12 @@ const Header = () => {
                   <Link href="/collection/quan-boxer">ĐỒ lót - Boxer</Link>
                 </li>
                 <li className="relative group">
-                  <Link href="#">PHỤ KIỆN
-                    <FontAwesomeIcon className="pr-1 pl-24" icon={faChevronRight} />
+                  <Link href="#">
+                    PHỤ KIỆN
+                    <FontAwesomeIcon
+                      className="pr-1 pl-24"
+                      icon={faChevronRight}
+                    />
                   </Link>
                   <ul className="absolute left-[200px] top-0 bg-white shadow-lg hidden group-hover:block min-w-[200px] z-50">
                     <li>
@@ -582,8 +605,9 @@ const Header = () => {
         onClick={handleOverlayClick}
       ></div>
       <nav
-        className={`${styles["mobile-nav"]} ${isMobileMenuOpen ? styles.active : ""
-          }`}
+        className={`${styles["mobile-nav"]} ${
+          isMobileMenuOpen ? styles.active : ""
+        }`}
       >
         <div className={styles["mobile-nav-header"]}>
           <div>MENU</div>
@@ -597,8 +621,8 @@ const Header = () => {
         <div className={styles["mobile-search-container"]}>
           <form
             onSubmit={(e: any) => e.preventDefault()}
-            className={styles["mobile-search-form"]}>
-
+            className={styles["mobile-search-form"]}
+          >
             <input
               onChange={(e: any) => setInputSearch(e.target.value)}
               type="text"
@@ -642,13 +666,20 @@ const Header = () => {
 
             {/* Menu con của SẢN PHẨM */}
             <div
-              className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["sanpham"] ? styles.active : ""
-                }`}
+              className={`${styles["mobile-dropdown-content"]} ${
+                activeDropdowns["sanpham"] ? styles.active : ""
+              }`}
             >
-              <a href="/collection/all" className={styles["mobile-dropdown-item"]}>
+              <a
+                href="/collection/all"
+                className={styles["mobile-dropdown-item"]}
+              >
                 TẤT CẢ SẢN PHẨM
               </a>
-              <a href="/collection/bestsellers" className={styles["mobile-dropdown-item"]}>
+              <a
+                href="/collection/bestsellers"
+                className={styles["mobile-dropdown-item"]}
+              >
                 HÀNG BÁN CHẠY
               </a>
 
@@ -666,31 +697,56 @@ const Header = () => {
                 </button>
               </div>
               <div
-                className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["aoNam"] ? styles.active : ""
-                  }`}
+                className={`${styles["mobile-dropdown-content"]} ${
+                  activeDropdowns["aoNam"] ? styles.active : ""
+                }`}
               >
-                <a href="/collection/ao-thun" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-thun"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo thun
                 </a>
-                <a href="/collection/ao-polo" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-polo"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo polo
                 </a>
-                <a href="/collection/ao-so-mi" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-so-mi"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo sơ mi
                 </a>
-                <a href="/collection/ao-khoac" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-khoac"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo khoác
                 </a>
-                <a href="/collection/ao-ba-lo" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-ba-lo"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo ba lỗ
                 </a>
-                <a href="/collection/ao-ni-sweater" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-ni-sweater"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo nỉ - SWEATER
                 </a>
-                <a href="/collection/ao-hoodie" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-hoodie"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo hoodie
                 </a>
-                <a href="/collection/ao-len" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/ao-len"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Áo len
                 </a>
               </div>
@@ -709,25 +765,44 @@ const Header = () => {
                 </button>
               </div>
               <div
-                className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["quan"] ? styles.active : ""
-                  }`}
+                className={`${styles["mobile-dropdown-content"]} ${
+                  activeDropdowns["quan"] ? styles.active : ""
+                }`}
               >
-                <a href="/collection/quan-jean" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/quan-jean"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Quần jean
                 </a>
-                <a href="/collection/quan-short" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/quan-short"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Quần short
                 </a>
-                <a href="/collection/quan-tay" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/quan-tay"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Quần tây
                 </a>
-                <a href="/collection/quan-jogger-quan-dai" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/quan-jogger-quan-dai"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Quần jogger - quần dài
                 </a>
-                <a href="/collection/quan-kaki" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/quan-kaki"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Quần Kaki
                 </a>
-                <a href="/collection/quan-boxer" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/quan-boxer"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Quần Boxer
                 </a>
               </div>
@@ -736,7 +811,8 @@ const Header = () => {
               <div className={styles["mobile-nav-link"]}>
                 <div className="font-medium">
                   <p>PHỤ KIỆN</p>
-                </div>                <button
+                </div>{" "}
+                <button
                   className={styles["mobile-dropdown-toggle"]}
                   onClick={() => toggleDropdown("phuKien")}
                   type="button"
@@ -745,28 +821,50 @@ const Header = () => {
                 </button>
               </div>
               <div
-                className={`${styles["mobile-dropdown-content"]} ${activeDropdowns["phuKien"] ? styles.active : ""
-                  }`}
+                className={`${styles["mobile-dropdown-content"]} ${
+                  activeDropdowns["phuKien"] ? styles.active : ""
+                }`}
               >
-                <a href="/collection/non" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/non"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Nón
                 </a>
-                <a href="/collection/that-lung" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/that-lung"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Thắt lưng
                 </a>
-                <a href="/collection/balo-tui-xach" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/balo-tui-xach"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Balo - Túi xách
                 </a>
-                <a href="/collection/vi" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/vi"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Ví
                 </a>
-                <a href="/collection/giay-dep" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/giay-dep"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Giày dép
                 </a>
-                <a href="/collection/mat-kinh" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/mat-kinh"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Mắt kính
                 </a>
-                <a href="/collection/vo" className={styles["mobile-dropdown-item"]}>
+                <a
+                  href="/collection/vo"
+                  className={styles["mobile-dropdown-item"]}
+                >
                   Vớ
                 </a>
               </div>
@@ -791,8 +889,9 @@ const Header = () => {
                     </button>
                   </div>
                   <div
-                    className={`${styles["mobile-dropdown-content"]} ${activeDropdowns[index] ? styles.active : ""
-                      }`}
+                    className={`${styles["mobile-dropdown-content"]} ${
+                      activeDropdowns[index] ? styles.active : ""
+                    }`}
                   >
                     {item.categories.map((subItem: any, subIndex: number) => (
                       <a

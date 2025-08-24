@@ -1,14 +1,19 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 const OrderSuccess = () => {
-  const [orderId, setOrderId] = useState(null);
+  const router = useRouter();
+  const useSearchParam = useSearchParams();
+  const idOrder = useSearchParam.get("idOrder");
 
-  //   useEffect(() => {
-  //     const params = new URLSearchParams(window.location.search);
-  //     setOrderId(params.get("order_id")); // ví dụ: ?order_id=123
-  //   }, []);
+  useEffect(() => {
+    if (!idOrder) {
+      router.push("/user/history-order");
+    }
+  }, [idOrder]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
@@ -30,16 +35,16 @@ const OrderSuccess = () => {
           Đặt hàng thành công!
         </h1>
         <p className="text-gray-600 mb-4">Cảm ơn bạn đã đặt hàng.</p>
-        <a
-          href="/user/history-order"
+        <Link
+          href={`/user/detail-order?idOrder=${idOrder}`}
           className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
         >
           Xem đơn hàng
-        </a>
+        </Link>
 
-        {orderId && (
+        {idOrder && (
           <p className="text-gray-700 mb-6">
-            <strong>Mã đơn hàng:</strong> #{orderId}
+            <strong>Mã đơn hàng:</strong> #{idOrder}
           </p>
         )}
 

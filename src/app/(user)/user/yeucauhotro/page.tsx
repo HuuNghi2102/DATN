@@ -1,12 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "@/app/(admin)/admin/components/Spiner/Spiner";
 
 export default function SupportRequestWithSidebar() {
   const [user, setUser] = useState<any>(null);
   const [content, setContent] = useState("");
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
 
   useEffect(() => {
     const u = localStorage.getItem("user");
@@ -25,6 +27,7 @@ export default function SupportRequestWithSidebar() {
     if (content === "") {
       toast.warn("Vui lòng điền nội dung cần hỗ trợ");
     } else {
+      setIsLoadingButton(true);
       const res = await fetch(`https://huunghi.id.vn/api/function/Support`, {
         method: "POST",
         headers: {
@@ -38,6 +41,9 @@ export default function SupportRequestWithSidebar() {
       });
       const result = await res.json();
       setContent("");
+      setTimeout(() => {
+        setIsLoadingButton(false);
+      }, 6000);
       toast.success(result.message);
     }
   };
@@ -143,10 +149,11 @@ export default function SupportRequestWithSidebar() {
 
           <div className="flex space-x-3">
             <button
+              disabled={isLoadingButton}
               onClick={() => send()}
               className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
             >
-              Gửi
+              {isLoadingButton ? <Spinner /> : "Gửi"}
             </button>
             <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors">
               Hủy

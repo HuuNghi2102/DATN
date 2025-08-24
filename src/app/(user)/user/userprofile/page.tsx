@@ -1,5 +1,5 @@
 "use client";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -164,7 +164,11 @@ export default function UserProfile() {
       text: "Sổ địa chỉ",
       href: "/user/sodiachi",
     },
-    { icon: "fas fa-heart", text: "Sản phẩm đã xem", href: "/user/sanphamdaxem" },
+    {
+      icon: "fas fa-heart",
+      text: "Sản phẩm đã xem",
+      href: "/user/sanphamdaxem",
+    },
     { icon: "fas fa-lock", text: "Đổi mật khẩu", href: "/user/changePassword" },
   ];
 
@@ -666,18 +670,6 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
     </div>
   );
 }

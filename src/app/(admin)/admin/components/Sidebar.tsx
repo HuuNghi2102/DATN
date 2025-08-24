@@ -123,7 +123,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
           localStorage.removeItem("cart");
           router.push("/login");
         } else {
-          toast.error("Không thể đăng xuất");
+          toast.error("Không thể đăng xuất"); 
         }
       }
     } catch (error) {
@@ -180,9 +180,9 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
         `}
       >
         <div className="brand flex items-center mb-8 pb-4 border-b border-gray-200">
-<div className="brand-logo w-9 h-9 bg-indigo-500 text-white rounded flex items-center justify-center mr-3 font-semibold">
-  {getUser?.ten_user?.charAt(0).toUpperCase() ?? ""}
-</div>
+          <div className="brand-logo w-9 h-9 bg-indigo-500 text-white rounded flex items-center justify-center mr-3 font-semibold">
+            {getUser?.ten_user?.charAt(0).toUpperCase() ?? ""}
+          </div>
           <div className="brand-name text-lg font-semibold text-gray-900">
             VerveStyle Admin
           </div>
@@ -201,7 +201,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className }) => {
               </Link>
             ))}
           <button
-            onClick={handleLogout}
+            onClick={() => handleLogout()}
             className="w-full nav-item flex items-center px-3 py-2 rounded text-red-700 mb-1 hover:bg-indigo-500 hover:text-white transition-colors"
           >
             <FaSignOutAlt className="mr-3 w-5 text-center" /> Đăng xuất

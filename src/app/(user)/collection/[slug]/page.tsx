@@ -1,5 +1,5 @@
 "use client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -138,18 +138,17 @@ export default function AllProductPage() {
     } else if (slug == "bestsellers") {
       setNameCategory("Sản phẩm bán chạy");
     } else if (slug == "new") {
-      setNameCategory("Sản phẩm mới");   
-    }else if (slug == "sale") {
+      setNameCategory("Sản phẩm mới");
+    } else if (slug == "sale") {
       setNameCategory("Sản phẩm giảm giá");
-    }
-     else {
+    } else {
       fetchCategory();
     }
   }, [slug]);
 
   useEffect(() => {
     fetchProducts();
-  }, [sort,slug, currentPage]);
+  }, [sort, currentPage, slug]);
 
   const fetchProducts = async () => {
     const response = await fetch(

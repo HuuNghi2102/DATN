@@ -6,7 +6,7 @@ import "../globals.css";
 import Header from "./header/header";
 import Footer from "./footer/footer";
 import { Providers } from "../providers"; // 👈 dùng wrapper
-import ChatBoxAI from "./chatbox/ChatboxAI";
+import ChatBox from "../(admin)/admin/components/ChatBox/ChatBox";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,6 +31,7 @@ export default function RootLayout({
     <>
       <Providers>
         <Header />
+        <ChatBox />
         {children}
         <Footer />
       </Providers>

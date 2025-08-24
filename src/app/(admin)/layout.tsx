@@ -1,7 +1,7 @@
 // app/admin/layout.tsx
 import { Geist, Geist_Mono } from "next/font/google";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./admin/components/Sidebar"; // Giả sử bạn đặt Sidebar tại `app/admin/components/sidebar.tsx`
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +26,18 @@ export default function AdminLayout({
   return (
     <>
       <Sidebar />
-      <main className="flex-1 ml-0 md:ml-64 p-6">
-        <ToastContainer
-          position="top-center"
-          autoClose={2000}
-          theme="light"
-        />
-        {children}
-        </main>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <main className="flex-1 ml-0 md:ml-64 p-6">{children}</main>
     </>
   );
 }

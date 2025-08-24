@@ -31,15 +31,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${metadata.title}`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${metadata.title}`}
+      >
         <Providers>
           {/* <Header /> */}
           <CountProvider>
             {children}
             <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              theme="light"
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
             />
           </CountProvider>
 
