@@ -6,7 +6,7 @@ import "../globals.css";
 import Header from "./header/header";
 import Footer from "./footer/footer";
 import { Providers } from "../providers"; // 👈 dùng wrapper
-
+import ChatBoxAI from "./chatbox/ChatboxAI";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

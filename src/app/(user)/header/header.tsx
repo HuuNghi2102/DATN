@@ -289,10 +289,10 @@ const Header = () => {
                     </span>
                   </>
                 ) : (
-                  <a href="/login" style={{ display: "flex", flexDirection: "column", alignItems: "center", textDecoration: "none", color: "inherit" }}>
+                  <Link href="/login" style={{ display: "flex", flexDirection: "column", alignItems: "center", textDecoration: "none", color: "inherit" }}>
                     <FontAwesomeIcon className="w-6 h-6" icon={faUser} />
                     <span className="pt-1">Đăng nhập</span>
-                  </a>
+                  </Link>
                 )}
               </div>
 
@@ -307,9 +307,9 @@ const Header = () => {
                     )}
                   </p>
                   <div className={styles.dropdownButtons}>
-                    <a href="/user/userprofile">
+                    <Link href="/user/userprofile" onClick={() => setShowUserDropdown(false)}>
                       <button className={styles.btn}>Xem chi tiết</button>
-                    </a>
+                    </Link>
                     <button className={styles.btn} onClick={logout}>
                       Đăng xuất
                     </button>

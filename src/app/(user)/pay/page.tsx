@@ -270,7 +270,7 @@ const PayPage = () => {
       "https://huunghi.id.vn/api/function/getProvince"
     );
     const resultProvince = await responseProvince.json();
-    setArrayProvince(resultProvince.province);
+    setArrayProvince(resultProvince.province ? resultProvince.province : []);
     console.log(resultProvince);
 
     // Lấy danh sách phương thức thanh toán
@@ -785,7 +785,7 @@ const PayPage = () => {
                     >
                       <option>Chọn tỉnh/thành phố</option>
                       {arrayProvince.map((province, index) => (
-                        <option key={index} value={province.province_code}>
+                        <option key={index} value={province.province_code}> 
                           {province.name}
                         </option>
                       ))}
