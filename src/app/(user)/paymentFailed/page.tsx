@@ -1,40 +1,34 @@
-import React from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import React, { Suspense } from "react";
+import PaymentFailed from "./components/ContentFailed";
 
-const PaymentFailed = () => {
-  const searchParams = useSearchParams();
-  const idOrder = searchParams.get("idOrder");
-
+const Content = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 pt-[11%]">
-      <div className="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full text-center">
-        <img className="w-40 ml-28" src="/assets/images/image.png" alt="" />
-        <h1 className="text-2xl font-semibold text-red-500 mb-2">
-          Thanh toán thất bại!
-        </h1>
-        <p className="text-gray-700 mb-6 text-sm leading-relaxed">
-          Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại hoặc
-          kiểm tra lại đơn hàng của bạn.
-        </p>
+    <Suspense
+      fallback={
+        <div
+          id="loading-screen"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
+        >
+          <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+              VERVESTYLE
+            </div>
 
-        <div className="flex justify-center gap-3">
-          <Link
-            href={`user/detail-order?idOrder=${idOrder}`}
-            className="px-4 py-2 border border-black text-black rounded-lg hover:bg-black hover:text-white transition"
-          >
-            Lịch sử mua hàng
-          </Link>
-          <Link
-            href={`/pagePaymentVNPay?idOrder=${idOrder}`}
-            className="px-4 py-2 bg-amber-400 border border-black text-black rounded-lg hover:bg-white hover:text-black transition"
-          >
-            Thử lại
-          </Link>
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">
+              Đang khởi động trải nghiệm của bạn...
+            </p>
+          </div>
         </div>
-      </div>
-    </div>
+      }
+    >
+      <PaymentFailed />
+    </Suspense>
   );
 };
 
-export default PaymentFailed;
+export default Content;
