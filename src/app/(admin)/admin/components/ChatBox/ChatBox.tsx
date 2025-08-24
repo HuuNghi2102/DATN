@@ -90,21 +90,21 @@ export default function ChatBox() {
 
       {/* Khung chat */}
       {open && (
-        <div className="mt-2 w-80 h-[350px] md:h-[450px] bg-white shadow-xl rounded-xl flex flex-col overflow-hidden border border-orange-400 relative top-28">
+        <div className="mt-2 w-80 h-[350px] md:h-[450px] bg-white shadow-xl rounded-xl flex flex-col overflow-hidden border border-amber-400 relative top-28">
           {/* Header với nút X */}
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-3 font-semibold text-center rounded-t-xl flex justify-between items-center shadow-md">
+          <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-white p-3 font-semibold text-center rounded-t-xl flex justify-between items-center shadow-md">
             <div className="flex items-center gap-2">
               {/* Logo nhỏ */}
               <img
                 src="/assets/images/logo.png"
                 alt="Verves"
-                className="w-6 h-6 rounded-full"
+                className="w-10 object-cover"
               />
               <span className="text-lg">Verve Style</span>
             </div>
             <button
               onClick={toggleChat}
-              className="text-white font-bold px-3 py-1 hover:text-gray-200 hover:bg-orange-700 rounded-md transition"
+              className="text-white font-bold px-3 py-1 hover:text-gray-200 rounded-md transition"
             >
               ✕
             </button>
@@ -124,8 +124,8 @@ export default function ChatBox() {
                 <div
                   className={`px-3 py-2 rounded-lg break-words ${
                     msg.role === "user"
-                      ? "bg-blue-600 text-white"
-                      : "bg-white text-black border border-orange-300"
+                      ? "bg-amber-300 text-black"
+                      : "bg-white text-black border border-amber-300"
                   }`}
                 >
                   {msg.message}
@@ -156,7 +156,7 @@ export default function ChatBox() {
                           <div className="flex items-center gap-2 mt-1">
                             {/* Giá mới */}
                             {prod.gia_da_giam && (
-                              <p className="text-orange-500 font-bold text-sm">
+                              <p className="text-red-500 font-bold text-sm">
                                 {prod.gia_da_giam.toLocaleString()}₫
                               </p>
                             )}
@@ -180,14 +180,14 @@ export default function ChatBox() {
           <div className="p-2 flex gap-2 border-t border-gray-200">
             <input
               type="text"
-              className="flex-1 border rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="flex-1 border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Nhập tin nhắn..."
             />
             <button
-              className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded-lg text-sm font-semibold"
+              className="bg-amber-400 hover:bg-amber-500 text-white px-3 py-1 rounded-lg text-sm font-semibold"
               onClick={sendMessage}
             >
               Gửi
