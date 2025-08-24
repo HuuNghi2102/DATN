@@ -1,62 +1,34 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import React, { Suspense } from "react";
+import OrderSuccess from "./components/Page";
 
-const OrderSuccess = () => {
-  const router = useRouter();
-  const useSearchParam = useSearchParams();
-  const idOrder = useSearchParam.get("idOrder");
-
-  useEffect(() => {
-    if (!idOrder) {
-      router.push("/user/history-order");
-    }
-  }, [idOrder]);
-
+const Content = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
-        <svg
-          className="w-20 h-20 mx-auto text-green-500 mb-4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
+    <Suspense
+      fallback={
+        <div
+          id="loading-screen"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-500"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-        <h1 className="text-2xl font-bold text-green-600 mb-2">
-          Đặt hàng thành công!
-        </h1>
-        <p className="text-gray-600 mb-4">Cảm ơn bạn đã đặt hàng.</p>
-        <Link
-          href={`/user/detail-order?idOrder=${idOrder}`}
-          className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-        >
-          Xem đơn hàng
-        </Link>
+          <div className="flex flex-col items-center space-y-6">
+            {/* Logo hoặc icon tùy chọn */}
+            <div className="text-3xl font-semibold tracking-widest text-black uppercase">
+              VERVESTYLE
+            </div>
 
-        {idOrder && (
-          <p className="text-gray-700 mb-6">
-            <strong>Mã đơn hàng:</strong> #{idOrder}
-          </p>
-        )}
+            {/* Vòng quay */}
+            <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
 
-        {/* <Link
-          to="/lich-su-mua-hang"
-          className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-        >
-          Xem đơn hàng
-        </Link> */}
-      </div>
-    </div>
+            {/* Nội dung loading */}
+            <p className="text-sm text-gray-700 tracking-wide">
+              Đang khởi động trải nghiệm của bạn...
+            </p>
+          </div>
+        </div>
+      }
+    >
+      <OrderSuccess />
+    </Suspense>
   );
 };
 
-export default OrderSuccess;
+export default Content;
