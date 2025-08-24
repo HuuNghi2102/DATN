@@ -1,5 +1,5 @@
 "use client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CartItem } from "../../compoments/CartItem";
 import React, { useState, useEffect } from "react";
@@ -174,7 +174,7 @@ const ProductPageDetail = () => {
       const resultt = await resEavlue.json();
       const listEvalues = resultt.data.data;
 
-      setListEvalue(listEvalues);
+      setListEvalue(listEvalues ? listEvalues : []);
       setPerPage(resultt.data.per_page);
       setEvaluate(resultt.data.total);
     } else {
@@ -599,18 +599,26 @@ const ProductPageDetail = () => {
               <h1 className="text-xl lg:text-xl font-bold text-gray-900 mb-2">
                 {product ? product.ten_san_pham : "Đang tải..."}
               </h1>
-              <div className=" bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium">
-                Còn Hàng
+              <div
+                className={
+                  productVariant.so_luong
+                    ? "bg-green-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium"
+                    : "bg-red-500 text-white w-20 px-2 py-1 mb-2 rounded text-xs font-medium"
+                }
+              >
+                {productVariant.so_luong ? "Còn hàng" : "Hết hàng"}
               </div>
               <div className="text-sm text-gray-600 mb-2">
                 Đánh giá trung bình:{" "}
                 <strong className="font-semibold text-yellow-500 text-xl">
-                  {!listEvalue
-                    ? `5`
-                    : listEvalue.reduce(
-                        (total, e) => total + e.diem_danh_gia,
-                        0
-                      ) / listEvalue.length}
+                  {listEvalue.length === 0
+                    ? (5).toFixed(1)
+                    : (
+                        listEvalue.reduce(
+                          (total, e) => e.diem_danh_gia + total,
+                          0
+                        ) / listEvalue.length
+                      ).toFixed(1)}{" "}
                   ★
                 </strong>
               </div>

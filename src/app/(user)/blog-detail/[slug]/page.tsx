@@ -1,5 +1,5 @@
 "use client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -603,7 +603,6 @@ const IntegratedPage = () => {
           </div>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

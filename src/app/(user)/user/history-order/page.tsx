@@ -1,5 +1,5 @@
 "use client";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import userInterface from "@/app/(user)/compoments/userInterface";
@@ -309,7 +309,6 @@ export default function UserProfile() {
           </div>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }

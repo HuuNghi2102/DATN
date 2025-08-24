@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 
@@ -574,8 +574,6 @@ export default function AccountPage() {
           </div>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={3000} />
-      {addressForm.mac_dinh}
     </div>
   );
 }

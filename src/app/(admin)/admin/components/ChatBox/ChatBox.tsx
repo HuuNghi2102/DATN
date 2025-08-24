@@ -89,11 +89,19 @@ export default function ChatBox() {
       {open && (
         <div className="mt-2 w-80 h-[350px] md:h-[450px] bg-white shadow-xl rounded-xl flex flex-col overflow-hidden border border-orange-400 relative top-28">
           {/* Header với nút X */}
-          <div className="bg-orange-500 text-white p-2 font-semibold text-center rounded-t-xl flex justify-between items-center">
-            <span>Trợ lý Verves</span>
+          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-3 font-semibold text-center rounded-t-xl flex justify-between items-center shadow-md">
+            <div className="flex items-center gap-2">
+              {/* Logo nhỏ */}
+              <img
+                src="/assets/images/logo.png"
+                alt="Verves"
+                className="w-6 h-6 rounded-full"
+              />
+              <span className="text-lg">Verve Style</span>
+            </div>
             <button
               onClick={toggleChat}
-              className="text-white font-bold px-2 py-1 hover:text-gray-200"
+              className="text-white font-bold px-3 py-1 hover:text-gray-200 hover:bg-orange-700 rounded-md transition"
             >
               ✕
             </button>
@@ -153,7 +161,7 @@ export default function ChatBox() {
                             {/* Giá cũ */}
                             {prod.gia_chua_giam && (
                               <p className="text-gray-400 text-xs line-through">
-                                {prod.gia_chua_giam. toLocaleString()}₫
+                                {prod.gia_chua_giam.toLocaleString()}₫
                               </p>
                             )}
                           </div>

@@ -1,5 +1,5 @@
 "use client";
-import { toast, ToastContainer } from "react-toastify";
+import { toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -221,7 +221,6 @@ const Register = () => {
           </div>
         </div>
       </main>
-      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 };

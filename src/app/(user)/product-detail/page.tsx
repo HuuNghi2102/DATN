@@ -8,7 +8,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import Slider from "react-slick";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
@@ -565,7 +565,6 @@ const ProductPageDetail = () => {
           ))}
         </div>
       </div>
-      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 };

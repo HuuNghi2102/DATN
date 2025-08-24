@@ -26,6 +26,17 @@ export default function AdminLayout({
   return (
     <>
       <Sidebar />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <main className="flex-1 ml-0 md:ml-64 p-6">{children}</main>
     </>
   );
