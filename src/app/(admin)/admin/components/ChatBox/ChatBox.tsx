@@ -31,6 +31,7 @@ export default function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([
     { role: "ai", message: "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?" },
   ]);
+  const [dataBefore, setDataBefore] = useState<ProductFull[]>([]);
   const [input, setInput] = useState("");
 
   const toggleChat = () => setOpen(!open);
@@ -49,12 +50,10 @@ export default function ChatBox() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: trimmed }),
+        body: JSON.stringify({ dataBefore: [], message: trimmed }),
       });
 
       const data = await res.json();
-
-      console.log(data);
 
       if (data.data && Array.isArray(data.data) && data.data.length > 0) {
         setMessages((prev) => [
