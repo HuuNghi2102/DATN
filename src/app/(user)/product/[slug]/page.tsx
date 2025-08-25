@@ -831,7 +831,7 @@ const ProductPageDetail = () => {
                   onClick={() => {
                     addToCart(true);
                   }}
-                  className=" bg-amber-400  text-white py-3 px-6 rounded font-medium hover:bg-amber-600 transition-colors"
+                  className="  bg-white border-2 border-amber-400 text-amber-400 py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors"
                 >
                   THÊM VÀO GIỎ
                 </button>
@@ -839,7 +839,7 @@ const ProductPageDetail = () => {
                   onClick={() => {
                     addToCart(false);
                   }}
-                  className=" bg-white border-2 border-amber-400 text-amber-400 py-3 px-6 rounded font-medium hover:bg-gray-50 transition-colors"
+                  className=" bg-amber-400  text-white py-3 px-6 rounded font-medium hover:bg-amber-600 transition-colors"
                 >
                   MUA NGAY
                 </button>

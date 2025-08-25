@@ -82,7 +82,7 @@ export default function ChatBox() {
       {!open && (
         <button
           onClick={toggleChat}
-          className="fixed bottom-20 right-6 w-14 h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105 "
+          className="fixed bottom-20 right-6 w-14 h-14 bg-amber-400 hover:bg-amber-500 text-white rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-105 "
         >
           <FaComments size={28} />
         </button>

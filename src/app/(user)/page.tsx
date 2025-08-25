@@ -66,7 +66,21 @@ const productSettings = {
     { breakpoint: 480, settings: { slidesToShow: 2 } },
   ],
 };
-
+const categorySettings = {
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 5000,
+  speed: 300,
+  infinite: true,
+  nextArrow: <NextArrow />,
+  prevArrow: <PrevArrow />,
+  responsive: [
+    { breakpoint: 1280, settings: { slidesToShow: 4 } },
+    { breakpoint: 768, settings: { slidesToShow: 3 } },
+    { breakpoint: 480, settings: { slidesToShow: 2 } },
+  ],
+};
 const addWhistList = async (
   name: string,
   image: string,
@@ -579,95 +593,91 @@ const Home = () => {
           </div>
         </div>
         {/* Collection Section */}
-        <div className="my-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {productsCate.map(
-              (category, index) =>
-                category.products.length >= 3 && (
-                  <div
-                    key={index}
-                    className="bg-white rounded-[10px] shadow-md p-4"
-                  >
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">
-                        {category.ten_loai}
-                      </h3>
-                      <button className="text-white bg-amber-400 w-[100px] h-[30px] rounded-[8px] hover:bg-amber-500 transition-all duration-500 text-sm">
-                        <Link href={`/collection/${category.duong_dan}`}>
-                          Xem tất cả
-                        </Link>
-                      </button>
+<div className="my-4">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {productsCate.map(
+      (category, index) =>
+        category.products.length >= 3 && (
+          <div
+            key={index}
+            className="bg-white rounded-[10px] shadow-md p-4"
+          >
+            {/* Header */}
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="uppercase border-l-[3px] border-black pl-3 text-lg sm:text-xl">
+                {category.ten_loai}
+              </h3>
+              <Link href={`/collection/${category.duong_dan}`}>
+                <button className="text-white bg-amber-400 w-[100px] h-[30px] rounded-[8px] hover:bg-amber-500 transition-all duration-500 text-sm">
+                  Xem tất cả
+                </button>
+              </Link>
+            </div>
+
+            {/* Slider (không bọc grid nữa) */}
+            <Slider {...categorySettings}>
+              {category.products.map((product, i) => (
+                <div key={i} className="px-2"> {/* padding thay cho gap */}
+                  <div className="relative group overflow-hidden">
+                    <Link
+                      href={`/product/${product.duong_dan}`}
+                      className="relative block"
+                    >
+                      <img
+                        src={
+                          hoveredProduct === product.id_san_pham
+                            ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
+                            : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
+                        }
+                        alt="product"
+                        className="w-[173px] h-[171px] object-cover transition-all duration-300 mx-auto"
+                        onMouseEnter={() => setHoveredProduct(product.id_san_pham)}
+                        onMouseLeave={() => setHoveredProduct(null)}
+                      />
+                    </Link>
+                    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <FontAwesomeIcon
+                        icon={faSearch}
+                        className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto"
+                      />
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {category.products.map(
-                        (product, i) =>
-                          i < 3 && (
-                            <div key={i} className="w-full">
-                              <div className="relative group overflow-hidden">
-                                <Link
-                                  href={`/product/${product.duong_dan}`}
-                                  className="relative block"
-                                >
-                                  <img
-                                    src={
-                                      hoveredProduct === product.id_san_pham
-                                        ? `https://huunghi.id.vn/storage/products/${product.images[1]?.link_anh}`
-                                        : `https://huunghi.id.vn/storage/products/${product.images[0]?.link_anh}`
-                                    }
-                                    alt="product"
-                                    className="w-[173px] h-[171px] object-cover transition-all duration-300"
-                                    onMouseEnter={() =>
-                                      setHoveredProduct(product.id_san_pham)
-                                    }
-                                    onMouseLeave={() => setHoveredProduct(null)}
-                                  />
-                                </Link>
-                                <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                  <FontAwesomeIcon
-                                    icon={faSearch}
-                                    className="text-black p-3 rounded-full bg-white w-5 h-5 pointer-events-auto"
-                                  />
-                                </div>
-                                <a
-                                  onClick={() =>
-                                    addWhistList(
-                                      product.ten_san_pham,
-                                      product.images[0]?.link_anh,
-                                      product.gia_da_giam,
-                                      product.duong_dan,
-                                      product.id_san_pham
-                                    )
-                                  }
-                                  className="absolute right-2 bottom-2  cursor-pointer w-7 h-7 rounded-full flex justify-center items-center  text-sm bg-gray-100 text-red-500"
-                                >
-                                  <FontAwesomeIcon icon={faHeart} />
-                                </a>
-                              </div>
-                              <div className="mt-2 px-1">
-                                <p className="text-sm line-clamp-2 h-[40px]">
-                                  {product.ten_san_pham}
-                                </p>
-                                <strong className="text-sm text-red-500">
-                                  {product.gia_da_giam.toLocaleString("vi-VN") +
-                                    " VNĐ "}
-                                  <del className="text-gray-700 text-xs">
-                                    {product.gia_chua_giam != null
-                                      ? product.gia_chua_giam.toLocaleString(
-                                          "vi-VN"
-                                        ) + "đ"
-                                      : ""}
-                                  </del>
-                                </strong>
-                              </div>
-                            </div>
-                          )
-                      )}
-                    </div>
+                    <a
+                      onClick={() =>
+                        addWhistList(
+                          product.ten_san_pham,
+                          product.images[0]?.link_anh,
+                          product.gia_da_giam,
+                          product.duong_dan,
+                          product.id_san_pham
+                        )
+                      }
+                      className="absolute right-2 bottom-2 cursor-pointer w-7 h-7 rounded-full flex justify-center items-center text-sm bg-gray-100 text-red-500"
+                    >
+                      <FontAwesomeIcon icon={faHeart} />
+                    </a>
                   </div>
-                )
-            )}
+                  <div className="mt-2 px-1">
+                    <p className="text-sm line-clamp-2 h-[40px]">
+                      {product.ten_san_pham}
+                    </p>
+                    <strong className="text-sm text-red-500">
+                      {product.gia_da_giam.toLocaleString("vi-VN") + " VNĐ "}
+                      <del className="text-gray-700 text-xs">
+                        {product.gia_chua_giam != null
+                          ? product.gia_chua_giam.toLocaleString("vi-VN") + "đ"
+                          : ""}
+                      </del>
+                    </strong>
+                  </div>
+                </div>
+              ))}
+            </Slider>
           </div>
-        </div>
+        )
+    )}
+  </div>
+</div>
+
         {/* Combo Mix & Match */}
         <div className="comboMix py-6">
           <h2 className="text-xl font-semibold mb-4 uppercase sm:text-lg">
