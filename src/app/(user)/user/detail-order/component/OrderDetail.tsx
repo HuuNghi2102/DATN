@@ -50,7 +50,6 @@ export default function OrderDetail() {
           if (response.ok) {
             const order = result.data.orders;
             setOrder(order);
-            console.log(order);
             setOrderItems(result.data.orders.detail_orders);
             if (order.id_ma_giam_gia !== null) {
               const fetchVoucher = await fetch(
@@ -62,6 +61,7 @@ export default function OrderDetail() {
                   },
                 }
               );
+
               if (fetchVoucher.ok) {
                 const result = await fetchVoucher.json();
                 setVoucher(result.data.voucher);
@@ -453,7 +453,13 @@ export default function OrderDetail() {
                         <span>
                           {formatPrice(
                             order.gia_tong_don_hang +
-                              (voucher ? voucher.gia_tri_giam : 0)
+                              (voucher
+                                ? voucher.loai_giam_gia === "so_tien"
+                                  ? voucher.gia_tri_giam
+                                  : (order.gia_tong_don_hang /
+                                      (100 - voucher.gia_tri_giam)) *
+                                    voucher.gia_tri_giam
+                                : 0)
                           )}
                         </span>
                       </div>
@@ -465,7 +471,9 @@ export default function OrderDetail() {
                         <span>Giảm giá:</span>
                         <span>
                           {voucher
-                            ? formatPrice(voucher.gia_tri_giam)
+                            ? voucher.loai_giam_gia == "so_tien"
+                              ? formatPrice(voucher.gia_tri_giam)
+                              : voucher.gia_tri_giam + "%"
                             : "Không áp dụng"}
                         </span>
                       </div>

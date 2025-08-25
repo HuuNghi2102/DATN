@@ -331,7 +331,8 @@ const PayPage = () => {
       idProvince == 205 ||
       idProvince == 206 ||
       idProvince == 240 ||
-      idProvince == 211
+      idProvince == 211 ||
+      orderInfo.totalOrder > 1000000
     ) {
       setOrderInfo({ ...orderInfo, price_ship: 0 });
     } else {
@@ -786,7 +787,7 @@ const PayPage = () => {
                     >
                       <option>Chọn tỉnh/thành phố</option>
                       {arrayProvince.map((province, index) => (
-                        <option key={index} value={province.province_code}> 
+                        <option key={index} value={province.province_code}>
                           {province.name}
                         </option>
                       ))}

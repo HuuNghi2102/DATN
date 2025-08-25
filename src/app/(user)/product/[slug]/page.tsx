@@ -670,7 +670,7 @@ const ProductPageDetail = () => {
                 <div className="flex items-center">
                   <i className="fas fa-shipping-fast text-orange-500 mr-2"></i>
                   <span>
-                    <strong>FREESHIP</strong> đơn từ 250K
+                    <strong>FREESHIP</strong> đơn từ 1000K
                   </span>
                 </div>
               </div>

@@ -247,7 +247,10 @@ export default function UserProfile() {
                           {order.so_dien_thoai_nguoi_nhan}
                         </td>
                         <td className="border border-gray-300 p-3 text-center text-black font-medium whitespace-nowrap overflow-hidden text-ellipsis">
-                          {order.gia_tong_don_hang.toLocaleString("vi-VN")}đ
+                          {(
+                            order.gia_tong_don_hang + order.tien_ship
+                          ).toLocaleString("vi-VN")}
+                          đ
                         </td>
                         <td className="border border-gray-300 p-3 text-center text-sm text-gray-800">
                           {order.trang_thai_don_hang === "cho_xac_nhan" &&
