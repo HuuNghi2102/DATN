@@ -20,6 +20,12 @@ import {
 import { Editor } from "@tinymce/tinymce-react";
 
 export default function AdminPostManagement() {
+  const [errorMessages, setErrorMessages] = useState({
+    title: "",
+    slug: "",
+    content: "",
+    image: "",
+  });
   const [posts, setPosts] = useState<articleInterface[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editorData, setEditorData] = useState<string>("");
@@ -88,10 +94,34 @@ export default function AdminPostManagement() {
   // Thêm bài viết mới
   const handleCreateArticle = async () => {
     const content = editorRef.current?.getContent();
-    if (!title || !slug || !content || !imageFile) {
-      alert("Vui lòng nhập đầy đủ thông tin!");
-      return;
+
+    const newErrors: any = {};
+
+    let hasError = false;
+
+    if (!title?.trim()) {
+      newErrors.title = "Tiêu đề không được để trống";
+      hasError = true;
     }
+
+    if (!slug?.trim()) {
+      newErrors.slug = "Đường dẫn không được để trống";
+      hasError = true;
+    }
+
+    if (!content?.trim()) {
+      newErrors.content = "Nội dung không được để trống";
+      hasError = true;
+    }
+
+    if (!imageFile) {
+      newErrors.image = "Vui lòng chọn ảnh bài viết";
+      hasError = true;
+    }
+
+    setErrorMessages(newErrors);
+
+    if (hasError) return; // Nếu có lỗi thì dừng lại
 
     const newArticle = {
       ten_bai_viet: title,
@@ -103,7 +133,17 @@ export default function AdminPostManagement() {
     };
 
     try {
-      await createdArticle(newArticle, imageFile as File);
+      const data = await createdArticle(newArticle, imageFile as File);
+      const errors = data.errors;
+      if (errors) {
+        setErrorMessages({
+          title: errors.name ? errors.name[0] : "",
+          slug: errors.slug ? errors.slug[0] : "",
+          content: errors.content ? errors.content[0] : "",
+          image: errors.image ? errors.image[0] : "",
+        });
+        return;
+      }
       await refreshPosts();
       toast.success("Thêm bài viết thành công!");
       resetForm();
@@ -115,10 +155,33 @@ export default function AdminPostManagement() {
   // Sửa bài viết
   const handleEditArticle = async () => {
     const content = editorRef.current?.getContent();
-    if (!selectedPost || !title || !slug || !content || !imageFile) {
-      alert("Vui lòng nhập đầy đủ thông tin!");
-      return;
+    const newErrors: any = {};
+
+    let hasError = false;
+
+    if (!title?.trim()) {
+      newErrors.title = "Tiêu đề không được để trống";
+      hasError = true;
     }
+
+    if (!slug?.trim()) {
+      newErrors.slug = "Đường dẫn không được để trống";
+      hasError = true;
+    }
+
+    if (!content?.trim()) {
+      newErrors.content = "Nội dung không được để trống";
+      hasError = true;
+    }
+
+    if (!imageFile) {
+      newErrors.image = "Vui lòng chọn ảnh bài viết";
+      hasError = true;
+    }
+
+    setErrorMessages(newErrors);
+
+    if (hasError) return;
 
     const updateArticle = {
       ten_bai_viet: title,
@@ -128,17 +191,33 @@ export default function AdminPostManagement() {
       id_nguoi_tao: 1,
     };
 
-    try {
-      await editArticle(
-        selectedPost.duong_dan,
-        updateArticle,
-        imageFile as File
-      );
-      await refreshPosts();
-      toast.success("Sửa bài viết thành công");
-      resetForm();
-    } catch (error) {
-      console.error("Lỗi khi cập nhật bài viết:", error);
+    if (selectedPost) {
+      try {
+        const data = await editArticle(
+          selectedPost.duong_dan,
+          updateArticle,
+          imageFile as File
+        );
+
+        const errors = data.errors;
+        if (errors) {
+          setErrorMessages({
+            title: errors.name ? errors.name[0] : "",
+            slug: errors.slug ? errors.slug[0] : "",
+            content: errors.content ? errors.content[0] : "",
+            image: errors.image ? errors.image[0] : "",
+          });
+          return;
+        }
+
+        await refreshPosts();
+        toast.success("Sửa bài viết thành công");
+        resetForm();
+      } catch (error) {
+        console.error("Lỗi khi cập nhật bài viết:", error);
+      }
+    } else {
+      console.error("Bài viết chưa được chọn");
     }
   };
 
@@ -161,6 +240,7 @@ export default function AdminPostManagement() {
     if (getdeleteArticle) {
       toast.success("Xóa bài viết thành công");
       await refreshPosts();
+      resetForm();
     } else {
       toast.error("Xóa bài viết thất bại");
     }
@@ -216,7 +296,6 @@ export default function AdminPostManagement() {
             setStatus(false);
             editorRef.current?.setContent("");
             scrollToForm();
-
           }}
         >
           <FontAwesomeIcon icon={faPlus} /> Thêm mới
@@ -241,6 +320,11 @@ export default function AdminPostManagement() {
                 placeholder="Nhập tiêu đề bài viết"
                 className="w-full border px-3 py-2 rounded"
               />
+              {errorMessages.title && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.title}
+                </p>
+              )}
             </div>
 
             <div>
@@ -260,6 +344,11 @@ export default function AdminPostManagement() {
                   placeholder="duong-dan-bai-viet"
                 />
               </div>
+              {errorMessages.slug && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.slug}
+                </p>
+              )}
             </div>
 
             <div>
@@ -320,6 +409,11 @@ export default function AdminPostManagement() {
                   },
                 }}
               />
+              {errorMessages.content && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.content}
+                </p>
+              )}
             </div>
 
             <div>
@@ -339,6 +433,11 @@ export default function AdminPostManagement() {
                     className="h-24 rounded"
                   />
                 </div>
+              )}
+              {errorMessages.image && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errorMessages.image}
+                </p>
               )}
             </div>
 
@@ -406,8 +505,9 @@ export default function AdminPostManagement() {
                 </td>
                 <td>
                   <label
-                    className={`relative inline-flex text-xs items-center px-3 py-1 text-white rounded-full cursor-pointer ${post.trang_thai === 1 ? "bg-green-500" : "bg-red-500"
-                      }`}
+                    className={`relative inline-flex text-xs items-center px-3 py-1 text-white rounded-full cursor-pointer ${
+                      post.trang_thai === 1 ? "bg-green-500" : "bg-red-500"
+                    }`}
                   >
                     {post.trang_thai === 1
                       ? "Đang hoạt động"
@@ -433,7 +533,6 @@ export default function AdminPostManagement() {
                           }
                         }, 0);
                         scrollToForm();
-
                       }}
                       className="w-8 h-8 border border-gray-300 rounded flex items-center justify-center hover:border-indigo-500 text-indigo-600"
                     >
@@ -471,10 +570,11 @@ export default function AdminPostManagement() {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-3 py-1 rounded-md border ${currentPage === 1
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === 1
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+            }`}
           >
             <FontAwesomeIcon icon={faChevronLeft} />
           </button>
@@ -495,10 +595,11 @@ export default function AdminPostManagement() {
               <button
                 key={pageNum}
                 onClick={() => handlePageChange(pageNum)}
-                className={`px-3 py-1 rounded-md border ${currentPage === pageNum
+                className={`px-3 py-1 rounded-md border ${
+                  currentPage === pageNum
                     ? "bg-indigo-500 text-white"
                     : "bg-white text-gray-700 hover:bg-gray-50"
-                  }`}
+                }`}
               >
                 {pageNum}
               </button>
@@ -512,10 +613,11 @@ export default function AdminPostManagement() {
           {totalPages > 5 && currentPage < totalPages - 2 && (
             <button
               onClick={() => handlePageChange(totalPages)}
-              className={`px-3 py-1 rounded-md border ${currentPage === totalPages
+              className={`px-3 py-1 rounded-md border ${
+                currentPage === totalPages
                   ? "bg-indigo-500 text-white"
                   : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
+              }`}
             >
               {totalPages}
             </button>
@@ -524,10 +626,11 @@ export default function AdminPostManagement() {
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-3 py-1 rounded-md border ${currentPage === totalPages
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === totalPages
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-white text-gray-700 hover:bg-gray-50"
-              }`}
+            }`}
           >
             <FontAwesomeIcon icon={faChevronRight} />
           </button>
