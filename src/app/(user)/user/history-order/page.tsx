@@ -93,6 +93,12 @@ export default function UserProfile() {
   const filteredOrders =
     selectedStatus === "tat_ca"
       ? orders
+      : selectedStatus === "cho_xac_nhan"
+      ? orders?.filter(
+          (order) =>
+            order.trang_thai_don_hang === "cho_xac_nhan" ||
+            order.trang_thai_don_hang === "dang_chuan_bi_hang"
+        )
       : orders?.filter((order) => order.trang_thai_don_hang === selectedStatus);
 
   const statusTabs = [
