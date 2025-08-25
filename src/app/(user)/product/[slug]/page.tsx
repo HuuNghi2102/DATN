@@ -662,8 +662,10 @@ const ProductPageDetail = () => {
                     <i className="fas fa-tag text-orange-500 mr-2"></i>
                     <span>
                       Nhập mã <strong>{voucher.ma_giam_gia}</strong> GIẢM{" "}
-                      {voucher.ma_giam_gia} ĐƠN TỪ{" "}
-                      {voucher.gia_tri_don_hang.toLocaleString() + "VNĐ"}
+                      {voucher.loai_giam_gia === "so_tien"
+                        ? voucher.gia_tri_giam + "đ"
+                        : voucher.gia_tri_giam + "%"}{" "}
+                      ĐƠN TỪ {voucher.gia_tri_don_hang.toLocaleString() + "VNĐ"}
                     </span>
                   </div>
                 ))}
