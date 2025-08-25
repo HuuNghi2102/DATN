@@ -1,5 +1,5 @@
 "use client";
-import { toast} from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -63,12 +63,12 @@ const Register = () => {
         return;
       }
 
-      localStorage.setItem("user", JSON.stringify(result.data.user));
-      localStorage.setItem("accessToken", JSON.stringify(result.data.token));
-      localStorage.setItem("typeToken", JSON.stringify(result.data.typeToken));
+      // localStorage.setItem("user", JSON.stringify(result.data.user));
+      // localStorage.setItem("accessToken", JSON.stringify(result.data.token));
+      // localStorage.setItem("typeToken", JSON.stringify(result.data.typeToken));
 
       toast.success(`${result.message}`);
-      router.push("/user/userprofile");
+      router.push("/login");
     } catch (error) {
       console.error("Lỗi khi gọi API:", error);
       toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
@@ -92,7 +92,7 @@ const Register = () => {
               >
                 Trang chủ
               </a>
-              
+
               <a
                 href="#"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-gray-900"
